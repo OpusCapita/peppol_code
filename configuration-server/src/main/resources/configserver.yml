@@ -12,6 +12,10 @@ spring:
           basedir: ${user.home}/checkout
           uri: http://nocontrol.itella.net/gitbucket/Peppol/peppol2.0-configuration
 
+security:
+  basic:
+    enable: false
+
 server:
   port: 8888
 management:
