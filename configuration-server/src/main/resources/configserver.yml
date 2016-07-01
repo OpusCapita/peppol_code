@@ -14,7 +14,7 @@ spring:
 
 security:
   basic:
-    enable: false
+    enabled: false
 
 server:
   port: 8888
