@@ -9,8 +9,8 @@ spring:
     config:
       server:
         git:
-          basedir: ${user.home}/checkout
-          uri: http://nocontrol.itella.net/gitbucket/Peppol/peppol2.0-configuration
+          basedir: /var/local/services/peppol2.0/configuration-server/checkout
+          uri: http://10.164.1.141/gitbucket/git/Peppol/peppol2.0-configuration.git
 
 security:
   basic:
@@ -20,3 +20,7 @@ server:
   port: 8888
 management:
   context_path: /admin
+
+  logging:
+      level:
+          org.springframework.cloud: 'DEBUG'
