@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+>
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+    <cbc:ID>2403140697</cbc:ID>
+    <cbc:IssueDate>2014-09-29</cbc:IssueDate>
+    <cbc:InvoiceTypeCode listAgencyID="NES" listID="UNCL1001">380</cbc:InvoiceTypeCode>
+    <cbc:DocumentCurrencyCode listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
+    <cac:OrderReference>
+        <cbc:ID>900041950/</cbc:ID>
+    </cac:OrderReference>
+    <cac:AdditionalDocumentReference>
+        <cbc:ID schemeAgencyName="EFONELFO">1005847761</cbc:ID>
+        <cbc:DocumentType>SuppliersOrderNumber</cbc:DocumentType>
+    </cac:AdditionalDocumentReference>
+    <cac:AdditionalDocumentReference>
+        <cbc:ID schemeAgencyName="EFONELFO">Eva Herberg</cbc:ID>
+        <cbc:DocumentType>SuppliersReference</cbc:DocumentType>
+    </cac:AdditionalDocumentReference>
+    <cac:AdditionalDocumentReference>
+        <cbc:ID schemeAgencyName="EFONELFO">900041950/Trond Broen</cbc:ID>
+        <cbc:DocumentType>BuyersReference</cbc:DocumentType>
+    </cac:AdditionalDocumentReference>
+    <cac:AdditionalDocumentReference>
+        <cbc:ID schemeAgencyName="EFONELFO">7</cbc:ID>
+        <cbc:DocumentType>OrderOrigin</cbc:DocumentType>
+    </cac:AdditionalDocumentReference>
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="NO:ORGNR">980672891</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="ZZZ">980672891</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Solar Norge AS</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:AdditionalStreetName>Pb. 53 Næringsparken</cbc:AdditionalStreetName>
+                <cbc:CityName>Gardermoen</cbc:CityName>
+                <cbc:PostalZone>2065</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT">980672891MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>Solar Norge AS</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret">980672891</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>Eva Herberg</cbc:ID>
+                <cbc:Name>Eva Herberg</cbc:Name>
+                <cbc:Telephone>+47 63 94 64 00</cbc:Telephone>
+                <cbc:Telefax>+47 63 94 64 49</cbc:Telefax>
+                <cbc:ElectronicMail>post@solarnorge.no</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="NO:ORGNR">971033533</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="ZZZ">2000967</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Jernbaneverket</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:AdditionalStreetName>Stortorvet 7</cbc:AdditionalStreetName>
+                <cbc:CityName>Oslo</cbc:CityName>
+                <cbc:PostalZone>0155</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT">971033533MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>Jernbaneverket</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret">971033533</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>900041950/Trond Broen</cbc:ID>
+                <cbc:Name>900041950/Trond Broen</cbc:Name>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+        <cbc:ActualDeliveryDate>2014-09-29</cbc:ActualDeliveryDate>
+        <cac:DeliveryLocation>
+            <cbc:ID schemeID="ZZZ">Jernbaneverket</cbc:ID>
+            <cac:Address>
+                <cbc:ID schemeAgencyID="9" schemeAgencyName="GS1" schemeID="GLN"/>
+                <cbc:StreetName>Telefon: 48880192</cbc:StreetName>
+                <cbc:AdditionalStreetName>Smithestrømsveien 1B</cbc:AdditionalStreetName>
+                <cbc:MarkAttention/>
+                <cbc:CityName>Drammen</cbc:CityName>
+                <cbc:PostalZone>3045</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+    </cac:Delivery>
+    <cac:PaymentMeans>
+        <cbc:PaymentMeansCode listID="UNCL4461">42</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>2014-10-30</cbc:PaymentDueDate>
+        <cbc:PaymentID>240314069720047824</cbc:PaymentID>
+        <cac:PayeeFinancialAccount>
+            <cbc:ID schemeID="BBAN">60030652269</cbc:ID>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="NOK">16472.50</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="NOK">65890.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="NOK">16472.50</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">S</cbc:ID>
+                <cbc:Percent>25</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="NOK">65890.00</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="NOK">65890.00</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="NOK">82362.50</cbc:TaxInclusiveAmount>
+        <cbc:PayableRoundingAmount currencyID="NOK">0</cbc:PayableRoundingAmount>
+        <cbc:PayableAmount currencyID="NOK">82362.50</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine>
+        <cbc:ID>10</cbc:ID>
+        <cbc:Note/>
+        <cbc:InvoicedQuantity unitCode="MTR" unitCodeListID="UNECERec20">9000.00</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="NOK">60210.00</cbc:LineExtensionAmount>
+        <cac:OrderLineReference>
+            <cbc:LineID>10</cbc:LineID>
+            <cac:OrderReference>
+                <cbc:ID>900041950/</cbc:ID>
+            </cac:OrderReference>
+        </cac:OrderLineReference>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="NOK">15052.50</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="NOK">60210.00</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="NOK">15052.50</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">S</cbc:ID>
+                    <cbc:Percent>25.00</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Name>DL RØR 1X32 PN12,5 PREG. JERNB</cbc:Name>
+            <cac:SellersItemIdentification>
+                <cbc:ID>2802987</cbc:ID>
+            </cac:SellersItemIdentification>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">S</cbc:ID>
+                <cbc:Percent>25.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">6.69</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+    <cac:InvoiceLine>
+        <cbc:ID>20</cbc:ID>
+        <cbc:Note/>
+        <cbc:InvoicedQuantity unitCode="MTR" unitCodeListID="UNECERec20">8000.00</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="NOK">5680.00</cbc:LineExtensionAmount>
+        <cac:OrderLineReference>
+            <cbc:LineID>20</cbc:LineID>
+            <cac:OrderReference>
+                <cbc:ID>900041950/</cbc:ID>
+            </cac:OrderReference>
+        </cac:OrderLineReference>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="NOK">1420.00</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="NOK">5680.00</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="NOK">1420.00</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">S</cbc:ID>
+                    <cbc:Percent>25.00</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Name>LYTTERTRÅD FOR KABELSØK</cbc:Name>
+            <cac:SellersItemIdentification>
+                <cbc:ID>2821666</cbc:ID>
+            </cac:SellersItemIdentification>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">S</cbc:ID>
+                <cbc:Percent>25.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">0.71</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+</Invoice>
