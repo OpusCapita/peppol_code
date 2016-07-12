@@ -1,2 +1,2 @@
 rootProject.name = 'next'
-include "common", "configuration-server", "validator"
+include "common", "configuration-server", "validator", "testapp"
