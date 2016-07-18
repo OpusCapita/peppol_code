@@ -31,13 +31,14 @@ repositories {
 
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'com.beust:jcommander:1.48'
     compile 'org.codehaus.groovy:groovy-all:2.4.7'
     compile 'commons-io:commons-io:2.5'
     compile 'com.intellij:annotations:12.0'
+    // compile 'com.opuscapita.peppol:next-common:0.0.1-SNAPSHOT'
     testCompile 'junit:junit:4.12'
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
 dependencyManagement {
