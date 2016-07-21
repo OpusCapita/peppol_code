@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.document;
 
+import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.container.document.impl.SveFaktura1Document;
 import com.opuscapita.peppol.commons.container.document.impl.UblDocument;
 import com.opuscapita.peppol.commons.container.document.test.TestTypeOne;
@@ -18,7 +19,7 @@ public class DocumentLoaderTest {
 
     @Test
     public void testDocumentLoader() throws Exception {
-        Set<BaseDocument> result = DocumentLoader.recheckTypes("com.opuscapita.peppol.commons.container.document.test");
+        Set<BaseDocument> result = DocumentLoader.reloadDocumentTypes("com.opuscapita.peppol.commons.container.document.test");
         assertNotNull(result);
         assertEquals(2, result.size());
         assertTrue(result.toArray()[0].getClass() == TestTypeOne.class ||

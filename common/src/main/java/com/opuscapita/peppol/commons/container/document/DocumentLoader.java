@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.document;
 
+import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class DocumentLoader {
 
     static {
         try {
-            examples = recheckTypes(TYPES_PACKAGE);
+            examples = reloadDocumentTypes(TYPES_PACKAGE);
         } catch (Exception e) {
             logger.error("Unable to create list of known document types", e);
         }
@@ -52,7 +53,7 @@ public class DocumentLoader {
 
         Document document;
         try {
-            document = XmlUtils.getDocument(bytes);
+            document = DocumentUtils.getDocument(bytes);
         } catch (Exception e) {
             logger.warn("Unable to parse document " + fileName, e);
             return new InvalidDocument("Unable to parse document", e, fileName);
@@ -62,14 +63,20 @@ public class DocumentLoader {
 
     @NotNull
     private BaseDocument select(Document document, String fileName) {
+        BaseDocument result;
         for (BaseDocument example : examples) {
             if (example.recognize(document)) {
                 try {
-                    BaseDocument result = example.getClass().newInstance();
+                    result = example.getClass().newInstance();
                     result.setDocument(document);
                     result.setFileName(fileName);
-                    return result;
-                } catch (Exception e) {
+                    boolean success = result.fillFields();
+                    if (success) {
+                        return result;
+                    } else {
+                        return new InvalidDocument("Failed to read data from the document", result);
+                    }
+                } catch (InstantiationException | IllegalAccessException e) {
                     logger.warn("Unable to create document object", e);
                     return new InvalidDocument("Unable to create document object", e, fileName);
                 }
@@ -78,7 +85,7 @@ public class DocumentLoader {
         return new InvalidDocument("Unable to determine document type", null, fileName);
     }
 
-    static Set<BaseDocument> recheckTypes(String pakkage)
+    static Set<BaseDocument> reloadDocumentTypes(String pakkage)
             throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         logger.info("Loading set of known document types from " + pakkage);
         ClassPathScanningCandidateComponentProvider provider
@@ -87,6 +94,7 @@ public class DocumentLoader {
         Set<BeanDefinition> found =
                 provider.findCandidateComponents(pakkage);
         logger.info("Found " + found.size() + " document type(s) to load");
+
         Set<BaseDocument> result = new HashSet<>(found.size());
         for (BeanDefinition bd : found) {
             result.add((BaseDocument) Class.forName(bd.getBeanClassName()).newInstance());

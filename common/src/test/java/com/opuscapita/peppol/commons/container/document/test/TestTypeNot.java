@@ -8,16 +8,9 @@ import org.w3c.dom.Document;
  * @author Sergejs.Roze
  */
 public class TestTypeNot extends BaseDocument {
-    @NotNull
     @Override
-    public String getSenderId() {
-        return null;
-    }
-
-    @NotNull
-    @Override
-    public String getRecipientId() {
-        return null;
+    public boolean fillFields() {
+        return false;
     }
 
     @Override

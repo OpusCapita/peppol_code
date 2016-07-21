@@ -2,6 +2,7 @@ package com.opuscapita.peppol.commons.container.document;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,7 +19,7 @@ import java.io.IOException;
  *
  * @author Sergejs.Roze
  */
-public class XmlUtils {
+public class DocumentUtils {
     public static final String SBD = "StandardBusinessDocument";
     public static final String SBDH = "StandardBusinessDocumentHeader";
 
@@ -39,8 +40,10 @@ public class XmlUtils {
                     nodes = node.getChildNodes();
                     for (i = 0; i < nodes.getLength(); i++) {
                         node = nodes.item(i);
-                        if (!SBDH.equals(node.getLocalName())) {
-                            return node;
+                        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+                            if (!SBDH.equals(node.getLocalName())) {
+                                return node;
+                            }
                         }
                     }
                 } else {
@@ -125,4 +128,64 @@ public class XmlUtils {
         }
         return null;
     }
+
+    /**
+     * Reads document identification field from SBDH.
+     *
+     * @param document the document
+     * @return the document identification value or null if not available
+     */
+    @Nullable
+    public static String readSbdhStandard(Document document) {
+        Node sbdh = DocumentUtils.getSBDH(document);
+        if (sbdh != null) {
+            Node standard = DocumentUtils.searchForXPath(sbdh, "DocumentIdentification", "Standard");
+            if (standard != null) {
+                return standard.getTextContent();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Reads profile id from the document.
+     *
+     * @param document the document
+     * @return the profile id of the document or null if not available
+     */
+    @Nullable
+    public static String readDocumentProfileId(Document document) {
+        Node root = DocumentUtils.getRootNode(document);
+        if (root != null) {
+            Node profileId = DocumentUtils.searchForXPath(root, "ProfileID");
+            if (profileId != null) {
+                return profileId.getTextContent();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Reads value from the given node and xpath in case current value is null, otherwise returns current value.
+     *
+     * @param current the current value of the field
+     * @param node the node to start from
+     * @param path the XPath as an array
+     * @return the current value if not empty, the value read from the given node and xpath, or null if cannot read value
+     */
+    @Nullable
+    public static String selectValueFrom(@Nullable String current, @Nullable Node node, @NotNull String... path) {
+        if (current != null) {
+            return current;
+        }
+        if (node == null) {
+            return null;
+        }
+        Node resultNode = DocumentUtils.searchForXPath(node, path);
+        if (resultNode == null) {
+            return null;
+        }
+        return StringUtils.trimWhitespace(resultNode.getTextContent());
+    }
+
 }

@@ -19,8 +19,12 @@ import java.util.List;
 public class TestApp implements CommandLineRunner {
     private final static Options options = new Options();
 
+    private final ScriptExecutor scriptExecutor;
+
     @Autowired
-    ScriptExecutor scriptExecutor;
+    public TestApp(ScriptExecutor scriptExecutor) {
+        this.scriptExecutor = scriptExecutor;
+    }
 
     @Override
     public void run(String... args) throws Exception {
