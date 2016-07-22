@@ -19,7 +19,7 @@ import org.w3c.dom.Node;
 public class UblDocument extends BaseDocument {
     private static final Logger logger = LoggerFactory.getLogger(UblDocument.class);
 
-    private static final String SBDH_ID = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2";
+    private static final String SBDH_ID = "urn:oasis:names:specification:ubl:schema:xsd:(Invoice|CreditNote)-2";
     private static final String PROFILE_ID_MASK = "urn:www\\.cenbii\\.eu:profile:bii0[4-5]:ver[1-2]\\.0";
 
     private UblDocumentType type;
@@ -49,7 +49,7 @@ public class UblDocument extends BaseDocument {
     public boolean recognize(@NotNull Document document) {
         String fromSbdh = DocumentUtils.readSbdhStandard(document);
         if (fromSbdh != null) {
-            if (!SBDH_ID.equals(fromSbdh)) {
+            if (!fromSbdh.matches(SBDH_ID)) {
                 return false;
             }
         }
