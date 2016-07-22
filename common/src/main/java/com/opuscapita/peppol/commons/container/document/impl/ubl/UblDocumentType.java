@@ -7,7 +7,9 @@ import com.opuscapita.peppol.commons.container.document.impl.FieldsReader;
  */
 public enum UblDocumentType {
     UNDEFINED("", null),
-    INVOICE("Invoice", UblInvoiceFieldsReader.class);
+    INVOICE("Invoice", UblInvoiceFieldsReader.class),
+    CREDIT_NOTE("CreditNote", UblCreditNodeFieldsReader.class),
+    DESADV("DespatchAdvice", UblDespatchAdviceFieldsReader.class);
 
     private final String tag;
     private final Class<? extends FieldsReader> reader;

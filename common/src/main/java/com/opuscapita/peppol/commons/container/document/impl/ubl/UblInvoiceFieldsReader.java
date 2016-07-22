@@ -35,35 +35,6 @@ public class UblInvoiceFieldsReader implements FieldsReader {
             base.setRecipientId(value);
         }
 
-        value = selectValueFrom(null, sbdh, "DocumentIdentification", "TypeVersion");
-        value = selectValueFrom(value, root, "UBLVersionID");
-        if (value == null) {
-            success = false;
-        } else {
-            base.setVersionId(value);
-        }
-
-        value = selectValueFrom(null, root, "ID");
-        if (value == null) {
-            success = false;
-        } else {
-            base.setDocumentId(value);
-        }
-
-        value = selectValueFrom(null, root, "IssueDate");
-        if (value == null) {
-            success = false;
-        } else {
-            base.setIssueDate(value);
-        }
-
-        value = selectValueFrom(null, root, "PaymentMeans", "PaymentDueDate");
-        if (value == null) {
-            success = false;
-        } else {
-            base.setDueDate(value);
-        }
-
         value = selectValueFrom(null, root, "AccountingSupplierParty", "Party", "PartyName", "Name");
         if (value == null) {
             success = false;
@@ -90,6 +61,41 @@ public class UblInvoiceFieldsReader implements FieldsReader {
             success = false;
         } else {
             base.setRecipientCountryCode(value);
+        }
+
+        value = selectValueFrom(null, root, "PaymentMeans", "PaymentDueDate");
+        if (value == null) {
+            success = false;
+        } else {
+            base.setDueDate(value);
+        }
+
+        return fillCommonFields(sbdh, root, base) && success;
+    }
+
+    public static boolean fillCommonFields(@Nullable Node sbdh, @NotNull Node root, @NotNull BaseDocument base) {
+        boolean success = true;
+
+        String value = selectValueFrom(null, sbdh, "DocumentIdentification", "TypeVersion");
+        value = selectValueFrom(value, root, "UBLVersionID");
+        if (value == null) {
+            success = false;
+        } else {
+            base.setVersionId(value);
+        }
+
+        value = selectValueFrom(null, root, "ID");
+        if (value == null) {
+            success = false;
+        } else {
+            base.setDocumentId(value);
+        }
+
+        value = selectValueFrom(null, root, "IssueDate");
+        if (value == null) {
+            success = false;
+        } else {
+            base.setIssueDate(value);
         }
 
         value = selectValueFrom(null, root, "ProfileID");
