@@ -1,11 +1,12 @@
 import com.opuscapita.peppol.commons.container.document.DocumentLoader
+import com.opuscapita.peppol.commons.container.document.impl.UblDocument
 
 def dn = "C:\\rozeser1\\files_from_lion"
 def dir = new File(dn)
 
-println new DocumentLoader().load(dn + "\\" + "uuid_f3d8a35b-8ae0-4916-a330-5d0675b40b04.xml").class
+//println new DocumentLoader().load(dn + "\\" + "b66741f8-807f-4360-bfb9-10b0d3341668.xml").class
 
-/*
+
 for (String file in dir.list()) {
     // print file + "   ->   "
     def dl = new DocumentLoader()
@@ -15,4 +16,3 @@ for (String file in dir.list()) {
         println file + "  ->  " + result.class
     }
 }
-*/

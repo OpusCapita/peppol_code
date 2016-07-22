@@ -20,7 +20,7 @@ public class UblDocument extends BaseDocument {
     private static final Logger logger = LoggerFactory.getLogger(UblDocument.class);
 
     private static final String SBDH_ID = "urn:oasis:names:specification:ubl:schema:xsd:(Invoice|CreditNote)-2";
-    private static final String PROFILE_ID_MASK = "urn:www\\.cenbii\\.eu:profile:bii0[4-5]:ver[1-2]\\.0";
+    private static final String PROFILE_ID_MASK = "urn:www\\.cenbii\\.eu:profile:bii(04|05|xx):ver[1-2]\\.0";
 
     private UblDocumentType type;
 
