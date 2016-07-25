@@ -12,7 +12,7 @@ import static com.opuscapita.peppol.commons.container.document.DocumentUtils.sel
 /**
  * @author Sergejs.Roze
  */
-public class Svefaktura1FieldsReader implements FieldsReader {
+public class Svefaktura1 implements FieldsReader {
 
     @Override
     public boolean fillFields(@Nullable Node sbdh, @NotNull Node root, @NotNull BaseDocument base) {

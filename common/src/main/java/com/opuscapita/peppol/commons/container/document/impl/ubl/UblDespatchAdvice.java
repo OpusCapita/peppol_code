@@ -11,7 +11,7 @@ import static com.opuscapita.peppol.commons.container.document.DocumentUtils.sel
 /**
  * @author Sergejs.Roze
  */
-public class UblDespatchAdviceFieldsReader implements FieldsReader {
+public class UblDespatchAdvice implements FieldsReader {
 
     @Override
     public boolean fillFields(@Nullable Node sbdh, @NotNull Node root, @NotNull BaseDocument base) {
@@ -61,7 +61,7 @@ public class UblDespatchAdviceFieldsReader implements FieldsReader {
             base.setRecipientCountryCode(value);
         }
 
-        return UblInvoiceFieldsReader.fillCommonFields(sbdh, root, base) && success;
+        return UblInvoice.fillCommonFields(sbdh, root, base) && success;
     }
 
 }

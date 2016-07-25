@@ -13,13 +13,13 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Sergejs.Roze
  */
-public class Svefaktura1FieldsReaderTest {
+public class Svefaktura1Test {
 
     @Test
     public void testSvefaktura1() throws Exception {
         BaseDocument document;
 
-        try (InputStream inputStream = Svefaktura1FieldsReaderTest.class.getResourceAsStream("/valid/svefaktura1.xml")) {
+        try (InputStream inputStream = Svefaktura1Test.class.getResourceAsStream("/valid/svefaktura1.xml")) {
             document = new DocumentLoader().load(inputStream, "test");
             assertTrue(document instanceof SveFaktura1Document);
         }
@@ -43,7 +43,7 @@ public class Svefaktura1FieldsReaderTest {
     public void testSvefaktura1WithAttachment() throws Exception {
         BaseDocument document;
 
-        try (InputStream inputStream = Svefaktura1FieldsReaderTest.class.getResourceAsStream("/valid/sv1_with_attachment.xml")) {
+        try (InputStream inputStream = Svefaktura1Test.class.getResourceAsStream("/valid/sv1_with_attachment.xml")) {
             document = new DocumentLoader().load(inputStream, "test2");
             assertTrue(document instanceof SveFaktura1Document);
         }

@@ -2,7 +2,7 @@ package com.opuscapita.peppol.commons.container.document.impl;
 
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.PeppolDocument;
-import com.opuscapita.peppol.commons.container.document.impl.sf1.Svefaktura1FieldsReader;
+import com.opuscapita.peppol.commons.container.document.impl.sf1.Svefaktura1;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -30,7 +30,7 @@ public class SveFaktura1Document extends BaseDocument {
             return false;
         }
 
-        return new Svefaktura1FieldsReader().fillFields(sbdhNode, rootNode, this);
+        return new Svefaktura1().fillFields(sbdhNode, rootNode, this);
     }
 
     @Override
