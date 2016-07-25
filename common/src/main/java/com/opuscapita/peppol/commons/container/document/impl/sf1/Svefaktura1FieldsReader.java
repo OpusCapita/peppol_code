@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.container.document.impl.sf1;
 
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.document.DocumentUtils;
 import com.opuscapita.peppol.commons.container.document.impl.FieldsReader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -87,7 +88,14 @@ public class Svefaktura1FieldsReader implements FieldsReader {
         }
 
         base.setProfileId("urn:sfti:services:documentprocessing:BasicInvoice:1:0");
-        base.setCustomizationId("urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0");
+
+        Node object = DocumentUtils.searchForChildNode(root.getParentNode(), DocumentUtils.OBJECT_ENVELOPE);
+        if (object == null) {
+            base.setCustomizationId("urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0");
+        } else {
+            base.setCustomizationId(
+                    "urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0");
+        }
 
         return success;
     }

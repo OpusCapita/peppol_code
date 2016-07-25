@@ -65,6 +65,10 @@ public class DocumentLoaderTest {
             document = loader.load(inputStream, "test");
             assertTrue(document instanceof InvalidDocument);
         }
+        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/valid/sv1_with_attachment.xml")) {
+            document = loader.load(inputStream, "test");
+            assertTrue(document instanceof SveFaktura1Document);
+        }
     }
 
 }

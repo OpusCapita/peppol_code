@@ -20,8 +20,9 @@ import java.io.IOException;
  * @author Sergejs.Roze
  */
 public class DocumentUtils {
-    public static final String SBD = "StandardBusinessDocument";
-    public static final String SBDH = "StandardBusinessDocumentHeader";
+    private static final String SBD = "StandardBusinessDocument";
+    private static final String SBDH = "StandardBusinessDocumentHeader";
+    public static final String OBJECT_ENVELOPE = "ObjectEnvelope";
 
     /**
      * Returns root node of the document or null if document has no root node.
@@ -41,7 +42,7 @@ public class DocumentUtils {
                     for (i = 0; i < nodes.getLength(); i++) {
                         node = nodes.item(i);
                         if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
-                            if (!SBDH.equals(node.getLocalName())) {
+                            if (!SBDH.equals(node.getLocalName()) && !OBJECT_ENVELOPE.equals(node.getLocalName())) {
                                 return node;
                             }
                         }
