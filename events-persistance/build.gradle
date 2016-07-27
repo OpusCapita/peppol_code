@@ -17,7 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot' 
 
 jar {
-	baseName = 'configuration-server'
+	baseName = 'events-persistance'
 	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -32,15 +32,17 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.cloud:spring-cloud-config-server')
+	compile('org.springframework.boot:spring-boot-starter-amqp')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-jdbc')
+	compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
+	compile('org.springframework.retry:spring-retry')
+	compile 'com.google.code.gson:gson:2.7'
 	compile project(':common')
-	testCompile('org.springframework.boot:spring-boot-starter-test') 
-}
-
-dependencyManagement {
-	imports { 
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.BUILD-SNAPSHOT"
-	}
+	runtime('com.h2database:h2')
+	runtime('mysql:mysql-connector-java')
+	runtime('org.postgresql:postgresql')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 
