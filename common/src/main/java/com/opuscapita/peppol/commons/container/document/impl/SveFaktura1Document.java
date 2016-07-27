@@ -2,29 +2,37 @@ package com.opuscapita.peppol.commons.container.document.impl;
 
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.PeppolDocument;
+import com.opuscapita.peppol.commons.container.document.impl.sf1.Svefaktura1;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import static com.opuscapita.peppol.commons.container.document.DocumentUtils.readSbdhStandard;
 
 /**
  * @author Sergejs.Roze
  */
-@PeppolDocument("SveFaktura1")
+@SuppressWarnings("SimplifiableIfStatement")
+@PeppolDocument("Svefaktura1 document")
 public class SveFaktura1Document extends BaseDocument {
-    public static final String SBDH_ID = "urn:sfti:documents:BasicInvoice:1:0";
+    private static final String SBDH_ID = "urn:sfti:documents:BasicInvoice:1:0";
 
-    @NotNull
     @Override
-    public String getSenderId() {
-        return null;
+    public boolean fillFields() {
+        Node rootNode = getRootNode();
+        if (rootNode == null) {
+            return false;
+        }
+
+        // SBDH is mandatory in Svefaktura1
+        Node sbdhNode = getSbdhNode();
+        if (sbdhNode == null) {
+            return false;
+        }
+
+        return new Svefaktura1().fillFields(sbdhNode, rootNode, this);
     }
 
-    @NotNull
-    @Override
-    public String getRecipientId() {
-        return null;
-    }
-
-    @SuppressWarnings("SimplifiableIfStatement")
     @Override
     public boolean recognize(@NotNull Document document) {
         String fromSbdh = readSbdhStandard(document);

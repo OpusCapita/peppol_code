@@ -1,5 +1,7 @@
-import com.opuscapita.peppol.commons.container.ContainerMessage
+import com.opuscapita.peppol.commons.container.document.DocumentLoader
+import com.opuscapita.peppol.commons.container.document.impl.UblDocument
 
-def cm = new ContainerMessage()
+def cm = new DocumentLoader().load("/tmp/cm_input.xml")
 
-cm.load("/tmp/cm_input.xml")
+print cm instanceof UblDocument
+
