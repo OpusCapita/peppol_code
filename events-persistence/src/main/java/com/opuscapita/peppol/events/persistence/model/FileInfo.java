@@ -30,7 +30,7 @@ public class FileInfo implements Comparable<FileInfo> {
     @GeneratedValue
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "message_id")
     private Message message;
 
@@ -46,15 +46,15 @@ public class FileInfo implements Comparable<FileInfo> {
     @Column(name = "duplicate")
     private boolean duplicate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sentFile")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "sentFile")
     @Sort(type = SortType.NATURAL)
     private SortedSet<SentFileInfo> sentInfo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "failedFile")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "failedFile")
     @Sort(type = SortType.NATURAL)
     private SortedSet<FailedFileInfo> failedInfo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "reprocessedFile")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "reprocessedFile")
     @Sort(type = SortType.NATURAL)
     private SortedSet<ReprocessFileInfo> reprocessInfo;
 

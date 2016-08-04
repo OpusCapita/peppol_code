@@ -2,8 +2,8 @@ package com.opuscapita.peppol.events.persistence.amqp;
 
 import com.google.gson.Gson;
 import com.opuscapita.peppol.events.persistence.controller.PersistanceController;
-import com.opuscapita.peppol.events.persistence.errors.ErrorHandler;
-import com.opuscapita.peppol.events.persistence.model.*;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.events.persistence.model.PeppolEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -33,17 +33,19 @@ public class EventQueueListener {
         System.out.println("*******************************************************");
         System.out.println(message);
         System.out.println("*******************************************************");
+        String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = gson.fromJson(message, PeppolEvent.class);
+            customerId = peppolEvent.getTransportType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
             persistanceController.storePeppolEvent(peppolEvent);
         } catch (Exception e) {
             e.printStackTrace();
-            handleError(message, e);
+            handleError(message, customerId, e);
         }
     }
 
-    public void handleError(String message, Exception e) {
-        errorHandler.logBadMessage(message, e);
+    public void handleError(String message, String customerId, Exception e) {
+        errorHandler.logBadMessage(message, customerId, e);
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
 }

@@ -25,7 +25,7 @@ public class Customer {
     @Column(name = "customer_id")
     private String identifier;
 
-    @Column(name = "customer_name")
+    @Column(name = "customer_name", nullable = false)
     private String name;
 
     @Column(name = "outbound_emails")
@@ -40,7 +40,7 @@ public class Customer {
     @Column(name = "os_contact_person")
     private String responsiblePerson;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sender")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "sender")
     private Set<Message> messages;
 
     public Integer getId() {
