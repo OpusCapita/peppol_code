@@ -1,9 +1,7 @@
 package com.opuscapita.peppol.commons.container;
 
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
-import com.opuscapita.peppol.commons.container.route.Status;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -14,29 +12,12 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class ContainerMessage implements Serializable {
-    private Route route;
-    private BaseDocument document;
-    private Endpoint source;
-    private Status currentStatus;
+    private final Route route;
+    private final BaseDocument document;
 
-
-    @NotNull
-    public Route getRoute() {
-        return route;
-    }
-
-    public void setRoute(@NotNull Route route) {
+    public ContainerMessage(@NotNull Route route, @NotNull BaseDocument document) {
         this.route = route;
+        this.document = document;
     }
-
-//    @Nullable
-//    public String getSenderId() {
-//
-//    }
-//
-//    @Nullable
-//    public String getRecipientId() {
-//
-//    }
 
 }

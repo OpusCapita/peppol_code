@@ -1,0 +1,9 @@
+routing:
+
+  inbound_a2a:
+    ok:
+      validation:
+        ok:
+          ftp_send_a2a:
+            ok:
+              backup_file:

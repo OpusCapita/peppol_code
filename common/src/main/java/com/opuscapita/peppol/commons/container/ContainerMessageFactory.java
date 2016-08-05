@@ -1,6 +1,9 @@
 package com.opuscapita.peppol.commons.container;
 
+import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -16,6 +19,12 @@ import java.io.InputStream;
  */
 @Component
 public class ContainerMessageFactory {
+    private final DocumentLoader documentLoader;
+
+    @Autowired
+    public ContainerMessageFactory(DocumentLoader documentLoader) {
+        this.documentLoader = documentLoader;
+    }
 
     @NotNull
     public ContainerMessage create(@NotNull String fileName) throws IOException {
@@ -25,13 +34,19 @@ public class ContainerMessageFactory {
     @NotNull
     public ContainerMessage create(@NotNull File file) throws IOException {
         try (InputStream is = new FileInputStream(file)) {
-            return create(is);
+            return create(is, file.getAbsolutePath());
         }
     }
 
     @NotNull
-    private ContainerMessage create(@NotNull InputStream inputStream) {
-        return null; // TODO
+    public ContainerMessage create(@NotNull InputStream inputStream, @NotNull String fileName) throws IOException {
+        BaseDocument baseDocument = documentLoader.load(inputStream, fileName);
+        return loadRoute(baseDocument);
     }
 
+    @NotNull
+    private ContainerMessage loadRoute(@NotNull BaseDocument baseDocument) {
+        return null;
+    }
 }
+

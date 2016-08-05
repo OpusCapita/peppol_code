@@ -42,4 +42,10 @@ public class SveFaktura1Document extends BaseDocument {
 
         return false;
     }
+
+    @NotNull
+    @Override
+    public Archetype getArchetype() {
+        return Archetype.SVEFAKTURA1;
+    }
 }
