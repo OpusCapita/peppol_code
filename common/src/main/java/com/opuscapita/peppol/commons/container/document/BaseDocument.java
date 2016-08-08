@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.document;
 
+import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
@@ -24,21 +25,23 @@ public abstract class BaseDocument {
     public static final String UNKNOWN_PROFILE_ID = "Unknown profile ID";
     public static final String UNKNOWN_CUSTOMIZATION_ID = "Unknown customization ID";
 
-    protected String senderId = UNKNOWN_SENDER;
-    protected String recipientId = UNKNOWN_RECIPIENT;
-    protected String versionId = UNKNOWN_VERSION_ID;
-    protected String documentId = UNKNOWN_DOCUMENT_ID;
-    protected String issueDate = UNKNOWN_ISSUE_DATE;
-    protected String dueDate = UNKNOWN_DUE_DATE;
-    protected String senderName = UNKNOWN_SENDER_NAME;
-    protected String senderCountryCode = UNKNOWN_SENDER_COUNTRY_CODE;
-    protected String recipientName = UNKNOWN_RECIPIENT_NAME;
-    protected String recipientCountryCode = UNKNOWN_RECIPIENT_COUNTRY_CODE;
-    protected String profileId = UNKNOWN_PROFILE_ID;
-    protected String customizationId = UNKNOWN_CUSTOMIZATION_ID;
+    private String senderId = UNKNOWN_SENDER;
+    private String recipientId = UNKNOWN_RECIPIENT;
+    private String versionId = UNKNOWN_VERSION_ID;
+    private String documentId = UNKNOWN_DOCUMENT_ID;
+    private String issueDate = UNKNOWN_ISSUE_DATE;
+    private String dueDate = UNKNOWN_DUE_DATE;
+    private String senderName = UNKNOWN_SENDER_NAME;
+    private String senderCountryCode = UNKNOWN_SENDER_COUNTRY_CODE;
+    private String recipientName = UNKNOWN_RECIPIENT_NAME;
+    private String recipientCountryCode = UNKNOWN_RECIPIENT_COUNTRY_CODE;
+    private String profileId = UNKNOWN_PROFILE_ID;
+    private String customizationId = UNKNOWN_CUSTOMIZATION_ID;
 
     private Document document;
     private String fileName;
+
+    private Archetype archetype;
 
     private Node root;
     private Node sbdh;
@@ -144,6 +147,9 @@ public abstract class BaseDocument {
     public String getCustomizationId() {
         return customizationId;
     }
+
+    @NotNull
+    public abstract Archetype getArchetype();
 
     protected void setDocument(Document document) {
         this.document = document;

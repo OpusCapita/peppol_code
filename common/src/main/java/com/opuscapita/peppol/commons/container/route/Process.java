@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 /**
  * Single process or module in execution route.
@@ -11,21 +12,13 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class Process implements Serializable {
-    private final String name;
     private final Endpoint endpoint;
+    private final Properties properties;
+    private String status = "";
 
-    private final String ok;
-    private final String nok;
-    private final String error;
-
-    private Status status = Status.NONE;
-
-    public Process(@NotNull String name, @NotNull Endpoint endpoint, @Nullable String ok, @Nullable String nok, @Nullable String error) {
-        this.name = name;
+    public Process(@NotNull Endpoint endpoint, @Nullable Properties properties) {
         this.endpoint = endpoint;
-        this.ok = ok;
-        this.nok = nok;
-        this.error = error;
+        this.properties = properties == null ? new Properties() : properties;
     }
 
     @NotNull
@@ -33,32 +26,16 @@ public class Process implements Serializable {
         return endpoint;
     }
 
-    @Nullable
-    public String getOk() {
-        return ok;
-    }
-
-    @Nullable
-    public String getNok() {
-        return nok;
-    }
-
-    @Nullable
-    public String getError() {
-        return error;
-    }
-
-    @NotNull
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(@NotNull Status status) {
-        this.status = status;
+    public void addStatus(@NotNull String status) {
+        this.status += status;
     }
 
     @NotNull
-    public String getName() {
-        return name;
+    public Properties getProperties() {
+        return properties;
     }
 }

@@ -32,12 +32,13 @@ repositories {
 
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
     compile 'commons-io:commons-io:2.5'
     compile 'com.intellij:annotations:12.0'
     compile fileTree(dir: 'libs', include: '*.jar')
     testCompile 'junit:junit:4.12'
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
 dependencyManagement {
