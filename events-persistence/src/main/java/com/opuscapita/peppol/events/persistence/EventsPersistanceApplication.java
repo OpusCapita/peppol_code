@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
@@ -28,6 +30,7 @@ public class EventsPersistanceApplication {
     }
 
     @Bean
+    @ConditionalOnProperty("spring.rabbitmq.host")
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
@@ -38,6 +41,7 @@ public class EventsPersistanceApplication {
     }
 
     @Bean
+    @ConditionalOnProperty("spring.rabbitmq.host")
     MessageListenerAdapter listenerAdapter(EventQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
@@ -45,6 +49,11 @@ public class EventsPersistanceApplication {
     @Bean
     public Gson gson() {
         return new Gson();
+    }
+
+    @Bean
+    public ErrorHandler errorHandler() {
+        return new ErrorHandler();
     }
 
     @Bean

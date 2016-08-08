@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.0.BUILD-SNAPSHOT'
+        springBootVersion = '1.4.0.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -19,6 +19,7 @@ apply plugin: 'spring-boot'
 jar {
     baseName = 'common'
     version = '0.0.1-SNAPSHOT'
+    from sourceSets.main.allSource
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -42,7 +43,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.BUILD-SNAPSHOT"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR4"
     }
 }
 

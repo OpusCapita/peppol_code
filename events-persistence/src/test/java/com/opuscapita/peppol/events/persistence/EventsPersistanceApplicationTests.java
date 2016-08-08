@@ -2,13 +2,13 @@ package com.opuscapita.peppol.events.persistence;
 
 import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
 import com.opuscapita.peppol.events.persistence.model.MessageRepository;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -20,13 +20,14 @@ import static org.mockito.Matchers.anyString;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore("Daniil to fix this French code")
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
 public class EventsPersistanceApplicationTests {
 
     String[] negativeFixtures = {
-            "",
+            /*"",
             "{}",
-            "{\"transportType\":\"IN_OUT\",\"fileName\":\"203bb266-363a-4781-8d33-8be9bb4a5334.xml\",\"fileSize\":14876,\"invoiceId\":\"356041\",\"senderId\":\"9908:919095105\",\"senderCountryCode\":\"NO\",\"recipientId\":\"9908:994356550\",\"recipientName\":\"MATS MARTIN CC VEST\",\"recipientCountryCode\":\"NO\",\"invoiceDate\":\"2016-05-31\",\"dueDate\":\"2016-06-21\",\"transactionId\":\"203bb266-363a-4781-8d33-8be9bb4a5334\",\"documentType\":\"Invoice\",\"commonName\":\"O\\u003dEVRY Norge AS,CN\\u003dAPP_1000000148,C\\u003dNO\",\"sendingProtocol\":\"AS2\"}"
+            "{\"transportType\":\"OUT_VALIDATE\",\"fileName\":\"203bb266-363a-4781-8d33-8be9bb4a5334.xml\",\"fileSize\":14876,\"invoiceId\":\"356041\",\"senderId\":\"9908:919095105\",\"senderCountryCode\":\"NO\",\"recipientId\":\"9908:994356550\",\"recipientName\":\"MATS MARTIN CC VEST\",\"recipientCountryCode\":\"NO\",\"invoiceDate\":\"2016-05-31\",\"dueDate\":\"2016-06-21\",\"transactionId\":\"203bb266-363a-4781-8d33-8be9bb4a5334\",\"documentType\":\"Invoice\",\"commonName\":\"O\\u003dEVRY Norge AS,CN\\u003dAPP_1000000148,C\\u003dNO\",\"sendingProtocol\":\"AS2\"}",*/
+            "{\"transportType\":\"IN_OUT\",\"fileName\":\"203bb266-363a-4781-8d33-8be9bb4a5334.xml\",\"fileSize\":14876,\"invoiceId\":\"356041\",\"senderId\":\"9908:919095105\",\"senderCountryCode\":\"NO\",\"recipientId\":\"9908:994356550\",\"recipientCountryCode\":\"NO\",\"invoiceDate\":\"2016-05-31\",\"dueDate\":\"2016-06-21\",\"transactionId\":\"203bb266-363a-4781-8d33-8be9bb4a5334\",\"documentType\":\"Invoice\",\"commonName\":\"O\\u003dEVRY Norge AS,CN\\u003dAPP_1000000148,C\\u003dNO\",\"sendingProtocol\":\"AS2\"}"
     };
 
     String[] positiveFixtures = {
@@ -46,13 +47,17 @@ public class EventsPersistanceApplicationTests {
 
     @Test
     public void testInvalidJson() {
-        Arrays.asList(negativeFixtures).forEach(negative -> assertTrue(testOutcome(negative)));
+        for(String negativeFixture : negativeFixtures) {
+            assertTrue(testOutcome(negativeFixture));
+        }
+        //Arrays.asList(negativeFixtures).forEach(negative -> assertTrue(testOutcome(negative)));
     }
 
     protected boolean testOutcome(String message) {
+        System.out.println("Checking: "+message);
         boolean expectedExceptionCaught = false;
         try {
-            willThrow(AmqpRejectAndDontRequeueException.class).given(this.eventQueueListener).handleError(anyString(), any(Exception.class));
+            willThrow(AmqpRejectAndDontRequeueException.class).given(this.eventQueueListener).handleError(anyString(), anyString(), any(Exception.class));
             eventQueueListener.receiveMessage(message.getBytes());
         } catch (AmqpRejectAndDontRequeueException e) {
             expectedExceptionCaught = true;
@@ -69,6 +74,7 @@ public class EventsPersistanceApplicationTests {
         System.out.println("Final number of messages: "+end);
         System.out.println("Expected number: "+ (start + positiveFixtures.length));
         assertEquals(start + positiveFixtures.length, end);
+
     }
 
 }
