@@ -16,8 +16,17 @@ RUN mkdir -p "${CONFIG_SERVER_HOME}"
 RUN mkdir -p /var/local/services/peppol2.0/configuration-server/checkout
 ADD ["build/libs/configuration-server-0.0.1-SNAPSHOT.jar", "${CONFIG_SERVER_HOME}/config-server.jar"]
 RUN sh -c 'touch ${CONFIG_SERVER_HOME}/config-server.jar'
-ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -Dhttp.proxyHost=10.202.9.33 -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=\"10.10.104.128|.local|itella.net|nocontrol.itella.net|localhost\" -jar ${CONFIG_SERVER_HOME}/config-server.jar"]
+
+# enable configuration
+RUN mkdir -p "/etc/peppol2.0/configuration-server"
+RUN ln -s "/etc/peppol2.0/configuration-server/bootstrap.yml" "${CONFIG_SERVER_HOME}/bootstrap.yml"
+
+WORKDIR "${CONFIG_SERVER_HOME}"
+ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880 -Dhttp.nonProxyHosts=\"10.10.104.128|*.local|localhost\" -jar ${CONFIG_SERVER_HOME}/config-server.jar"]
 #ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar ${CONFIG_SERVER_HOME}/config-server.jar"]
+
+VOLUME "/etc/peppol2.0"
+
 EXPOSE 8888
 EXPOSE 80
 EXPOSE 443
