@@ -72,6 +72,12 @@ public class UblDocument extends BaseDocument {
         return type != UblDocumentType.UNDEFINED;
     }
 
+    @NotNull
+    @Override
+    public Archetype getArchetype() {
+        return Archetype.UBL;
+    }
+
     private UblDocumentType recognizeType(String rootName) {
         for (int i = 0; i < UblDocumentType.values().length; i++) {
             UblDocumentType current = UblDocumentType.values()[i];
