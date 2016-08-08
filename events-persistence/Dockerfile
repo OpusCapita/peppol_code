@@ -22,7 +22,7 @@ RUN mkdir -p "/etc/peppol2.0/events-persistence"
 RUN ln -s "/etc/peppol2.0/events-persistence" "${EVENTS_PERSISTENCE_HOME}/config"
 
 WORKDIR "${EVENTS_PERSISTENCE_HOME}"
-ENTRYPOINT ["sh", "-c", "sleep 5 && java -Djava.security.egd=file:/dev/./urandom -Dhttp.proxyHost=10.202.9.33 -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=\"10.10.104.128|*.local|itella.net|nocontrol.itella.net|localhost\" -jar ${EVENTS_PERSISTENCE_HOME}/events-persistence.jar"]
+ENTRYPOINT ["sh", "-c", "sleep 15 && java -Djava.security.egd=file:/dev/./urandom -Dhttp.proxyHost=10.202.9.33 -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=\"10.10.104.128|*.local|itella.net|nocontrol.itella.net|localhost\" -jar ${EVENTS_PERSISTENCE_HOME}/events-persistence.jar"]
 
 VOLUME "/etc/peppol2.0"
 
