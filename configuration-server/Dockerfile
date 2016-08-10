@@ -22,7 +22,7 @@ RUN mkdir -p "/etc/peppol2.0/configuration-server"
 RUN ln -s "/etc/peppol2.0/configuration-server/bootstrap.yml" "${CONFIG_SERVER_HOME}/bootstrap.yml"
 
 WORKDIR "${CONFIG_SERVER_HOME}"
-ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880 -Dhttp.nonProxyHosts=\"10.10.104.128|*.local|localhost\" -jar ${CONFIG_SERVER_HOME}/config-server.jar"]
+ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -Dhttp.proxyHost=10.202.9.33 -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=\"10.10.104.128|*.local|localhost\" -jar ${CONFIG_SERVER_HOME}/config-server.jar"]
 #ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar ${CONFIG_SERVER_HOME}/config-server.jar"]
 
 VOLUME "/etc/peppol2.0"
