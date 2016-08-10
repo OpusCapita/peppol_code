@@ -3,7 +3,7 @@ VOLUME /tmp
 ENV CONFIG_SERVER_HOME /opt/local/services/peppol2.0/config-server
 ENV http_proxy http://10.202.9.33:8080
 ENV https_proxy http://10.202.9.33:8080
-ENV no_proxy "10.10.104.128,.local,nocontrol.itella.net,group.itella.net"
+ENV no_proxy "10.10.104.128,localhost,.local,nocontrol.itella.net,group.itella.net"
 ENV HTTP_PROXY http://10.202.9.33:8080
 ENV HTTPS_PROXY http://10.202.9.33:8080
 ENV NO_PROXY "10.10.104.128,.local,nocontrol.itella.net,group.itella.net"
