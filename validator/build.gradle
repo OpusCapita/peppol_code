@@ -39,8 +39,10 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    optional "org.springframework.boot:spring-boot-configuration-processor"
 }
 
+compileJava.dependsOn(processResources)
 
 eclipse {
     classpath {

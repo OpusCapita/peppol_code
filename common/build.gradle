@@ -33,6 +33,7 @@ repositories {
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile('org.springframework.boot:spring-boot-starter-amqp')
     compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
     compile 'commons-io:commons-io:2.5'
     compile 'com.intellij:annotations:12.0'

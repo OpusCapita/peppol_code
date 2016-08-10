@@ -20,4 +20,19 @@ public class ContainerMessage implements Serializable {
         this.document = document;
     }
 
+    public Route getRoute() {
+        return route;
+    }
+
+    public BaseDocument getDocument() {
+        return document;
+    }
+
+    public boolean isInbound() {
+        return route.isInbound();
+    }
+
+    public String getCustomerId() {
+        return isInbound() ? getDocument().getRecipientId() : getDocument().getSenderId();
+    }
 }

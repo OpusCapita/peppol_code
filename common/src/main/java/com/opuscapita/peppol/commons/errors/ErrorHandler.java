@@ -1,10 +1,12 @@
 package com.opuscapita.peppol.commons.errors;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -29,7 +31,7 @@ public class ErrorHandler {
     @Autowired
     Gson gson;
 
-    public void logBadMessage(String message, String customerId, Exception e) {
+    public void reportToServiceNow(String message, String customerId, Exception e) {
         String dumpFileName = storeMessageToDisk(message);
         createSncTicket(dumpFileName, customerId, e);
     }
@@ -68,5 +70,13 @@ public class ErrorHandler {
     private String generateMessageDumpFileName() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd_HH.mm.ss_z");
         return dateFormat.format(new Date()) + ".json";
+    }
+
+    public void reportFailureToAmqp(String message, Exception e, RabbitTemplate rabbitTemplate, String outgoingQueueName) {
+        JsonObject errorDoc = new JsonObject();
+        errorDoc.addProperty("error", e.getMessage());
+        errorDoc.addProperty("message", message);
+        errorDoc.addProperty("timestamp", System.currentTimeMillis());
+        rabbitTemplate.convertAndSend(outgoingQueueName, errorDoc.toString());
     }
 }

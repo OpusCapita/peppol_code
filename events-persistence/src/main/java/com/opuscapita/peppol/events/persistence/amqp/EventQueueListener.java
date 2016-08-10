@@ -45,7 +45,7 @@ public class EventQueueListener {
     }
 
     public void handleError(String message, String customerId, Exception e) {
-        errorHandler.logBadMessage(message, customerId, e);
+        errorHandler.reportToServiceNow(message, customerId, e);
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
 }
