@@ -34,6 +34,7 @@ public class ContainerMessageFactory {
     private final RoutingConfiguration routingConfiguration;
     private final ServiceNow serviceNow;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public ContainerMessageFactory(@NotNull DocumentLoader documentLoader, @NotNull RoutingConfiguration routingConfiguration, @NotNull ServiceNow serviceNow) {
         this.documentLoader = documentLoader;

@@ -2,6 +2,7 @@ package com.opuscapita.peppol.testapp;
 
 import com.opuscapita.peppol.commons.container.ContainerMessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,14 +14,14 @@ public class Helper {
     @SuppressWarnings("WeakerAccess")
     public static final String NAME = "helper";
 
-    private final ContainerMessageFactory containerMessageFactory;
+    private final ApplicationContext context;
 
     @Autowired
-    public Helper(ContainerMessageFactory containerMessageFactory) {
-        this.containerMessageFactory = containerMessageFactory;
+    public Helper(ApplicationContext context) {
+        this.context = context;
     }
 
     public ContainerMessageFactory getContainerMessageFactory() {
-        return containerMessageFactory;
+        return context.getBean(ContainerMessageFactory.class);
     }
 }

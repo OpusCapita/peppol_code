@@ -51,6 +51,6 @@ public class TestApp implements CommandLineRunner {
 
     @Bean
     public ServiceNow serviceNowRest() {
-        return null;
+        return sncEntity -> {};
     }
 }
