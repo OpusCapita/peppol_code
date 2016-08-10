@@ -1,12 +1,11 @@
 package com.opuscapita.peppol.commons.container;
 
-import com.opuscapita.commons.servicenow.ServiceNow;
-import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.container.route.RoutingConfiguration;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +31,14 @@ public class ContainerMessageFactory {
 
     private final DocumentLoader documentLoader;
     private final RoutingConfiguration routingConfiguration;
-    private final ServiceNow serviceNow;
+    @Autowired
+    private ErrorHandler errorHandler;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public ContainerMessageFactory(@NotNull DocumentLoader documentLoader, @NotNull RoutingConfiguration routingConfiguration, @NotNull ServiceNow serviceNow) {
+    public ContainerMessageFactory(@NotNull DocumentLoader documentLoader, @NotNull RoutingConfiguration routingConfiguration) {
         this.documentLoader = documentLoader;
         this.routingConfiguration = routingConfiguration;
-        this.serviceNow = serviceNow;
     }
 
     @NotNull
@@ -81,14 +80,11 @@ public class ContainerMessageFactory {
 
     private void openSncTicket(BaseDocument baseDocument, Endpoint source) throws IOException {
         logger.error("No route found for document " + baseDocument.getFileName());
-        SncEntity sncEntity = new SncEntity(
-                "No route found for document",
+        errorHandler.reportToServiceNow(
                 "Cannot find route for a document with id " + baseDocument.getFileName(),
-                baseDocument.getDocumentId(),
                 source == Endpoint.PEPPOL ? baseDocument.getRecipientId() : baseDocument.getSenderId(),
-                3);
-
-        serviceNow.insert(sncEntity);
+                new IllegalArgumentException("Unable to create ContainerMessage")
+        );
     }
 }
 
