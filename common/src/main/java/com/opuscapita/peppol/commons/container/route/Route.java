@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.container.route;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,14 +12,38 @@ import java.util.List;
  * @author Sergejs.Roze
  */
 public class Route {
-    private final Process source;
-    private final List<Process> processes;
+    private final List<Endpoint> processes;
+    private String status = "";
 
     private int index = 0;
 
-    public Route(@NotNull Process source, @NotNull List<Process> processes) {
-        this.source = source;
+    public Route(@NotNull List<Endpoint> processes) {
         this.processes = processes;
+    }
+
+    public Route(@NotNull Endpoint source, @NotNull String configLine) {
+        processes = new ArrayList<>();
+        processes.add(source);
+
+        String[] tokens = configLine.split(",");
+        if (tokens.length <= 1) {
+            return;
+        }
+
+        for (int i = 1; i < tokens.length; i++) {
+            String token = tokens[i].trim();
+            boolean found = false;
+            for (Endpoint e : Endpoint.values()) {
+                if (e.name().equalsIgnoreCase(token)) {
+                    processes.add(e);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new IllegalArgumentException("Cannot find endpoint named " + token); // TODO proper error handling
+            }
+        }
     }
 
     /**
@@ -28,29 +53,30 @@ public class Route {
      * @return the next process if any or null when this was the end process
      */
     @Nullable
-    public Process pop(@NotNull String status) {
+    public Endpoint pop(@NotNull String status) {
         if (index >= processes.size()) {
             return null;
         }
-        Process current = processes.get(index);
-        current.addStatus(status);
+        Endpoint current = processes.get(index);
+        this.status += status + "\n";
 
         index++;
         return index >= processes.size() ? null : processes.get(index);
     }
 
-    public void addStatus(@NotNull String status) {
-        if (index < processes.size()) {
-            processes.get(index).addStatus(status);
-        }
+    public boolean isInbound() {
+        return processes.size() != 0 && processes.get(0) == Endpoint.PEPPOL;
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        result += processes.stream().map(Object::toString).reduce((a, b) -> a + " " + b);
+        return result;
     }
 
     @NotNull
-    public Process getSource() {
-        return source;
-    }
-
-    public boolean isInbound() {
-        return source.getEndpoint() == Endpoint.PEPPOL;
+    public String getStatus() {
+        return status;
     }
 }

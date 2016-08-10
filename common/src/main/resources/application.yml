@@ -1,9 +1,18 @@
 routing:
+  filters:
+    - mask: '007:.*'
+      destination: xib
+    - mask: '.*'
+      destination: a2a
+  routes:
+    - inbound_a2a, validation, ftp_a2a
+    - inbound_xib, validation, ftp_xib
+    - outbound, validation, peppol
 
-  inbound_a2a:
-    ok:
-      validation:
-        ok:
-          ftp_send_a2a:
-            ok:
-              backup_file:
+  - route:
+      description: 'Incoming files to A2A'
+      mask: '007:.*'
+      endpoints:
+        - validation
+        - gateway_a2a
+

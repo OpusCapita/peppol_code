@@ -2,10 +2,12 @@ package com.opuscapita.peppol.testapp;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.opuscapita.commons.servicenow.ServiceNow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
  *
  * @author Sergejs.Roze
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol", "com.opuscapita.commons"})
 public class TestApp implements CommandLineRunner {
     private final static Options options = new Options();
 
@@ -45,5 +47,10 @@ public class TestApp implements CommandLineRunner {
     private static class Options {
         @Parameter
         private List<String> scenarios = new ArrayList<>();
+    }
+
+    @Bean
+    public ServiceNow serviceNowRest() {
+        return null;
     }
 }

@@ -21,7 +21,7 @@ public class ScriptExecutor {
         this.helper = helper;
     }
 
-    public void execute(Scenario scenario) {
+    void execute(Scenario scenario) {
         if (scenario.getScript() == null) {
             return;
         }

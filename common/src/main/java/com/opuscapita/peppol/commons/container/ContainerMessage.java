@@ -35,4 +35,8 @@ public class ContainerMessage implements Serializable {
     public String getCustomerId() {
         return isInbound() ? getDocument().getRecipientId() : getDocument().getSenderId();
     }
+    @Override
+    public String toString() {
+        return document.getClass().getName() + " [" + route + "]";
+    }
 }

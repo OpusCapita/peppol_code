@@ -4,13 +4,6 @@ import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
-import com.opuscapita.peppol.commons.container.ContainerMessageFactory;
-import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.validator.amqp.EventQueueListener;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
 public class PeppolValidatorApplication {
     @Value("${amqp.queueName}")
     private String queueName;
@@ -60,18 +53,4 @@ public class PeppolValidatorApplication {
         return new ServiceNowREST(serviceNowConfiguration());
     }
 
-    @Bean
-    public ErrorHandler errorHandler() {
-        return new ErrorHandler();
-    }
-
-    @Bean
-    public DocumentLoader documentLoader() {
-        return new DocumentLoader();
-    }
-
-    @Bean
-    public ContainerMessageFactory containerMessageFactory() {
-        return new ContainerMessageFactory(documentLoader());
-    }
 }

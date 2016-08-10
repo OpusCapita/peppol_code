@@ -6,5 +6,8 @@ package com.opuscapita.peppol.commons.container.route;
  * @author Sergejs.Roze
  */
 public enum Endpoint {
-    PEPPOL, FTP_A2A, FTP_XIB, VALIDATION
+    PEPPOL,
+    GATEWAY_A2A,
+    GATEWAY_XIB,
+    VALIDATION
 }
