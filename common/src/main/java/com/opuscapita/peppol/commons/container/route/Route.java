@@ -11,72 +11,90 @@ import java.util.List;
  *
  * @author Sergejs.Roze
  */
+@SuppressWarnings("unused")
 public class Route {
-    private final List<Endpoint> processes;
+    private List<Endpoint> endpoints = new ArrayList<>();
+    private String description;
+    private String mask;
+    private Endpoint source;
+
     private String status = "";
+    private int current = 0;
 
-    private int index = 0;
-
-    public Route(@NotNull List<Endpoint> processes) {
-        this.processes = processes;
-    }
-
-    public Route(@NotNull Endpoint source, @NotNull String configLine) {
-        processes = new ArrayList<>();
-        processes.add(source);
-
-        String[] tokens = configLine.split(",");
-        if (tokens.length <= 1) {
-            return;
-        }
-
-        for (int i = 1; i < tokens.length; i++) {
-            String token = tokens[i].trim();
-            boolean found = false;
-            for (Endpoint e : Endpoint.values()) {
-                if (e.name().equalsIgnoreCase(token)) {
-                    processes.add(e);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                throw new IllegalArgumentException("Cannot find endpoint named " + token); // TODO proper error handling
-            }
-        }
+    @Nullable
+    public Endpoint pop() {
+        return pop(null);
     }
 
     /**
      * Returns next process in the route and makes next process current.
      *
-     * @param status the outcome of the finished process
+     * @param status the outcome of the finished process, optional
      * @return the next process if any or null when this was the end process
      */
     @Nullable
-    public Endpoint pop(@NotNull String status) {
-        if (index >= processes.size()) {
+    public Endpoint pop(@Nullable String status) {
+        if (current >= endpoints.size()) {
             return null;
         }
-        Endpoint current = processes.get(index);
+        Endpoint e = endpoints.get(current);
         this.status += status + "\n";
 
-        index++;
-        return index >= processes.size() ? null : processes.get(index);
+        current++;
+        return e;
     }
 
     public boolean isInbound() {
-        return processes.size() != 0 && processes.get(0) == Endpoint.PEPPOL;
-    }
-
-    @Override
-    public String toString() {
-        String result = "";
-        result += processes.stream().map(Object::toString).reduce((a, b) -> a + " " + b);
-        return result;
+        return source == Endpoint.PEPPOL;
     }
 
     @NotNull
     public String getStatus() {
         return status;
+    }
+
+    @Override
+    public String toString() {
+        String result = description;
+        if (mask != null) {
+            result += " (" + mask + ") ";
+        }
+        result += "[ " + source + " ";
+        for (Endpoint endpoint : endpoints) {
+            result += endpoint + " ";
+        }
+        return result + "]";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getMask() {
+        return mask;
+    }
+
+    public void setMask(String mask) {
+        this.mask = mask;
+    }
+
+    public Endpoint getSource() {
+        return source;
+    }
+
+    public void setSource(Endpoint source) {
+        this.source = source;
+    }
+
+    public List<Endpoint> getEndpoints() {
+        return endpoints;
+    }
+
+    public void setEndpoints(List<Endpoint> endpoints) {
+        this.endpoints = endpoints;
     }
 }
