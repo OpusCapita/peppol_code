@@ -20,7 +20,7 @@ public class InvalidDocument extends BaseDocument {
         setFileName(fileName);
     }
 
-    public InvalidDocument(String reason, BaseDocument other) {
+    public InvalidDocument(@NotNull String reason, @NotNull BaseDocument other) {
         this.reason = reason;
         this.e = null;
         setFileName(other.getFileName());

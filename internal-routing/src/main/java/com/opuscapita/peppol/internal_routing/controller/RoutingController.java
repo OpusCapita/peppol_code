@@ -5,6 +5,8 @@ import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ public class RoutingController {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public RoutingController(RoutingConfiguration routingConfiguration, ErrorHandler errorHandler) {
+    public RoutingController(@NotNull RoutingConfiguration routingConfiguration, @Nullable ErrorHandler errorHandler) {
         this.routingConfiguration = routingConfiguration;
         this.errorHandler = errorHandler;
     }
@@ -49,6 +51,9 @@ public class RoutingController {
 
     private void openSncTicket(BaseDocument baseDocument, Endpoint source) throws IOException {
         logger.error("No route found for document " + baseDocument.getFileName());
+        if (errorHandler == null) {
+            return;
+        }
         errorHandler.reportToServiceNow(
                 "Cannot find route for a document with id " + baseDocument.getFileName(),
                 source == Endpoint.PEPPOL ? baseDocument.getRecipientId() : baseDocument.getSenderId(),

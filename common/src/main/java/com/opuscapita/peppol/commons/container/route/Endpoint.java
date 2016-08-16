@@ -8,7 +8,5 @@ package com.opuscapita.peppol.commons.container.route;
 @SuppressWarnings("unused")
 public enum Endpoint {
     PEPPOL,
-    GATEWAY_A2A,
-    GATEWAY_XIB,
-    VALIDATION
+    GATEWAY
 }
