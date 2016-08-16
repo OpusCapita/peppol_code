@@ -57,6 +57,7 @@ public class InternalRoutingApp {
     }
 
     @Bean
+    @ConditionalOnProperty("snc.enabled")
     ServiceNowConfiguration serviceNowConfiguration() {
         return new ServiceNowConfiguration(
                 environment.getProperty("snc.rest.url"),
