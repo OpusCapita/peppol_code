@@ -26,7 +26,7 @@ public class InternalRoutingApp {
     private Environment environment;
 
     public static void main(String[] args) {
-        SpringApplication.run(EventsPersistanceApplication.class, args);
+        SpringApplication.run(InternalRoutingApp.class, args);
     }
 
     @Bean

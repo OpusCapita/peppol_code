@@ -13,7 +13,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class Route {
-    private List<Endpoint> endpoints = new ArrayList<>();
+    private List<String> endpoints = new ArrayList<>();
     private String description;
     private String mask;
     private Endpoint source;
@@ -22,7 +22,7 @@ public class Route {
     private int current = 0;
 
     @Nullable
-    public Endpoint pop() {
+    public String pop() {
         return pop(null);
     }
 
@@ -33,11 +33,11 @@ public class Route {
      * @return the next process if any or null when this was the end process
      */
     @Nullable
-    public Endpoint pop(@Nullable String status) {
+    public String pop(@Nullable String status) {
         if (current >= endpoints.size()) {
             return null;
         }
-        Endpoint e = endpoints.get(current);
+        String e = endpoints.get(current);
         this.status += status + "\n";
 
         current++;
@@ -60,41 +60,45 @@ public class Route {
             result += " (" + mask + ") ";
         }
         result += "[ " + source + " ";
-        for (Endpoint endpoint : endpoints) {
+        for (String endpoint : endpoints) {
             result += endpoint + " ";
         }
         return result + "]";
     }
 
+    @Nullable
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description = description;
     }
 
+    @Nullable
     public String getMask() {
         return mask;
     }
 
-    public void setMask(String mask) {
+    public void setMask(@Nullable String mask) {
         this.mask = mask;
     }
 
+    @NotNull
     public Endpoint getSource() {
         return source;
     }
 
-    public void setSource(Endpoint source) {
+    public void setSource(@NotNull Endpoint source) {
         this.source = source;
     }
 
-    public List<Endpoint> getEndpoints() {
+    @NotNull
+    public List<String> getEndpoints() {
         return endpoints;
     }
 
-    public void setEndpoints(List<Endpoint> endpoints) {
+    public void setEndpoints(@NotNull List<String> endpoints) {
         this.endpoints = endpoints;
     }
 }

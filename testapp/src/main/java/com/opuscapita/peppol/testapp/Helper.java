@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.testapp;
 
-import com.opuscapita.peppol.commons.container.ContainerMessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,4 @@ public class Helper {
         this.context = context;
     }
 
-    public ContainerMessageFactory getContainerMessageFactory() {
-        return context.getBean(ContainerMessageFactory.class);
-    }
 }

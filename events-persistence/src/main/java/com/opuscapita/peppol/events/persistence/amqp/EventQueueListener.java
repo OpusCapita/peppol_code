@@ -1,8 +1,8 @@
 package com.opuscapita.peppol.events.persistence.amqp;
 
 import com.google.gson.Gson;
-import com.opuscapita.peppol.events.persistence.controller.PersistanceController;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.events.persistence.controller.PersistenceController;
 import com.opuscapita.peppol.events.persistence.model.PeppolEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class EventQueueListener {
     Logger logger = LoggerFactory.getLogger(EventQueueListener.class);
 
     @Autowired
-    PersistanceController persistanceController;
+    PersistenceController persistenceController;
 
     @Autowired
     ErrorHandler errorHandler;
@@ -37,7 +37,7 @@ public class EventQueueListener {
         try {
             PeppolEvent peppolEvent = gson.fromJson(message, PeppolEvent.class);
             customerId = peppolEvent.getTransportType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
-            persistanceController.storePeppolEvent(peppolEvent);
+            persistenceController.storePeppolEvent(peppolEvent);
         } catch (Exception e) {
             e.printStackTrace();
             handleError(message, customerId, e);

@@ -1,5 +1,6 @@
-package com.opuscapita.peppol.commons.container.route;
+package com.opuscapita.peppol.internal_routing.controller;
 
+import com.opuscapita.peppol.commons.container.route.Route;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;

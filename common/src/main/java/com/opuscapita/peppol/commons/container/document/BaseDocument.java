@@ -11,6 +11,7 @@ import org.w3c.dom.Node;
  *
  * @author Sergejs.Roze
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class BaseDocument {
     public static final String UNKNOWN_RECIPIENT = "n/a";
     public static final String UNKNOWN_SENDER = "n/a";
