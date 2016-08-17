@@ -17,7 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'testapp'
+    baseName = 'internal_routing'
     version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -31,23 +31,13 @@ repositories {
 
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'com.beust:jcommander:1.48'
-    compile 'org.codehaus.groovy:groovy-all:2.4.7'
-    compile 'commons-io:commons-io:2.5'
-    compile 'com.intellij:annotations:12.0'
-
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-amqp')
+    compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
+    compile('org.springframework.retry:spring-retry')
+    compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
-    compile project(':internal-routing')
-
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR4"
-    }
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 

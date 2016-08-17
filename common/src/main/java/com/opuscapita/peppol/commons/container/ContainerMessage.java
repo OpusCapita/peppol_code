@@ -14,10 +14,10 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class ContainerMessage implements Serializable {
-    private Route route;
     private final BaseDocument document;
     private final String origin;
     private final Endpoint source;
+    private Route route;
 
     public ContainerMessage(@NotNull BaseDocument document, @Nullable String origin, @NotNull Endpoint source) {
         this.document = document;
