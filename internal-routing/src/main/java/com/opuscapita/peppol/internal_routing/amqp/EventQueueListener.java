@@ -50,7 +50,7 @@ public class EventQueueListener {
     }
 
     private void handleError(String message, String customerId, Exception e) {
-        errorHandler.reportToServiceNow(message, customerId, e);
+        errorHandler.reportToServiceNow(message, customerId, e, "Failed processing message in internal routing");
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
 }

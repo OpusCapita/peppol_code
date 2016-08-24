@@ -32,16 +32,20 @@ public class ErrorHandler {
     Gson gson;
 
     public void reportToServiceNow(String message, String customerId, Exception e) {
-        String dumpFileName = storeMessageToDisk(message);
-        createSncTicket(dumpFileName, customerId, e);
+        reportToServiceNow(message, customerId, e, e.getMessage());
     }
 
-    protected void createSncTicket(String dumpFileName, String customerId, Exception jse) {
+    public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription) {
+        String dumpFileName = storeMessageToDisk(message);
+        createSncTicket(dumpFileName, customerId, e, shortDescription);
+    }
+
+    protected void createSncTicket(String dumpFileName, String customerId, Exception jse, String shortDescription) {
         StringWriter stackTraceWriter = new StringWriter();
         jse.printStackTrace(new PrintWriter(stackTraceWriter));
         String correlationId = generateFailedMessageCorrelationId(jse);
         try {
-            serviceNowRest.insert(new SncEntity(jse.getMessage(), dumpFileName + "\n\r" + stackTraceWriter.toString(), correlationId, customerId, 0));
+            serviceNowRest.insert(new SncEntity(shortDescription, dumpFileName + "\n\r" + stackTraceWriter.toString(), correlationId, customerId, 0));
         } catch (IOException e) {
             logger.error("Unable to create SNC ticket", e);
         }

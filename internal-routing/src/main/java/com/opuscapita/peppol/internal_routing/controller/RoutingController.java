@@ -57,7 +57,7 @@ public class RoutingController {
         errorHandler.reportToServiceNow(
                 "Cannot find route for a document with id " + baseDocument.getFileName(),
                 source == Endpoint.PEPPOL ? baseDocument.getRecipientId() : baseDocument.getSenderId(),
-                new IllegalArgumentException("Unable to create ContainerMessage")
+                new IllegalArgumentException("Unable to create ContainerMessage"), "Can't find route"
         );
     }
 
