@@ -29,7 +29,7 @@ public class EventQueueListener {
     Gson gson;
 
     public synchronized void receiveMessage(byte[] data) {
-        String message = new String(data);
+        String message = new String(data).replace("\"urn\"", "urn"); //Sort of hack
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = gson.fromJson(message, PeppolEvent.class);
