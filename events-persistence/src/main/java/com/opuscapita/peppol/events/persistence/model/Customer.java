@@ -26,7 +26,7 @@ public class Customer {
     private String identifier;
 
     @Column(name = "customer_name", nullable = false)
-    private String name;
+    private String name = "n/a";
 
     @Column(name = "outbound_emails")
     private String outboundEmails;
