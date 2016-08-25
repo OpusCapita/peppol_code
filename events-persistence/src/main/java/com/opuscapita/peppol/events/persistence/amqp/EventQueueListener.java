@@ -30,9 +30,6 @@ public class EventQueueListener {
 
     public synchronized void receiveMessage(byte[] data) {
         String message = new String(data);
-        System.out.println("*******************************************************");
-        System.out.println(message);
-        System.out.println("*******************************************************");
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = gson.fromJson(message, PeppolEvent.class);
@@ -45,7 +42,12 @@ public class EventQueueListener {
     }
 
     public void handleError(String message, String customerId, Exception e) {
-        errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+        try {
+            errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+        } catch (Exception wierd) {
+            logger.error("reporting to service now threw exception: ");
+            wierd.printStackTrace();
+        }
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
 }
