@@ -56,7 +56,7 @@ public class Message {
     @Enumerated(EnumType.STRING)
     private Direction direction;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "message")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "message")
     @Sort(type = SortType.NATURAL)
     private SortedSet<FileInfo> files;
 
