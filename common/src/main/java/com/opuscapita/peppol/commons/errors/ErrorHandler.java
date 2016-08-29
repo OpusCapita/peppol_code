@@ -52,7 +52,7 @@ public class ErrorHandler {
     }
 
     private String generateFailedMessageCorrelationId(Exception jse) {
-        return jse.getCause().getClass().getName();
+        return jse.getClass().getName();
     }
 
     protected String storeMessageToDisk(String message) {
