@@ -69,7 +69,7 @@ public class ErrorHandler {
     }
 
     private String getMessageDumpBaseFolderPath() {
-        return environment.getProperty("persistence.events.error.files.path", "/tmp/");
+        return environment.getProperty("persistence.events.error.dumps.path", "/tmp/");
     }
 
     private String generateMessageDumpFileName() {
