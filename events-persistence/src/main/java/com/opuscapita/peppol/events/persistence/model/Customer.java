@@ -40,7 +40,7 @@ public class Customer {
     @Column(name = "os_contact_person")
     private String responsiblePerson;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "sender")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sender")
     private Set<Message> messages;
 
     public Integer getId() {

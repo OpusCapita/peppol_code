@@ -33,8 +33,11 @@ public class EventQueueListener {
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = gson.fromJson(message, PeppolEvent.class);
+            System.out.println("PeppolEvent de-serialized");
             customerId = peppolEvent.getTransportType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
+            System.out.println("customer id fetched: " + customerId);
             persistenceController.storePeppolEvent(peppolEvent);
+            System.out.println("Persisted following data: " + new String(data));
         } catch (Exception e) {
             e.printStackTrace();
             handleError(message, customerId, e);

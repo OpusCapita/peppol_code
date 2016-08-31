@@ -35,13 +35,20 @@ public class PersistenceController {
 
     public void storePeppolEvent(PeppolEvent peppolEvent) {
         refactorIfInbound(peppolEvent);
+        System.out.println("refactorIfInbound(peppolEvent); passed");
         getAccessPoint(peppolEvent);
+        System.out.println("getAccessPoint(peppolEvent); passed");
 
         Message message = getMessage(peppolEvent);
+        System.out.println("Message message = getMessage(peppolEvent); passed");
         FileInfo fileInfo = getFileInfo(message, peppolEvent);
+        System.out.println("FileInfo fileInfo = getFileInfo(message, peppolEvent); passed");
         setFileInfoStatus(fileInfo, peppolEvent, message);
+        System.out.println("setFileInfoStatus(fileInfo, peppolEvent, message); passed");
         fileInfoRepository.save(fileInfo);
+        System.out.println("fileInfoRepository.save(fileInfo); passed");
         messageRepository.save(message);
+        System.out.println("messageRepository.save(message); passed");
     }
 
     private FileInfo getFileInfo(Message message, PeppolEvent peppolEvent) {
@@ -153,9 +160,12 @@ public class PersistenceController {
     }
 
     private Message getMessage(PeppolEvent peppolEvent) {
+        System.out.println("entered getMessage");
         Message message = fetchMessageByPeppolEvent(peppolEvent);
+        System.out.println("Message message = fetchMessageByPeppolEvent(peppolEvent); passed");
         if (message == null) {
             Customer customer = getOrCreateCustomer(peppolEvent);
+            System.out.println("Customer customer = getOrCreateCustomer(peppolEvent); passed");
             message = new Message();
             message.setSender(customer);
             message.setRecipientId(peppolEvent.getRecipientId());
@@ -185,14 +195,18 @@ public class PersistenceController {
                 logger.debug("Document has no due date.");
             }
             messageRepository.save(message);
+            System.out.println("messageRepository.save(message); passed");
         }
         return message;
     }
 
     public Message fetchMessageByPeppolEvent(PeppolEvent peppolEvent) {
+        System.out.println("entered fetchMessageByPeppolEvent");
         try {
             Customer customer = getOrCreateCustomer(peppolEvent);
+            System.out.println("Customer customer = getOrCreateCustomer(peppolEvent); passed");
             Message message = messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId());
+            System.out.println("Message message = messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId()); passed");
             return message;
         } catch (Exception e) {
             logger.error("Failed to get customer using document: " + e.getMessage());
@@ -201,13 +215,17 @@ public class PersistenceController {
     }
 
     private Customer getOrCreateCustomer(PeppolEvent peppolEvent) {
+        System.out.println("entered getOrCreateCustomer");
         Customer customer = customerRepository.findByIdentifier(peppolEvent.getSenderId());
+        System.out.println("Customer customer = customerRepository.findByIdentifier(peppolEvent.getSenderId()); passed");
         if (customer == null) {
+            System.out.println("Creating new customer");
             customer = new Customer();
 
             customer.setName(peppolEvent.getSenderName());
             customer.setIdentifier(peppolEvent.getSenderId());
             customer = customerRepository.save(customer);
+            System.out.println("customer = customerRepository.save(customer); passed");
         }
         return customer;
     }
