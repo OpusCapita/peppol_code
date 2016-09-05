@@ -19,7 +19,7 @@ public class PeppolEvent {
     // Document specific parameters
     private String invoiceId;
     private String senderId;
-    private String senderName;
+    private String senderName = "n/a";
     private String senderCountryCode;
     private String recipientId;
     private String recipientName;
@@ -88,7 +88,9 @@ public class PeppolEvent {
     }
 
     public void setSenderName(String senderName) {
-        this.senderName = senderName;
+        if(senderName != null) {
+            this.senderName = senderName;
+        }
     }
 
     public String getRecipientId() {
