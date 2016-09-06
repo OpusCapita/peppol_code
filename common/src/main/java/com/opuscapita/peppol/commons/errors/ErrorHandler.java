@@ -73,7 +73,7 @@ public class ErrorHandler {
     }
 
     private String generateMessageDumpFileName() {
-        String uniqueSuffix = RandomStringUtils.random(5);
+        String uniqueSuffix = RandomStringUtils.randomAlphanumeric(5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd_HH.mm.ss.SSS_z_");
         return dateFormat.format(new Date()) + uniqueSuffix + ".json";
     }

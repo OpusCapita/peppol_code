@@ -33,10 +33,10 @@ public class PeppolEventDeSerializer implements JsonDeserializer<PeppolEvent> {
             put("invoiceId", false);
             put("documentType", false);
             put("recipientCountryCode", false);
-            put("recipientId", false);
+            put("recipientId", true);
             put("recipientName", false);
             put("senderCountryCode", false);
-            put("senderId", false);
+            put("senderId", true);
             put("senderName", false);
             put("sendingProtocol", false);
             put("transactionId", false);
