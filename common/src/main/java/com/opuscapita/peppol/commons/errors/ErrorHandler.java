@@ -38,7 +38,9 @@ public class ErrorHandler {
 
     public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription) {
         String dumpFileName = storeMessageToDisk(message);
+        logger.warn("Dumped errorneous message to: " + dumpFileName);
         createSncTicket(dumpFileName, customerId, e, shortDescription);
+        logger.warn("ServiceNow ticker created with reference to: " + dumpFileName);
     }
 
     protected void createSncTicket(String dumpFileName, String customerId, Exception jse, String shortDescription) {
@@ -63,7 +65,8 @@ public class ErrorHandler {
         try (FileOutputStream fos = new FileOutputStream(dumpFile)) {
             fos.write(message.getBytes());
         } catch (IOException e) {
-            logger.error("failed to store message to disk", e);
+            logger.error("Failed to store message to disk ( " + dumpFile.getAbsolutePath() + " )", e);
+            logger.error("Failed message: " + message);
         }
         return dumpFile.exists() ? dumpFile.getAbsolutePath() : "N/A";
     }
