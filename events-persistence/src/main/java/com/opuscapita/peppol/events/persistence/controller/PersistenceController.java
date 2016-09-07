@@ -41,7 +41,8 @@ public class PersistenceController {
         FileInfo fileInfo = getFileInfo(message, peppolEvent);
         setFileInfoStatus(fileInfo, peppolEvent, message);
         fileInfoRepository.save(fileInfo);
-        messageRepository.save(message);
+        Message persistedMessage = messageRepository.save(message);
+        logger.info("Message persisted with id: " + persistedMessage.getId());
     }
 
     private FileInfo getFileInfo(Message message, PeppolEvent peppolEvent) {
