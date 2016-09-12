@@ -9,6 +9,8 @@ gradle-app.setting
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 !common/libs/service-now-connector-all.jar
+!oxalis-inbound/ee/oxalis.war
+!oxalis-inbound/libs/*.jar
 
 # Cache of project
 .gradletasknamecache
