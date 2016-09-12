@@ -1,0 +1,24 @@
+
+apply plugin: 'java'
+
+jar {
+    baseName = 'oxalis-inbound'
+    version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile project (':common')
+
+    testCompile 'junit:junit:4.12'
+}

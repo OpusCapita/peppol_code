@@ -5,6 +5,7 @@ import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.inbound.amqp.InboundQueueListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -18,16 +19,21 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class InboundApp {
-    @Value("${amqp.queueName:inbound}")
+    @Value("${amqp.queue.in.name}")
     private String queueName;
 
+    private final Environment environment;
+
     @Autowired
-    private Environment environment;
+    public InboundApp(Environment environment) {
+        this.environment = environment;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(InboundApp.class, args);
     }
 
+    @SuppressWarnings("Duplicates")
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
@@ -42,6 +48,12 @@ public class InboundApp {
     @Bean
     public Gson gson() {
         return new Gson();
+    }
+
+    @Bean
+    @ConditionalOnProperty("spring.rabbitmq.host")
+    MessageListenerAdapter listenerAdapter(InboundQueueListener receiver) {
+        return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     @Bean

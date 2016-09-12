@@ -38,7 +38,7 @@ public class ErrorHandler {
 
     public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription) {
         String dumpFileName = storeMessageToDisk(message);
-        logger.warn("Dumped errorneous message to: " + dumpFileName);
+        logger.warn("Dumped erroneous message to: " + dumpFileName);
         createSncTicket(dumpFileName, customerId, e, shortDescription);
         logger.warn("ServiceNow ticket created with reference to: " + dumpFileName);
     }

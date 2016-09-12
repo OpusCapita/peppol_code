@@ -5,7 +5,7 @@ import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.internal_routing.amqp.EventQueueListener;
+import com.opuscapita.peppol.internal_routing.amqp.RoutingQueueListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -22,13 +22,18 @@ public class InternalRoutingApp {
     @Value("${amqp.queueName}")
     private String queueName;
 
+    private final Environment environment;
+
     @Autowired
-    private Environment environment;
+    public InternalRoutingApp(Environment environment) {
+        this.environment = environment;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(InternalRoutingApp.class, args);
     }
 
+    @SuppressWarnings("Duplicates")
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
@@ -42,7 +47,7 @@ public class InternalRoutingApp {
 
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
-    MessageListenerAdapter listenerAdapter(EventQueueListener receiver) {
+    MessageListenerAdapter listenerAdapter(RoutingQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
