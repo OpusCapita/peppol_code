@@ -53,7 +53,7 @@ public class InboundQueueListener {
 
     private void handleError(String message, String customerId, Exception e) {
         try {
-            errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+            errorHandler.reportToServiceNow(message, customerId, e, "Failed to process inbound file");
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", e);
         }
