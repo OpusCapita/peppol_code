@@ -19,8 +19,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
+@EnableJpaRepositories(basePackages = "com.opuscapita.peppol.events.persistence.model")
+@EnableTransactionManagement
 public class EventsPersistenceApplication {
     @Value("${amqp.queueName}")
     private String queueName;

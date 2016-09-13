@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.sql.Date;
 import java.text.ParseException;
@@ -28,16 +29,23 @@ public class PersistenceController {
     CustomerRepository customerRepository;
     @Autowired
     FileInfoRepository fileInfoRepository;
+    @Autowired
+    FailedFileInfoRepository failedFileInfoRepository;
+    @Autowired
+    SentFileInfoRepository sentFileInfoRepository;
+    @Autowired
+    ReprocessFileInfoRepository reprocessFileInfoRepository;
     @Value("${error.dir}")
     private String errorDirPath;
     @Value("${invalid.dir}")
     private String invalidDirPath;
 
+    @Transactional
     public void storePeppolEvent(PeppolEvent peppolEvent) {
         refactorIfInbound(peppolEvent);
         getAccessPoint(peppolEvent);
 
-        Message message = getMessage(peppolEvent);
+        Message message = getOrCreateMessage(peppolEvent);
         FileInfo fileInfo = getFileInfo(message, peppolEvent);
         setFileInfoStatus(fileInfo, peppolEvent, message);
         fileInfoRepository.save(fileInfo);
@@ -106,6 +114,7 @@ public class PersistenceController {
     private void addReprocessInfo(FileInfo fileInfo) {
         ReprocessFileInfo reprocessFileInfo = new ReprocessFileInfo();
         reprocessFileInfo.setReprocessedFile(fileInfo);
+        reprocessFileInfo = reprocessFileInfoRepository.save(reprocessFileInfo);
         if (fileInfo.getReprocessInfo() == null) {
             fileInfo.setReprocessInfo(new TreeSet<ReprocessFileInfo>());
         }
@@ -123,6 +132,7 @@ public class PersistenceController {
             errorMessage = errorMessage.substring(0, 1000);
         }
         failedFileInfo.setErrorMessage(errorMessage);
+        failedFileInfo = failedFileInfoRepository.save(failedFileInfo);
         if (fileInfo.getFailedInfo() == null) {
             fileInfo.setFailedInfo(new TreeSet<FailedFileInfo>());
         }
@@ -147,13 +157,15 @@ public class PersistenceController {
             sentFileInfo.setApCompanyName(getApName(peppolEvent.getCommonName()));
             sentFileInfo.setApId(getApId(peppolEvent.getCommonName()));
         }
+        sentFileInfo = sentFileInfoRepository.save(sentFileInfo);
         if (fileInfo.getSentInfo() == null) {
             fileInfo.setSentInfo(new TreeSet<SentFileInfo>());
         }
+
         fileInfo.getSentInfo().add(sentFileInfo);
     }
 
-    private Message getMessage(PeppolEvent peppolEvent) {
+    private Message getOrCreateMessage(PeppolEvent peppolEvent) {
         Message message = fetchMessageByPeppolEvent(peppolEvent);
         if (message == null) {
             Customer customer = getOrCreateCustomer(peppolEvent);
@@ -185,7 +197,7 @@ public class PersistenceController {
             } catch (Exception pass) {
                 logger.debug("Document has no due date.");
             }
-            messageRepository.save(message);
+            message = messageRepository.save(message);
         }
         return message;
     }
