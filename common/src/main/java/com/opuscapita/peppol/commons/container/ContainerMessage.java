@@ -15,13 +15,13 @@ import java.io.Serializable;
  */
 public class ContainerMessage implements Serializable {
     private final BaseDocument document;
-    private final String origin;
+    private final String metadata;
     private final Endpoint source;
     private Route route;
 
-    public ContainerMessage(@NotNull BaseDocument document, @Nullable String origin, @NotNull Endpoint source) {
+    public ContainerMessage(@NotNull BaseDocument document, @Nullable String metadata, @NotNull Endpoint source) {
         this.document = document;
-        this.origin = origin;
+        this.metadata = metadata;
         this.source = source;
     }
 
@@ -47,8 +47,8 @@ public class ContainerMessage implements Serializable {
     }
 
     @Nullable
-    public String getOrigin() {
-        return origin;
+    public String getPeppolMessageMetadata() {
+        return metadata;
     }
 
     @NotNull
