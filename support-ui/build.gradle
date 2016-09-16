@@ -3,6 +3,8 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+apply plugin: 'war'
+
 jar {
     baseName = 'support-ui'
     version = '0.0.1-SNAPSHOT'
@@ -30,4 +32,5 @@ dependencies {
     compile group: 'javax', name: 'javaee-api', version: '6.0'
     compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
     compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.2.4'
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
 }
