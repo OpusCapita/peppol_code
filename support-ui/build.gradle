@@ -40,6 +40,7 @@ dependencies {
     compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '3.2.0.RELEASE'
     compile group: 'org.springframework.security', name: 'spring-security-config', version: '3.2.0.RELEASE'
     compile group: 'org.springframework', name: 'spring-orm', version: '4.0.1.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.0.1.RELEASE'
     compile fileTree(dir: '/src/main/webapp/WEB-INF/lib/', include: '*jar')
 /*, name: 'itella-ums-client', version:'2.4'*/
 }
