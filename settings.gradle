@@ -1,2 +1,2 @@
 rootProject.name = 'next'
-include "common", "configuration-server", "validator", "testapp", "events-persistence", "eventing", "internal-routing", "inbound", "oxalis-inbound"
+include "common", "configuration-server", "validator", "testapp", "events-persistence", "eventing", "internal-routing", "inbound", "oxalis-inbound", "email-notificator"

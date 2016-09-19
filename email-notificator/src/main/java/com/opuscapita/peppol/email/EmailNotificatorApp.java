@@ -1,14 +1,11 @@
-package com.opuscapita.peppol.events.persistence;
+package com.opuscapita.peppol.email;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.commons.model.PeppolEvent;
-import com.opuscapita.peppol.commons.model.util.PeppolEventDeSerializer;
-import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
+import com.opuscapita.peppol.email.amqp.EmailQueueListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -19,23 +16,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.opuscapita.peppol.commons.model.model")
-@EnableTransactionManagement
-public class EventsPersistenceApplication {
-    @Value("${amqp.queueName}")
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol", "com.opuscapita.commons"})
+public class EmailNotificatorApp {
+    @Value("${amqp.queue.name}")
     private String queueName;
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
-    public static void main(String[] args) {
-        SpringApplication.run(EventsPersistenceApplication.class, args);
+    @Autowired
+    public EmailNotificatorApp(Environment environment) {
+        this.environment = environment;
     }
 
+    public static void main(String[] args) {
+        SpringApplication.run(EmailNotificatorApp.class, args);
+    }
+
+    @SuppressWarnings("Duplicates")
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
@@ -48,14 +46,14 @@ public class EventsPersistenceApplication {
     }
 
     @Bean
-    @ConditionalOnProperty("spring.rabbitmq.host")
-    MessageListenerAdapter listenerAdapter(EventQueueListener receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
+    public Gson gson() {
+        return new Gson();
     }
 
     @Bean
-    public Gson gson() {
-        return new GsonBuilder().registerTypeAdapter(PeppolEvent.class, new PeppolEventDeSerializer()).create();
+    @ConditionalOnProperty("spring.rabbitmq.host")
+    MessageListenerAdapter listenerAdapter(EmailQueueListener receiver) {
+        return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     @Bean
@@ -64,6 +62,7 @@ public class EventsPersistenceApplication {
     }
 
     @Bean
+    @ConditionalOnProperty("snc.enabled")
     ServiceNowConfiguration serviceNowConfiguration() {
         return new ServiceNowConfiguration(
                 environment.getProperty("snc.rest.url"),
