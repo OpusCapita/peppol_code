@@ -13,6 +13,7 @@ import java.io.Serializable;
  *
  * @author Sergejs.Roze
  */
+@SuppressWarnings("WeakerAccess")
 public class ContainerMessage implements Serializable {
     private final BaseDocument document;
     private final String metadata;
@@ -37,6 +38,9 @@ public class ContainerMessage implements Serializable {
         return source == Endpoint.PEPPOL;
     }
 
+    /**
+     * Returns customer ID depending on the direction of the message, either sender or recipient ID.
+     */
     public String getCustomerId() {
         return isInbound() ? getDocument().getRecipientId() : getDocument().getSenderId();
     }
