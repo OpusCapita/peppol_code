@@ -30,9 +30,9 @@ for (String file in dir.list()) {
     // print file + "   ->   "
     def dl = new DocumentLoader()
     //Linux Box:
-    //def result = dl.load(dn + "/" + file)
+    def result = dl.load(dn + "/" + file)
     //Windows:
-    def result = dl.load(dn + "\\" + file)
+    //def result = dl.load(dn + "\\" + file)
 
     // println result.getClass()
     if (result.class == SveFaktura1Document.class) {
