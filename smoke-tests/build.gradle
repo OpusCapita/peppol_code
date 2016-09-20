@@ -1,0 +1,22 @@
+
+apply plugin: 'groovy'
+
+
+test.onlyIf {
+    project.hasProperty('smokeTest')
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.7'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.gebish:geb-core:0.13.1'
+    testCompile 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0'
+}
+
+test {
+    systemProperties = System.properties.findAll { it.key.toString().toLowerCase().contains('proxy') }
+}
