@@ -9,26 +9,40 @@ public class SmokeTest1 {
 
     @BeforeClass
     static void setUp() {
-        println "Test it"
+        println "BeforeClass - Test it"
     }
 
-    @Before
-    void setUp2() {
-        println "Test it"
-    }
+//    @Before
+//    void setUp2() {
+//        println "Test it"
+//    }
+
+//    @Test
+//    void smokeTest11() {
+//        throw new RuntimeException()
+//    }
 
     @Test
-    void smokeTest11() {
-        throw new RuntimeException()
-    }
-
-    @Test
-    void smokeTest12() {
-
-        Browser.drive {
-            go "http://google.com"
-
+    void smokePing() {
+        HttpURLConnection connection = null;
+        try {
+            URL u = new URL("http://www.google.com/");
+            connection = (HttpURLConnection) u.openConnection();
+            connection.setRequestMethod("HEAD");
+            int code = connection.getResponseCode();
+            System.out.println("smokePing answer: " + code);
+            // You can determine on HTTP return code received. 200 is success.
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
-
 }
+
