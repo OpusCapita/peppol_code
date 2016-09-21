@@ -7,10 +7,10 @@ import org.junit.Test
 
 public class SmokeTest1 {
 
-    @BeforeClass
-    static void setUp() {
-        println "BeforeClass - Test it"
-    }
+//    @BeforeClass
+//    static void setUp() {
+//        println "BeforeClass - Test it"
+//    }
 
 //    @Before
 //    void setUp2() {
@@ -26,12 +26,13 @@ public class SmokeTest1 {
     void smokePing() {
         HttpURLConnection connection = null;
         try {
-            URL u = new URL("http://www.google.com/");
+            URL u = new URL("http://peppol.itella.net/login");
             connection = (HttpURLConnection) u.openConnection();
             connection.setRequestMethod("HEAD");
             int code = connection.getResponseCode();
             System.out.println("smokePing answer: " + code);
             // You can determine on HTTP return code received. 200 is success.
+            assert code == 405
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
