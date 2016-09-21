@@ -18,15 +18,22 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.9.Final'
-    compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.0.9.Final'
-    /*compile group: 'org.hibernate', name: 'hibernate-ehcache', version:'5.0.9.Final'*/
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '4.2.4.Final'
+    compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.2.4.Final'
+    compile group: 'org.hibernate', name: 'hibernate-ehcache', version: '4.2.4.Final'
+    compile group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.25'
+    compile group: 'net.sf.ehcache', name: 'ehcache-core', version: '2.6.9'
+
     compile(group: 'org.springframework', name: 'spring-core', version: '4.0.1.RELEASE') {
         exclude(module: 'commons-logging')
     }
     compile(group: 'org.springframework', name: 'spring-context', version: '4.0.1.RELEASE') {
         exclude(module: 'commons-logging')
     }
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+    compile group: 'org.springframework.amqp', name: 'spring-rabbit', version: '1.2.1.RELEASE'
+    compile group: 'com.rabbitmq', name: 'amqp-client', version: '3.0.4'
     compile group: 'log4j', name: 'log4j', version: '1.2.16'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.5'
     providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
@@ -42,5 +49,4 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-orm', version: '4.0.1.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '4.0.1.RELEASE'
     compile fileTree(dir: '/src/main/webapp/WEB-INF/lib/', include: '*jar')
-/*, name: 'itella-ums-client', version:'2.4'*/
 }

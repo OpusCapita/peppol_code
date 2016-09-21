@@ -24,7 +24,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 //@EnableCaching
-@ComponentScan(basePackages = {"com.opuscapita.peppol.support-ui"},
+@ComponentScan(basePackages = {"com.opuscapita.peppol.support.ui"},
         excludeFilters = {@ComponentScan.Filter(type = FilterType.CUSTOM, value = {WebPackageFilter.class})})
 @PropertySource({"file:${PEPPOL_CONFIG_PATH}/jdbc.properties", "file:${PEPPOL_CONFIG_PATH}/config.properties"})
 public class RootConfiguration {

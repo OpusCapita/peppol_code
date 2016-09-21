@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
  * To change this template use File | Settings | File Templates.
  */
 @Configuration
-@ComponentScan(basePackages = {"com.opuscapita.peppol.persistence.controller"},
+@ComponentScan(basePackages = {"com.opuscapita.peppol.support.ui.controller"},
         excludeFilters = {@ComponentScan.Filter(type = FilterType.CUSTOM, value = {WebPackageFilter.class})})
 @EnableWebMvc
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
