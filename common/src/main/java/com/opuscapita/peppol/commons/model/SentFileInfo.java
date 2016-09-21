@@ -17,37 +17,30 @@ import java.sql.Timestamp;
 @Table(name = "sent")
 public class SentFileInfo implements Comparable<SentFileInfo> {
 
-    @Override
-    public int compareTo(SentFileInfo sentFileInfo) {
-        return TimeStampComparison.compare(this.getTimestamp(), sentFileInfo.getTimestamp());
-    }
-
     @Id
     @Column(name = "id")
     @GeneratedValue
     private Integer id;
-
     @ManyToOne
     @JoinColumn(name = "file_id")
     private FileInfo sentFile;
-
     @Column(name = "ts")
     private Timestamp timestamp;
-
     @Column(name = "forced")
     private boolean forced;
-
     @Column(name = "transmission_id")
     private String transmissionId;
-
     @Column(name = "ap_id")
     private String apId;
-
     @Column(name = "ap_company_name")
     private String apCompanyName;
-
     @Column(name = "ap_protocol")
     private String apProtocol;
+
+    @Override
+    public int compareTo(SentFileInfo sentFileInfo) {
+        return TimeStampComparison.compare(this.getTimestamp(), sentFileInfo.getTimestamp());
+    }
 
     public Integer getId() {
         return id;
@@ -111,5 +104,19 @@ public class SentFileInfo implements Comparable<SentFileInfo> {
 
     public void setApProtocol(String apProtocol) {
         this.apProtocol = apProtocol;
+    }
+
+    @Override
+    public String toString() {
+        return "SentFileInfo{" +
+                "id=" + id +
+                ", sentFile=" + sentFile +
+                ", timestamp=" + timestamp +
+                ", forced=" + forced +
+                ", transmissionId='" + transmissionId + '\'' +
+                ", apId='" + apId + '\'' +
+                ", apCompanyName='" + apCompanyName + '\'' +
+                ", apProtocol='" + apProtocol + '\'' +
+                '}';
     }
 }
