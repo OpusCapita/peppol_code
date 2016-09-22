@@ -1,5 +1,6 @@
-package com.opuscapita.peppol.commons.model;
+package com.opuscapita.peppol.email.model;
 
+import com.opuscapita.peppol.commons.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

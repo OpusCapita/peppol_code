@@ -1,5 +1,6 @@
-package com.opuscapita.peppol.commons.model;
+package com.opuscapita.peppol.events.persistence.model;
 
+import com.opuscapita.peppol.commons.model.AccessPoint;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

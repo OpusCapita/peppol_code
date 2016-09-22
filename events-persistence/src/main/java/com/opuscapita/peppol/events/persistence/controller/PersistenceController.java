@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.events.persistence.controller;
 
 import com.opuscapita.peppol.commons.model.*;
+import com.opuscapita.peppol.events.persistence.model.AccessPointRepository;
+import com.opuscapita.peppol.events.persistence.model.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
