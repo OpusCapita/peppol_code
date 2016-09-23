@@ -36,7 +36,6 @@ public class RoutingQueueListener {
     @SuppressWarnings("unused")
     public synchronized void receiveMessage(byte[] data) {
         String message = new String(data);
-        logger.debug("Received message: " + message);
 
         try {
             ContainerMessage cm = gson.fromJson(message, ContainerMessage.class);

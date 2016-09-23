@@ -6,9 +6,9 @@ import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.model.PeppolEvent;
+import com.opuscapita.peppol.commons.model.util.PeppolEventDeSerializer;
 import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
-import com.opuscapita.peppol.events.persistence.model.PeppolEvent;
-import com.opuscapita.peppol.events.persistence.model.util.PeppolEventDeSerializer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -17,13 +17,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.opuscapita.peppol.events.persistence.model")
+@ComponentScan(basePackages = {"com.opuscapita.peppol.events.persistence", "com.opuscapita.peppol.events.persistence.model"})
+@EntityScan(basePackages = "com.opuscapita.peppol.events.persistence.model")
 @EnableTransactionManagement
 public class EventsPersistenceApplication {
     @Value("${amqp.queueName}")
@@ -31,6 +35,10 @@ public class EventsPersistenceApplication {
 
     @Autowired
     private Environment environment;
+
+    public EventsPersistenceApplication() {
+        System.out.println("EventsPersistenceApplication has been created");
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(EventsPersistenceApplication.class, args);

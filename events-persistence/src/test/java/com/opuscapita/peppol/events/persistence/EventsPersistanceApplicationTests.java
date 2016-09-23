@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.events.persistence;
 
+import com.opuscapita.peppol.commons.model.MessageRepository;
 import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
-import com.opuscapita.peppol.events.persistence.model.MessageRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;

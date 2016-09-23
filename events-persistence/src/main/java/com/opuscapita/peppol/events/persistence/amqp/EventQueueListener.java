@@ -2,8 +2,8 @@ package com.opuscapita.peppol.events.persistence.amqp;
 
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.events.persistence.controller.PersistenceController;
-import com.opuscapita.peppol.events.persistence.model.PeppolEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
