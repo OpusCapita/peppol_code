@@ -1,0 +1,18 @@
+<div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        Select <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu" style="text-align: left;">
+        <li><a ng-click="params.filter()[name] = 'failed'" href="#">Failed</a></li>
+        <li><a ng-click="params.filter()[name] = 'invalid'" href="#">Invalid</a></li>
+        <li><a ng-click="params.filter()[name] = 'processing'" href="#">Processing</a></li>
+        <li><a ng-click="params.filter()[name] = 'reprocessed'" href="#">Reprocessed</a></li>
+        <li><a ng-click="params.filter()[name] = 'sent'" href="#">Delivered</a></li>
+        <li><a ng-click="params.filter()[name] = 'resolved'" href="#">Resolved</a></li>
+        <li class="divider"></li>
+        <li><a ng-click="params.filter()[name] = ''" href="#">Deselect</a></li>
+    </ul>
+</div>
+
+<input type="text" name="{{column.filterName}}" ng-model="params.filter()[name]" ng-if="filter == 'text'"
+       class="input-filter form-control"/>
