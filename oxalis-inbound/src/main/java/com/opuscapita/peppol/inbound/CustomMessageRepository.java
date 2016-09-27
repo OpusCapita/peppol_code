@@ -21,6 +21,7 @@ import java.util.Properties;
  */
 public class CustomMessageRepository extends SimpleMessageRepository {
     private final static String INBOUND_OUTPUT_DIR = "inbound.output.dir";
+    private final static String INBOUND_MQ_EXCHANGE = "inbound.output.mq.exchange";
     private final static String INBOUND_MQ_QUEUE = "inbound.output.mq.queue";
     private final static String INBOUND_MQ_HOST = "inbound.output.mq.host";
     private final static String INBOUND_MQ_PORT = "inbound.output.mq.port";
@@ -80,7 +81,7 @@ public class CustomMessageRepository extends SimpleMessageRepository {
         MessageQueue mq = new RabbitMq();
 
         try {
-            mq.send(mqProperties, properties.getProperty(INBOUND_MQ_QUEUE), baseName);
+            mq.send(mqProperties, properties.getProperty(INBOUND_MQ_EXCHANGE), properties.getProperty(INBOUND_MQ_QUEUE), baseName);
             logger.info("Received message " + baseName + ".xml");
         } catch (Exception e) {
             logger.error("Failed to send message to MQ: " + mqProperties, e);
