@@ -36,10 +36,6 @@ public class EventsPersistenceApplication {
     @Autowired
     private Environment environment;
 
-    public EventsPersistenceApplication() {
-        System.out.println("EventsPersistenceApplication has been created");
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(EventsPersistenceApplication.class, args);
     }
