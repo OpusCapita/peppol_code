@@ -54,8 +54,6 @@ public class DirectoryChecker {
         Date earlier = DateUtils.addSeconds(new Date(), seconds);
         AgeFileFilter ageFileFilter = new AgeFileFilter(earlier);
 
-        if (true) throw new IllegalStateException("oops");
-
         Iterator<File> files = FileUtils.iterateFiles(new File(directory), ageFileFilter, null);
         while (files.hasNext()) {
             File next = files.next();
@@ -69,6 +67,17 @@ public class DirectoryChecker {
                 String subject = normalizeSubjects(subjects);
                 emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
                 logger.info("E-mail " + baseName + " successfully sent");
+
+                if (StringUtils.isNotBlank(sent)) {
+                    try {
+                        File destination = new File(sent);
+                        FileUtils.moveFileToDirectory(new File(baseName + EXT_TO), destination, true);
+                        FileUtils.moveFileToDirectory(new File(baseName + EXT_SUBJECT), destination, false);
+                        FileUtils.moveFileToDirectory(new File(baseName + EXT_BODY), destination, false);
+                    } catch (Exception e) {
+                        logger.error("Failed to create backup of sent e-mails: ", e);
+                    }
+                }
             }
         }
     }

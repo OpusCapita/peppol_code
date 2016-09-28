@@ -9,9 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,20 +19,14 @@ import org.springframework.stereotype.Component;
 public class EmailQueueListener {
     private final static Logger logger = LoggerFactory.getLogger(EmailQueueListener.class);
 
-    @Value("${amqp.queue.out.name}")
-    private String queueName;
-
     private final EmailController controller;
     private final ErrorHandler errorHandler;
-    private final RabbitTemplate rabbitTemplate;
     private final Gson gson;
 
     @Autowired
-    public EmailQueueListener(@Nullable ErrorHandler errorHandler, @NotNull EmailController controller,
-            @NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
+    public EmailQueueListener(@Nullable ErrorHandler errorHandler, @NotNull EmailController controller, @NotNull Gson gson) {
         this.errorHandler = errorHandler;
         this.controller = controller;
-        this.rabbitTemplate = rabbitTemplate;
         this.gson = gson;
     }
 
@@ -54,7 +46,10 @@ public class EmailQueueListener {
 
     private void handleError(String message, String customerId, Exception e) {
         try {
-            errorHandler.reportToServiceNow(message, customerId, e, "Failed to process e-mail message");
+            logger.error("Failed to process e-mail message: " + message + ", customerId = " + customerId, e);
+            if (errorHandler != null) {
+                errorHandler.reportToServiceNow(message, customerId, e, "Failed to process e-mail message");
+            }
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", e);
         }
