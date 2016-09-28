@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,7 @@ import static com.opuscapita.peppol.email.controller.EmailController.*;
  * @author Sergejs.Roze
  */
 @Component
+@ConditionalOnProperty("email.scheduler.enabled")
 public class DirectoryChecker {
     private final static Logger logger = LoggerFactory.getLogger(DirectoryChecker.class);
 
@@ -37,7 +39,7 @@ public class DirectoryChecker {
     @Value("${email.sent.directory?:''}")
     private String sent;
 
-    @Value("${email.wait.seconds?:120")
+    @Value("${email.wait.seconds?:120}")
     private int seconds;
 
     private final EmailSender emailSender;
@@ -52,17 +54,21 @@ public class DirectoryChecker {
         Date earlier = DateUtils.addSeconds(new Date(), seconds);
         AgeFileFilter ageFileFilter = new AgeFileFilter(earlier);
 
+        if (true) throw new IllegalStateException("oops");
+
         Iterator<File> files = FileUtils.iterateFiles(new File(directory), ageFileFilter, null);
         while (files.hasNext()) {
             File next = files.next();
             if (next.getName().endsWith(EXT_TO)) {
                 String baseName = FilenameUtils.removeExtension(next.getAbsolutePath());
+                logger.info("Sending an e-mail generated from: " + baseName);
 
                 String to = FileUtils.readFileToString(next, Charset.defaultCharset());
                 List<String> subjects = FileUtils.readLines(new File(baseName + EXT_SUBJECT), Charset.defaultCharset());
                 List<String> body = FileUtils.readLines(new File(baseName + EXT_BODY), Charset.defaultCharset());
                 String subject = normalizeSubjects(subjects);
                 emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
+                logger.info("E-mail " + baseName + " successfully sent");
             }
         }
     }

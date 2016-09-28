@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.email.controller.EmailController;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -29,8 +30,8 @@ public class EmailQueueListener {
     private final Gson gson;
 
     @Autowired
-    public EmailQueueListener(
-            @NotNull ErrorHandler errorHandler, @NotNull EmailController controller, @NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
+    public EmailQueueListener(@Nullable ErrorHandler errorHandler, @NotNull EmailController controller,
+            @NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
         this.errorHandler = errorHandler;
         this.controller = controller;
         this.rabbitTemplate = rabbitTemplate;
