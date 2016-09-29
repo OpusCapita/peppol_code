@@ -1,3 +1,4 @@
 rootProject.name = 'testapp'
 include ':common'
 include ':internal-routing'
+include ':email-notificator'

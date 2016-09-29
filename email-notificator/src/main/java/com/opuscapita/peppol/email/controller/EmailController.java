@@ -42,12 +42,18 @@ public class EmailController {
     }
 
     public void processMessage(@NotNull ContainerMessage cm) throws Exception {
+        if (!(cm.getDocument() instanceof InvalidDocument)) {
+            logger.error("Expected invalid document while received " + cm.getDocument().getClass().getName());
+            throw new IllegalStateException("Message is not in invalid state");
+        }
+
         String customerId = cm.getCustomerId();
         if (StringUtils.isBlank(customerId)) {
             processNoCustomer(cm);
         }
 
         Customer customer = customerRepository.findByIdentifier(customerId);
+
         if (customer == null) {
             processNoCustomer(cm);
             return;

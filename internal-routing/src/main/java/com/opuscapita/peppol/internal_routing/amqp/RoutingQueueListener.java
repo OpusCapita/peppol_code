@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.internal_routing.controller.RoutingController;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -25,7 +26,7 @@ public class RoutingQueueListener {
     private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public RoutingQueueListener(@NotNull Gson gson, @NotNull ErrorHandler errorHandler,
+    public RoutingQueueListener(@NotNull Gson gson, @Nullable ErrorHandler errorHandler,
                                 @NotNull RoutingController controller, @NotNull RabbitTemplate rabbitTemplate) {
         this.gson = gson;
         this.errorHandler = errorHandler;
