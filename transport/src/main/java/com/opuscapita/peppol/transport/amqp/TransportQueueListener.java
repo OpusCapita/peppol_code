@@ -1,37 +1,35 @@
-package com.opuscapita.peppol.internal_routing.amqp;
+package com.opuscapita.peppol.transport.amqp;
 
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.internal_routing.controller.RoutingController;
+import com.opuscapita.peppol.transport.contoller.TransportController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Sergejs.Roze
  */
 @Component
-public class RoutingQueueListener {
-    private static Logger logger = LoggerFactory.getLogger(RoutingQueueListener.class);
+@Lazy
+public class TransportQueueListener {
+    private static Logger logger = LoggerFactory.getLogger(TransportQueueListener.class);
 
-    private final RoutingController controller;
+    private final TransportController controller;
     private final ErrorHandler errorHandler;
     private final Gson gson;
-    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public RoutingQueueListener(@NotNull Gson gson, @Nullable ErrorHandler errorHandler,
-                                @NotNull RoutingController controller, @NotNull RabbitTemplate rabbitTemplate) {
+    public TransportQueueListener(@NotNull Gson gson, @Nullable ErrorHandler errorHandler, @NotNull TransportController controller) {
         this.gson = gson;
         this.errorHandler = errorHandler;
         this.controller = controller;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     @SuppressWarnings("unused")
@@ -39,13 +37,13 @@ public class RoutingQueueListener {
         String message = new String(data);
 
         try {
+            logger.debug("Message received");
             ContainerMessage cm = gson.fromJson(message, ContainerMessage.class);
-            cm = controller.loadRoute(cm);
-            logger.debug("Route set to " + cm.getRoute());
-            rabbitTemplate.convertAndSend(cm.getRoute().pop("Route defined: " + cm.getRoute()), cm);
+            controller.storeMessage(cm);
+            logger.debug("Message stored");
         } catch (Exception e) {
-            logger.error("Failed to read message: " + e.getMessage(), e);
-            handleError("Internal routing failed to process received AMQP message", "", e);
+            logger.error("Failed to store message: " + e.getMessage(), e);
+            handleError("Failed to store message", "", e);
         }
 
     }
@@ -55,11 +53,12 @@ public class RoutingQueueListener {
             if (errorHandler != null) {
                 errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
             } else {
-                logger.error(message + ", customerId: " + customerId, e);
+                logger.error(message + ", customer: " + customerId, e);
             }
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", e);
         }
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
+
 }
