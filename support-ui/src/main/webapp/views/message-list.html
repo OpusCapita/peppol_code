@@ -39,7 +39,7 @@
                     ng-click="showMessageInfo(msg)">
                     <message-status msg="msg"></message-status>
                 </td>
-                <td data-title="'Recipient'" sortable="'recipientId'" filter="{ 'recipientId': 'text' }"
+                <td data-title="getRecipientDataTitle()" sortable="'recipientId'" filter="{ 'recipientId': 'text' }"
                     style="width: 15%;" ng-click="showMessageInfo(msg)">
                     <span class="glyphicon"
                           ng-class="{ 'glyphicon-expand': !msg.$selected, 'glyphicon-collapse-down': msg.$selected }"></span>
