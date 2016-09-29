@@ -3,6 +3,7 @@ package com.opuscapita.peppol.testapp;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.opuscapita.commons.servicenow.ServiceNow;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -50,7 +51,13 @@ public class TestApp implements CommandLineRunner {
     }
 
     @Bean
+    public ErrorHandler errorHandler() {
+        return null;
+    }
+
+    @Bean
     public ServiceNow serviceNowRest() {
         return sncEntity -> {};
     }
+
 }

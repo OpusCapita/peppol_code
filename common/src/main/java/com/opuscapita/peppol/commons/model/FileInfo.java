@@ -20,41 +20,28 @@ import java.util.SortedSet;
 @Table(name = "files")
 public class FileInfo implements Comparable<FileInfo> {
 
-    @Override
-    public int compareTo(FileInfo fileInfo) {
-        return TimeStampComparison.compare(this.getArrivedTimeStamp(), fileInfo.getArrivedTimeStamp());
-    }
-
     @Id
     @Column(name = "id")
     @GeneratedValue
     private Integer id;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "message_id")
     private Message message;
-
     @Column(name = "filename")
     private String filename;
-
     @Column(name = "file_size")
     private Long fileSize;
-
     @Column(name = "arrived_ts")
     private Timestamp arrivedTimeStamp;
-
     @Column(name = "duplicate")
     private boolean duplicate;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "sentFile")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "sentFile", cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type = SortType.NATURAL)
     private SortedSet<SentFileInfo> sentInfo;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "failedFile")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "failedFile", cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type = SortType.NATURAL)
     private SortedSet<FailedFileInfo> failedInfo;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "reprocessedFile")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "reprocessedFile", cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type = SortType.NATURAL)
     private SortedSet<ReprocessFileInfo> reprocessInfo;
 
@@ -65,6 +52,11 @@ public class FileInfo implements Comparable<FileInfo> {
         this.filename = file.getName();
         this.fileSize = file.length();
         this.arrivedTimeStamp = new Timestamp(file.lastModified());
+    }
+
+    @Override
+    public int compareTo(FileInfo fileInfo) {
+        return TimeStampComparison.compare(this.getArrivedTimeStamp(), fileInfo.getArrivedTimeStamp());
     }
 
     public Integer getId() {
