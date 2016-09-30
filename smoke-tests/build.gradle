@@ -1,9 +1,16 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.hidetake:gradle-ssh-plugin:2.7.0"
+    }
+}
 
 apply plugin: 'groovy'
 apply plugin: 'java'
 apply plugin: 'org.hidetake.ssh'
-
-
 
 test.onlyIf {
     project.hasProperty('smokeTest')
