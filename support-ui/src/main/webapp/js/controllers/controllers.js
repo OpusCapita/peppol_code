@@ -372,7 +372,11 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             comparingDate.setMonth(comparingDate.getMonth() - 3);
             console.log("Timestamp diff: " + String(comparingDate.getTime() - timestamp));
             return timestamp > comparingDate.getTime();
-        }
+        };
+
+        $scope.getRecipientDataTitle = function () {
+            return location.pathname.includes("/inbound") ? "Sender" : "Recipient";
+        };
     }]);
 
 var ModalInstanceCtrl = ['$scope', '$modalInstance', 'messages', function ($scope, $modalInstance, messages) {

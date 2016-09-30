@@ -42,8 +42,6 @@ public abstract class BaseDocument {
     private Document document;
     private String fileName;
 
-    private Archetype archetype;
-
     private Node root;
     private Node sbdh;
 
@@ -156,7 +154,7 @@ public abstract class BaseDocument {
         this.document = document;
     }
 
-    protected void setFileName(String fileName) {
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 

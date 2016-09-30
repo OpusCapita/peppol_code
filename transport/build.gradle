@@ -4,7 +4,7 @@ buildscript {
     }
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/snapshot" }
+        // maven { url "https://repo.spring.io/snapshot" }
         maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
@@ -17,7 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'email-notificator'
+    baseName = 'transport'
     version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -25,7 +25,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven { url "https://repo.spring.io/snapshot" }
+    // maven { url "https://repo.spring.io/snapshot" }
     maven { url "https://repo.spring.io/milestone" }
 }
 
@@ -33,13 +33,17 @@ repositories {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-amqp'
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile 'org.springframework.boot:spring-boot-starter-jdbc'
-    compile 'org.springframework.boot:spring-boot-starter-mail'
-
     compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
-    compile project(':common')
-    // testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile project (':common')
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+
+eclipse {
+    classpath {
+        containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+        containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+    }
 }

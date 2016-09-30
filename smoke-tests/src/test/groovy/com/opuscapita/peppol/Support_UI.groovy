@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 
-public class SmokeTest1 {
+public class SupportUItest {
 
 //    @BeforeClass
 //    static void setUp() {
@@ -23,7 +23,7 @@ public class SmokeTest1 {
 //    }
 
     @Test
-    void smokePing() {
+    void PingUI() {
         HttpURLConnection connection = null;
         try {
             URL u = new URL("http://peppol.itella.net/login");

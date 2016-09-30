@@ -1,43 +1,37 @@
-package com.opuscapita.peppol.events.persistence;
+package com.opuscapita.peppol.transport;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.commons.model.PeppolEvent;
-import com.opuscapita.peppol.commons.model.util.PeppolEventDeSerializer;
-import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
+import com.opuscapita.peppol.transport.amqp.TransportQueueListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.opuscapita.peppol.events.persistence.model")
-@ComponentScan(basePackages = {"com.opuscapita.peppol.events.persistence", "com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons.model"})
-@EntityScan(basePackages = {"com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons.model"})
-@EnableTransactionManagement
-public class EventsPersistenceApplication {
-    @Value("${amqp.queueName}")
+/**
+ * @author Sergejs.Roze
+ */
+public class TransportApp {
+    @Value("${amqp.queue.name}")
     private String queueName;
 
+    private final Environment environment;
+
     @Autowired
-    private Environment environment;
+    public TransportApp(Environment environment) {
+        this.environment = environment;
+    }
 
     public static void main(String[] args) {
-        SpringApplication.run(EventsPersistenceApplication.class, args);
+        SpringApplication.run(TransportApp.class, args);
     }
 
     @SuppressWarnings("Duplicates")
@@ -54,13 +48,13 @@ public class EventsPersistenceApplication {
 
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
-    MessageListenerAdapter listenerAdapter(EventQueueListener receiver) {
+    MessageListenerAdapter listenerAdapter(TransportQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     @Bean
     public Gson gson() {
-        return new GsonBuilder().registerTypeAdapter(PeppolEvent.class, new PeppolEventDeSerializer()).create();
+        return new Gson();
     }
 
     @Bean
@@ -84,4 +78,5 @@ public class EventsPersistenceApplication {
     public ServiceNow serviceNowRest() {
         return new ServiceNowREST(serviceNowConfiguration());
     }
+
 }

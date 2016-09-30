@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,7 @@ import static com.opuscapita.peppol.email.controller.EmailController.*;
  * @author Sergejs.Roze
  */
 @Component
+@ConditionalOnProperty("email.scheduler.enabled")
 public class DirectoryChecker {
     private final static Logger logger = LoggerFactory.getLogger(DirectoryChecker.class);
 
@@ -37,7 +39,7 @@ public class DirectoryChecker {
     @Value("${email.sent.directory?:''}")
     private String sent;
 
-    @Value("${email.wait.seconds?:120")
+    @Value("${email.wait.seconds?:120}")
     private int seconds;
 
     private final EmailSender emailSender;
@@ -57,13 +59,38 @@ public class DirectoryChecker {
             File next = files.next();
             if (next.getName().endsWith(EXT_TO)) {
                 String baseName = FilenameUtils.removeExtension(next.getAbsolutePath());
+                logger.info("Sending an e-mail generated from: " + baseName);
 
                 String to = FileUtils.readFileToString(next, Charset.defaultCharset());
                 List<String> subjects = FileUtils.readLines(new File(baseName + EXT_SUBJECT), Charset.defaultCharset());
                 List<String> body = FileUtils.readLines(new File(baseName + EXT_BODY), Charset.defaultCharset());
                 String subject = normalizeSubjects(subjects);
                 emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
+                logger.info("E-mail " + baseName + " successfully sent");
+
+                if (StringUtils.isNotBlank(sent)) {
+                    try {
+                        File destination = new File(sent);
+                        FileUtils.moveFileToDirectory(new File(baseName + EXT_TO), destination, true);
+                        FileUtils.moveFileToDirectory(new File(baseName + EXT_SUBJECT), destination, false);
+                        FileUtils.moveFileToDirectory(new File(baseName + EXT_BODY), destination, false);
+                    } catch (Exception e) {
+                        logger.error("Failed to create backup of sent e-mails: ", e);
+                    }
+                }
+
+                delete(baseName + EXT_TO);
+                delete(baseName + EXT_SUBJECT);
+                delete(baseName + EXT_BODY);
             }
+        }
+    }
+
+    private void delete(String fileName) throws IOException {
+        boolean deleted = new File(fileName).delete();
+        if (!deleted) {
+            logger.error("Failed to delete file: " + fileName);
+            throw new IOException("Failed to delete file: " + fileName);
         }
     }
 

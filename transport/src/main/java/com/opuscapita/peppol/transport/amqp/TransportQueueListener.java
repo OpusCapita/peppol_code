@@ -1,9 +1,9 @@
-package com.opuscapita.peppol.email.amqp;
+package com.opuscapita.peppol.transport.amqp;
 
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.email.controller.EmailController;
+import com.opuscapita.peppol.transport.contoller.TransportController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -18,18 +18,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Lazy
-public class EmailQueueListener {
-    private final static Logger logger = LoggerFactory.getLogger(EmailQueueListener.class);
+public class TransportQueueListener {
+    private static Logger logger = LoggerFactory.getLogger(TransportQueueListener.class);
 
-    private final EmailController controller;
+    private final TransportController controller;
     private final ErrorHandler errorHandler;
     private final Gson gson;
 
     @Autowired
-    public EmailQueueListener(@Nullable ErrorHandler errorHandler, @NotNull EmailController controller, @NotNull Gson gson) {
+    public TransportQueueListener(@NotNull Gson gson, @Nullable ErrorHandler errorHandler, @NotNull TransportController controller) {
+        this.gson = gson;
         this.errorHandler = errorHandler;
         this.controller = controller;
-        this.gson = gson;
     }
 
     @SuppressWarnings("unused")
@@ -37,24 +37,28 @@ public class EmailQueueListener {
         String message = new String(data);
 
         try {
+            logger.debug("Message received");
             ContainerMessage cm = gson.fromJson(message, ContainerMessage.class);
-            controller.processMessage(cm);
-            logger.info("E-mail message stored for processing");
+            controller.storeMessage(cm);
+            logger.debug("Message stored");
         } catch (Exception e) {
-            logger.error("Failed to process e-mail message", e);
-            handleError("Failed to process e-mail message", "n/a", e);
+            logger.error("Failed to store message: " + e.getMessage(), e);
+            handleError("Failed to store message", "", e);
         }
+
     }
 
     private void handleError(String message, String customerId, Exception e) {
         try {
-            logger.error("Failed to process e-mail message: " + message + ", customerId = " + customerId, e);
             if (errorHandler != null) {
-                errorHandler.reportToServiceNow(message, customerId, e, "Failed to process e-mail message");
+                errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+            } else {
+                logger.error(message + ", customer: " + customerId, e);
             }
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", e);
         }
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
+
 }

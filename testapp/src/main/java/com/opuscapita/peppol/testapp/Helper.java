@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.testapp;
 
 import com.opuscapita.peppol.internal_routing.controller.RoutingController;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -17,8 +18,13 @@ public class Helper {
     private final ApplicationContext context;
 
     @Autowired
-    public Helper(ApplicationContext context) {
+    public Helper(@NotNull ApplicationContext context) {
         this.context = context;
+    }
+
+    @NotNull
+    public ApplicationContext getContext() {
+        return context;
     }
 
     public RoutingController getRoutingController() {
