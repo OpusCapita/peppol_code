@@ -1,5 +1,8 @@
 
 apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'org.hidetake.ssh'
+
 
 
 test.onlyIf {
@@ -8,6 +11,7 @@ test.onlyIf {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -15,6 +19,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.gebish:geb-core:0.13.1'
     testCompile 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0'
+    testCompile 'org.hidetake:gradle-ssh-plugin:2.7.0'
 }
 
 test {
