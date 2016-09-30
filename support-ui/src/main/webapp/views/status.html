@@ -1,0 +1,13 @@
+<div class="span6">
+
+    <h1>Queue list:</h1>
+
+    <div ng-repeat="queue in queues">
+        {{queue.queueName}} - {{queue.size}} (Consumers - {{queue.consumers}})
+    </div>
+    <br/>
+
+    <div>
+        <p>{{quartz.status}}</p>
+    </div>
+</div>

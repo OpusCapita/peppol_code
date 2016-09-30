@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.opuscapita.peppol.events.persistence.model")
-@ComponentScan(basePackages = {"com.opuscapita.peppol.events.persistence", "com.opuscapita.peppol.events.persistence.model"})
-@EntityScan(basePackages = "com.opuscapita.peppol.events.persistence.model")
+@ComponentScan(basePackages = {"com.opuscapita.peppol.events.persistence", "com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons.model"})
+@EntityScan(basePackages = {"com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons.model"})
 @EnableTransactionManagement
 public class EventsPersistenceApplication {
     @Value("${amqp.queueName}")
@@ -36,14 +36,11 @@ public class EventsPersistenceApplication {
     @Autowired
     private Environment environment;
 
-    public EventsPersistenceApplication() {
-        System.out.println("EventsPersistenceApplication has been created");
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(EventsPersistenceApplication.class, args);
     }
 
+    @SuppressWarnings("Duplicates")
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
@@ -72,6 +69,7 @@ public class EventsPersistenceApplication {
     }
 
     @Bean
+    @ConditionalOnProperty("snc.enabled")
     ServiceNowConfiguration serviceNowConfiguration() {
         return new ServiceNowConfiguration(
                 environment.getProperty("snc.rest.url"),

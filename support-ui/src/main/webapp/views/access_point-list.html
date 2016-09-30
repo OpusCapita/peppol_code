@@ -1,0 +1,43 @@
+<div class="clearfix"></div>
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+<div loading-container="tableParams.settings().$loading">
+    <table ng-table="tableParams" show-filter="true" class="table custom-table">
+        <tr ng-repeat="accessPoint in $data">
+            <td data-title="'Access Point ID'" filter="{ 'accessPointId': 'text' }" sortable="'accessPointId'">
+                {{accessPoint.accessPointId}}
+            </td>
+            <td data-title="'Access Point Name'" filter="{ 'accessPointName': 'text' }" sortable="'accessPointName'">
+                <span ng-if="!accessPoint.$edit">{{accessPoint.accessPointName}}</span>
+
+                <div ng-if="accessPoint.$edit"><input class="form-control" type="text"
+                                                      ng-model="accessPoint.accessPointName"/>
+                </div>
+            </td>
+            <td data-title="'Email List'" filter="{ 'emailList': 'text' }" sortable="'emailList'">
+                <span ng-if="!accessPoint.$edit">{{showEmails(accessPoint.emailList)}}</span>
+
+                <div ng-if="accessPoint.$edit"><input class="form-control" type="text"
+                                                      ng-model="accessPoint.emailList"/>
+                </div>
+            </td>
+
+            <td data-title="'Contact Person'" filter="{ 'contactPerson': 'text' }" sortable="'contactPerson'">
+                <span ng-if="!accessPoint.$edit">{{accessPoint.contactPerson}}</span>
+
+                <div ng-if="accessPoint.$edit"><input class="form-control" type="text"
+                                                      ng-model="accessPoint.contactPerson"/>
+                </div>
+            </td>
+            <td data-title="'Actions'" style="width: 15%">
+                <!--<a ng-if="!accessPoint.$edit" href="/access_point/{{accessPoint.id}}/messages" class="btn btn-info btn-s">Show
+                    messages</a>-->
+                <a ng-if="!accessPoint.$edit" href="" class="btn btn-default btn-s"
+                   ng-click="updateAccessPoint(accessPoint)">Edit</a>
+                <a ng-if="accessPoint.$edit" href="" class="btn btn-success btn-s"
+                   ng-click="saveAccessPointChanges(accessPoint)">Save</a>
+                <a ng-if="accessPoint.$edit" href="" class="btn btn-danger btn-s"
+                   ng-click="reverseChanges(accessPoint)">Cancel</a>
+            </td>
+        </tr>
+    </table>
+</div>

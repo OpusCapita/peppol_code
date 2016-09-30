@@ -4,7 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.model.Customer;
-import com.opuscapita.peppol.commons.model.CustomerRepository;
+import com.opuscapita.peppol.email.model.CustomerRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -22,6 +23,7 @@ import java.io.*;
  * @author Sergejs.Roze
  */
 @Component
+@Lazy
 public class EmailController {
     private final static Logger logger = LoggerFactory.getLogger(EmailController.class);
 
@@ -42,12 +44,18 @@ public class EmailController {
     }
 
     public void processMessage(@NotNull ContainerMessage cm) throws Exception {
+        if (!(cm.getDocument() instanceof InvalidDocument)) {
+            logger.error("Expected invalid document while received " + cm.getDocument().getClass().getName());
+            throw new IllegalStateException("Message is not in invalid state");
+        }
+
         String customerId = cm.getCustomerId();
         if (StringUtils.isBlank(customerId)) {
             processNoCustomer(cm);
         }
 
         Customer customer = customerRepository.findByIdentifier(customerId);
+
         if (customer == null) {
             processNoCustomer(cm);
             return;

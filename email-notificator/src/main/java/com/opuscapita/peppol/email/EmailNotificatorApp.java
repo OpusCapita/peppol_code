@@ -6,6 +6,7 @@ import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.email.amqp.EmailQueueListener;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -25,7 +26,7 @@ public class EmailNotificatorApp {
     private final Environment environment;
 
     @Autowired
-    public EmailNotificatorApp(Environment environment) {
+    public EmailNotificatorApp(@NotNull Environment environment) {
         this.environment = environment;
     }
 
@@ -57,6 +58,7 @@ public class EmailNotificatorApp {
     }
 
     @Bean
+    @ConditionalOnProperty("snc.enabled")
     public ErrorHandler errorHandler() {
         return new ErrorHandler();
     }

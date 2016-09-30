@@ -1,5 +1,7 @@
 package com.opuscapita.peppol.validator.validations.common;
 
+import com.opuscapita.peppol.commons.container.document.impl.Archetype;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,11 +9,11 @@ import java.util.List;
  * Created by Daniil on 03.05.2016.
  */
 public class ValidationResult {
-    private final ValidationType validationType;
+    private final Archetype validationType;
     boolean passed;
     List<ValidationError> errors = new ArrayList<>();
 
-    public ValidationResult(ValidationType validationType) {
+    public ValidationResult(Archetype validationType) {
         this.validationType = validationType;
     }
 
@@ -23,7 +25,7 @@ public class ValidationResult {
         return passed;
     }
 
-    public ValidationType getValidationType() {
+    public Archetype getValidationType() {
         return validationType;
     }
 

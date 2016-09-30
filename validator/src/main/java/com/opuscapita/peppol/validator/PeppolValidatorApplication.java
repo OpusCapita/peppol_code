@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
 public class PeppolValidatorApplication {
-    @Value("${amqp.queueName}")
+    @Value("${peppol.validation.consume-queue}")
     private String queueName;
 
 
@@ -27,6 +29,7 @@ public class PeppolValidatorApplication {
         } catch (Exception e) {
             //Failed to launch the application
             //Try snc stuff? :)
+            e.printStackTrace();
         }
     }
 

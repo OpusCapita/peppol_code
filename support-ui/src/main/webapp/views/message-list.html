@@ -1,0 +1,140 @@
+<div ng-controller="MessageCtrl">
+    <div class="col-md-4">
+        <p class="form-control-static">
+            <button
+                    ng-click="reprocessSelectedMessages()" ng-disabled="isAllowedToReprocess()"
+                    class="btn btn-danger">Reprocess all
+            </button>
+            <button
+                    ng-click="resolveSelectedMessages()" ng-disabled="isAllowedToResolve()"
+                    class="btn btn-warning">Resolve all
+            </button>
+        </p>
+    </div>
+    <div class="col-md-offset-5 col-md-3 search-bar">
+        <input type="text" class="form-control" ng-model="tableParams.$params.search"
+               ng-keyup="$event.keyCode == 13 && tableParams.reload()"
+               placeholder="Type to search...">
+    </div>
+
+    <div class="clearfix"></div>
+    <div loading-container="tableParams.settings().$loading">
+        <table ng-table="tableParams" show-filter="true" class="table ng-table-rowselected">
+            <tbody ng-repeat="group in $groups">
+            <tr class="ng-table-group">
+                <td colspan="{{$columns.length}}">
+                    <a href="" ng-click="group.$hideRows = !group.$hideRows">
+                    <span class="glyphicon"
+                          ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
+                        <strong>{{ group.value }}</strong>
+                    </a>
+                </td>
+            </tr>
+            <tr ng-hide="group.$hideRows" ng-repeat-start="msg in group.data"
+                ng-class="{'active': msg.$selected}">
+                <td width="30" style="text-align: left" header="'/ng-table/headers/checkbox.html'">
+                    <input type="checkbox" ng-model="checkboxes.items[msg.id]"/>
+                </td>
+                <td data-title="'Status'" style="width: 100px;" filter="{ 'status': 'status' }"
+                    ng-click="showMessageInfo(msg)">
+                    <message-status msg="msg"></message-status>
+                </td>
+                <td data-title="getRecipientDataTitle()" sortable="'recipientId'" filter="{ 'recipientId': 'text' }"
+                    style="width: 15%;" ng-click="showMessageInfo(msg)">
+                    <span class="glyphicon"
+                          ng-class="{ 'glyphicon-expand': !msg.$selected, 'glyphicon-collapse-down': msg.$selected }"></span>
+                    {{msg.recipientId}}
+                </td>
+                <td data-title="'Document Type'" sortable="'documentType'" filter="{ 'documentType': 'text' }"
+                    ng-click="showMessageInfo(msg)">
+                    {{msg.documentType}}
+                </td>
+                <td data-title="'Document Number'" sortable="'invoiceNumber'" filter="{ 'invoiceNumber': 'text' }"
+                    ng-click="showMessageInfo(msg)">
+                    {{msg.invoiceNumber}}
+                </td>
+                <td data-title="'Document Date'" sortable="'invoiceDate'" filter="{ 'invoiceDate': 'date' }"
+                    ng-click="showMessageInfo(msg)">
+                    {{msg.invoiceDate}}
+                </td>
+                <td data-title="'Due Date'" sortable="'dueDate'" filter="{ 'dueDate': 'date' }"
+                    ng-click="showMessageInfo(msg)">
+                    {{msg.dueDate}}
+                </td>
+                <td data-title="'Arrived time'" sortable="'file.arrivedTimeStamp'" ng-click="showMessageInfo(msg)">
+                    {{msg.arrivedTimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
+                </td>
+                <td data-title="'Delivered time'" ng-show="!hasErrors" ng-click="showMessageInfo(msg)">
+                    {{msg.deliveredTimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
+                </td>
+                <td data-title="'Error message'" ng-show="hasErrors" style="width: 40%;"
+                    ng-click="showMessageInfo(msg)">
+                    {{msg.errorMessage}}
+                </td>
+            </tr>
+            <tr ng-repeat-end ng-show="msg.showMessageDesc">
+                <td colspan="{{colspan}}"> <!--ng-include src="'views/error-description.html'"-->
+                    <div class="error-description">
+                        <div ng-repeat="file in msg.files" class="alert"
+                             ng-class="{'alert-danger': msg.status == 'failed' || msg.status == 'invalid',
+                              'alert-warning': msg.status == 'processing' || msg.status == 'reprocessed' || msg.status == 'resolved',
+                              'alert-success': msg.status == 'sent'}">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-md-1 control-label">File name:</label>
+
+                                        <p class="col-md-4 form-control-static">{{file.filename}}</p>
+
+                                        <label class="col-md-1 control-label">Status:</label>
+
+                                        <p class="col-md-1 form-control-static">
+                                            <file-status file="file" direction="msg.direction"
+                                                         class="form-control-static"></file-status>
+                                        </p>
+
+                                        <label class="col-md-1 control-label">Actions:</label>
+
+                                        <div class="col-md-4">
+                                            <p class="form-control-static">
+                                                <a href
+                                                   ng-show="isAllowedToDownload(msg.arrivedTimeStamp)"
+                                                   ng-click="downloadFile(file.filename)"
+                                                   class="btn btn-primary btn-xs">Download</a>
+                                                <a href
+                                                   ng-show="msg.status == 'failed' || msg.status == 'processing' || msg.status == 'invalid'"
+                                                   ng-click="reprocessFile(file, msg)"
+                                                   class="btn btn-danger btn-xs">Reprocess</a>
+                                                <a href ng-show="msg.status == 'failed' || msg.status == 'invalid'"
+                                                   ng-click="openResolveModal(msg)"
+                                                   class="btn btn-warning btn-xs">Resolve</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-md-1 control-label" ng-if="msg.status == 'resolved'">Resolve
+                                            comment:</label>
+
+                                        <div class="col-md-11" ng-if="msg.status == 'resolved'">
+                                            <p class="form-control-static">{{msg.resolvedComment}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <file-details msg="msg" file="file"
+                                              get-error-message="showFullError(failed)"></file-details>
+                            </form>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <script type="text/ng-template" id="ng-table/filters/status.html">
+            <input type="radio" ng-model="params.filter()[name]" name="filter-age" value=""/> None
+            <br/>
+            <input type="radio" ng-model="params.filter()[name]" name="filter-age" value="50"/> 50 years
+        </script>
+
+    </div>
+</div>

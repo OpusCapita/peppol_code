@@ -1,0 +1,68 @@
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <a class="col-md-2" href="" ng-click="toogleShow()">
+            <strong class="ng-binding" ng-hide="showDetails">Show details</strong>
+            <strong class="ng-binding" ng-show="showDetails">Hide details</strong>
+        </a>
+    </div>
+    <div ng-show="showDetails" class="well">
+        <div class="form-group">
+            <label class="col-md-2 col-lg-1 control-label">Arrived:</label>
+
+            <div class="col-md-10 col-lg-11">
+                <p class="form-control-static">{{file.arrivedTimeStamp}}
+                </p>
+            </div>
+            <hr/>
+        </div>
+        <div class="form-group" ng-repeat-start="event in events" style="border-top: 1px solid;">
+            <label class="col-md-1 control-label"
+                   ng-if="event.type == 'sent' && msg.direction == 'OUT'">Delivered:</label>
+            <label class="col-md-1 control-label"
+                   ng-if="event.type == 'sent' && msg.direction == 'IN'">Received:</label>
+            <label class="col-md-1 control-label" ng-if="event.type == 'reprocessed'">Reprocessed:</label>
+            <label class="col-md-1 control-label" ng-if="event.type == 'failed'">Failed:</label>
+
+            <div class="col-md-2">
+                <p class="form-control-static">{{event.ts}}</p>
+            </div>
+
+            <label class="col-md-2 control-label" ng-if="event.type == 'failed'">Error:</label>
+
+            <div class="col-md-7" ng-if="event.type == 'failed'">
+                <p class="form-control-static">{{event.errorMessage}}</p>
+            </div>
+
+            <label class="col-md-2 control-label" ng-if="event.transmissionId">Transmission ID:</label>
+            <div class="col-md-3" ng-if="event.transmissionId">
+                <p class="form-control-static">{{event.transmissionId}}</p>
+            </div>
+            <label class="col-md-1 control-label" ng-if="event.apProtocol">Protocol:</label>
+            <div class="col-md-3" ng-if="event.apProtocol">
+                <p class="form-control-static">{{event.apProtocol}}</p>
+            </div>
+
+            <label class="col-md-1 control-label" ng-if="event.apCompanyName">AP Name:</label>
+            <div class="col-md-2" ng-if="event.apCompanyName">
+                <p class="form-control-static">{{event.apCompanyName}}</p>
+            </div>
+            <label class="col-md-2 control-label" ng-if="event.apId">AP ID:</label>
+            <div class="col-md-2" ng-if="event.apId">
+                <p class="form-control-static">{{event.apId}}</p>
+            </div>
+        </div>
+        <div class="form-group" ng-repeat-end ng-show="event.type == 'failed'">
+            <div class="col-md-12"><a href ng-click="getErrorMessage({failed: event})">
+                <span class="glyphicon"
+                      ng-class="{ 'glyphicon-chevron-right': !event.$showDescr, 'glyphicon-chevron-down': event.$showDescr }"></span>
+                Show full error:
+            </a>
+                <pre ng-show="event.$showDescr">{{event.fullError}}</pre>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+<pre ng-show="failed.$showDescr">{{failed.fullError}}</pre>

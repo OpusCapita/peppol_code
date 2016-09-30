@@ -1,0 +1,51 @@
+<div class="clearfix"></div>
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+<div loading-container="tableParams.settings().$loading">
+    <table ng-table="tableParams" show-filter="true" class="table custom-table">
+        <tr ng-repeat="customer in $data">
+            <td data-title="'Customer Number'" filter="{ 'identifier': 'text' }" sortable="'identifier'">
+                {{customer.identifier}}
+            </td>
+            <td data-title="'Customer Name'" filter="{ 'name': 'text' }" sortable="'name'">
+                <span ng-if="!customer.$edit">{{customer.name}}</span>
+
+                <div ng-if="customer.$edit"><input class="form-control" type="text" ng-model="customer.name"/>
+                </div>
+            </td>
+            <td data-title="'Outbound Email list'" filter="{ 'outboundEmails': 'text' }" sortable="'outboundEmails'">
+                <span ng-if="!customer.$edit">{{showEmails(customer.outboundEmails)}}</span>
+
+                <div ng-if="customer.$edit"><input class="form-control" type="text" ng-model="customer.outboundEmails"/>
+                </div>
+            </td>
+            <td data-title="'Inbound Email list'" filter="{ 'inboundEmails': 'text' }" sortable="'inboundEmails'">
+                <span ng-if="!customer.$edit">{{showEmails(customer.inboundEmails)}}</span>
+
+                <div ng-if="customer.$edit"><input class="form-control" type="text" ng-model="customer.inboundEmails"/>
+                </div>
+            </td>
+            <td data-title="'Contact person'" filter="{ 'contactPerson': 'text' }" sortable="'contactPerson'">
+                <span ng-if="!customer.$edit">{{customer.contactPerson}}</span>
+
+                <div ng-if="customer.$edit"><input class="form-control" type="text" ng-model="customer.contactPerson"/>
+                </div>
+
+            </td>
+            <td data-title="'OpusCapita contact person'" filter="{ 'responsiblePerson': 'text' }"
+                sortable="'responsiblePerson'">
+                <span ng-if="!customer.$edit">{{customer.responsiblePerson}}</span>
+
+                <div ng-if="customer.$edit"><input class="form-control" type="text"
+                                                   ng-model="customer.responsiblePerson"/></div>
+            </td>
+            <td data-title="'Actions'" style="width: 15%">
+                <a ng-if="!customer.$edit" href="/customer/{{customer.id}}/messages" class="btn btn-info btn-s">Show
+                    messages</a>
+                <a ng-if="!customer.$edit" href="" class="btn btn-default btn-s" ng-click="updateCustomer(customer)">Edit</a>
+                <a ng-if="customer.$edit" href="" class="btn btn-success btn-s"
+                   ng-click="saveCustomerChanges(customer)">Save</a>
+                <a ng-if="customer.$edit" href="" class="btn btn-danger btn-s" ng-click="reverseChanges(customer)">Cancel</a>
+            </td>
+        </tr>
+    </table>
+</div>

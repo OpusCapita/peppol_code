@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.events.persistence.controller;
 
+
 import com.opuscapita.peppol.commons.model.*;
+import com.opuscapita.peppol.events.persistence.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,6 +170,7 @@ public class PersistenceController {
     private Message getOrCreateMessage(PeppolEvent peppolEvent) {
         Message message = fetchMessageByPeppolEvent(peppolEvent);
         if (message == null) {
+            logger.info("Creating new message for file: " + peppolEvent.getFileName());
             Customer customer = getOrCreateCustomer(peppolEvent);
             message = new Message();
             message.setSender(customer);

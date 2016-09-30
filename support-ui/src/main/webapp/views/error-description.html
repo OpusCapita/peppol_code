@@ -1,0 +1,14 @@
+<div class="error-description">
+    <div ng-repeat="file in msg.files" class="">
+        <strong>Filename: </strong> {{file.filename}}
+        <ul ng-repeat="failed in file.failed">
+            <li>
+                <a href ng-click="failed.$hideDescr = ! failed.$hideDescr">
+                    <span class="glyphicon glyphicon-chevron-right"
+                          ng-class="{ 'glyphicon-chevron-right': failed.$hideDescr, 'glyphicon-chevron-down': !group.$hideDescr }"></span>
+                </a>
+                {{failed.ts}} {{failed.errorMessage}}
+            </li>
+        </ul>
+    </div>
+</div>

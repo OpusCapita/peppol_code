@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.internal_routing.controller.RoutingController;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -25,7 +26,7 @@ public class RoutingQueueListener {
     private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public RoutingQueueListener(@NotNull Gson gson, @NotNull ErrorHandler errorHandler,
+    public RoutingQueueListener(@NotNull Gson gson, @Nullable ErrorHandler errorHandler,
                                 @NotNull RoutingController controller, @NotNull RabbitTemplate rabbitTemplate) {
         this.gson = gson;
         this.errorHandler = errorHandler;
@@ -51,7 +52,11 @@ public class RoutingQueueListener {
 
     private void handleError(String message, String customerId, Exception e) {
         try {
-            errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+            if (errorHandler != null) {
+                errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+            } else {
+                logger.error(message + ", customerId: " + customerId, e);
+            }
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", e);
         }
