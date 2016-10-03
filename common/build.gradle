@@ -20,6 +20,7 @@ jar {
     baseName = 'common'
     version = '0.0.1-SNAPSHOT'
     from sourceSets.main.allSource
+    bootRepackage.enabled = false
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

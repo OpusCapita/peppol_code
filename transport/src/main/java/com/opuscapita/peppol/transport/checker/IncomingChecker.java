@@ -33,32 +33,30 @@ import java.util.Iterator;
 @Lazy
 public class IncomingChecker {
     private static final Logger logger = LoggerFactory.getLogger(IncomingChecker.class);
-
-    @Value("${transport.file.age.seconds?:120}")
-    private int age;
-
-    @Value("${transport.input.directory}")
-    private String directory;
-
-    @Value("${transport.input.recursive?:false}")
-    private boolean recursive;
-
-    @Value("${transport.input.mask?:.*}")
-    private String mask;
-
-    @Value("${transport.input.queue?:internal_routing}")
-    private String queue;
-
-    @Value("${transport.backup.directory}")
-    private String backup;
-
     private final DocumentLoader documentLoader;
     private final RabbitTemplate rabbitTemplate;
+    @Value("${transport.file.age.seconds?:120}")
+    private int age;
+    @Value("${transport.input.directory}")
+    private String directory;
+    @Value("${transport.input.recursive?:false}")
+    private boolean recursive;
+    @Value("${transport.input.mask?:.*}")
+    private String mask;
+    @Value("${transport.input.queue?:internal_routing}")
+    private String queue;
+    @Value("${transport.backup.directory}")
+    private String backup;
 
     @Autowired
     public IncomingChecker(@NotNull DocumentLoader documentLoader, @NotNull RabbitTemplate rabbitTemplate) {
         this.documentLoader = documentLoader;
         this.rabbitTemplate = rabbitTemplate;
+    }
+
+    // stolen from Oxalis
+    private static String normalizeFilename(String s) {
+        return s.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
     @Scheduled(fixedRate = 60_000) // 1 minute
@@ -93,16 +91,16 @@ public class IncomingChecker {
         BaseDocument doc = documentLoader.load(file);
 
         ContainerMessage cm = new ContainerMessage(doc, file.getAbsolutePath(), Endpoint.GATEWAY);
-        cm.getDocument().setFileName(backupFile(file, cm));
+        cm.getBaseDocument().setFileName(backupFile(file, cm));
         FileUtils.forceDelete(file);
 
         rabbitTemplate.convertAndSend(queue, cm);
-        logger.info("File " + cm.getDocument().getFileName() + " processed and sent to MQ");
+        logger.info("File " + cm.getBaseDocument().getFileName() + " processed and sent to MQ");
     }
 
     private String backupFile(File file, ContainerMessage cm) throws IOException {
-        String senderId = normalizeFilename(cm.getDocument().getSenderId());
-        String recipientId = normalizeFilename(cm.getDocument().getRecipientId());
+        String senderId = normalizeFilename(cm.getBaseDocument().getSenderId());
+        String recipientId = normalizeFilename(cm.getBaseDocument().getRecipientId());
 
         File backupDirectory = new File(backup + File.separator + senderId + File.separator + recipientId);
         if (!backupDirectory.mkdirs()) {
@@ -114,11 +112,6 @@ public class IncomingChecker {
         logger.info("Incoming file " + file.getAbsolutePath() + " stored as " + result);
 
         return result;
-    }
-
-    // stolen from Oxalis
-    private static String normalizeFilename(String s) {
-        return s.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
 }

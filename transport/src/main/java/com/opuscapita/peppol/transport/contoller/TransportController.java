@@ -22,10 +22,10 @@ public class TransportController {
     private String directory;
 
     public void storeMessage(@NotNull ContainerMessage cm) throws IOException {
-        File input = new File(cm.getDocument().getFileName());
+        File input = new File(cm.getBaseDocument().getFileName());
 
         FileUtils.copyFileToDirectory(input, new File(directory));
-        logger.info("File " + cm.getDocument().getFileName() + " stored to " + directory);
+        logger.info("File " + cm.getBaseDocument().getFileName() + " stored to " + directory);
     }
 
 }
