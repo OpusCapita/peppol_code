@@ -1,33 +1,26 @@
 package com.opuscapita.peppol.validator.validations.difi;
 
-import no.difi.vefa.validator.api.ValidatorException;
-import org.junit.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Daniil on 03.05.2016.
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class DifiValidatorTest {
-    private static DifiValidator difiValidator;
-
-    @BeforeClass
-    public static void init() {
-        try {
-            difiValidator = new DifiValidator();
-        } catch (ValidatorException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @AfterClass
-    public static void shutdown() {
-        difiValidator = null;
-    }
+    @Autowired
+    DifiValidator difiValidator;
 
     @Test
     public void validateNull() throws Exception{

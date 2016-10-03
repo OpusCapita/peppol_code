@@ -69,4 +69,10 @@ public class DifiValidator implements BasicValidator {
     private String extractErrorDetails(SectionType section) {
         return section.getAssertion().stream().filter(raw -> raw.getFlag() == FlagType.ERROR || raw.getFlag() == FlagType.FATAL).map(filtered -> filtered.getIdentifier() + " " + filtered.getLocation() + " " + filtered.getTest() + " " + filtered.getText()).collect(Collectors.joining("\n\r"));
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        validator.close();
+    }
 }
