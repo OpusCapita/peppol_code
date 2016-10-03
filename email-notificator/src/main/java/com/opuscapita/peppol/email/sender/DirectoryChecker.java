@@ -78,7 +78,19 @@ public class DirectoryChecker {
                         logger.error("Failed to create backup of sent e-mails: ", e);
                     }
                 }
+
+                delete(baseName + EXT_TO);
+                delete(baseName + EXT_SUBJECT);
+                delete(baseName + EXT_BODY);
             }
+        }
+    }
+
+    private void delete(String fileName) throws IOException {
+        boolean deleted = new File(fileName).delete();
+        if (!deleted) {
+            logger.error("Failed to delete file: " + fileName);
+            throw new IOException("Failed to delete file: " + fileName);
         }
     }
 

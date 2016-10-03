@@ -37,9 +37,10 @@ dependencies {
     compile 'commons-io:commons-io:2.5'
     compile 'com.intellij:annotations:12.0'
 
-    compile project(':common')
-    compile project(':internal-routing')
-    compile project(':email-notificator')
+    compile project (':common')
+    compile project (':internal-routing')
+    compile project (':email-notificator')
+    compile project (':events-persistence')
 
     runtime 'org.hsqldb:hsqldb:2.3.4'
 

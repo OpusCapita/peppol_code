@@ -40,6 +40,7 @@ public class EventsPersistenceApplication {
         SpringApplication.run(EventsPersistenceApplication.class, args);
     }
 
+    @SuppressWarnings("Duplicates")
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
@@ -68,6 +69,7 @@ public class EventsPersistenceApplication {
     }
 
     @Bean
+    @ConditionalOnProperty("snc.enabled")
     ServiceNowConfiguration serviceNowConfiguration() {
         return new ServiceNowConfiguration(
                 environment.getProperty("snc.rest.url"),

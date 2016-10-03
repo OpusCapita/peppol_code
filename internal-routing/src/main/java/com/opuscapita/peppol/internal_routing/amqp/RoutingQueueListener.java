@@ -52,7 +52,11 @@ public class RoutingQueueListener {
 
     private void handleError(String message, String customerId, Exception e) {
         try {
-            errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+            if (errorHandler != null) {
+                errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+            } else {
+                logger.error(message + ", customerId: " + customerId, e);
+            }
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", e);
         }

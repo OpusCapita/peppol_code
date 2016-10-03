@@ -6,9 +6,6 @@ RUN mkdir -p "${PEPPOL_CONFIG_PATH}"
 
 VOLUME /etc/peppol2.0
 
-#ENV HTTP_PROXY http://10.202.9.33:8080
-#ENV HTTPS_PROXY http://10.202.9.33:8080
-
 ENV JAVA_OPTS "\
     -Dhttp.proxyHost=10.202.9.33 \
     -Dhttp.proxyPort=8080 \
@@ -16,7 +13,6 @@ ENV JAVA_OPTS "\
     -Dhttps.proxyPort=8080 \
     -Dhttp.nonProxyHosts=\"*.local|10.164.1.146\" \
 	-Dums.server.url=https://ums.itella.com//itella-ums-server/services/BasicUms "
-
 
 WORKDIR "${CATALINA_HOME}"
 ADD ["build/libs/support-ui.war", "webapps/ROOT.war"]

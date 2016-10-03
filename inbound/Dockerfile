@@ -17,7 +17,14 @@ ENV JAVA_OPTS "\
     -Dhttps.proxyPort=8080 \
     -Dhttp.nonProxyHosts=\"*.local\" "
 
-ADD ["build/libs/inbound-0.0.1-SNAPSHOT.jar", "${INBOUND_HOME}/inbound.jar"]
+WORKDIR "${INBOUND_HOME}"
+
+# oxalis-standalone for testing
+ADD ["bin/oxalis-standalone.jar", "oxalis-standalone.jar"]
+ADD ["bin/send-to-peppol.sh", "send-to-peppol.sh"]
+
+# custom persistence module
+ADD ["build/libs/inbound-0.0.1-SNAPSHOT.jar", "inbound.jar"]
 
 CMD ["catalina.sh", "run"]
 
