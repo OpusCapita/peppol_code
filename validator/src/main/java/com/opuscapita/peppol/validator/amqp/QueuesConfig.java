@@ -30,7 +30,7 @@ public class QueuesConfig {
     }
 
 
-
+    @SuppressWarnings("Duplicates")
     @NotNull
     private SimpleMessageListenerContainer getMessageContainerForQueue(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter, String queueName) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();

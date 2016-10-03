@@ -22,7 +22,7 @@ public class InboundControllerTest {
         ContainerMessage cm = controller.processFile(baseName);
 
         assertNotNull(cm);
-        assertNotNull(cm.getDocument());
+        assertNotNull(cm.getBaseDocument());
         assertNull(cm.getRoute());
         assertEquals("metadata", cm.getPeppolMessageMetadata());
         assertEquals(Endpoint.PEPPOL, cm.getSource());
@@ -38,9 +38,9 @@ public class InboundControllerTest {
         ContainerMessage cm = controller.processFile(baseName);
 
         assertNotNull(cm);
-        assertNotNull(cm.getDocument());
-        assertTrue(cm.getDocument() instanceof InvalidDocument);
-        InvalidDocument invalidDocument = (InvalidDocument) cm.getDocument();
+        assertNotNull(cm.getBaseDocument());
+        assertTrue(cm.getBaseDocument() instanceof InvalidDocument);
+        InvalidDocument invalidDocument = (InvalidDocument) cm.getBaseDocument();
 
         assertEquals("Unable to parse document", invalidDocument.getReason());
     }

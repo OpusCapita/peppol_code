@@ -4,22 +4,24 @@ import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1ValidatorConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
 public class PeppolValidatorApplication {
+    @Value("${peppol.validator.svefaktura1.schematron.path}")
+    String svefaktur1SchematronXslPath;
+    @Value("${peppol.validator.svefaktura1.xsd.path}")
+    String svefaktura1XsdPath;
+    @Value("${peppol.validator.svefaktura1.schematron.enabled}")
+    Boolean svefaktura1SchematronValidationEnabled;
     @Value("${peppol.validation.consume-queue}")
     private String queueName;
-
-
-
     @Autowired
     private Environment environment;
 
@@ -33,6 +35,10 @@ public class PeppolValidatorApplication {
         }
     }
 
+    @Bean
+    public Svefaktura1ValidatorConfig svefaktura1ValidatorConfig() {
+        return new Svefaktura1ValidatorConfig(svefaktura1SchematronValidationEnabled, svefaktur1SchematronXslPath, svefaktura1XsdPath);
+    }
 
 
     @Bean

@@ -23,17 +23,14 @@ import java.io.*;
  */
 @Component
 public class EmailController {
-    private final static Logger logger = LoggerFactory.getLogger(EmailController.class);
-
     public static final String EXT_TO = ".to";
     public static final String EXT_SUBJECT = ".subj";
     public static final String EXT_BODY = ".body";
-
-    @Value("${email.directory}")
-    private String directory;
-
+    private final static Logger logger = LoggerFactory.getLogger(EmailController.class);
     private final CustomerRepository customerRepository;
     private final ErrorHandler errorHandler;
+    @Value("${email.directory}")
+    private String directory;
 
     @Autowired
     public EmailController(@NotNull CustomerRepository customerRepository, @Nullable ErrorHandler errorHandler) {
@@ -42,8 +39,8 @@ public class EmailController {
     }
 
     public void processMessage(@NotNull ContainerMessage cm) throws Exception {
-        if (!(cm.getDocument() instanceof InvalidDocument)) {
-            logger.error("Expected invalid document while received " + cm.getDocument().getClass().getName());
+        if (!(cm.getBaseDocument() instanceof InvalidDocument)) {
+            logger.error("Expected invalid document while received " + cm.getBaseDocument().getClass().getName());
             throw new IllegalStateException("Message is not in invalid state");
         }
 
@@ -75,13 +72,13 @@ public class EmailController {
 
     private void storeMessage(String emails, ContainerMessage cm) throws IOException {
         String fileName = getFileName(cm.getCustomerId());
-        if (cm.getDocument() == null || !(cm.getDocument() instanceof InvalidDocument)) {
-            String msg = "Document is not an instance of InvalidDocument but is " + cm.getDocument().getClass().getName() + " instead";
+        if (cm.getBaseDocument() == null || !(cm.getBaseDocument() instanceof InvalidDocument)) {
+            String msg = "Document is not an instance of InvalidDocument but is " + cm.getBaseDocument().getClass().getName() + " instead";
             logger.error(msg);
             throw new IllegalStateException(msg);
         }
 
-        InvalidDocument doc = (InvalidDocument) cm.getDocument();
+        InvalidDocument doc = (InvalidDocument) cm.getBaseDocument();
 
         // let's create 3 files per message: list of recipients, subjects in one line, bodies
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_TO)))) {
@@ -97,7 +94,7 @@ public class EmailController {
         }
 
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_BODY, true)))) {
-            printWriter.print(cm.getDocument().toString());
+            printWriter.print(cm.getBaseDocument().toString());
         }
     }
 
@@ -112,7 +109,7 @@ public class EmailController {
 
     // in case we cannot identify customer
     private void processNoCustomer(ContainerMessage cm) {
-        String message = "Cannot determine customer ID from the file: " + cm.getDocument().getFileName();
+        String message = "Cannot determine customer ID from the file: " + cm.getBaseDocument().getFileName();
         logger.warn(message);
         if (errorHandler != null) {
             errorHandler.reportToServiceNow(message, "n/a", null, "Failed to find customer ID");

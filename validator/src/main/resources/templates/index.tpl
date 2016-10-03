@@ -4,7 +4,7 @@ html() {
         title('Peppol Standalone Validator')
     }
     body() {
-        form() {
+        form(method: 'post', enctype: 'multipart/form-data') {
             input(type: 'file', name: 'datafile', id: 'datafile')
             input(type: 'submit', value: 'Go')
         }

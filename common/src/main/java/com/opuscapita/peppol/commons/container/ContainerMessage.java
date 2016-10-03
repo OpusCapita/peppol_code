@@ -30,7 +30,13 @@ public class ContainerMessage implements Serializable {
         return route;
     }
 
-    public BaseDocument getDocument() {
+    @NotNull
+    public ContainerMessage setRoute(@NotNull Route route) {
+        this.route = route;
+        return this;
+    }
+
+    public BaseDocument getBaseDocument() {
         return document;
     }
 
@@ -42,7 +48,7 @@ public class ContainerMessage implements Serializable {
      * Returns customer ID depending on the direction of the message, either sender or recipient ID.
      */
     public String getCustomerId() {
-        return isInbound() ? getDocument().getRecipientId() : getDocument().getSenderId();
+        return isInbound() ? getBaseDocument().getRecipientId() : getBaseDocument().getSenderId();
     }
 
     @Override
@@ -53,12 +59,6 @@ public class ContainerMessage implements Serializable {
     @Nullable
     public String getPeppolMessageMetadata() {
         return metadata;
-    }
-
-    @NotNull
-    public ContainerMessage setRoute(@NotNull Route route) {
-        this.route = route;
-        return this;
     }
 
     public Endpoint getSource() {

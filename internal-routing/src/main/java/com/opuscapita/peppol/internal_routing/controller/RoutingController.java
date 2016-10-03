@@ -33,7 +33,7 @@ public class RoutingController {
 
     public ContainerMessage loadRoute(ContainerMessage cm) throws IOException {
         Endpoint source = cm.getSource();
-        BaseDocument baseDocument = cm.getDocument();
+        BaseDocument baseDocument = cm.getBaseDocument();
         for (Route route : routingConfiguration.getRoutes()) {
             if (source == route.getSource()) {
                 if (route.getMask() != null) {
