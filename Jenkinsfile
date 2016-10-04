@@ -13,12 +13,14 @@ node {
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
         }
     }
+
     stage('Unit Test') {
         dir('src') {
             sh 'bash gradlew configuration-server:check'
             //sh 'bash gradlew events-persistence:check'
         }
     }
+
     stage('Package') {
         dir('src/configuration-server') {
             config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
@@ -28,6 +30,13 @@ node {
             }
         }
     }
+
+    stage('Release') {
+        dir('src') {
+            sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
+        }
+    }
+
     stage('Deploy Stage') {
         def ansible_hosts = "stage.hosts"
         dir('infra/ap2') {
