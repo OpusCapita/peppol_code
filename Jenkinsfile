@@ -5,9 +5,12 @@ node {
     stage('Build') {
         dir('src') {
             git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
-            sh 'bash gradlew clean configuration-server:assemble'
-            //sh 'bash gradlew configuration-server:assemble'
-            //sh 'bash gradlew events-persistence:assemble'
+            sh '''
+                bash gradlew clean \
+                configuration-server:assemble \
+                events-persistence:assemble \
+                support-ui:assemble
+            '''
         } 
         dir('infra') {
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
@@ -16,8 +19,12 @@ node {
 
     stage('Unit Test') {
         dir('src') {
-            sh 'bash gradlew configuration-server:check'
-            //sh 'bash gradlew events-persistence:check'
+            sh '''
+                bash gradlew \
+                configuration-server:check
+                events-persistence:check
+                support-ui:check
+            '''
         }
     }
 
