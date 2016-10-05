@@ -1,5 +1,6 @@
-package com.opuscapita.peppol
+package com.opuscapita.peppol.tests.smoke
 
+import com.opuscapita.peppol.tests.BaseTest
 import groovy.json.JsonSlurper
 import org.junit.Test
 

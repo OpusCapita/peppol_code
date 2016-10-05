@@ -1,5 +1,6 @@
-package com.opuscapita.peppol
+package com.opuscapita.peppol.tests.smoke
 
+import com.opuscapita.peppol.tests.BaseTest
 import geb.Browser
 import geb.navigator.Navigator
 import groovy.sql.Sql

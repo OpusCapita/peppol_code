@@ -1,5 +1,6 @@
-package com.opuscapita.peppol
+package com.opuscapita.peppol.tests.smoke
 
+import com.opuscapita.peppol.tests.BaseTest
 import org.junit.Test
 
 class SupportUITest extends BaseTest {

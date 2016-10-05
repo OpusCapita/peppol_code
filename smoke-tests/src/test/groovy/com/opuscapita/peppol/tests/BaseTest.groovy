@@ -1,4 +1,4 @@
-package com.opuscapita.peppol
+package com.opuscapita.peppol.tests
 
 abstract class BaseTest {
 
