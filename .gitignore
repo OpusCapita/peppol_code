@@ -83,3 +83,4 @@ fabric.properties
 .idea/
 build/
 local.properties
+*.exe
