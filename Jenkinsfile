@@ -30,11 +30,7 @@ node {
 
     stage('Package') {
         dir('src/configuration-server') {
-            config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
-                sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
-                config_server_image.push("${tag}")
-            }
+            def config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
         }
     }
 
@@ -42,6 +38,10 @@ node {
         dir('src') {
             // disabled until we get PeppolJenkins service user
             //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
+        }
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
+            sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
+            config_server_image.push("${tag}")
         }
     }
 
