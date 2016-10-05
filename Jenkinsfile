@@ -3,6 +3,7 @@ def tag = "latest"
 
 def config_server_image
 def events_persistence_image
+def support_ui_image
 
 node {
     stage('Build') {
@@ -38,6 +39,9 @@ node {
         dir('src/events-persistence') {
             events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", ".")
         }
+        dir('src/support-ui') {
+            support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", ".")
+        }
     }
 
     stage('Release') {
@@ -51,6 +55,8 @@ node {
             config_server_image.push("${tag}")
             events_persistence_image.push()
             events_persistence_image.push("${tag}")
+            support_ui_image.push()
+            support_ui_image.push("${tag}")
         }
     }
 
