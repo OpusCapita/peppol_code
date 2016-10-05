@@ -32,6 +32,9 @@ node {
         dir('src/configuration-server') {
             def config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
         }
+        dir('src/events-persistence') {
+            def events-persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", ".")
+        }
     }
 
     stage('Release') {
@@ -43,6 +46,8 @@ node {
             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
             config_server_image.push("")
             config_server_image.push("${tag}")
+            events_persistence_image.push("")
+            events_persistence_image.push("${tag}")
         }
     }
 
