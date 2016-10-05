@@ -1,6 +1,9 @@
 #!groovy
 def tag = "latest"
 
+def config_server_image
+def events_persistence_image
+
 node {
     stage('Build') {
         dir('src') {
@@ -30,10 +33,10 @@ node {
 
     stage('Package') {
         dir('src/configuration-server') {
-            def config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
+            config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
         }
         dir('src/events-persistence') {
-            def events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", ".")
+            events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", ".")
         }
     }
 
