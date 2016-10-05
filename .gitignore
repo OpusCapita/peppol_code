@@ -78,7 +78,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-.gitignore
+# Build tool files
 .gradle/
 .idea/
-configuration-server/build/
+build/
+local.properties
