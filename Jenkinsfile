@@ -33,7 +33,8 @@ node {
 
     stage('Release') {
         dir('src') {
-            sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
+            // disabled until we get PeppolJenkins service user
+            //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
         }
     }
 
