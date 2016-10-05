@@ -21,8 +21,8 @@ node {
         dir('src') {
             sh '''
                 bash gradlew \
-                configuration-server:check
-                events-persistence:check
+                configuration-server:check \
+                events-persistence:check \
                 support-ui:check
             '''
         }
