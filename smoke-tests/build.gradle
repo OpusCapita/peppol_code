@@ -10,11 +10,6 @@ buildscript {
 
 apply plugin: 'groovy'
 apply plugin: 'java'
-apply plugin: 'org.hidetake.ssh'
-
-test.onlyIf {
-    project.hasProperty('smokeTest')
-}
 
 repositories {
     mavenCentral()
@@ -22,13 +17,23 @@ repositories {
 }
 
 dependencies {
-    testCompile 'org.codehaus.groovy:groovy-all:2.4.7'
+
     testCompile 'junit:junit:4.12'
-    testCompile 'org.gebish:geb-core:0.13.1'
-    testCompile 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0'
-    testCompile 'org.hidetake:gradle-ssh-plugin:2.7.0'
+
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.7'
+
+    testCompile 'com.aestasit.infrastructure.sshoogr:sshoogr:0.9.25'
+
+    testCompile 'org.gebish:geb-core:1.0-rc-2'
+    testCompile 'org.seleniumhq.selenium:selenium-java:3.0.0-beta4'
+    testCompile 'org.seleniumhq.selenium:selenium-htmlunit-driver:3.0.0-beta4'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.0.0-beta4'
+    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:3.0.0-beta4'
+
+    testCompile 'mysql:mysql-connector-java:6.0.4'
+
 }
 
 test {
-    systemProperties = System.properties.findAll { it.key.toString().toLowerCase().contains('proxy') }
+    systemProperties = System.properties.findAll { key, value -> [ "proxy", "remote" ].any { key.toString().toLowerCase().contains(it) } }
 }
