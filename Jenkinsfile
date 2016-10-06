@@ -46,8 +46,7 @@ node {
 
     stage('Release') {
         dir('src') {
-            // disabled until we get PeppolJenkins service user
-            //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
+            sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
         }
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
