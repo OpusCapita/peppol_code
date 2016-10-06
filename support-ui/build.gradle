@@ -5,10 +5,9 @@ targetCompatibility = 1.8
 
 apply plugin: 'war'
 
-jar {
+war {
     baseName = 'support-ui'
-    version = '0.0.1-SNAPSHOT'
-    from sourceSets.main.allSource
+    version = ''
 }
 
 repositories {
