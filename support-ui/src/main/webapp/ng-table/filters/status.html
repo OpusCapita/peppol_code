@@ -2,12 +2,12 @@
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         Select <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu" role="menu" style="text-align: left;">
+    <ul class="dropdown-menu" id="status_list" role="menu" style="text-align: left;">
         <li><a ng-click="params.filter()[name] = 'failed'" href="#">Failed</a></li>
         <li><a ng-click="params.filter()[name] = 'invalid'" href="#">Invalid</a></li>
         <li><a ng-click="params.filter()[name] = 'processing'" href="#">Processing</a></li>
         <li><a ng-click="params.filter()[name] = 'reprocessed'" href="#">Reprocessed</a></li>
-        <li><a ng-click="params.filter()[name] = 'sent'" href="#">Delivered</a></li>
+        <li><a ng-click="params.filter()[name] = 'sent'" href="#">Delivered/Received</a></li>
         <li><a ng-click="params.filter()[name] = 'resolved'" href="#">Resolved</a></li>
         <li class="divider"></li>
         <li><a ng-click="params.filter()[name] = ''" href="#">Deselect</a></li>

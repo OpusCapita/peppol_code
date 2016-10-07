@@ -18,7 +18,10 @@ function setActions(file, status) {
 function setStatus($scope, status) {
     if (status === "sent") {
         $scope.label = 'label-success';
-        $scope.status = 'delivered';
+        if ($scope.msg.direction == 'OUT')
+            $scope.status = 'delivered';
+        else
+            $scope.status = 'received';
     } else if (status === "resolved") {
         $scope.label = 'label-success';
         $scope.status = 'resolved';

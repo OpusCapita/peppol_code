@@ -374,8 +374,12 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             return timestamp > comparingDate.getTime();
         };
 
-        $scope.getRecipientDataTitle = function () {
-            return location.pathname.includes("/inbound") ? "Sender" : "Recipient";
+        $scope.getPartyDataTitle = function () {
+            if (location.pathname.includes("/inbound"))
+                return "Sender";
+            if (location.pathname.includes("/customer"))
+                return "Partner";
+            return "Recipient";
         };
     }]);
 

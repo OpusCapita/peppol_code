@@ -2,11 +2,11 @@
     <div class="col-md-4">
         <p class="form-control-static">
             <button
-                    ng-click="reprocessSelectedMessages()" ng-disabled="isAllowedToReprocess()"
+                    id="reprocess_button" ng-click="reprocessSelectedMessages()" ng-disabled="isAllowedToReprocess()"
                     class="btn btn-danger">Reprocess all
             </button>
             <button
-                    ng-click="resolveSelectedMessages()" ng-disabled="isAllowedToResolve()"
+                    id="resolve_button" ng-click="resolveSelectedMessages()" ng-disabled="isAllowedToResolve()"
                     class="btn btn-warning">Resolve all
             </button>
         </p>
@@ -33,38 +33,44 @@
             <tr ng-hide="group.$hideRows" ng-repeat-start="msg in group.data"
                 ng-class="{'active': msg.$selected}">
                 <td width="30" style="text-align: left" header="'/ng-table/headers/checkbox.html'">
-                    <input type="checkbox" ng-model="checkboxes.items[msg.id]"/>
+                    <input type="checkbox" id="checkbox" ng-model="checkboxes.items[msg.id]"/>
                 </td>
-                <td data-title="'Status'" style="width: 100px;" filter="{ 'status': 'status' }"
+                <td id="status" data-title="'Status'" style="width: 100px;" filter="{ 'status': 'status' }"
                     ng-click="showMessageInfo(msg)">
                     <message-status msg="msg"></message-status>
                 </td>
-                <td data-title="getRecipientDataTitle()" sortable="'recipientId'" filter="{ 'recipientId': 'text' }"
+                <td id="party_id" data-title="getPartyDataTitle()" sortable="'recipientId'"
+                    filter="{ 'recipientId': 'text' }"
                     style="width: 15%;" ng-click="showMessageInfo(msg)">
                     <span class="glyphicon"
                           ng-class="{ 'glyphicon-expand': !msg.$selected, 'glyphicon-collapse-down': msg.$selected }"></span>
                     {{msg.recipientId}}
                 </td>
-                <td data-title="'Document Type'" sortable="'documentType'" filter="{ 'documentType': 'text' }"
+                <td id="document_type" data-title="'Document Type'" sortable="'documentType'"
+                    filter="{ 'documentType': 'text' }"
                     ng-click="showMessageInfo(msg)">
                     {{msg.documentType}}
                 </td>
-                <td data-title="'Document Number'" sortable="'invoiceNumber'" filter="{ 'invoiceNumber': 'text' }"
+                <td id="document_number" data-title="'Document Number'" sortable="'invoiceNumber'"
+                    filter="{ 'invoiceNumber': 'text' }"
                     ng-click="showMessageInfo(msg)">
                     {{msg.invoiceNumber}}
                 </td>
-                <td data-title="'Document Date'" sortable="'invoiceDate'" filter="{ 'invoiceDate': 'date' }"
+                <td id="document_date" data-title="'Document Date'" sortable="'invoiceDate'"
+                    filter="{ 'invoiceDate': 'date' }"
                     ng-click="showMessageInfo(msg)">
                     {{msg.invoiceDate}}
                 </td>
-                <td data-title="'Due Date'" sortable="'dueDate'" filter="{ 'dueDate': 'date' }"
+                <td id="due_date" data-title="'Due Date'" sortable="'dueDate'" filter="{ 'dueDate': 'date' }"
                     ng-click="showMessageInfo(msg)">
                     {{msg.dueDate}}
                 </td>
-                <td data-title="'Arrived time'" sortable="'file.arrivedTimeStamp'" ng-click="showMessageInfo(msg)">
+                <td id="arrived_time" data-title="'Arrived time'" sortable="'file.arrivedTimeStamp'"
+                    ng-click="showMessageInfo(msg)">
                     {{msg.arrivedTimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
                 </td>
-                <td data-title="'Delivered time'" ng-show="!hasErrors" ng-click="showMessageInfo(msg)">
+                <td id="delivered_time" data-title="'Delivered time'" ng-show="!hasErrors"
+                    ng-click="showMessageInfo(msg)">
                     {{msg.deliveredTimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
                 </td>
                 <td data-title="'Error message'" ng-show="hasErrors" style="width: 40%;"
@@ -100,14 +106,17 @@
                                                 <a href
                                                    ng-show="isAllowedToDownload(msg.arrivedTimeStamp)"
                                                    ng-click="downloadFile(file.filename)"
-                                                   class="btn btn-primary btn-xs">Download</a>
+                                                   class="btn btn-primary btn-xs"
+                                                   id="download_message_button">Download</a>
                                                 <a href
                                                    ng-show="msg.status == 'failed' || msg.status == 'processing' || msg.status == 'invalid'"
                                                    ng-click="reprocessFile(file, msg)"
-                                                   class="btn btn-danger btn-xs">Reprocess</a>
+                                                   class="btn btn-danger btn-xs"
+                                                   id="reprocess_message_button">Reprocess</a>
                                                 <a href ng-show="msg.status == 'failed' || msg.status == 'invalid'"
                                                    ng-click="openResolveModal(msg)"
-                                                   class="btn btn-warning btn-xs">Resolve</a>
+                                                   class="btn btn-warning btn-xs"
+                                                   id="resolve_message_button">Resolve</a>
                                             </p>
                                         </div>
                                     </div>
