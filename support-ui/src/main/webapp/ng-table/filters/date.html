@@ -1,0 +1,20 @@
+<div class="input-group datepicker" ng-controller="DatepickerCtrl">
+    <input
+            type="text"
+            class="form-control"
+            uib-datepicker-popup="yyyy-MM-dd"
+            uib-datepicker-popup ng-model="dt"
+            is-open="popup.opened"
+            min-date="minDate"
+            close-text="Close"
+            show-button-bar="false"
+            datepicker-options="dateOptions"
+            close-on-date-selection="true"
+            ng-required="true"
+            my-date/>
+    <span class="input-group-btn">
+    <button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
+      <i class="glyphicon glyphicon-calendar"></i>
+    </button>
+  </span>
+</div>

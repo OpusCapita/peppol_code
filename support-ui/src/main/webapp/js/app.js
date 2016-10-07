@@ -5,6 +5,8 @@ angular.module('peppolApp', [
     'peppolApp.services',
     'peppolApp.controllers',
     'ngTable',
+    'ngSanitize',
+    'ngAnimate',
     'ui.bootstrap'
 ])
     .config(function ($routeProvider, $httpProvider, $locationProvider, $logProvider) {

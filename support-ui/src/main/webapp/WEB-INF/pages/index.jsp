@@ -98,6 +98,7 @@
 <script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular-resource.js"></script>
 <script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular-cookies.js"></script>
 <script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular-route.js"></script>
+<script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular-animate.js"></script>
 <script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular-sanitize.js"></script>
 
 <script src="${pageContext.request.contextPath}/js/lib/ng-table-master/ng-table.src.js"></script>
