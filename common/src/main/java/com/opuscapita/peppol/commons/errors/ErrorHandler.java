@@ -35,18 +35,21 @@ public class ErrorHandler {
     public void reportToServiceNow(String message, String customerId, Exception e) {
         reportToServiceNow(message, customerId, e, e.getMessage());
     }
-
     public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription) {
+        reportToServiceNow(message, customerId, e, shortDescription, "");
+    }
+
+    public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription, String correlationIdPrefix) {
         String dumpFileName = storeMessageToDisk(message);
         logger.warn("Dumped erroneous message to: " + dumpFileName);
-        createSncTicket(dumpFileName, customerId, e, shortDescription);
+        createSncTicket(dumpFileName, customerId, e, shortDescription, correlationIdPrefix);
         logger.warn("ServiceNow ticket created with reference to: " + dumpFileName);
     }
 
-    protected void createSncTicket(String dumpFileName, String customerId, Exception jse, String shortDescription) {
+    protected void createSncTicket(String dumpFileName, String customerId, Exception jse, String shortDescription, String correlationIdPrefix) {
         StringWriter stackTraceWriter = new StringWriter();
         jse.printStackTrace(new PrintWriter(stackTraceWriter));
-        String correlationId = generateFailedMessageCorrelationId(jse);
+        String correlationId = correlationIdPrefix + generateFailedMessageCorrelationId(jse);
         try {
             serviceNowRest.insert(new SncEntity(shortDescription, dumpFileName + "\n\r" + stackTraceWriter.toString(), correlationId, customerId, 0));
         } catch (IOException e) {
