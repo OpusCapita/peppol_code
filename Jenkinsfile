@@ -46,7 +46,7 @@ node {
 
     stage('Release') {
         dir('src') {
-            // disabled until we get PeppolJenkins service user
+            // automatic versions trigger a new build repeatedly, disabled for now
             //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
         }
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {

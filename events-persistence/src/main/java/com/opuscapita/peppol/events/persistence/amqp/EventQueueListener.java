@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.events.persistence.amqp;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.events.persistence.controller.PersistenceController;
@@ -32,7 +33,7 @@ public class EventQueueListener {
         String message = new String(data).replace("\"urn\"", "urn"); //Sort of hack
         String customerId = "n/a";
         try {
-            PeppolEvent peppolEvent = gson.fromJson(message, PeppolEvent.class);
+            PeppolEvent peppolEvent = deserializePeppolEvent(message);
             customerId = peppolEvent.getTransportType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
             persistenceController.storePeppolEvent(peppolEvent);
         } catch (Exception e) {
@@ -41,13 +42,26 @@ public class EventQueueListener {
         }
     }
 
+    private PeppolEvent deserializePeppolEvent(String message) {
+        return gson.fromJson(message, PeppolEvent.class);
+    }
+
     public void handleError(String message, String customerId, Exception e) {
         try {
-            errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
+            errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event", extractFileNameFromMessage(message));
         } catch (Exception wierd) {
             logger.error("reporting to service now threw exception: ");
             wierd.printStackTrace();
         }
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
+    }
+
+    private String extractFileNameFromMessage(String message) {
+        try {
+            return new Gson().fromJson(message, JsonObject.class).get("fileName").getAsString();
+        } catch (Exception e) {
+            logger.info("No file name extracted for reporting error in message: " + message);
+        }
+        return "";
     }
 }
