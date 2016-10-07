@@ -46,7 +46,8 @@ node {
 
     stage('Release') {
         dir('src') {
-            sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
+            // automatic versions trigger a new build repeatedly, disabled for now
+            //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
         }
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
