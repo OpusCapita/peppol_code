@@ -16,16 +16,13 @@ public class InvalidDocument extends BaseDocument {
     private final String reason;
     private final Exception e;
 
-    public InvalidDocument(@NotNull String reason, @Nullable Exception e, @NotNull String fileName) {
+    public InvalidDocument(@NotNull String reason, @Nullable Exception e) {
         this.reason = reason;
         this.e = e;
-        setFileName(fileName);
     }
 
-    public InvalidDocument(@NotNull String reason, @NotNull BaseDocument other) {
-        this.reason = reason;
-        this.e = null;
-        setFileName(other.getFileName());
+    public InvalidDocument(@NotNull String reason) {
+        this(reason, null);
     }
 
     @Override
@@ -82,7 +79,6 @@ public class InvalidDocument extends BaseDocument {
         if (e != null) {
             result += "\n" + ExceptionUtils.getStackTrace(e) + "\n";
         }
-        result += "Reference id: " + getFileName();
         return result;
     }
 }

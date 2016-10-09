@@ -111,7 +111,7 @@ public class EmailController {
 
     // in case we cannot identify customer
     private void processNoCustomer(ContainerMessage cm) {
-        String message = "Cannot determine customer ID from the file: " + cm.getBaseDocument().getFileName();
+        String message = "Cannot determine customer ID from the file: " + cm.getFileName();
         logger.warn(message);
         if (errorHandler != null) {
             errorHandler.reportToServiceNow(message, "n/a", null, "Failed to find customer ID");

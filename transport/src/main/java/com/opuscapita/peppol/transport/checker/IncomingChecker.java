@@ -33,8 +33,10 @@ import java.util.Iterator;
 @Lazy
 public class IncomingChecker {
     private static final Logger logger = LoggerFactory.getLogger(IncomingChecker.class);
-    private final DocumentLoader documentLoader;
+
     private final RabbitTemplate rabbitTemplate;
+    private final DocumentLoader documentLoader;
+
     @Value("${transport.file.age.seconds?:120}")
     private int age;
     @Value("${transport.input.directory}")
@@ -49,9 +51,9 @@ public class IncomingChecker {
     private String backup;
 
     @Autowired
-    public IncomingChecker(@NotNull DocumentLoader documentLoader, @NotNull RabbitTemplate rabbitTemplate) {
-        this.documentLoader = documentLoader;
+    public IncomingChecker(@NotNull RabbitTemplate rabbitTemplate, @NotNull DocumentLoader documentLoader) {
         this.rabbitTemplate = rabbitTemplate;
+        this.documentLoader = documentLoader;
     }
 
     // stolen from Oxalis
@@ -82,36 +84,44 @@ public class IncomingChecker {
             }
 
             if (file.getAbsolutePath().matches(mask)) {
+                logger.info("Found outgoing file: " + file.getAbsolutePath());
                 send(file);
             }
         }
     }
 
     private void send(File file) throws IOException {
-        BaseDocument doc = documentLoader.load(file);
-
-        ContainerMessage cm = new ContainerMessage(doc, file.getAbsolutePath(), Endpoint.GATEWAY);
-        cm.getBaseDocument().setFileName(backupFile(file, cm));
+        ContainerMessage cm = new ContainerMessage(file.getAbsolutePath(), backupFile(file), Endpoint.GATEWAY);
         FileUtils.forceDelete(file);
 
         rabbitTemplate.convertAndSend(queue, cm);
-        logger.info("File " + cm.getBaseDocument().getFileName() + " processed and sent to MQ");
+        logger.info("File " + cm.getFileName() + " processed and sent to MQ");
     }
 
-    private String backupFile(File file, ContainerMessage cm) throws IOException {
-        String senderId = normalizeFilename(cm.getBaseDocument().getSenderId());
-        String recipientId = normalizeFilename(cm.getBaseDocument().getRecipientId());
+    // returns file name of the local backup file
+    // FIXME we're parsing file directly from network drive and then reading it again, that's wrong
+    String backupFile(File file) throws IOException {
+        BaseDocument document = documentLoader.load(file);
+
+        String senderId = normalizeFilename(document.getSenderId());
+        String recipientId = normalizeFilename(document.getRecipientId());
 
         File backupDirectory = new File(backup + File.separator + senderId + File.separator + recipientId);
-        if (!backupDirectory.mkdirs()) {
-            throw new IOException("Failed to create backup directory: " + backupDirectory.getAbsolutePath());
+        if (!backupDirectory.exists()) {
+            if (!backupDirectory.mkdirs()) {
+                throw new IOException("Failed to create backup directory: " + backupDirectory.getAbsolutePath());
+            }
         }
 
         FileUtils.copyFileToDirectory(file, backupDirectory);
-        String result = backupDirectory.getAbsolutePath() + File.separator + FilenameUtils.getName(file.getAbsolutePath());
+        String result = backupDirectory.getAbsolutePath() + File.separator + FilenameUtils.getName(file.getName());
         logger.info("Incoming file " + file.getAbsolutePath() + " stored as " + result);
 
         return result;
+    }
+
+    void setBackup(String backup) {
+        this.backup = backup;
     }
 
 }

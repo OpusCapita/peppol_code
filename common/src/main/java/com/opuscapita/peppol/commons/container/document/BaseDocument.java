@@ -40,7 +40,6 @@ public abstract class BaseDocument {
     private String customizationId = UNKNOWN_CUSTOMIZATION_ID;
 
     private Document document;
-    private String fileName;
 
     private Node root;
     private Node sbdh;
@@ -64,11 +63,6 @@ public abstract class BaseDocument {
     @NotNull
     public Document getDocument() {
         return document;
-    }
-
-    @NotNull
-    public String getFileName() {
-        return fileName;
     }
 
     /**
@@ -152,10 +146,6 @@ public abstract class BaseDocument {
 
     protected void setDocument(Document document) {
         this.document = document;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 
     public void setSenderId(String senderId) {

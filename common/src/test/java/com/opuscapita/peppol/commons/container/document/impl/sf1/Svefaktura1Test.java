@@ -27,7 +27,6 @@ public class Svefaktura1Test {
         assertEquals("0008:7381034999991", document.getSenderId());
         assertEquals("0007:2021002361", document.getRecipientId());
         assertEquals("60445647", document.getDocumentId());
-        assertEquals("test", document.getFileName());
         assertEquals("1.0", document.getVersionId());
         assertEquals("2016-04-13", document.getIssueDate());
         assertEquals("2016-05-18", document.getDueDate());
@@ -51,7 +50,6 @@ public class Svefaktura1Test {
         assertEquals("0008:1234567890123", document.getSenderId());
         assertEquals("0008:1234567890123", document.getRecipientId());
         assertEquals("310791199", document.getDocumentId());
-        assertEquals("test2", document.getFileName());
         assertEquals("1.0", document.getVersionId());
         assertEquals("2016-07-21", document.getIssueDate());
         assertEquals("2016-08-26", document.getDueDate());

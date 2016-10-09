@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.mq;
 
+import com.opuscapita.peppol.commons.container.ContainerMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +16,7 @@ public interface MessageQueue {
     /**
      * Connect to the queue and send a string message. Connects and disconnects for every message so is not efficient.
      */
-    void send(@NotNull MqProperties mqProperties, @Nullable String exchange, @NotNull String queueName, @NotNull String message)
+    void send(@NotNull MqProperties mqProperties, @Nullable String exchange, @NotNull String queueName, @NotNull ContainerMessage message)
             throws IOException, TimeoutException;
 
 }

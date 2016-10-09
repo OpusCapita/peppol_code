@@ -56,7 +56,7 @@ public class DocumentLoader {
             document = DocumentUtils.getDocument(bytes);
         } catch (Exception e) {
             logger.warn("Unable to parse document " + fileName, e);
-            return new InvalidDocument("Unable to parse document", e, fileName);
+            return new InvalidDocument("Unable to parse document", e);
         }
         return select(document, fileName);
     }
@@ -69,20 +69,19 @@ public class DocumentLoader {
                 try {
                     result = example.getClass().newInstance();
                     result.setDocument(document);
-                    result.setFileName(fileName);
                     boolean success = result.fillFields();
                     if (success) {
                         return result;
                     } else {
-                        return new InvalidDocument("Failed to read data from the document", result);
+                        return new InvalidDocument("Failed to read data from the document");
                     }
                 } catch (InstantiationException | IllegalAccessException e) {
                     logger.warn("Unable to create document object", e);
-                    return new InvalidDocument("Unable to create document object", e, fileName);
+                    return new InvalidDocument("Unable to create document object", e);
                 }
             }
         }
-        return new InvalidDocument("Unable to determine document type", null, fileName);
+        return new InvalidDocument("Unable to determine document type", null);
     }
 
     static Set<BaseDocument> reloadDocumentTypes(String pakkage)

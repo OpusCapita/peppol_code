@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by KACENAR1 on 21.06.2014
  */
 @Controller
-@RequestMapping("/rest/inbound")
+@RequestMapping("/rest/preprocessing")
 public class InboundMessageController {
 
     @Autowired

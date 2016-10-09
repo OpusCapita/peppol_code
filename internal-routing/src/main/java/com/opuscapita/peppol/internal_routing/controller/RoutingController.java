@@ -31,6 +31,7 @@ public class RoutingController {
         this.errorHandler = errorHandler;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public ContainerMessage loadRoute(ContainerMessage cm) throws IOException {
         Endpoint source = cm.getSource();
         BaseDocument baseDocument = cm.getBaseDocument();
@@ -38,25 +39,25 @@ public class RoutingController {
             if (source == route.getSource()) {
                 if (route.getMask() != null) {
                     if (baseDocument.getRecipientId().matches(route.getMask())) {
-                        return cm.setRoute(route);
+                        return new ContainerMessage(cm.getBaseDocument(), cm.getSourceMetadata(), cm.getSource(), cm.getFileName(), route);
                     }
                 } else {
-                    return cm.setRoute(route);
+                    return new ContainerMessage(cm.getBaseDocument(), cm.getSourceMetadata(), cm.getSource(), cm.getFileName(), route);
                 }
             }
         }
-        openSncTicket(baseDocument, source);
-        throw new IllegalArgumentException("Cannot define route for " + baseDocument.getFileName());
+        openSncTicket(cm, source);
+        throw new IllegalArgumentException("Cannot define route for " + cm.getFileName());
     }
 
-    private void openSncTicket(BaseDocument baseDocument, Endpoint source) throws IOException {
-        logger.error("No route found for document " + baseDocument.getFileName());
+    private void openSncTicket(ContainerMessage cm, Endpoint source) throws IOException {
+        logger.error("No route found for document " + cm.getFileName());
         if (errorHandler == null) {
             return;
         }
         errorHandler.reportToServiceNow(
-                "Cannot find route for a document with id " + baseDocument.getFileName(),
-                source == Endpoint.PEPPOL ? baseDocument.getRecipientId() : baseDocument.getSenderId(),
+                "Cannot find route for a document with id " + cm.getFileName(),
+                cm.getCustomerId(),
                 new IllegalArgumentException("Unable to create ContainerMessage"), "Can't find route"
         );
     }

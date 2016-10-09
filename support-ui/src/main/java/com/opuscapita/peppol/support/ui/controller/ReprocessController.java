@@ -24,7 +24,7 @@ public class ReprocessController {
     @Autowired
     private FileInfoService fileInfoService;
 
-    @RequestMapping(value = "/inbound/{fileIds}", method = RequestMethod.POST)
+    @RequestMapping(value = "/preprocessing/{fileIds}", method = RequestMethod.POST)
     @PreAuthorize("isAuthenticated()")
     public
     @ResponseBody

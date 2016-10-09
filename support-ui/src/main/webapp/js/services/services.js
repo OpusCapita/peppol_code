@@ -56,7 +56,7 @@ services.factory('MessageFactory', function ($resource, $cacheFactory) {
 
 services.factory("InboundMessageFactory", function ($resource, $cacheFactory) {
     var cache = $cacheFactory('InboundMessageFactory');
-    var url = '/rest/inbound';
+    var url = '/rest/preprocessing';
     return getAllMessageFactory($resource, url, cache);
 });
 
@@ -82,7 +82,7 @@ var getAllMessageFactory = function ($resource, url, cache) {
             details.$promise.then(callback);
         }
     }
-}
+};
 
 services.factory('FailedFactory', function ($resource) {
     var url = '/rest/outbound/failed';
@@ -102,7 +102,7 @@ services.factory('FailedFactory', function ($resource) {
 services.factory('ReprocessFactory', function ($resource) {
     var url = '/rest/reprocess';
     return $resource(url, {}, {
-        reprocess_inbound: {method: 'POST', url: url + '/inbound/:file_ids', params: {file_ids: '@file_ids'}},
+        reprocess_inbound: {method: 'POST', url: url + '/preprocessing/:file_ids', params: {file_ids: '@file_ids'}},
         reprocess_outbound: {method: 'POST', url: url + '/outbound/:file_ids', params: {file_ids: '@file_ids'}}
     })
 });
@@ -117,7 +117,7 @@ services.factory('InvalidFactory', function ($resource) {
 });
 
 services.factory('InboundInvalidFactory', function ($resource) {
-    var url = '/rest/inbound/invalid';
+    var url = '/rest/preprocessing/invalid';
     return $resource(url, {}, {
         query: {method: 'GET', isArray: true},
         size: {method: 'GET', url: url + '/count'},

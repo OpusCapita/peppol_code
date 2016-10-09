@@ -42,7 +42,8 @@ public class IndexController {
 
         ModelAndView result = new ModelAndView("result");
         try {
-            ContainerMessage containerMessage = new ContainerMessage(new DocumentLoader().load(dataFile.getInputStream(), dataFile.getName()), "", Endpoint.REST);
+            ContainerMessage containerMessage = new ContainerMessage(
+                    new DocumentLoader().load(dataFile.getInputStream(), dataFile.getName()), dataFile.getName(), Endpoint.REST);
             ValidationResult validationResult = validationController.validate(containerMessage);
             System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
             validationResult.getErrors().forEach(error -> System.out.println(error.toString()));
