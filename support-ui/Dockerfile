@@ -3,7 +3,7 @@ FROM d-l-tools.ocnet.local:443/peppol2.0/tomcat:8
 ENV PEPPOL_CONFIG_PATH /etc/peppol2.0/support-ui
 RUN mkdir -p "${PEPPOL_CONFIG_PATH}"
 
-VOLUME /etc/peppol2.0
+VOLUME /etc/peppol2.0/support-ui
 
 ENV JAVA_OPTS "\
     -Dhttp.proxyHost=10.202.9.33 \
