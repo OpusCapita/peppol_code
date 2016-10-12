@@ -8,15 +8,12 @@ def support_ui_image
 
 def properties  // additional properties loaded from file
 
-def loadProperties(String filename) {
+def Properties loadProperties(String filename) {
     Properties properties = new Properties()
-    File propertiesFile = new File(filename)
-    propertiesFile.withInputStream {
-        properties.load(it)
-    }
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
     return properties
 }
-
 
 node {
     stage('Build') {
