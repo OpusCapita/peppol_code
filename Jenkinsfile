@@ -27,7 +27,7 @@ node {
             '''
             properties = loadProperties('gradle.properties')
             releaseVersion = properties.version
-            tag = "${releaseVersion}+${env.BUILD_NUMBER}"
+            tag = "${releaseVersion}-${env.BUILD_NUMBER}"
         } 
         dir('infra') {
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
