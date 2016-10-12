@@ -26,7 +26,7 @@ node {
                 support-ui:assemble
             '''
             properties = loadProperties('gradle.properties')
-            releaseVersion = properties."release.version"
+            releaseVersion = properties.version
             tag = "${releaseVersion}+${env.BUILD_NUMBER}"
         } 
         dir('infra') {
