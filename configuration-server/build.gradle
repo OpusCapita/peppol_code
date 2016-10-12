@@ -33,7 +33,7 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.cloud:spring-cloud-config-server')
-	compile project(':common')
+	//compile project(':common')
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 

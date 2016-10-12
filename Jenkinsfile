@@ -1,9 +1,22 @@
 #!groovy
+def releaseVersion
 def tag = "latest"
 
 def config_server_image
 def events_persistence_image
 def support_ui_image
+
+def properties  // additional properties loaded from file
+
+def loadProperties(String filename) {
+    Properties properties = new Properties()
+    File propertiesFile = new File(filename)
+    propertiesFile.withInputStream {
+        properties.load(it)
+    }
+    return properties
+}
+
 
 node {
     stage('Build') {
@@ -15,6 +28,9 @@ node {
                 events-persistence:assemble \
                 support-ui:assemble
             '''
+            properties = loadProperties('gradle.properties')
+            releaseVersion = properties."release.version"
+            tag = "${releaseVersion}+${env.BUILD_NUMBER}"
         } 
         dir('infra') {
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
