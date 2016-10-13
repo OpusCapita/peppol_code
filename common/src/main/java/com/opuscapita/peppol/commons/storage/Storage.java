@@ -2,6 +2,7 @@ package com.opuscapita.peppol.commons.storage;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,54 +12,44 @@ import java.io.InputStream;
 public interface Storage {
 
     /**
-     * Reads file from storage. There is no difference between temporary and long-time storage when reading.
+     * Stores file to temporary storage.
      *
-     * @param fileId the file ID
-     * @return the file as stream
-     */
-    @NotNull
-    InputStream read(@NotNull String fileId) throws IOException;
-
-    /**
-     * Stores data to temporary storage. Uses freshly generated UUID as a file name.
-     *
-     * @param bytes the data to store
+     * @param stream the input stream
+     * @param fileName the name of the file to store
      * @return the file ID
      */
     @NotNull
-    String storeTemporary(@NotNull byte[] bytes) throws IOException;
+    String storeTemporary(@NotNull InputStream stream, @NotNull String fileName) throws IOException;
 
     /**
-     * Stores data to temporary storage using given base file name.
+     * Stores file to temporary storage.
      *
-     * @param bytes the data to store
-     * @param baseName the base name of the file, directories will be ignored
+     * @param source the file to store
      * @return the file ID
      */
     @NotNull
-    String storeTemporary(@NotNull byte[] bytes, @NotNull String baseName) throws IOException;
+    String storeTemporary(@NotNull File source) throws IOException;
 
     /**
-     * Stores data to long-term storage. Uses freshly generated UUID as a file name.
+     * Stores data to long-term storage.
      *
      * @param senderId the sender ID, use empty line when missing
      * @param recipientId the recipient ID, use empty line when missing
-     * @param bytes the data to store
+     * @param fileName the name of the file to store
      * @return the file ID
      */
     @NotNull
-    String storeLongterm(@NotNull String senderId, @NotNull String recipientId, @NotNull byte[] bytes) throws IOException;
+    String storeLongterm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName) throws IOException;
 
     /**
-     * Stores data to long-term storage. Uses given file name.
+     * Stores data to long-term storage.
      *
      * @param senderId the sender ID, use empty line when missing
      * @param recipientId the recipient ID, use empty line when missing
-     * @param bytes the data to store
-     * @param baseName the base name of the file, directories will be ignored
+     * @param input the file to store
      * @return the file ID
      */
     @NotNull
-    String storeLongterm(@NotNull String senderId, @NotNull String recipientId, @NotNull byte[] bytes, @NotNull String baseName)
-            throws IOException;
+    String storeLongterm(@NotNull String senderId, @NotNull String recipientId, @NotNull File input) throws IOException;
+
 }
