@@ -2,6 +2,7 @@ package eu.peppol.persistence;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.storage.StorageImpl;
 import com.opuscapita.peppol.inbound.InboundMessageSender;
 import com.opuscapita.peppol.inbound.InboundProperties;
 import eu.peppol.PeppolMessageMetaData;
@@ -33,18 +34,14 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
         logger.info("Received message with Transmission ID = " + metadata.getTransmissionId());
 
         // store file locally
-        File dataFile = null;
+        String dataFile;
         try {
-            File messageDirectory = prepareMessageDirectory(
-                    properties.getProperty(INBOUND_OUTPUT_DIR),
-                    metadata.getRecipientId(),
-                    metadata.getSenderId());
-
-            String dataFileName = normalizeFilename(metadata.getTransmissionId().toString()) + ".xml";
-            dataFile = new File(messageDirectory, dataFileName);
-            saveDocument(inputStream, dataFile);
-            logger.info("Message stored as: " + dataFile.getAbsolutePath());
+            dataFile = new StorageImpl()
+                    .setShortTermDirectory(properties.getProperty(INBOUND_OUTPUT_DIR))
+                    .storeTemporary(inputStream, normalizeFilename(metadata.getTransmissionId().toString()) + ".xml");
+            logger.info("Message stored as: " + dataFile);
         } catch (Exception e) {
+            // TODO open ticket
             throw new OxalisMessagePersistenceException(metadata, e);
         }
 
@@ -53,7 +50,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
 
         // send file to MQ, no exception to sending AP here anymore, file already available
         try {
-            ContainerMessage cm = prepareMessage(dataFile.getAbsolutePath(), metadataString);
+            ContainerMessage cm = prepareMessage(dataFile, metadataString);
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {
             logger.error("Failed to send file " + metadata.getTransmissionId() + " to MQ: ", e);

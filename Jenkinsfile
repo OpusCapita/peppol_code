@@ -1,9 +1,19 @@
 #!groovy
+def releaseVersion
 def tag = "latest"
 
 def config_server_image
 def events_persistence_image
 def support_ui_image
+
+def properties  // additional properties loaded from file
+
+def Properties loadProperties(String filename) {
+    Properties properties = new Properties()
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
+    return properties
+}
 
 node {
     stage('Build') {
@@ -15,6 +25,9 @@ node {
                 events-persistence:assemble \
                 support-ui:assemble
             '''
+            properties = loadProperties('gradle.properties')
+            releaseVersion = properties.version
+            tag = "${releaseVersion}-${env.BUILD_NUMBER}"
         } 
         dir('infra') {
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
@@ -51,11 +64,11 @@ node {
         }
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
-            config_server_image.push()
+            config_server_image.push("latest")
             config_server_image.push("${tag}")
-            events_persistence_image.push()
+            events_persistence_image.push("latest")
             events_persistence_image.push("${tag}")
-            support_ui_image.push()
+            support_ui_image.push("latest")
             support_ui_image.push("${tag}")
         }
     }
