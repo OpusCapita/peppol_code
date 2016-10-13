@@ -12,7 +12,7 @@ import java.io.InputStream;
 public interface Storage {
 
     /**
-     * Stores file to temporary storage.
+     * Stores stream to temporary storage.
      *
      * @param stream the input stream
      * @param fileName the name of the file to store
@@ -22,13 +22,13 @@ public interface Storage {
     String storeTemporary(@NotNull InputStream stream, @NotNull String fileName) throws IOException;
 
     /**
-     * Stores file to temporary storage.
+     * Moves file to temporary storage.
      *
      * @param source the file to store
      * @return the file ID
      */
     @NotNull
-    String storeTemporary(@NotNull File source) throws IOException;
+    String moveToTemporary(@NotNull File source) throws IOException;
 
     /**
      * Stores data to long-term storage.
@@ -39,7 +39,7 @@ public interface Storage {
      * @return the file ID
      */
     @NotNull
-    String storeLongterm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName) throws IOException;
+    String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName) throws IOException;
 
     /**
      * Stores data to long-term storage.
@@ -50,6 +50,6 @@ public interface Storage {
      * @return the file ID
      */
     @NotNull
-    String storeLongterm(@NotNull String senderId, @NotNull String recipientId, @NotNull File input) throws IOException;
+    String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File input) throws IOException;
 
 }

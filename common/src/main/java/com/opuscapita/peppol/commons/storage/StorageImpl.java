@@ -38,7 +38,7 @@ public class StorageImpl implements Storage {
 
     @NotNull
     @Override
-    public String storeTemporary(@NotNull File source) throws IOException {
+    public String moveToTemporary(@NotNull File source) throws IOException {
         File dir = createDailyDirectory();
         File result = new File(dir, source.getName());
 
@@ -61,13 +61,13 @@ public class StorageImpl implements Storage {
 
     @NotNull
     @Override
-    public String storeLongterm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName) throws IOException {
-        return storeLongterm(senderId, recipientId, new File(fileName));
+    public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName) throws IOException {
+        return moveToLongTerm(senderId, recipientId, new File(fileName));
     }
 
     @NotNull
     @Override
-    public String storeLongterm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
+    public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
         senderId = normalizeFilename(senderId);
         recipientId = normalizeFilename(recipientId);
         String date = new SimpleDateFormat("yyyymmdd").format(new Date());

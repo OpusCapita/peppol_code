@@ -82,7 +82,7 @@ public class IncomingChecker {
     }
 
     private void send(File file) throws IOException {
-        String fileName = storage.storeTemporary(file);
+        String fileName = storage.moveToTemporary(file);
 
         ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, Endpoint.GATEWAY);
 
