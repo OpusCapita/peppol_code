@@ -44,7 +44,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Value("${reprocess.outbound.dir}")
     private String reprocessOutboundDir;
 
-    @Value("${reprocess.preprocessing.dir}")
+    @Value("${reprocess.inbound.dir}")
     private String reprocessInboundDir;
 
 
