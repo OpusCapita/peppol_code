@@ -182,8 +182,8 @@ app.controller('AccessPointCtrl', ['$scope', 'AccessPointFactory', '$resource', 
         };
     }]);
 
-app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', 'FailedFactory', 'InvalidFactory', 'MessageFactory', 'ReprocessFactory', '$window', '$route', '$modal',
-    function ($scope, $resource, $location, $timeout, FailedFactory, InvalidFactory, MessageFactory, ReprocessFactory, $window, $route, $modal) {
+app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', 'FailedFactory', 'InvalidFactory', 'MessageFactory', 'ReprocessFactory', '$window', '$route', '$modal', '$filter',
+    function ($scope, $resource, $location, $timeout, FailedFactory, InvalidFactory, MessageFactory, ReprocessFactory, $window, $route, $modal, $filter) {
         $scope.showMessageInfo = function (msg) {
             msg.showMessageDesc = (msg.showMessageDesc != true);
             if (msg.showMessageDesc) {
@@ -381,6 +381,101 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
                 return "Partner";
             return "Recipient";
         };
+        <!--invoiceDate-->
+        $scope.today = function() {
+            $scope.invoiceDate = new Date();
+        };
+
+        $scope.today();
+
+        $scope.clear = function() {
+            $scope.invoiceDate = null;
+        };
+
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.dateOptions = {
+            dateDisabled: disabled,
+            formatYear: 'yy',
+            startingDay: 1
+        };
+
+        $scope.toggleMin = function () {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+        };
+
+        $scope.toggleMin();
+
+        $scope.setDate = function (year, month, day) {
+            $scope.invoiceDate = new Date(year, month, day);
+        };
+
+
+        $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+        $scope.format = 'yyyy-MM-dd';
+        $scope.altInputFormats = ['yyyy/M!/d!'];
+
+        $scope.popup = {
+            opened: false
+        };
+
+        $scope.openDatePicker = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.popup.opened = true;
+        };
+
+        // Disable weekend selection
+        function disabled(data) {
+            var date = data.date,
+                mode = data.mode;
+            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+        }
+
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        var afterTomorrow = new Date();
+        afterTomorrow.setDate(tomorrow.getDate() + 1);
+
+        $scope.changeSelect= function(dt){
+            dt.setHours(0,0,0,0);
+            console.log(dt);
+        };
+
+        $scope.events = [
+            {
+                date: tomorrow,
+                status: 'full'
+            },
+            {
+                date: afterTomorrow,
+                status: 'partially'
+            }
+        ];
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+            return '';
+        };
+
     }]);
 
 var ModalInstanceCtrl = ['$scope', '$modalInstance', 'messages', function ($scope, $modalInstance, messages) {
@@ -474,6 +569,7 @@ app.controller("ProcessingCtrl", ["$scope", "ProcessingFactory", "$resource", "$
         $scope.colspan = DEFAULT_COLSPAN;
         $scope.tableParams = createTable(ngTableParams, $location, $timeout, ProcessingFactory, $scope);
     }]);
+
 app.controller("ReprocessedCtrl", ["$scope", "ReprocessedFactory", "$resource", "$location", "ngTableParams", "$timeout",
     function ($scope, ReprocessedFactory, $resource, $location, ngTableParams, $timeout) {
         $scope.colspan = DEFAULT_COLSPAN;
@@ -498,7 +594,7 @@ app.controller("LogoutCtrl", ["$resource", "$route", "$location", function ($res
     })
 }]);
 
-app.controller("DatepickerCtrl", ['$scope', function ($scope) {
+/*app.controller("DatepickerCtrl", ['$scope', function ($scope) {
 
     $scope.inlineOptions = {
         customClass: getDayClass,
@@ -525,8 +621,8 @@ app.controller("DatepickerCtrl", ['$scope', function ($scope) {
 
     $scope.dt = new Date();
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-    $scope.format = "dd/MM/yyyy";
-    $scope.altInputFormats = ['d!/M!/yyyy'];
+    $scope.format = "yyyy-MM-dd";
+    $scope.altInputFormats = ['yyyy/M!/d!'];
 
     $scope.popup = {
         opened: false
@@ -580,7 +676,7 @@ app.controller("DatepickerCtrl", ['$scope', function ($scope) {
         return '';
     };
 
-}]);
+}]);*/
 
 app.controller('sideMenu', ['$scope', function ($scope) {
     $scope.active;

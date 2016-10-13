@@ -1,15 +1,16 @@
-<div class="input-group datepicker" ng-controller="DatepickerCtrl">
+<div class="input-group datepicker">
     <input
             type="text"
-            class="form-control"
+            name="{{column.filterName}}"
+            class="input-filter form-control"
             datepicker-popup="{{format}}"
-            ng-model="dt"
+            uib-datepicker-popup ng-model="params.filter()[name]"
+            ng-change="changeSelect(params.filter()[name])"
             is-open="popup.opened"
             close-text="Close"
             datepicker-options="dateOptions"
             ng-required="true"
-            close-on-date-selection="false"
-    />
+            close-on-date-selection="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
       <i class="glyphicon glyphicon-calendar"></i>
