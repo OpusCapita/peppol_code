@@ -11,6 +11,7 @@ gradle-app.setting
 !common/libs/service-now-connector-all.jar
 !inbound/ee/oxalis.war
 !inbound/libs/*.jar
+!outbound/bin/oxalis-standalone.jar
 
 # Cache of project
 .gradletasknamecache
