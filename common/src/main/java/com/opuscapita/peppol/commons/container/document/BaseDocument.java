@@ -13,18 +13,18 @@ import org.w3c.dom.Node;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class BaseDocument {
-    public static final String UNKNOWN_RECIPIENT = "n/a";
-    public static final String UNKNOWN_SENDER = "n/a";
-    public static final String UNKNOWN_VERSION_ID = "Unknown version id";
+    public static final String UNKNOWN_RECIPIENT = "";
+    public static final String UNKNOWN_SENDER = "";
+    public static final String UNKNOWN_VERSION_ID = "";
     public static final String UNKNOWN_DOCUMENT_ID = "";
     public static final String UNKNOWN_ISSUE_DATE = "";
     public static final String UNKNOWN_DUE_DATE = "";
-    public static final String UNKNOWN_SENDER_NAME = "n/a";
+    public static final String UNKNOWN_SENDER_NAME = "";
     public static final String UNKNOWN_SENDER_COUNTRY_CODE = "";
-    public static final String UNKNOWN_RECIPIENT_NAME = "n/a";
+    public static final String UNKNOWN_RECIPIENT_NAME = "";
     public static final String UNKNOWN_RECIPIENT_COUNTRY_CODE = "";
-    public static final String UNKNOWN_PROFILE_ID = "Unknown profile ID";
-    public static final String UNKNOWN_CUSTOMIZATION_ID = "Unknown customization ID";
+    public static final String UNKNOWN_PROFILE_ID = "";
+    public static final String UNKNOWN_CUSTOMIZATION_ID = "";
 
     private String senderId = UNKNOWN_SENDER;
     private String recipientId = UNKNOWN_RECIPIENT;

@@ -92,9 +92,7 @@
 
 <script src="${pageContext.request.contextPath}/js/lib/jquery-1.11.0.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular.js"></script>
-<%--
 <script src="${pageContext.request.contextPath}/js/lib/bootstrap.min.js"></script>
---%>
 <script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular-resource.js"></script>
 <script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular-cookies.js"></script>
 <script src="${pageContext.request.contextPath}/js/lib/angular-1.2.11/angular-route.js"></script>

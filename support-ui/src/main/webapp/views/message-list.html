@@ -35,7 +35,7 @@
                 <td width="30" style="text-align: left" header="'/ng-table/headers/checkbox.html'">
                     <input type="checkbox" id="checkbox" ng-model="checkboxes.items[msg.id]"/>
                 </td>
-                <td id="status" data-title="'Status'" style="width: 100px;" filter="{ 'status': 'status' }"
+                <td data-title="'Status'" style="width: 100px;" filter="{ 'status': 'status' }"
                     ng-click="showMessageInfo(msg)">
                     <message-status msg="msg"></message-status>
                 </td>
@@ -61,7 +61,7 @@
                     ng-click="showMessageInfo(msg)">
                     {{msg.invoiceDate}}
                 </td>
-                <td id="due_date" data-title="'Due Date'" sortable="'dueDate'" filter="{ 'dueDate': 'date' }"
+                <td id="due_date" data-title="'Due Date'" sortable="'dueDate'"
                     ng-click="showMessageInfo(msg)">
                     {{msg.dueDate}}
                 </td>

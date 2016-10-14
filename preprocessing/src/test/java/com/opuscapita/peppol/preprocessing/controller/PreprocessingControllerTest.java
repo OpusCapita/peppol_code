@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.storage.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Sergejs.Roze
@@ -31,7 +34,10 @@ public class PreprocessingControllerTest {
 
     @Test
     public void testValidFile() throws Exception {
-        PreprocessingController controller = new PreprocessingController(dl);
+        Storage storage = mock(Storage.class);
+        when(storage.moveToLongTerm("9908:980361330", "9908:923609016", "/valid.xml")).thenReturn("long_term");
+
+        PreprocessingController controller = new PreprocessingController(dl, storage);
         ContainerMessage cm = controller.process(new ContainerMessage("metadata", "/valid.xml", Endpoint.PEPPOL));
 
         assertNotNull(cm);
@@ -40,24 +46,29 @@ public class PreprocessingControllerTest {
         assertEquals("metadata", cm.getSourceMetadata());
         assertEquals(Endpoint.PEPPOL, cm.getSource());
         assertEquals("9908:923609016", cm.getCustomerId());
+        assertEquals("long_term", cm.getFileName());
     }
 
     @Test
     public void testInvalidFile() throws Exception {
-        PreprocessingController controller = new PreprocessingController(dl);
+        Storage storage = mock(Storage.class);
+        when(storage.moveToLongTerm("", "", "/not_xml.xml")).thenReturn("long_term");
+
+        PreprocessingController controller = new PreprocessingController(dl, storage);
         ContainerMessage cm = controller.process(new ContainerMessage("metadata", "/not_xml.xml", Endpoint.PEPPOL));
 
         assertNotNull(cm);
         assertNotNull(cm.getBaseDocument());
         assertTrue(cm.getBaseDocument() instanceof InvalidDocument);
         InvalidDocument invalidDocument = (InvalidDocument) cm.getBaseDocument();
-
         assertEquals("Unable to parse document", invalidDocument.getReason());
+        assertEquals("long_term", cm.getFileName());
     }
 
     @Test
     public void testNoFile() throws Exception {
-        PreprocessingController controller = new PreprocessingController(dl);
+        Storage storage = mock(Storage.class);
+        PreprocessingController controller = new PreprocessingController(dl, storage);
 
         try {
             controller.process(new ContainerMessage("metadata", "_no_such_file", Endpoint.GATEWAY));

@@ -8,6 +8,9 @@ import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -42,7 +45,14 @@ public class HibernateUtil {
             if (entry.getValue() != null && !entry.getValue().isEmpty()) {
                 if ("status".equals(entry.getKey())) {
                     conjunction.add(Restrictions.eq(entry.getKey(), MessageStatus.valueOf(entry.getValue())));
-
+                } else if ("invoiceDate".equals(entry.getKey())) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("\"yyyy-MM-dd'T'HH:mm:ss.SSSX\"");
+                    try {
+                        Date invoiceDate = sdf.parse(entry.getValue());
+                        conjunction.add(Restrictions.like(entry.getKey(), invoiceDate));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     conjunction.add(Restrictions.like(entry.getKey(), "%" + entry.getValue() + "%").ignoreCase());
                 }
