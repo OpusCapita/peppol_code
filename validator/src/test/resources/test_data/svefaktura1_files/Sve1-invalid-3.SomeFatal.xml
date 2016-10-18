@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+    <StandardBusinessDocumentHeader>
+        <HeaderVersion>1.0</HeaderVersion>
+        <Sender>
+            <Identifier Authority="iso6523-actorid-upis">0008:1234567890123</Identifier>
+        </Sender>
+        <Receiver>
+            <Identifier Authority="iso6523-actorid-upis">0008:1234567890123</Identifier>
+        </Receiver>
+        <DocumentIdentification>
+            <Standard>urn:sfti:documents:BasicInvoice:1:0</Standard>
+            <TypeVersion>1.0</TypeVersion>
+            <InstanceIdentifier>c000009l-bb9p-4b9r-ab9t-000a00000000</InstanceIdentifier>
+            <Type>Invoice</Type>
+            <CreationDateAndTime>2016-05-26T14:21:38Z</CreationDateAndTime>
+        </DocumentIdentification>
+        <BusinessScope>
+            <Scope>
+                <Type>DOCUMENTID</Type>
+                <InstanceIdentifier>
+                    urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0
+                </InstanceIdentifier>
+            </Scope>
+            <Scope>
+                <Type>PROCESSID</Type>
+                <InstanceIdentifier>urn:sfti:services:documentprocessing:BasicInvoice:1:0</InstanceIdentifier>
+            </Scope>
+        </BusinessScope>
+    </StandardBusinessDocumentHeader>
+    <Invoice xmlns:cac="urn:sfti:CommonAggregateComponents:1:0"
+             xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0"
+             xmlns="urn:sfti:documents:BasicInvoice:1:0"
+    >
+        <ID>467405571622</ID>
+        <cbc:IssueDate>2016-05-02</cbc:IssueDate>
+        <InvoiceTypeCode>380</InvoiceTypeCode>
+        <cbc:Note>Årsförbrukning: 301 677 kWh. Abonnemang: Effekt L0,4S. Områdes ID: MOR.
+            - - - - - - - - - - - -
+            För Ellevio AB:s momsreg.nr. SE556037732601 räkning fakturerar Energikundservice Sverige AB, SE-115 77
+            Stockholm momsreg.nr. SE556737080301. Företagen har F-skattsedel. Dröjsmålsränta: referensränta + 8
+            procentenheter. Anmärkningar på fakturan ska göras inom 14 dagar.
+        </cbc:Note>
+        <InvoiceCurrencyCode codeListID="ISO 4217 Alpha" codeListAgencyID="6"
+                             codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Currency"
+                             codeListVersionID="0.3"
+                             codeListURI="http://www.bsi-global.com/Technical%2BInformation/Publications/_Publications/tig90x.doc"
+                             codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:CurrencyCode:1:0" languageID="en">SEK
+        </InvoiceCurrencyCode>
+        <LineItemCountNumeric>3</LineItemCountNumeric>
+        <AdditionalDocumentReference>
+            <cac:ID identificationSchemeID="CT">FORTUM</cac:ID>
+        </AdditionalDocumentReference>
+        <AdditionalDocumentReference>
+            <cac:ID identificationSchemeID="ACD" identificationSchemeAgencyName="SFTI">1234567890123</cac:ID>
+        </AdditionalDocumentReference>
+        <cac:BuyerParty>
+            <cac:Party>
+                <cac:PartyIdentification>
+                    <cac:ID>1234567890123</cac:ID>
+                </cac:PartyIdentification>
+                <cac:PartyName>
+                    <cbc:Name>Landstinget Dalarna</cbc:Name>
+                </cac:PartyName>
+                <cac:Address>
+                    <cbc:StreetName>att. Ref: 41003</cbc:StreetName>
+                    <cbc:CityName>ÖSTERSUND</cbc:CityName>
+                    <cbc:PostalZone>83129</cbc:PostalZone>
+                    <cac:Country>
+                        <cac:IdentificationCode codeListID="ISO3166-1" codeListAgencyID="6"
+                                                codeListAgencyName="United Nations Economic Commission for Europe"
+                                                codeListName="Country" codeListVersionID="0.3"
+                                                codeListURI="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1-semic.txt"
+                                                codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:CountryIdentificationCode:1:0"
+                                                languageID="en">SE
+                        </cac:IdentificationCode>
+                    </cac:Country>
+                </cac:Address>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>SE232100018001</cac:CompanyID>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>2321000180</cac:CompanyID>
+                    <cac:TaxScheme>
+                        <cac:ID>SWT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+            </cac:Party>
+        </cac:BuyerParty>
+        <cac:SellerParty>
+            <cac:Party>
+                <cac:PartyIdentification>
+                    <cac:ID>1234567890123</cac:ID>
+                </cac:PartyIdentification>
+                <cac:PartyName>
+                    <cbc:Name>Energikundservice Sverige AB</cbc:Name>
+                </cac:PartyName>
+                <cac:Address>
+                    <cbc:CityName>Stockholm</cbc:CityName>
+                    <cbc:PostalZone>11577</cbc:PostalZone>
+                </cac:Address>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>SE556737080301</cac:CompanyID>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>5567370803</cac:CompanyID>
+                    <cbc:ExemptionReason>Företagen har F-skattsedel</cbc:ExemptionReason>
+                    <cac:RegistrationAddress>
+                        <cbc:CityName>STOCKHOLM</cbc:CityName>
+                    </cac:RegistrationAddress>
+                    <cac:TaxScheme>
+                        <cac:ID>SWT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+            </cac:Party>
+            <cac:AccountsContact>
+                <cbc:Name>Kundservice</cbc:Name>
+                <cbc:Telephone>020-818 818</cbc:Telephone>
+                <cbc:ElectronicMail>www.ellevio.se</cbc:ElectronicMail>
+            </cac:AccountsContact>
+        </cac:SellerParty>
+        <cac:Delivery>
+            <cac:DeliveryAddress>
+                <cac:AddressLine>
+                    <cbc:Line>SKERIOL obj.nr:627801 792 34 MOR</cbc:Line>
+                </cac:AddressLine>
+            </cac:DeliveryAddress>
+        </cac:Delivery>
+        <cac:PaymentMeans>
+            <cac:PaymentMeansTypeCode codeListID="UN/ECE 4461" codeListAgencyID="6"
+                                      codeListAgencyName="United Nations Economic Commission for Europe"
+                                      codeListName="Payment Means" codeListVersionID="D03A"
+                                      codeListURI="http://www.unece.org/trade/untdid/d03a/tred/tred4461.htm"
+                                      codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:PaymentMeansCode:1:0">1
+            </cac:PaymentMeansTypeCode>
+            <cbc:DuePaymentDate>2016-06-01</cbc:DuePaymentDate>
+            <cac:PayeeFinancialAccount>
+                <cac:ID>52339330</cac:ID>
+                <cac:FinancialInstitutionBranch>
+                    <cac:FinancialInstitution>
+                        <cac:ID>BGABSESS</cac:ID>
+                    </cac:FinancialInstitution>
+                </cac:FinancialInstitutionBranch>
+            </cac:PayeeFinancialAccount>
+        </cac:PaymentMeans>
+        <cac:PaymentMeans>
+            <cac:PaymentMeansTypeCode codeListID="UN/ECE 4461" codeListAgencyID="6"
+                                      codeListAgencyName="United Nations Economic Commission for Europe"
+                                      codeListName="Payment Means" codeListVersionID="D03A"
+                                      codeListURI="http://www.unece.org/trade/untdid/d03a/tred/tred4461.htm"
+                                      codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:PaymentMeansCode:1:0">1
+            </cac:PaymentMeansTypeCode>
+            <cbc:DuePaymentDate>2016-06-01</cbc:DuePaymentDate>
+            <cac:PayeeFinancialAccount>
+                <cac:ID>48755037</cac:ID>
+                <cac:FinancialInstitutionBranch>
+                    <cac:FinancialInstitution>
+                        <cac:ID>PGSISESS</cac:ID>
+                    </cac:FinancialInstitution>
+                </cac:FinancialInstitutionBranch>
+            </cac:PayeeFinancialAccount>
+        </cac:PaymentMeans>
+        <cac:TaxTotal>
+            <cbc:TotalTaxAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">1935.73
+            </cbc:TotalTaxAmount>
+            <cac:TaxSubTotal>
+                <cbc:TaxableAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">7742.93
+                </cbc:TaxableAmount>
+                <cbc:TaxAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">1935.73</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubTotal>
+        </cac:TaxTotal>
+        <cac:LegalTotal>
+            <cbc:LineExtensionTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">7742.93
+            </cbc:LineExtensionTotalAmount>
+            <cbc:TaxExclusiveTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">7742.93
+            </cbc:TaxExclusiveTotalAmount>
+            <cbc:TaxInclusiveTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">9679.00
+            </cbc:TaxInclusiveTotalAmount>
+            <cac:RoundOffAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">0.34</cac:RoundOffAmount>
+        </cac:LegalTotal>
+        <cac:InvoiceLine>
+            <cac:ID>1</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="dagar">30</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">2500.00
+            </cbc:LineExtensionAmount>
+            <cbc:Note>Leveransperiod, from datum 2016-04-01
+                Leveransperiod, tom datum 2016-04-30
+                Mätarnummer 210048604
+                Anläggningsidentitet 735999102109517505
+            </cbc:Note>
+            <cac:Item>
+                <cbc:Description>Fast elnätsavgift</cbc:Description>
+                <cac:StandardItemIdentification>
+                    <cac:ID>7330630026068</cac:ID>
+                </cac:StandardItemIdentification>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+                <cac:BasePrice>
+                    <cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">2500.0000
+                    </cbc:PriceAmount>
+                    <cbc:BaseQuantity quantityUnitCode="kr/mån">1</cbc:BaseQuantity>
+                </cac:BasePrice>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <cac:InvoiceLine>
+            <cac:ID>4</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="kWh">25426</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">1322.17
+            </cbc:LineExtensionAmount>
+            <cbc:Note>Leveransperiod, from datum 2016-04-01
+                Leveransperiod, tom datum 2016-04-30
+                Mätarnummer 210048604
+                Anläggningsidentitet 735999102109517505
+            </cbc:Note>
+            <cac:Item>
+                <cbc:Description>Rörlig elnätsavgift</cbc:Description>
+                <cac:StandardItemIdentification>
+                    <cac:ID>7330630026020</cac:ID>
+                </cac:StandardItemIdentification>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+                <cac:BasePrice>
+                    <cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">0.0520
+                    </cbc:PriceAmount>
+                    <cbc:BaseQuantity quantityUnitCode="öre/kWh">1</cbc:BaseQuantity>
+                </cac:BasePrice>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <cac:InvoiceLine>
+            <cac:ID>3</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="kW">87</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">3920.76
+            </cbc:LineExtensionAmount>
+            <cbc:Note>Leveransperiod, from datum 2016-04-01
+                Leveransperiod, tom datum 2016-04-30
+                Mätarnummer 210048604
+                Anläggningsidentitet 735999102109517505
+            </cbc:Note>
+            <cac:Item>
+                <cbc:Description>Månadseffektavgift</cbc:Description>
+                <cac:StandardItemIdentification>
+                    <cac:ID>7330630027126</cac:ID>
+                </cac:StandardItemIdentification>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+                <cac:BasePrice>
+                    <cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">45.0000
+                    </cbc:PriceAmount>
+                    <cbc:BaseQuantity quantityUnitCode="kr/kW, mån">1</cbc:BaseQuantity>
+                </cac:BasePrice>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <RequisitionistDocumentReference>
+            <cac:ID>41003</cac:ID>
+        </RequisitionistDocumentReference>
+        <InvoicingPeriod>
+            <cbc:StartDateTime>2016-04-01T00:00:00</cbc:StartDateTime>
+            <cbc:EndDateTime>2016-04-30T00:00:00</cbc:EndDateTime>
+        </InvoicingPeriod>
+    </Invoice>
+</StandardBusinessDocument>

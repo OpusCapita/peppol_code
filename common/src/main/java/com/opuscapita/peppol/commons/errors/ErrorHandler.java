@@ -11,6 +11,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,7 @@ public class ErrorHandler {
     public void reportToServiceNow(String message, String customerId, Exception e) {
         reportToServiceNow(message, customerId, e, e.getMessage());
     }
+
     public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription) {
         reportToServiceNow(message, customerId, e, shortDescription, "");
     }
@@ -42,16 +44,18 @@ public class ErrorHandler {
     public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription, String correlationIdPrefix) {
         String dumpFileName = storeMessageToDisk(message);
         logger.warn("Dumped erroneous message to: " + dumpFileName);
-        createSncTicket(dumpFileName, customerId, e, shortDescription, correlationIdPrefix);
+        createSncTicket(dumpFileName, message, customerId, e, shortDescription, correlationIdPrefix);
         logger.warn("ServiceNow ticket created with reference to: " + dumpFileName);
     }
 
-    protected void createSncTicket(String dumpFileName, String customerId, Exception jse, String shortDescription, String correlationIdPrefix) {
+    protected void createSncTicket(String dumpFileName, String message, String customerId, Exception jse, String shortDescription, String correlationIdPrefix) {
         StringWriter stackTraceWriter = new StringWriter();
         jse.printStackTrace(new PrintWriter(stackTraceWriter));
         String correlationId = correlationIdPrefix + generateFailedMessageCorrelationId(jse);
+        Yaml yaml = new Yaml();
+        Object yamlifiedMessaged = yaml.load(message);
         try {
-            serviceNowRest.insert(new SncEntity(shortDescription, dumpFileName + "\n\r" + stackTraceWriter.toString(), correlationId, customerId, 0));
+            serviceNowRest.insert(new SncEntity(shortDescription, yaml.dump(yamlifiedMessaged) + "\n\r" + dumpFileName + "\n\r" + stackTraceWriter.toString(), correlationId, customerId, 0));
         } catch (IOException e) {
             logger.error("Unable to create SNC ticket", e);
         }

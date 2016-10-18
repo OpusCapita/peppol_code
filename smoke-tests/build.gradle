@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath "org.hidetake:gradle-ssh-plugin:2.7.0"
@@ -17,11 +17,11 @@ repositories {
 }
 
 dependencies {
-    testCompile 'org.springframework.boot:spring-boot-starter-actuator'
-    testCompile 'org.springframework.boot:spring-boot-starter-amqp'
+    testCompile 'org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE'
+    testCompile 'org.springframework.boot:spring-boot-starter-amqp:1.4.1.RELEASE'
     testCompile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
-    testCompile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework.boot:spring-boot-starter-data-jpa:1.4.1.RELEASE'
+    testCompile 'org.springframework.boot:spring-boot-starter-test:1.4.1.RELEASE'
 
     testCompile 'junit:junit:4.12'
 
@@ -30,10 +30,10 @@ dependencies {
     testCompile 'com.aestasit.infrastructure.sshoogr:sshoogr:0.9.25'
 
     testCompile 'org.gebish:geb-core:1.0-rc-2'
-    testCompile 'org.seleniumhq.selenium:selenium-java:3.0.0-beta4'
-    testCompile 'org.seleniumhq.selenium:selenium-htmlunit-driver:3.0.0-beta4'
-    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.0.0-beta4'
-    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:3.0.0-beta4'
+    testCompile 'org.seleniumhq.selenium:selenium-java:2.9.0'
+    testCompile 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.9.0'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.9.0'
+    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.9.0'
 
     testCompile 'mysql:mysql-connector-java:6.0.4'
 

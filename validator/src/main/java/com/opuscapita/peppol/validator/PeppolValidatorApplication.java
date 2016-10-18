@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.validator.validations.difi.DifiValidatorConfig;
 import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1ValidatorConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,12 @@ public class PeppolValidatorApplication {
     String svefaktura1XsdPath;
     @Value("${peppol.validator.svefaktura1.schematron.enabled}")
     Boolean svefaktura1SchematronValidationEnabled;
+    @Value("${peppol.validation.artifacts.difi.path}")
+    String difiValidationArtifactsPath;
+    @Value("${peppol.validation.artifacts.si.path}")
+    String simplerInvoicingValidationArtifactsPath;
+    @Value("${peppol.validation.artifacts.at.path}")
+    String austrianValidationArtifactsPath;
     @Value("${peppol.validation.consume-queue}")
     private String queueName;
     @Autowired
@@ -38,6 +45,21 @@ public class PeppolValidatorApplication {
     @Bean
     public Svefaktura1ValidatorConfig svefaktura1ValidatorConfig() {
         return new Svefaktura1ValidatorConfig(svefaktura1SchematronValidationEnabled, svefaktur1SchematronXslPath, svefaktura1XsdPath);
+    }
+
+    @Bean
+    public DifiValidatorConfig difiValidatorConfig() {
+        return new DifiValidatorConfig(difiValidationArtifactsPath);
+    }
+
+    @Bean
+    public DifiValidatorConfig simplerInvoicingValidatorConfig() {
+        return new DifiValidatorConfig(simplerInvoicingValidationArtifactsPath);
+    }
+
+    @Bean
+    public DifiValidatorConfig austrianValidatorConfig() {
+        return new DifiValidatorConfig(austrianValidationArtifactsPath);
     }
 
 

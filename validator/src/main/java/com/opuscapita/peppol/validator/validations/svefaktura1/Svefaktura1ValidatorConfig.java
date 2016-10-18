@@ -24,7 +24,7 @@ public class Svefaktura1ValidatorConfig {
         this.svefaktura1XsdPath = svefaktura1XsdPath;
         System.out.println("schematronValidationEnabled: " + schematronValidationEnabled);
         System.out.println("schematronXslPath: " + schematronXslPath);
-        if (schematronValidationEnabled && (isBadFile(schematronXslPath) || isBadFile(svefaktura1XsdPath))) {
+        if (schematronValidationEnabled && (isBadFile(schematronXslPath) || !new File(svefaktura1XsdPath).exists())) {
             // TODO: Re-write error message
             throw new IllegalArgumentException("When 'svefaktura1.schematron.enabled' property is set to 'true', make sure you also set value for: 'svefaktura1.schematron.xsl' property and it is pointing to valid XSL schematron file");
         }

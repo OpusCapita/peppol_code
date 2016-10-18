@@ -1,11 +1,10 @@
 package com.opuscapita.peppol.validator.validations.svefaktura1;
 
+import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import com.opuscapita.peppol.validator.validations.common.BasicValidator;
 import com.opuscapita.peppol.validator.validations.common.ValidationError;
+import com.opuscapita.peppol.validator.validations.common.ValidationResult;
 import com.opuscapita.peppol.validator.validations.common.util.ValidationErrorBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -32,42 +31,44 @@ import java.util.List;
 /**
  * Created by bambr on 16.16.8.
  */
-@Component
-@Scope("prototype")
+
 public class SveFaktura1Validator implements BasicValidator {
     private static final String SVEFAKTURA1_XSD_LOCATION = "/validation/svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd";
     private final static String SBDH_XSD_LOCATION = "validation/SBDH/StandardBusinessDocumentHeader.xsd";
     private static final String XSL_LOCATION = "/validation/svefaktura1/out2016-02-17.xsl";
 
-    @Autowired
+
     Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
 
-    @Autowired
+
     Svefaktura1XsdValidator svefaktura1XsdValidator;
 
-    List<ValidationError> errors = new ArrayList<>();
 
-    @Override
-    public List<ValidationError> getErrors() {
-        return errors;
+    public SveFaktura1Validator(Svefaktura1ValidatorConfig svefaktura1ValidatorConfig, Svefaktura1XsdValidator svefaktura1XsdValidator) {
+        this.svefaktura1ValidatorConfig = svefaktura1ValidatorConfig;
+        this.svefaktura1XsdValidator = svefaktura1XsdValidator;
     }
 
-    @Override
-    public boolean validate(byte[] data) {
 
+    @Override
+    public ValidationResult validate(byte[] data) {
+        List<ValidationError> errors = new ArrayList<>();
+        ValidationResult result = new ValidationResult(Archetype.SVEFAKTURA1);
         svefaktura1XsdValidator.performXsdValidation(data);
 
         if (svefaktura1ValidatorConfig.getSchematronValidationEnabled()) {
             try {
                 Document finalDocument = performSchematronValidation(data);
-                extractErrorsAndWarnings(finalDocument);
+                extractErrorsAndWarnings(finalDocument, errors);
 
             } catch (Exception e) {
                 errors.add(ValidationErrorBuilder.aValidationError().withTitle("Svefaktura1 Schematron validation failed with exception").withDetails(e.getMessage()).build());
             }
-            return errors.size() == 0;
+
         }
-        return false;
+        result.setPassed(errors.size() == 0);
+        errors.forEach(result::addError);
+        return result;
     }
 
     private Document performSchematronValidation(byte[] data) throws ConfigurationException, TransformerException, ParserConfigurationException, SAXException, IOException {
@@ -100,7 +101,7 @@ public class SveFaktura1Validator implements BasicValidator {
         return documentBuilder.parse(new ByteArrayInputStream(resultData));
     }
 
-    private void extractErrorsAndWarnings(Document resultDocument) {
+    private void extractErrorsAndWarnings(Document resultDocument, List<ValidationError> errors) {
         NodeList failedAsserts = resultDocument.getElementsByTagName("svrl:failed-assert");
         for (int i = 0; i < failedAsserts.getLength(); i++) {
             Node failedAssert = failedAsserts.item(i);
