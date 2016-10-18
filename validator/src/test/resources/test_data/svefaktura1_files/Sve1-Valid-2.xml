@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+    <StandardBusinessDocumentHeader>
+        <HeaderVersion>1.0</HeaderVersion>
+        <Sender>
+            <Identifier Authority="iso6523-actorid-upis">0008:1234567890123</Identifier>
+        </Sender>
+        <Receiver>
+            <Identifier Authority="iso6523-actorid-upis">0008:1234567890123</Identifier>
+        </Receiver>
+        <DocumentIdentification>
+            <Standard>urn:sfti:documents:BasicInvoice:1:0</Standard>
+            <TypeVersion>1.0</TypeVersion>
+            <InstanceIdentifier>c000008x-bb91-4b93-ab95-000a00000000</InstanceIdentifier>
+            <Type>Invoice</Type>
+            <CreationDateAndTime>2016-05-26T14:16:47Z</CreationDateAndTime>
+        </DocumentIdentification>
+        <BusinessScope>
+            <Scope>
+                <Type>DOCUMENTID</Type>
+                <InstanceIdentifier>
+                    urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0
+                </InstanceIdentifier>
+            </Scope>
+            <Scope>
+                <Type>PROCESSID</Type>
+                <InstanceIdentifier>urn:sfti:services:documentprocessing:BasicInvoice:1:0</InstanceIdentifier>
+            </Scope>
+        </BusinessScope>
+    </StandardBusinessDocumentHeader>
+    <Invoice xmlns:cac="urn:sfti:CommonAggregateComponents:1:0"
+             xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0" xmlns="urn:sfti:documents:BasicInvoice:1:0">
+        <ID>676811446687355</ID>
+        <cbc:IssueDate>2016-05-10</cbc:IssueDate>
+        <InvoiceTypeCode>380</InvoiceTypeCode>
+        <InvoiceCurrencyCode>SEK</InvoiceCurrencyCode>
+        <LineItemCountNumeric>3</LineItemCountNumeric>
+        <AdditionalDocumentReference>
+            <cac:ID identificationSchemeID="CT" identificationSchemeAgencyName="SFTI">1234567890123</cac:ID>
+        </AdditionalDocumentReference>
+        <cac:BuyerParty>
+            <cac:Party>
+                <cac:PartyIdentification>
+                    <cac:ID>1234567890123</cac:ID>
+                </cac:PartyIdentification>
+                <cac:PartyName>
+                    <cbc:Name>Pysslingen Förskolor &amp; Skolor AB</cbc:Name>
+                </cac:PartyName>
+                <cac:Address>
+                    <cbc:StreetName>BOX 15003</cbc:StreetName>
+                    <cbc:Department>NORRSKENET</cbc:Department>
+                    <cbc:CityName>BROMMA</cbc:CityName>
+                    <cbc:PostalZone>16715</cbc:PostalZone>
+                    <cac:Country>
+                        <cac:IdentificationCode>SE</cac:IdentificationCode>
+                    </cac:Country>
+                </cac:Address>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>5560354309</cac:CompanyID>
+                    <cac:TaxScheme>
+                        <cac:ID>SWT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>SE556035430901</cac:CompanyID>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+            </cac:Party>
+        </cac:BuyerParty>
+        <cac:SellerParty>
+            <cac:Party>
+                <cac:PartyIdentification>
+                    <cac:ID>1234567890123</cac:ID>
+                </cac:PartyIdentification>
+                <cac:PartyName>
+                    <cbc:Name>Anticimex AB</cbc:Name>
+                </cac:PartyName>
+                <cac:Address>
+                    <cbc:Postbox>Box 47025</cbc:Postbox>
+                    <cbc:CityName>Stockholm</cbc:CityName>
+                    <cbc:PostalZone>10074</cbc:PostalZone>
+                    <cac:Country>
+                        <cac:IdentificationCode>SE</cac:IdentificationCode>
+                    </cac:Country>
+                </cac:Address>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>5560329285</cac:CompanyID>
+                    <cbc:ExemptionReason>Innehar F-skattsedel</cbc:ExemptionReason>
+                    <cac:RegistrationAddress>
+                        <cbc:CityName>Stockholm</cbc:CityName>
+                    </cac:RegistrationAddress>
+                    <cac:TaxScheme>
+                        <cac:ID>SWT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>SE556032928501</cac:CompanyID>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+            </cac:Party>
+            <cac:AccountsContact>
+                <cbc:Name>Huvudkontor</cbc:Name>
+                <cbc:Telephone>0752451000</cbc:Telephone>
+                <cbc:Telefax>0851763442</cbc:Telefax>
+                <cbc:ElectronicMail>huvudkontoret@anticimex.se</cbc:ElectronicMail>
+            </cac:AccountsContact>
+        </cac:SellerParty>
+        <cac:PaymentMeans>
+            <cac:PaymentMeansTypeCode>1</cac:PaymentMeansTypeCode>
+            <cbc:DuePaymentDate>2016-07-09</cbc:DuePaymentDate>
+            <cac:PayeeFinancialAccount>
+                <cac:ID>50950385</cac:ID>
+                <cac:FinancialInstitutionBranch>
+                    <cac:FinancialInstitution>
+                        <cac:ID>BGABSESS</cac:ID>
+                    </cac:FinancialInstitution>
+                </cac:FinancialInstitutionBranch>
+                <cac:PaymentInstructionID>676811446687355</cac:PaymentInstructionID>
+            </cac:PayeeFinancialAccount>
+        </cac:PaymentMeans>
+        <cac:PaymentMeans>
+            <cac:PaymentMeansTypeCode>1</cac:PaymentMeansTypeCode>
+            <cbc:DuePaymentDate>2016-07-09</cbc:DuePaymentDate>
+            <cac:PayeeFinancialAccount>
+                <cac:ID>49261035</cac:ID>
+                <cac:FinancialInstitutionBranch>
+                    <cac:FinancialInstitution>
+                        <cac:ID>PGSISESS</cac:ID>
+                    </cac:FinancialInstitution>
+                </cac:FinancialInstitutionBranch>
+                <cac:PaymentInstructionID>676811446687355</cac:PaymentInstructionID>
+            </cac:PayeeFinancialAccount>
+        </cac:PaymentMeans>
+        <cac:TaxTotal>
+            <cbc:TotalTaxAmount amountCurrencyID="SEK">5487.00</cbc:TotalTaxAmount>
+            <cac:TaxSubTotal>
+                <cbc:TaxableAmount amountCurrencyID="SEK">21948.00</cbc:TaxableAmount>
+                <cbc:TaxAmount amountCurrencyID="SEK">5487.00</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubTotal>
+        </cac:TaxTotal>
+        <cac:LegalTotal>
+            <cbc:LineExtensionTotalAmount amountCurrencyID="SEK">21948.00</cbc:LineExtensionTotalAmount>
+            <cbc:TaxExclusiveTotalAmount amountCurrencyID="SEK">21948.00</cbc:TaxExclusiveTotalAmount>
+            <cbc:TaxInclusiveTotalAmount amountCurrencyID="SEK">27435.00</cbc:TaxInclusiveTotalAmount>
+            <cac:RoundOffAmount amountCurrencyID="SEK">0.00</cac:RoundOffAmount>
+        </cac:LegalTotal>
+        <cac:InvoiceLine>
+            <cac:ID>1</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="PCE">1</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK">7316.00</cbc:LineExtensionAmount>
+            <cbc:Note>Period/Objekt:
+                20160301 - 20170228
+                NORRSKENETS FRISKOLA BODEN
+                LÄROVERKSGATAN 1 NORRSKENETS FRISKOLA BODEN 961 75 BODEN
+            </cbc:Note>
+            <cac:Item>
+                <cbc:Description>Inspektion systematiskt brandskydd. Uppdatering systematiskt brandskydd. Kontroll &amp;
+                    service släckare. Kontroll &amp; service inomhusbrandpost. Support systematiskt brandskydd. Service
+                    - övrig brandutrustning. Utbildning motivation brandskydd.
+                </cbc:Description>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <cac:InvoiceLine>
+            <cac:ID>2</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="PCE">1</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK">7316.00</cbc:LineExtensionAmount>
+            <cbc:Note>Period/Objekt:
+                20160301 - 20170228
+                NORRSKENETS FRISKOLA KALIX
+                NÄSBYVÄGEN 16 NORRSKENETS FRISKOLA KALIX 952 62 KALIX
+            </cbc:Note>
+            <cac:Item>
+                <cbc:Description>Inspektion systematiskt brandskydd. Uppdatering systematiskt brandskydd. Kontroll &amp;
+                    service släckare. Kontroll &amp; service inomhusbrandpost. Support systematiskt brandskydd. Service
+                    - övrig brandutrustning. Utbildning motivation brandskydd.
+                </cbc:Description>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <cac:InvoiceLine>
+            <cac:ID>3</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="PCE">1</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK">7316.00</cbc:LineExtensionAmount>
+            <cbc:Note>Period/Objekt:
+                20160301 - 20170228
+                NORRSKENETS FRISKOLA LULEÅ
+                HÖSTVÄGEN 7 NORRSKENETS FRISKOLA LULEÅ 976 33 LULEÅ
+            </cbc:Note>
+            <cac:Item>
+                <cbc:Description>Inspektion systematiskt brandskydd. Uppdatering systematiskt brandskydd. Kontroll &amp;
+                    service släckare. Kontroll &amp; service inomhusbrandpost. Support systematiskt brandskydd. Service
+                    - övrig brandutrustning. Utbildning motivation brandskydd.
+                </cbc:Description>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <RequisitionistDocumentReference>
+            <cac:ID>NORRSKENET</cac:ID>
+        </RequisitionistDocumentReference>
+    </Invoice>
+</StandardBusinessDocument>

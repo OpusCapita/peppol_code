@@ -5,15 +5,13 @@ import com.opuscapita.peppol.validator.util.DocumentContentUtils;
 import org.w3c.dom.NodeList;
 
 import javax.xml.transform.TransformerException;
-import java.util.List;
 
 /**
  * Created by Daniil on 03.05.2016.
  */
 public interface BasicValidator {
-    List<ValidationError> getErrors();
 
-    public boolean validate(byte[] data);
+    public ValidationResult validate(byte[] data);
 
     default byte[] extractInvoice(ContainerMessage containerMessage) throws TransformerException {
         NodeList invoiceNodes = containerMessage.getBaseDocument().getDocument().getElementsByTagNameNS("Invoice", "*");

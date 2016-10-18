@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.validator.validations.difi;
 
+import com.opuscapita.peppol.validator.validations.common.ValidationResult;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,16 +27,16 @@ public class DifiValidatorTest {
 
     @Test
     public void validateNull() throws Exception{
-        boolean result = difiValidator.validate(null);
-        assertFalse(result);
-        difiValidator.getErrors().forEach(error -> System.out.println(error));
+        ValidationResult result = difiValidator.validate(null);
+        assertFalse(result.isPassed());
+        result.getErrors().forEach(error -> System.out.println(error));
     }
 
     @Test
     public void validateEmpty() throws Exception {
-        boolean result = difiValidator.validate("".getBytes());
-        difiValidator.getErrors().forEach(error -> System.out.println(error));
-        assertFalse(result);
+        ValidationResult result = difiValidator.validate("".getBytes());
+        result.getErrors().forEach(error -> System.out.println(error));
+        assertFalse(result.isPassed());
 
     }
 
@@ -43,9 +44,9 @@ public class DifiValidatorTest {
     public void testValidFile() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(DifiValidatorTest.class.getResourceAsStream("/SAMPLE_INVOICE.xml")));
         byte[] data = reader.lines().collect(Collectors.joining()).getBytes();
-        boolean result = difiValidator.validate(data);
-        difiValidator.getErrors().forEach(error -> System.out.println(error));
-        assertTrue(result);
+        ValidationResult result = difiValidator.validate(data);
+        result.getErrors().forEach(error -> System.out.println(error));
+        assertTrue(result.isPassed());
     }
 
 

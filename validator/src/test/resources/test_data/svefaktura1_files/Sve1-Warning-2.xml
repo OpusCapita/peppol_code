@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+    <StandardBusinessDocumentHeader>
+        <HeaderVersion>1.0</HeaderVersion>
+        <Sender>
+            <Identifier Authority="iso6523-actorid-upis">0008:1234567890123</Identifier>
+        </Sender>
+        <Receiver>
+            <Identifier Authority="iso6523-actorid-upis">0008:1234567890123</Identifier>
+        </Receiver>
+        <DocumentIdentification>
+            <Standard>urn:sfti:documents:BasicInvoice:1:0</Standard>
+            <TypeVersion>1.0</TypeVersion>
+            <InstanceIdentifier>c000008l-bb8p-4b8r-ab8t-000a00000000</InstanceIdentifier>
+            <Type>Invoice</Type>
+            <CreationDateAndTime>2016-05-26T14:14:51Z</CreationDateAndTime>
+        </DocumentIdentification>
+        <BusinessScope>
+            <Scope>
+                <Type>DOCUMENTID</Type>
+                <InstanceIdentifier>
+                    urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0
+                </InstanceIdentifier>
+            </Scope>
+            <Scope>
+                <Type>PROCESSID</Type>
+                <InstanceIdentifier>urn:sfti:services:documentprocessing:BasicInvoice:1:0</InstanceIdentifier>
+            </Scope>
+        </BusinessScope>
+    </StandardBusinessDocumentHeader>
+    <Invoice xmlns:cac="urn:sfti:CommonAggregateComponents:1:0"
+             xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0" xmlns="urn:sfti:documents:BasicInvoice:1:0">
+        <ID>70034780</ID>
+        <cbc:IssueDate>2016-05-17</cbc:IssueDate>
+        <InvoiceTypeCode>380</InvoiceTypeCode>
+        <InvoiceCurrencyCode>SEK</InvoiceCurrencyCode>
+        <LineItemCountNumeric>3</LineItemCountNumeric>
+        <cac:BuyerParty>
+            <cac:Party>
+                <cac:PartyIdentification>
+                    <cac:ID>1234567890123</cac:ID>
+                </cac:PartyIdentification>
+                <cac:PartyName>
+                    <cbc:Name>Linköpings Universitet</cbc:Name>
+                </cac:PartyName>
+                <cac:Address>
+                    <cbc:StreetName>Fakturasupport</cbc:StreetName>
+                    <cbc:CityName>LINKÖPING</cbc:CityName>
+                    <cbc:PostalZone>581 83</cbc:PostalZone>
+                    <cac:Country>
+                        <cac:IdentificationCode>SE</cac:IdentificationCode>
+                    </cac:Country>
+                </cac:Address>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>2021003096</cac:CompanyID>
+                    <cac:TaxScheme>
+                        <cac:ID>SWT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+            </cac:Party>
+        </cac:BuyerParty>
+        <cac:SellerParty>
+            <cac:Party>
+                <cac:PartyIdentification>
+                    <cac:ID>1234567890123</cac:ID>
+                </cac:PartyIdentification>
+                <cac:PartyName>
+                    <cbc:Name>Akademiska Hus AB</cbc:Name>
+                </cac:PartyName>
+                <cac:Address>
+                    <cbc:StreetName>Box 483</cbc:StreetName>
+                    <cbc:CityName>GÖTEBORG</cbc:CityName>
+                    <cbc:PostalZone>401 27</cbc:PostalZone>
+                    <cac:Country>
+                        <cac:IdentificationCode>SE</cac:IdentificationCode>
+                    </cac:Country>
+                </cac:Address>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>SE556459915601</cac:CompanyID>
+                    <cac:RegistrationAddress>
+                        <cac:Country>
+                            <cac:IdentificationCode>SE</cac:IdentificationCode>
+                        </cac:Country>
+                    </cac:RegistrationAddress>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyTaxScheme>
+                    <cac:CompanyID>5564599156</cac:CompanyID>
+                    <cbc:ExemptionReason>Godkänd för F-skatt</cbc:ExemptionReason>
+                    <cac:RegistrationAddress>
+                        <cac:Country>
+                            <cac:IdentificationCode>SE</cac:IdentificationCode>
+                        </cac:Country>
+                    </cac:RegistrationAddress>
+                    <cac:TaxScheme>
+                        <cac:ID>SWT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:Contact>
+                    <cbc:Name>Anders Nilsson</cbc:Name>
+                    <cbc:Telephone>013-36 45 03</cbc:Telephone>
+                </cac:Contact>
+            </cac:Party>
+            <cac:AccountsContact>
+                <cbc:Name>Anders Nilsson</cbc:Name>
+            </cac:AccountsContact>
+        </cac:SellerParty>
+        <cac:PaymentMeans>
+            <cac:PaymentMeansTypeCode>1</cac:PaymentMeansTypeCode>
+            <cbc:DuePaymentDate>2016-06-17</cbc:DuePaymentDate>
+            <cac:PayeeFinancialAccount>
+                <cac:ID>59571463</cac:ID>
+                <cac:FinancialInstitutionBranch>
+                    <cac:FinancialInstitution>
+                        <cac:ID>BGABSESS</cac:ID>
+                    </cac:FinancialInstitution>
+                </cac:FinancialInstitutionBranch>
+                <cac:PaymentInstructionID>70034780</cac:PaymentInstructionID>
+            </cac:PayeeFinancialAccount>
+        </cac:PaymentMeans>
+        <cac:PaymentTerms>
+            <cbc:Note>Vid försenad betalning debiteras dröjsmålsränta enligt gällande referensränta +8%.</cbc:Note>
+        </cac:PaymentTerms>
+        <cac:TaxTotal>
+            <cbc:TotalTaxAmount amountCurrencyID="SEK">172089.63</cbc:TotalTaxAmount>
+            <cac:TaxSubTotal>
+                <cbc:TaxableAmount amountCurrencyID="SEK">688358.52</cbc:TaxableAmount>
+                <cbc:TaxAmount amountCurrencyID="SEK">172089.63</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubTotal>
+        </cac:TaxTotal>
+        <cac:LegalTotal>
+            <cbc:LineExtensionTotalAmount amountCurrencyID="SEK">688358.52</cbc:LineExtensionTotalAmount>
+            <cbc:TaxExclusiveTotalAmount amountCurrencyID="SEK">688358.52</cbc:TaxExclusiveTotalAmount>
+            <cbc:TaxInclusiveTotalAmount amountCurrencyID="SEK">860448</cbc:TaxInclusiveTotalAmount>
+            <cac:RoundOffAmount amountCurrencyID="SEK">-0.15</cac:RoundOffAmount>
+        </cac:LegalTotal>
+        <!--========================= Specifikationer ========================= -->
+        <cac:InvoiceLine>
+            <cac:ID>1</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="EA">1</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK">5400</cbc:LineExtensionAmount>
+            <cbc:Note>AO: 000005901-00
+                Anläggning: E0007002 B-huset
+
+                Ombygnad för del av B-huset till reception med
+                tillhörande arbetsplatser.
+                Enligt er beställning Dnr LiU 2015-01906
+            </cbc:Note>
+            <cac:Item>
+                <cbc:Description>Arbetskostnad</cbc:Description>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <cac:InvoiceLine>
+            <cac:ID>2</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="EA">1</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK">632369</cbc:LineExtensionAmount>
+            <cac:Item>
+                <cbc:Description>Leverantörsfaktura</cbc:Description>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <cac:InvoiceLine>
+            <cac:ID>3</cac:ID>
+            <cbc:InvoicedQuantity quantityUnitCode="EA">1</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount amountCurrencyID="SEK">50589.52</cbc:LineExtensionAmount>
+            <cac:Item>
+                <cbc:Description>8,00 % Administrativt påslag</cbc:Description>
+                <cac:TaxCategory>
+                    <cac:ID>S</cac:ID>
+                    <cbc:Percent>25</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cac:ID>VAT</cac:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:Item>
+        </cac:InvoiceLine>
+        <RequisitionistDocumentReference>
+            <cac:ID>2403 Karolina Ganhammar</cac:ID>
+        </RequisitionistDocumentReference>
+        <InvoicingPeriod>
+            <cbc:StartDateTime>2016-05-01T00:00:00</cbc:StartDateTime>
+            <cbc:EndDateTime>2016-05-31T00:00:00</cbc:EndDateTime>
+        </InvoicingPeriod>
+    </Invoice>
+</StandardBusinessDocument>
