@@ -50,12 +50,12 @@ angular.module('peppolApp', [
             controller: 'ReprocessedCtrl',
             reloadOnSearch: false
         });
-        $routeProvider.when('/preprocessing', {
+        $routeProvider.when('/inbound', {
             templateUrl: '/views/message-list.html',
             controller: 'InboundMessageCtrl',
             reloadOnSearch: false
         });
-        $routeProvider.when('/preprocessing/invalid', {
+        $routeProvider.when('/inbound/invalid', {
             templateUrl: '/views/message-list.html',
             controller: 'InvalidInboundMessageCtrl',
             reloadOnSearch: false

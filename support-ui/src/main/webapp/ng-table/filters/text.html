@@ -1,2 +1,3 @@
-<input type="text" name="{{column.filterName}}" ng-model="params.filter()[name]" ng-if="filter == 'text'"
+<input type="text" id="input_{{name}}" name="{{column.filterName}}" ng-model="params.filter()[name]"
+       ng-if="filter == 'text'"
        class="input-filter form-control" ng-keyup="$event.keyCode == 13 && params.reload()"/>
