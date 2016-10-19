@@ -24,7 +24,7 @@ node {
                 bash gradlew clean \
                 configuration-server:assemble \
                 events-persistence:assemble \
-                support-ui:assemble
+                support-ui:assemble \
                 transport:assemble
             '''
             properties = loadProperties('gradle.properties')
@@ -42,7 +42,7 @@ node {
                 bash gradlew \
                 configuration-server:check \
                 events-persistence:check \
-                support-ui:check
+                support-ui:check \
                 transport:check
             '''
         }
