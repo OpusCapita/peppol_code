@@ -5,6 +5,7 @@ def tag = "latest"
 def config_server_image
 def events_persistence_image
 def support_ui_image
+def transport_image
 
 def properties  // additional properties loaded from file
 
@@ -23,7 +24,8 @@ node {
                 bash gradlew clean \
                 configuration-server:assemble \
                 events-persistence:assemble \
-                support-ui:assemble
+                support-ui:assemble \
+                transport:assemble
             '''
             properties = loadProperties('gradle.properties')
             releaseVersion = properties.version
@@ -40,7 +42,8 @@ node {
                 bash gradlew \
                 configuration-server:check \
                 events-persistence:check \
-                support-ui:check
+                support-ui:check \
+                transport:check
             '''
         }
     }
@@ -54,6 +57,9 @@ node {
         }
         dir('src/support-ui') {
             support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", ".")
+        }
+        dir('src/transport') {
+            transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", ".")
         }
     }
 
@@ -70,6 +76,8 @@ node {
             events_persistence_image.push("${tag}")
             support_ui_image.push("latest")
             support_ui_image.push("${tag}")
+            transport_image.push("latest")
+            transport_image.push("${tag}")
         }
     }
 
