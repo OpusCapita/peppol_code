@@ -21,7 +21,7 @@ public interface XsdValidator {
     List<ValidationError> performXsdValidation(ContainerMessage containerMessage);
 
     default void validateAgainstXsd(ContainerMessage containerMessage, String xsdPath) throws SAXException, TransformerException, IOException {
-        byte[] data = DocumentContentUtils.getDocumentBytes(containerMessage);
+        byte[] data = DocumentContentUtils.getDocumentBytes(containerMessage.getBaseDocument().getDocument());
         validateAgainstXsd(data, xsdPath);
     }
 

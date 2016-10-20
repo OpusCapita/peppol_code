@@ -57,7 +57,6 @@ public class ValidationControllerTest {
     }
 
     @Test
-    @Ignore("Needs clarifications and fixes?")
     public void validateSveFaktura1Files() throws Exception {
         File resourceDir = new File(this.getClass().getResource("/test_data/svefaktura1_files").getFile());
         String[] dataFiles = resourceDir.list(new FilenameFilter() {

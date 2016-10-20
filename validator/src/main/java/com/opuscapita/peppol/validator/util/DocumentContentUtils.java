@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.validator.util;
 
-import com.opuscapita.peppol.commons.container.ContainerMessage;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import javax.xml.transform.Transformer;
@@ -14,10 +14,10 @@ import java.io.ByteArrayOutputStream;
  * Created by bambr on 16.3.10.
  */
 public class DocumentContentUtils {
-    public static byte[] getDocumentBytes(ContainerMessage containerMessage) throws TransformerException {
+    public static byte[] getDocumentBytes(Document document) throws TransformerException {
+        DOMSource source = new DOMSource(document);
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
-        DOMSource source = new DOMSource(containerMessage.getBaseDocument().getDocument());
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         StreamResult result = new StreamResult(bos);
         transformer.transform(source, result);

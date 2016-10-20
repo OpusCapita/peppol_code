@@ -17,10 +17,8 @@ import javax.naming.ConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
@@ -52,6 +50,8 @@ public class SveFaktura1Validator implements BasicValidator {
 
     @Override
     public ValidationResult validate(byte[] data) {
+        System.out.println("Validating: ");
+        System.out.println(new String(data));
         List<ValidationError> errors = new ArrayList<>();
         ValidationResult result = new ValidationResult(Archetype.SVEFAKTURA1);
         svefaktura1XsdValidator.performXsdValidation(data);
@@ -85,7 +85,6 @@ public class SveFaktura1Validator implements BasicValidator {
         documentBuilder.setErrorHandler(new ErrorHandler() {
             @Override
             public void warning(SAXParseException exception) throws SAXException {
-
             }
 
             @Override
@@ -102,6 +101,11 @@ public class SveFaktura1Validator implements BasicValidator {
     }
 
     private void extractErrorsAndWarnings(Document resultDocument, List<ValidationError> errors) {
+        try {
+            debugLogDomDocument(resultDocument);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         NodeList failedAsserts = resultDocument.getElementsByTagName("svrl:failed-assert");
         for (int i = 0; i < failedAsserts.getLength(); i++) {
             Node failedAssert = failedAsserts.item(i);
@@ -140,5 +144,18 @@ public class SveFaktura1Validator implements BasicValidator {
 
     private String extractAssertMessage(Node failedAssert) {
         return failedAssert.getChildNodes().item(1).getFirstChild().getNodeValue();
+    }
+
+    private void debugLogDomDocument(Document document) throws UnsupportedEncodingException, TransformerException {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+        transformer.transform(new DOMSource(document),
+                new StreamResult(new OutputStreamWriter(System.out, "UTF-8")));
     }
 }

@@ -9,7 +9,12 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.util.List;
 
@@ -42,8 +47,8 @@ public class ValidationController {
         if (validator != null) {
             byte[] data = new byte[0];
             try {
-                data = DocumentContentUtils.getDocumentBytes(containerMessage);
-            } catch (TransformerException e) {
+                data = DocumentContentUtils.getDocumentBytes(getRootDocument(containerMessage));
+            } catch (ParserConfigurationException | TransformerException e) {
                 e.printStackTrace();
                 addNonTypicalErrorToValidationResult(result, "Validation failed on transforming XML to byte array", e.getMessage());
             }
@@ -58,6 +63,16 @@ public class ValidationController {
             addNonTypicalErrorToValidationResult(result, "Failed to get validator", "No validator found for archetype: " + archetype + "\n\r" + validatorFetchingError);
         }
         return result;
+    }
+
+    private Document getRootDocument(@NotNull ContainerMessage containerMessage) throws ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document newDocument = builder.newDocument();
+        Node importedNode = newDocument.importNode(containerMessage.getBaseDocument().getRootNode(), true);
+        newDocument.appendChild(importedNode);
+        return newDocument;
     }
 
     private void addNonTypicalErrorToValidationResult(ValidationResult validationResult, String title, String details) {
