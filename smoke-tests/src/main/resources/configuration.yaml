@@ -3,7 +3,7 @@ tests:
      type: link
      params:
        reference: http://peppol.itella.net/login
-   health:
+   configuration-server:
      type: reference
      params:
        reference: http://10.117.83.21:8080/admin/health
