@@ -8,11 +8,7 @@ import java.util.Map;
 /**
  * Created by bambr on 16.20.10.
  */
-public class DbConnectionCheck implements Check {
-    @Override
-    public boolean init(Map<String, Object> rawConfig) {
-        return false;
-    }
+public class DbConnectionCheck extends Check {
 
     @Override
     public CheckResult run() {

@@ -9,9 +9,9 @@ public class CheckResult {
     final String name;
     final boolean passed;
     final String details;
-    final Map<String, Object> rawConfigOfCheck;
+    final Map<String, String> rawConfigOfCheck;
 
-    public CheckResult(String name, boolean passed, String details, Map<String, Object> rawConfigOfCheck) {
+    public CheckResult(String name, boolean passed, String details, Map<String, String> rawConfigOfCheck) {
         this.name = name;
         this.passed = passed;
         this.details = details;
@@ -30,7 +30,7 @@ public class CheckResult {
         return details;
     }
 
-    public Map<String, Object> getRawConfigOfCheck() {
+    public Map<String, String> getRawConfigOfCheck() {
         return rawConfigOfCheck;
     }
 
