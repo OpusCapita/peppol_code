@@ -37,7 +37,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         DataSourceTransactionManagerAutoConfiguration.class })
 @EnableScheduling
 @ComponentScan({"com.opuscapita.peppol.transport", "com.opuscapita.peppol.commons.storage", "com.opuscapita.peppol.commons.container",
-    "com.opuscapita.peppol.commons.errors", "com.opuscapita.commons"})
+        "com.opuscapita.peppol.commons.errors", "com.opuscapita.commons"})
 public class TransportApp {
     @Value("${amqp.queue.in.name}")
     private String queueName;
