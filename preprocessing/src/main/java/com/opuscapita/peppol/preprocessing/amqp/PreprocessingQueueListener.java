@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.preprocessing.controller.PreprocessingController;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -28,8 +29,14 @@ public class PreprocessingQueueListener {
     private final RabbitTemplate rabbitTemplate;
     private final Gson gson;
 
-    @Autowired
-    public PreprocessingQueueListener(@NotNull ErrorHandler errorHandler, @NotNull PreprocessingController controller,
+    @Autowired(required = false)
+    public PreprocessingQueueListener(@NotNull PreprocessingController controller,
+                                      @NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
+        this(null, controller, rabbitTemplate, gson);
+    }
+
+    @Autowired(required = false)
+    public PreprocessingQueueListener(@Nullable ErrorHandler errorHandler, @NotNull PreprocessingController controller,
                                       @NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
         this.errorHandler = errorHandler;
         this.controller = controller;
@@ -53,9 +60,12 @@ public class PreprocessingQueueListener {
 
     private void handleError(String message, String customerId, Exception e) {
         try {
-            errorHandler.reportToServiceNow(message, customerId, e, "Failed to process preprocessing file");
+            if (errorHandler != null) {
+                errorHandler.reportToServiceNow(message, customerId, e, "Failed to process preprocessing file");
+            }
+            logger.error(message + ", customerId: " + customerId, e);
         } catch (Exception weird) {
-            logger.error("Reporting to ServiceNow threw exception: ", e);
+            logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
