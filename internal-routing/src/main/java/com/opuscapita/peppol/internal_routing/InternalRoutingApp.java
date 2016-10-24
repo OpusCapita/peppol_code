@@ -57,6 +57,7 @@ public class InternalRoutingApp {
     }
 
     @Bean
+    @ConditionalOnProperty("snc.enabled")
     public ErrorHandler errorHandler() {
         return new ErrorHandler();
     }
@@ -74,6 +75,7 @@ public class InternalRoutingApp {
     }
 
     @Bean
+    @ConditionalOnProperty("snc.enabled")
     public ServiceNow serviceNowRest() {
         return new ServiceNowREST(serviceNowConfiguration());
     }

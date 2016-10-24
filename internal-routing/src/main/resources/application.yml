@@ -36,3 +36,14 @@ spring:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
       - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
       - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+
+snc:
+  enabled: true
+  rest:
+    url: localhost
+    username: test
+    password: test
+  bsc: test
+  from: test
+  businessGroup: test
+
