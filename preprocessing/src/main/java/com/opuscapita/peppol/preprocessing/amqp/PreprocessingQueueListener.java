@@ -29,13 +29,7 @@ public class PreprocessingQueueListener {
     private final RabbitTemplate rabbitTemplate;
     private final Gson gson;
 
-    @Autowired(required = false)
-    public PreprocessingQueueListener(@NotNull PreprocessingController controller,
-                                      @NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
-        this(null, controller, rabbitTemplate, gson);
-    }
-
-    @Autowired(required = false)
+    @Autowired
     public PreprocessingQueueListener(@Nullable ErrorHandler errorHandler, @NotNull PreprocessingController controller,
                                       @NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
         this.errorHandler = errorHandler;

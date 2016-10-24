@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,6 @@ import java.util.Iterator;
  * @author Sergejs.Roze
  */
 @Component
-@Lazy
 public class IncomingChecker {
     private static final Logger logger = LoggerFactory.getLogger(IncomingChecker.class);
 
@@ -43,17 +41,18 @@ public class IncomingChecker {
     private boolean recursive;
     @Value("${transport.input.mask?:.*}")
     private String mask;
-    @Value("${transport.input.queue?:internal_routing}")
+    @Value("${amqp.queue.out.name?:preprocessing}")
     private String queue;
 
     @Autowired
     public IncomingChecker(@NotNull RabbitTemplate rabbitTemplate, @NotNull Storage storage) {
         this.rabbitTemplate = rabbitTemplate;
         this.storage = storage;
+        System.out.printf("================================================================================================");
     }
 
     @Scheduled(fixedRate = 60_000) // 1 minute
-    public void receive() throws IOException {
+    public void check() throws IOException {
         receive(new File(directory));
     }
 

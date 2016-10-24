@@ -52,11 +52,10 @@ public class TransportQueueListener {
         try {
             if (errorHandler != null) {
                 errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event");
-            } else {
-                logger.error(message + ", customer: " + customerId, e);
             }
+            logger.error(message + ", customer: " + customerId, e);
         } catch (Exception weird) {
-            logger.error("Reporting to ServiceNow threw exception: ", e);
+            logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }

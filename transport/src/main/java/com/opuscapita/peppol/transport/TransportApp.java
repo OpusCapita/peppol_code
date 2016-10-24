@@ -6,28 +6,48 @@ import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.transport.amqp.TransportQueueListener;
+import com.opuscapita.peppol.transport.checker.IncomingChecker;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
+ * Application that stores files to gateways and checks incoming files from gateways.
+ * Can be used for local directories too.
+ *
  * @author Sergejs.Roze
  */
+@SpringBootConfiguration
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class,
+        DataSourceTransactionManagerAutoConfiguration.class })
+@EnableScheduling
+@ComponentScan({"com.opuscapita.peppol.transport", "com.opuscapita.peppol.commons.storage", "com.opuscapita.peppol.commons.container",
+    "com.opuscapita.peppol.commons.errors", "com.opuscapita.commons"})
 public class TransportApp {
-    @Value("${amqp.queue.name}")
+    @Value("${amqp.queue.in.name}")
     private String queueName;
 
     private final Environment environment;
 
     @Autowired
-    public TransportApp(Environment environment) {
+    public TransportApp(@NotNull Environment environment, @NotNull ApplicationContext context) {
         this.environment = environment;
+        context.getBean(IncomingChecker.class);
     }
 
     public static void main(String[] args) {
@@ -47,18 +67,19 @@ public class TransportApp {
     }
 
     @Bean
-    @ConditionalOnProperty("spring.rabbitmq.host")
+    @ConditionalOnProperty("amqp.queue.in.enabled")
     MessageListenerAdapter listenerAdapter(TransportQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     @Bean
-    public Gson gson() {
+    Gson gson() {
         return new Gson();
     }
 
     @Bean
-    public ErrorHandler errorHandler() {
+    @ConditionalOnProperty("snc.enabled")
+    ErrorHandler errorHandler() {
         return new ErrorHandler();
     }
 
@@ -75,8 +96,8 @@ public class TransportApp {
     }
 
     @Bean
-    public ServiceNow serviceNowRest() {
+    @ConditionalOnProperty("snc.enabled")
+    ServiceNow serviceNowRest() {
         return new ServiceNowREST(serviceNowConfiguration());
     }
-
 }
