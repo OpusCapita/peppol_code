@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -47,14 +46,11 @@ public class ValidationControllerTest {
     @Test
     @Ignore("Needs clarifications and fixes?")
     public void validate() throws Exception {
-        boolean nullFailedExpectedly = false;
         try {
             validationController.validate(null);
-        } catch (IllegalArgumentException e) {
-            nullFailedExpectedly = true;
+            fail();
+        } catch (IllegalArgumentException ignored) {
         }
-        assertTrue(nullFailedExpectedly);
-
     }
 
     @Test
