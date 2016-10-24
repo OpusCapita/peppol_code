@@ -5,6 +5,7 @@ import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import static org.junit.Assert.*;
 
 /**

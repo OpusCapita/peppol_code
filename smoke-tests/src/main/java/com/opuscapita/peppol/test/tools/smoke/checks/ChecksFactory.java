@@ -24,6 +24,8 @@ public class ChecksFactory {
                 return new FileSystemCheck().init(moduleName,params);
             case "module-configuration":
                 return new ModuleConfigurationCheck().init(moduleName,params);
+            case "queue":
+                return new QueuesCheck().init(moduleName,params);
             default :
                 throw new UnsupportedDataTypeException("No Check found for specified type: "+moduleName);
         }
