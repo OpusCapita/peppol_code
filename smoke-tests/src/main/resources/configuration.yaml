@@ -1,0 +1,46 @@
+tests:
+   support-ui:
+     type: link
+     params:
+       reference: http://peppol.itella.net/login
+   health:
+     type: reference
+     params:
+       reference: http://10.117.83.21:8080/admin/health
+   queue:
+     type: queue
+     params:
+       exchange: peppol
+       queue: persistence
+       host: localhost
+       port: 5673
+       username: guest
+       pasword: guest
+       virtual host: /
+   dataBase:
+     type: DB-connection
+     params:
+       host: t-l-mysql01.ocnet.local
+       port: 3306
+       username: oxalis
+       pasword: grAm0f0n_1982-X_
+       DB-name: oxalis
+       driver: com.mysql.jdbc.Driver
+   MQ-connection:
+     type: MQ-connection
+     params:
+       host: localhost
+       port: 5673
+       username: guest
+       pasword: guest
+       virtual-host: /
+   File-System-connection:
+     type: File-System-connection
+     params:
+       readable-directory: tmp
+       writeable-dyrectory: tmp
+   module-configuration:
+     type: module-configuration
+     params:
+       module-names: events-persistence
+       profile: development
