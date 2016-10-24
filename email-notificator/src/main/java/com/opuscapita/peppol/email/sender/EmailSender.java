@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EmailSender {
-    @Value("${email.sender?:'peppol@opuscapita.com'}")
+    @Value("${email.sender:'peppol@opuscapita.com'}")
     private String sender;
 
     private final JavaMailSender mailSender;
