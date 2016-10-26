@@ -3,6 +3,7 @@ def releaseVersion
 def tag = "latest"
 
 def config_server_image
+def email_notificator_image
 def events_persistence_image
 def support_ui_image
 def transport_image
@@ -23,6 +24,7 @@ node {
             sh '''
                 bash gradlew clean \
                 configuration-server:assemble \
+                email-notificator:assemble \
                 events-persistence:assemble \
                 support-ui:assemble \
                 transport:assemble
@@ -41,6 +43,7 @@ node {
             sh '''
                 bash gradlew \
                 configuration-server:check \
+                email-notificator:check \
                 events-persistence:check \
                 support-ui:check \
                 transport:check
@@ -51,6 +54,9 @@ node {
     stage('Package') {
         dir('src/configuration-server') {
             config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
+        }
+        dir('src/email-notificator') {
+            email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", ".")
         }
         dir('src/events-persistence') {
             events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", ".")
@@ -72,6 +78,8 @@ node {
             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
             config_server_image.push("latest")
             config_server_image.push("${tag}")
+            email_notificator_image.push("latest")
+            email_notificator_image.push("${tag}")
             events_persistence_image.push("latest")
             events_persistence_image.push("${tag}")
             support_ui_image.push("latest")

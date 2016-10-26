@@ -48,7 +48,7 @@ public class StorageImpl implements Storage {
     }
 
     private File createDailyDirectory() throws IOException {
-        String date = new SimpleDateFormat("yyyymmdd").format(new Date());
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
         File dir = new File(shortTerm, date);
         if (!dir.exists()) {
             if (!dir.mkdirs()) {

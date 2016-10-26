@@ -36,10 +36,10 @@ public class DirectoryChecker {
     @Value("${email.directory}")
     private String directory;
 
-    @Value("${email.sent.directory?:''}")
+    @Value("${email.sent.directory:''}")
     private String sent;
 
-    @Value("${email.wait.seconds?:120}")
+    @Value("${email.wait.seconds:120}")
     private int seconds;
 
     private final EmailSender emailSender;
