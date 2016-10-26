@@ -7,6 +7,7 @@ tests:
      type: reference
      params:
        reference: http://s-l-web1.ocnet.local:8888/admin/health
+       localReference: http://localhost:441/admin/health
    queue:
      type: queue
      params:

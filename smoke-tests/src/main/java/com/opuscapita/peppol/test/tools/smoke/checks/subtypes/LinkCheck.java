@@ -7,8 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * Created by bambr on 16.20.10.
  */
@@ -26,8 +24,8 @@ public class LinkCheck extends Check {
             URL url = new URL(rawConfig.get("reference"));
             conn = (HttpURLConnection) url.openConnection();
             conn.connect();
-            assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
-            result = new CheckResult(name, true, "the link is reachable, HTTP Status code: " + conn.getResponseCode(), rawConfig);
+            boolean goodResponse = conn.getResponseCode() == HttpURLConnection.HTTP_OK;
+            result = new CheckResult(name, goodResponse, "HTTP Status code: " + conn.getResponseCode(), rawConfig);
         } catch (Exception ex) {
             ex.printStackTrace();
             result = new CheckResult(name, false, "the link not reachable, " + ex, rawConfig);
