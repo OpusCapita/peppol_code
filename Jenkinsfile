@@ -5,6 +5,7 @@ def tag = "latest"
 def config_server_image
 def email_notificator_image
 def events_persistence_image
+def inbound_image
 def support_ui_image
 def transport_image
 
@@ -26,6 +27,7 @@ node {
                 configuration-server:assemble \
                 email-notificator:assemble \
                 events-persistence:assemble \
+                inbound:assemble \
                 support-ui:assemble \
                 transport:assemble
             '''
@@ -45,6 +47,7 @@ node {
                 configuration-server:check \
                 email-notificator:check \
                 events-persistence:check \
+                inbound:check \
                 support-ui:check \
                 transport:check
             '''
@@ -60,6 +63,9 @@ node {
         }
         dir('src/events-persistence') {
             events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", ".")
+        }
+        dir('src/inbound') {
+            inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", ".")
         }
         dir('src/support-ui') {
             support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", ".")
@@ -82,6 +88,8 @@ node {
             email_notificator_image.push("${tag}")
             events_persistence_image.push("latest")
             events_persistence_image.push("${tag}")
+            inbound_image.push("latest")
+            inbound_image.push("${tag}")
             support_ui_image.push("latest")
             support_ui_image.push("${tag}")
             transport_image.push("latest")
