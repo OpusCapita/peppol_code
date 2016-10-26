@@ -19,7 +19,7 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class InternalRoutingApp {
-    @Value("${amqp.queueName}")
+    @Value("${amqp.queue.name}")
     private String queueName;
 
     private final Environment environment;
