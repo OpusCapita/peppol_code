@@ -6,7 +6,7 @@ tests:
    configuration-server:
      type: reference
      params:
-       reference: http://10.117.83.21:8080/admin/health
+       reference: http://s-l-web1.ocnet.local:8888/admin/health
    queue:
      type: queue
      params:
@@ -15,7 +15,7 @@ tests:
        host: localhost
        port: 5673
        username: guest
-       pasword: guest
+       password: guest
        virtual host: /
    dataBase:
      type: DB-connection
@@ -23,22 +23,22 @@ tests:
        host: t-l-mysql01.ocnet.local
        port: 3306
        username: oxalis
-       pasword: grAm0f0n_1982-X_
+       password: grAm0f0n_1982-X_
        DB-name: oxalis
-       driver: com.mysql.jdbc.Driver
+       driver: mysql
    MQ-connection:
      type: MQ-connection
      params:
        host: localhost
        port: 5673
        username: guest
-       pasword: guest
+       password: guest
        virtual-host: /
    File-System-connection:
      type: File-System-connection
      params:
-       readable-directory: tmp
-       writeable-dyrectory: tmp
+       readable-directory: C:\test_dir
+       writable-directory: C:\test_dir
    module-configuration:
      type: module-configuration
      params:
