@@ -9,11 +9,11 @@ public abstract class Check {
     protected String name;
     protected Map<String, String> rawConfig;
 
-    public Check init(String name, Map<String, String> rawConfig){
-        this.name = name;
-        this.rawConfig = rawConfig;
-        return this;
+    public Check(String moduleName, Map<String, String> params) {
+        this.name = moduleName;
+        this.rawConfig = params;
     }
+
     public abstract CheckResult run();
 
     public String getName() {

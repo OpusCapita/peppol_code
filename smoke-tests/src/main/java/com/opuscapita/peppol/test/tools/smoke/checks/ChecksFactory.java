@@ -13,19 +13,19 @@ public class ChecksFactory {
     public static Check createCheck(String moduleName, String type, Map<String, String> params) throws UnsupportedDataTypeException {
         switch(type){
             case "link":
-                return new LinkCheck().init(moduleName, params);
+                return new LinkCheck(moduleName, params);
             case "reference":
-                return new HealthCheck().init(moduleName,params); // TODO: clarify this
+                return new HealthCheck(moduleName,params);
             case "DB-connection":
-                return new DbConnectionCheck().init(moduleName,params);
+                return new DbConnectionCheck(moduleName,params);
             case "MQ-connection":
-                return new MqConnectionCheck().init(moduleName,params);
+                return new MqConnectionCheck(moduleName,params);
             case "File-System-connection":
-                return new FileSystemCheck().init(moduleName,params);
+                return new FileSystemCheck(moduleName,params);
             case "module-configuration":
-                return new ModuleConfigurationCheck().init(moduleName,params);
+                return new ModuleConfigurationCheck(moduleName,params);
             case "queue":
-                return new QueuesCheck().init(moduleName,params);
+                return new QueuesCheck(moduleName,params);
             default :
                 throw new UnsupportedDataTypeException("No Check found for specified type: "+moduleName);
         }

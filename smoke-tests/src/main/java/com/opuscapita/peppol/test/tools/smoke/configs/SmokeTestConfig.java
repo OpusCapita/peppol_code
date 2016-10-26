@@ -5,6 +5,7 @@ import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by bambr on 16.20.10.
@@ -17,10 +18,6 @@ public class SmokeTestConfig {
     }
 
     public List<CheckResult> runChecks() {
-        ArrayList<CheckResult> checkResults = new ArrayList<>();
-        for(Check check : checks){
-            checkResults.add(check.run());
-        }
-        return  checkResults;
+       return checks.stream().map(Check::run).collect(Collectors.toCollection(ArrayList::new));
     }
 }

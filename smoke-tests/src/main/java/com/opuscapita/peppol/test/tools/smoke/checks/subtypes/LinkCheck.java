@@ -5,13 +5,18 @@ import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by bambr on 16.20.10.
  */
 public class LinkCheck extends Check {
+
+    public LinkCheck(String moduleName, Map<String, String> params) {
+        super(moduleName,params);
+    }
 
     @Override
     public CheckResult run() {
@@ -23,9 +28,9 @@ public class LinkCheck extends Check {
             conn.connect();
             assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
             result = new CheckResult(name, true, "the link is reachable, HTTP Status code: " + conn.getResponseCode(), rawConfig);
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = new CheckResult(name, false, "the link not reachable, " + e, rawConfig);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            result = new CheckResult(name, false, "the link not reachable, " + ex, rawConfig);
         }
         return result;
     }
