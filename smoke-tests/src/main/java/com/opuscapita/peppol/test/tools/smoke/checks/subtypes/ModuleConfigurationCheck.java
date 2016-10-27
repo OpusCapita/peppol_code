@@ -29,7 +29,6 @@ public class ModuleConfigurationCheck extends Check {
 
 
     @Override
-    /*http://localhost:441/events-persistence/development*/
     public CheckResult run() {
         boolean result = true;
 
