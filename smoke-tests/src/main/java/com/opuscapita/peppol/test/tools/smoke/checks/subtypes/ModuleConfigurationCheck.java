@@ -43,14 +43,15 @@ public class ModuleConfigurationCheck extends Check {
                 InputStreamReader is = new InputStreamReader(urlConn.getInputStream(), Charset.defaultCharset());
                 JsonObject jsonObj = new Gson().fromJson(is, JsonObject.class);
 
-                Set<String> configurationFiles = new HashSet<>();
+                Set<String> configuration = new HashSet<>();
+                //collecting all configuration files retrieved from the server for current module
                 for(JsonElement source : jsonObj.get("propertySources").getAsJsonArray()){
                     URL remoteConfigFile = new URL(source.getAsJsonObject().get("name").getAsString());
                     String configurationFile = Paths.get(remoteConfigFile.getFile()).getFileName().toString();
-                    configurationFiles.add(configurationFile);
+                    configuration.add(configurationFile);
                 }
 
-                if(!testConfiguration(configurationFiles,getValidConfigFilesForModule(module)))
+                if(!testConfiguration(configuration, getExpectedConfigurationForModule(module)))
                     result = false;
             }
         }
@@ -62,13 +63,14 @@ public class ModuleConfigurationCheck extends Check {
         return new CheckResult(name, result, "configuration check performed", rawConfig);
     }
 
-    private boolean testConfiguration(Set<String> configurationFiles, Set<String> expectedConfigurationFiles) {
-        if (configurationFiles.size() != expectedConfigurationFiles.size())
+    //comparing expected configuration files and the actual files found on server
+    private boolean testConfiguration(Set<String> configuration, Set<String> expectedConfiguration) {
+        if (configuration.size() != expectedConfiguration.size())
             return false;
-        return configurationFiles.containsAll(expectedConfigurationFiles);
+        return configuration.containsAll(expectedConfiguration);
     }
 
-    private Set<String> getValidConfigFilesForModule(String module) {
+    private Set<String> getExpectedConfigurationForModule(String module) {
         return new HashSet<>(
                 Arrays.asList("application.yml",
                         "application-" + profile + ".yml",
