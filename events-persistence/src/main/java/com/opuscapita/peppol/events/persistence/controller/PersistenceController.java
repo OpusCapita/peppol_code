@@ -7,10 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.io.File;
+import java.net.ConnectException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +45,7 @@ public class PersistenceController {
     private String invalidDirPath;
 
     @Transactional
+    @Retryable(ConnectException.class)
     public void storePeppolEvent(PeppolEvent peppolEvent) {
         refactorIfInbound(peppolEvent);
         getAccessPoint(peppolEvent);
