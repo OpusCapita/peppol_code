@@ -18,20 +18,18 @@ public class FileSystemCheck extends Check {
 
     @Override
     public CheckResult run() {
-        CheckResult checkResult = null;
         try {
             boolean canWrite = Files.isWritable(new File(rawConfig.get("writable-directory")).toPath());
             boolean canRead = Files.isReadable(new File(rawConfig.get("readable-directory")).toPath());
-            checkResult = new CheckResult(name, canWrite && canRead, "read/write test for directories: " +
+            return new CheckResult(name, canWrite && canRead, "read/write test for directories: " +
                     rawConfig.get("readable-directory") + " and " +
                     rawConfig.get("writable-directory"), rawConfig);
         }
         catch (Exception ex){
             ex.printStackTrace();
-            checkResult = new CheckResult(name, false, "read/write test for directories: " +
+            return new CheckResult(name, false, "read/write test for directories: " +
                     rawConfig.get("readable-directory") + " and " +
                     rawConfig.get("writable-directory") + " failed! " + ex, rawConfig);
         }
-        return checkResult;
     }
 }

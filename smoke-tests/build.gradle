@@ -51,6 +51,7 @@ dependencies {
     testCompile 'org.apache.commons:commons-lang3:3.4'
 
     testCompile 'org.jetbrains:annotations:13.0'
+    testCompile 'com.google.code.gson:gson:2.7'
 }
 
 test {
