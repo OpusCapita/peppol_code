@@ -1,7 +1,7 @@
 FROM d-l-tools.ocnet.local:443/peppol2.0/lib/oxalis:4
 MAINTAINER Edgars.Didrihsons@opuscapita.com
 
-VOLUME "/etc/peppol2.0"
+VOLUME "/etc/peppol2.0/inbound"
 ENV INBOUND_HOME "/opt/local/services/peppol2.0/inbound"
 ENV INBOUND_CONFIG "/etc/peppol2.0/inbound"
 
