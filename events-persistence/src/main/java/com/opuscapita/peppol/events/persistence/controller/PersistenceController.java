@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.RetryCallback;
+import org.springframework.retry.RetryContext;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -44,18 +47,30 @@ public class PersistenceController {
     @Value("${invalid.dir}")
     private String invalidDirPath;
 
+    @Autowired
+    private RetryTemplate retryTemplate;
+
+
+
     @Transactional
     @Retryable(ConnectException.class)
     public void storePeppolEvent(PeppolEvent peppolEvent) {
-        refactorIfInbound(peppolEvent);
-        getAccessPoint(peppolEvent);
+        retryTemplate.execute(new RetryCallback<Void, RuntimeException>() {
+            @Override
+            public Void doWithRetry(RetryContext context) throws RuntimeException {
+                logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");
+                refactorIfInbound(peppolEvent);
+                getAccessPoint(peppolEvent);
 
-        Message message = getOrCreateMessage(peppolEvent);
-        FileInfo fileInfo = getFileInfo(message, peppolEvent);
-        setFileInfoStatus(fileInfo, peppolEvent, message);
-        fileInfoRepository.save(fileInfo);
-        Message persistedMessage = messageRepository.save(message);
-        logger.info("Message persisted with id: " + persistedMessage.getId());
+                Message message = getOrCreateMessage(peppolEvent);
+                FileInfo fileInfo = getFileInfo(message, peppolEvent);
+                setFileInfoStatus(fileInfo, peppolEvent, message);
+                fileInfoRepository.save(fileInfo);
+                Message persistedMessage = messageRepository.save(message);
+                logger.info("Message persisted with id: " + persistedMessage.getId());
+                return null;
+            }
+        });
     }
 
     private FileInfo getFileInfo(Message message, PeppolEvent peppolEvent) {
