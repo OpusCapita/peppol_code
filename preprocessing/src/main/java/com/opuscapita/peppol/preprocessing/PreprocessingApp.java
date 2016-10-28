@@ -12,21 +12,12 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
-@SpringBootConfiguration
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class,
-        DataSourceTransactionManagerAutoConfiguration.class })
-@ComponentScan({"com.opuscapita.peppol.preprocessing", "com.opuscapita.peppol.commons.storage", "com.opuscapita.peppol.commons.container",
-        "com.opuscapita.peppol.commons.errors", "com.opuscapita.commons"})
+@SpringBootApplication(scanBasePackages = { "com.opuscapita.peppol.commons", "com.opuscapita.peppol.preprocessing" })
 public class PreprocessingApp {
     @Value("${amqp.queue.in.name}")
     private String queueName;
