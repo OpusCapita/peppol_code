@@ -17,8 +17,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol", "com.opuscapita.commons"})
+@SpringBootApplication
+@EnableScheduling
 public class EmailNotificatorApp {
     @Value("${amqp.queue.name}")
     private String queueName;

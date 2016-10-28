@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.RetryContext;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
@@ -53,11 +52,10 @@ public class PersistenceController {
 
 
     @Transactional
-    @Retryable(ConnectException.class)
-    public void storePeppolEvent(PeppolEvent peppolEvent) {
-        retryTemplate.execute(new RetryCallback<Void, RuntimeException>() {
+    public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
+        retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
             @Override
-            public Void doWithRetry(RetryContext context) throws RuntimeException {
+            public Void doWithRetry(RetryContext context) throws ConnectException {
                 logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");
                 refactorIfInbound(peppolEvent);
                 getAccessPoint(peppolEvent);

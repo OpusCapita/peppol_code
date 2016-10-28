@@ -27,7 +27,8 @@ routing:
         - peppol
 
 amqp:
-  queueName: internal_routing
+  queue:
+    name: internal_routing
 
 spring:
   autoconfigure:

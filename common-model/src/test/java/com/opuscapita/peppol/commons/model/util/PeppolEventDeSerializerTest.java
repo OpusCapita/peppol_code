@@ -16,15 +16,15 @@ import static org.junit.Assert.assertNotNull;
  * Created by bambr on 16.5.9.
  */
 public class PeppolEventDeSerializerTest {
-    String[] fixtures = {
+    private String[] fixtures = {
             "{}",
             "{\"transportType\":\"OUT_IN\",\"fileName\":\"ubl-40071810-6def-11e6-aad8-8f9310c3c4b8.xml\",\"fileSize\":0,\"invoiceId\":\"\",\"senderCountryCode\":\"\",\"recipientCountryCode\":\"\",\"invoiceDate\":\"\",\"dueDate\":\"\"}",
     };
-    private PeppolEventDeSerializer testObject;
+    private com.opuscapita.peppol.commons.model.util.PeppolEventDeSerializer testObject;
 
     @Before
     public void setUp() throws Exception {
-        testObject = new PeppolEventDeSerializer();
+        testObject = new com.opuscapita.peppol.commons.model.util.PeppolEventDeSerializer();
     }
 
     @After
@@ -34,12 +34,10 @@ public class PeppolEventDeSerializerTest {
 
     @Test
     public void testPopulatePEppolEvent() throws Exception {
-        Arrays.asList(fixtures).forEach(fixture -> {
-            testPopulateEventWithFixture(fixture);
-        });
+        Arrays.asList(fixtures).forEach(this::testPopulateEventWithFixture);
     }
 
-    protected void testPopulateEventWithFixture(String fixture) {
+    private void testPopulateEventWithFixture(String fixture) {
         PeppolEvent testPeppolEvent = testObject.fixSenderName(new Gson().fromJson(fixture, JsonElement.class).getAsJsonObject());
         assertNotNull(testPeppolEvent.getSenderName());
         assertEquals("n/a", testPeppolEvent.getSenderName());

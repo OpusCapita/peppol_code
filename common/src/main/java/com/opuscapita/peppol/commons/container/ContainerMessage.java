@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 /**
  * Holds the whole data exchange bean inside the application.
@@ -16,11 +17,13 @@ import java.io.Serializable;
  */
 @SuppressWarnings("WeakerAccess")
 public class ContainerMessage implements Serializable {
+    public static final String METADATA = "metadata";
+
     private final BaseDocument document;
-    private final String metadata;
     private final Endpoint source;
     private final String fileName;
     private final Route route;
+    private final Properties metadata = new Properties();
 
     public ContainerMessage(@NotNull String metadata, @NotNull String fileName, @NotNull Endpoint source) {
         this(null, metadata, source, fileName, null);
@@ -33,7 +36,7 @@ public class ContainerMessage implements Serializable {
     public ContainerMessage(@Nullable BaseDocument document, @Nullable String metadata, @NotNull Endpoint source,
                             @NotNull String fileName, @Nullable Route route) {
         this.document = document;
-        this.metadata = metadata;
+        this.metadata.put(METADATA, metadata == null ? "" : metadata);
         this.source = source;
         this.fileName = fileName;
         this.route = route;
@@ -79,6 +82,11 @@ public class ContainerMessage implements Serializable {
 
     @Nullable
     public String getSourceMetadata() {
+        return metadata.getProperty(METADATA);
+    }
+
+    @NotNull
+    public Properties getMetadata() {
         return metadata;
     }
 
