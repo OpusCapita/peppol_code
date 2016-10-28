@@ -5,7 +5,6 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url "https://repo.spring.io/milestone" }
-        flatDir { dirs 'libs' }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -17,7 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'common'
+    baseName = 'common-model'
     version = '0.0.1-SNAPSHOT'
     from sourceSets.main.allSource
     bootRepackage.enabled = false
@@ -27,24 +26,20 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    //maven { url "https://repo.spring.io/snapshot" }
     maven { url "https://repo.spring.io/milestone" }
 }
-
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-amqp'
     compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    compile 'commons-io:commons-io:2.5'
-    compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.intellij:annotations:12.0'
-    compile 'com.rabbitmq:amqp-client:3.6.5'
 
     compile 'org.yaml:snakeyaml:1.17'
+    compile 'com.google.code.gson:gson:2.7'
 
-    compile fileTree(dir: 'libs', include: '*.jar')
     testCompile 'junit:junit:4.12'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
@@ -54,7 +49,6 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR4"
     }
 }
-
 
 eclipse {
     classpath {
