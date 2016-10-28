@@ -6,8 +6,7 @@ tests:
    configuration-server:
      type: reference
      params:
-       reference: http://s-l-web1.ocnet.local:8888/admin/health
-       localReference: http://localhost:441/admin/health
+       reference: http://localhost:441/admin/health
    queue:
      type: queue
      params:
@@ -38,10 +37,11 @@ tests:
    File-System-connection:
      type: File-System-connection
      params:
-       readable-directory: C:\test_dir
-       writable-directory: C:\test_dir
+       readable-directory: C:\test_dir C:\test_dir
+       writable-directory: C:\test_dir C:\test_dir
    module-configuration:
      type: module-configuration
      params:
-       module-names: events-persistence
+       host: http://localhost:441/
+       module-names: events-persistence transport
        profile: development

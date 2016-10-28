@@ -1,9 +1,10 @@
 package com.opuscapita.peppol.test.tools.smoke.checks.subtypes;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.opuscapita.peppol.test.tools.smoke.checks.Check;
 import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
-import com.google.gson.Gson;
+
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -22,7 +23,7 @@ public class HealthCheck extends Check {
     @Override
     public CheckResult run() {
         try {
-            URL url = new URL(rawConfig.get("localReference"));
+            URL url = new URL(rawConfig.get("reference"));
             URLConnection urlConn = url.openConnection();
             InputStreamReader is = new InputStreamReader(urlConn.getInputStream(),Charset.defaultCharset());
 
@@ -31,12 +32,12 @@ public class HealthCheck extends Check {
             boolean statusCheck = statusValue.toUpperCase().equals("UP");
 
             return new CheckResult(name, statusCheck, "Health check performed for: " +
-                    rawConfig.get("localReference") + " received status is: " +
+                    rawConfig.get("reference") + " received status is: " +
                     statusValue, rawConfig);
-        }catch (Exception ex){
+        } catch (Exception ex){
             ex.printStackTrace();
             return new CheckResult(name, false, "Health check for: " +
-                    rawConfig.get("localReference") + " failed "
+                    rawConfig.get("reference") + " failed "
                     + ex, rawConfig);
         }
     }

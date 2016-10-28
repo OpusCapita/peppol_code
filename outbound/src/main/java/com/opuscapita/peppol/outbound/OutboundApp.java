@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -19,6 +20,7 @@ import org.springframework.core.env.Environment;
 /**
  * @author Sergejs.Roze
  */
+@SpringBootApplication
 public class OutboundApp {
     @Value("${amqp.queue.in.name}")
     private String queueName;
