@@ -18,7 +18,6 @@ import java.util.Map;
 public class SmokeTestConfigReader {
     private final static Logger logger = LogManager.getLogger(SmokeTestConfigReader.class);
 
-    //TODO bad method name
     public SmokeTestConfig initConfig(String configFile) {
         Yaml yaml = new Yaml();
         SmokeTestConfig testConfig = new SmokeTestConfig();

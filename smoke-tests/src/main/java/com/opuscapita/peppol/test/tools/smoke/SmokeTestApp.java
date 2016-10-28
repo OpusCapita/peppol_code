@@ -25,5 +25,12 @@ public class SmokeTestApp {
 
         SmokeTestConfig config = new SmokeTestConfigReader().initConfig(configFile);
         List<CheckResult> checkResults = config.runChecks();
+        printResult(checkResults);
+    }
+
+    private static void printResult(List<CheckResult> checkResults) {
+        for(CheckResult result : checkResults){
+            logger.info(result.toString());
+        }
     }
 }

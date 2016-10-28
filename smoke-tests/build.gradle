@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-apply plugin: 'groovy'
+/*apply plugin: 'groovy'*/
 apply plugin: 'java'
 
 repositories {
@@ -17,43 +17,15 @@ repositories {
 }
 
 dependencies {
-    testCompile 'org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE'
-    testCompile 'org.springframework.boot:spring-boot-starter-amqp:1.4.1.RELEASE'
-    testCompile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
-    testCompile 'org.springframework.boot:spring-boot-starter-data-jpa:1.4.1.RELEASE'
-    testCompile 'org.springframework.boot:spring-boot-starter-test:1.4.1.RELEASE'
-
-    testCompile 'junit:junit:4.12'
-
-    testCompile 'org.codehaus.groovy:groovy-all:2.4.7'
-
-    testCompile 'com.aestasit.infrastructure.sshoogr:sshoogr:0.9.25'
-
-    testCompile 'org.gebish:geb-core:1.0-rc-2'
-    testCompile 'org.seleniumhq.selenium:selenium-java:2.9.0'
-    testCompile 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.9.0'
-    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.9.0'
-    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.9.0'
-
-    testCompile 'mysql:mysql-connector-java:6.0.4'
-
-    testCompile 'org.ysb33r.groovy:groovy-vfs:0.5'
-    testCompile 'commons-net:commons-net:3.5'
-
-    testCompile 'com.rabbitmq:amqp-client:3.6.5'
-
-    testCompile 'com.fasterxml.jackson.core:jackson-annotations:2.8.3'
-    testCompile 'org.apache.logging.log4j:log4j-api:2.7'
-    testCompile 'junit:junit:4.12'
-    testCompile 'com.intellij:annotations:12.0'
-
-    testCompile 'commons-io:commons-io:2.5'
-    testCompile 'org.apache.commons:commons-lang3:3.4'
-
-    testCompile 'org.jetbrains:annotations:13.0'
-    testCompile 'com.google.code.gson:gson:2.7'
+    compile 'org.yaml:snakeyaml:1.17'
+    compile 'mysql:mysql-connector-java:6.0.4'
+    compile 'com.rabbitmq:amqp-client:3.6.5'
+    compile 'org.apache.logging.log4j:log4j-api:2.7'
+    compile 'com.intellij:annotations:12.0'
+    compile 'org.jetbrains:annotations:13.0'
+    compile 'com.google.code.gson:gson:2.7'
 }
 
-test {
+/*test {
     systemProperties = System.properties.findAll { key, value -> [ "proxy", "remote" ].any { key.toString().toLowerCase().contains(it) } }
-}
+}*/
