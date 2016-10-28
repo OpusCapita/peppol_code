@@ -17,6 +17,7 @@ public class SmokeTestApp {
 
     public static void main(String[] args) {
 
+        logger.info("Starting:  " + SmokeTestApp.class);
         String configFile = args[0];
         if(configFile == null || configFile.isEmpty()){
             logger.error("Config file not specified, exiting!");

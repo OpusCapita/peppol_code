@@ -42,6 +42,6 @@ tests:
    module-configuration:
      type: module-configuration
      params:
-       host: http://localhost:441/
+       host: http://localhost:441
        module-names: events-persistence transport
        profile: development
