@@ -585,13 +585,17 @@ app.controller('StatusCtrl', ['$scope', 'StatusFactory', '$location', function (
     });
 }]);
 
-app.controller("LogoutCtrl", ["$resource", "$route", "$location", function ($resource, $route, $location) {
+/*app.controller("LogoutCtrl", ["$resource", "$route", "$location", function ($resource, $route, $location) {
     $resource('/logout', {}, {
         get: {method: 'GET'}
     }).get({}, function (data) {
-        $location.path("/");
+ $location.path("/logout");
         $route.reload();
     })
+ }]);*/
+
+app.controller("LogoutCtrl", ["$resource", "$route", "$location", function ($resource, $route, $location) {
+    window.location = '/logout';
 }]);
 
 /*app.controller("DatepickerCtrl", ['$scope', function ($scope) {

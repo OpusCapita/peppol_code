@@ -27,7 +27,7 @@ public class LoginController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ModelAndView logout() {
         return new ModelAndView("login");
     }

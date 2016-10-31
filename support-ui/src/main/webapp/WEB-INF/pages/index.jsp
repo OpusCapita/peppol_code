@@ -34,7 +34,7 @@
         <span id="header_title">PEPPOL AP</span>
 
         <div id="header_menu_bar">
-            <span class="glyphicon glyphicon-user"></span> <i>${user.firstName} ${user.lastName}</i> <a href="/signout">Sign
+            <span class="glyphicon glyphicon-user"></span> <i>${user.firstName} ${user.lastName}</i> <a href="/logout">Sign
             Out</a>
         </div>
     </div>

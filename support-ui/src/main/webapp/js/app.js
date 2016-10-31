@@ -61,7 +61,7 @@ angular.module('peppolApp', [
             reloadOnSearch: false
         });
         $routeProvider.when('/status', {templateUrl: '/views/status.html', controller: 'StatusCtrl'});
-        $routeProvider.when('/signout', {templateUrl: '/views/status.html', controller: 'LogoutCtrl'});
+        $routeProvider.when('/logout', {templateUrl: '', controller: 'LogoutCtrl'});
         $routeProvider.otherwise({redirectTo: '/customers'});
 
         /* CORS... */
