@@ -17,7 +17,7 @@ import java.util.Properties;
  */
 @SuppressWarnings("WeakerAccess")
 public class ContainerMessage implements Serializable {
-    public static final String METADATA = "metadata";
+    public static final String SOURCE_INFO = "source_info";
 
     private final BaseDocument document;
     private final Endpoint source;
@@ -36,7 +36,7 @@ public class ContainerMessage implements Serializable {
     public ContainerMessage(@Nullable BaseDocument document, @Nullable String metadata, @NotNull Endpoint source,
                             @NotNull String fileName, @Nullable Route route) {
         this.document = document;
-        this.metadata.put(METADATA, metadata == null ? "" : metadata);
+        this.metadata.put(SOURCE_INFO, metadata == null ? "" : metadata);
         this.source = source;
         this.fileName = fileName;
         this.route = route;
@@ -82,7 +82,7 @@ public class ContainerMessage implements Serializable {
 
     @Nullable
     public String getSourceMetadata() {
-        return metadata.getProperty(METADATA);
+        return metadata.getProperty(SOURCE_INFO);
     }
 
     @NotNull

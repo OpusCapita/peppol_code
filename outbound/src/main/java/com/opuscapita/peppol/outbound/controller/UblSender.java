@@ -2,6 +2,7 @@ package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.outbound.util.OxalisUtils;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.outbound.OxalisOutboundModule;
@@ -33,7 +34,7 @@ public class UblSender {
 
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             requestBuilder = requestBuilder
-                    .documentType(document.getPeppolDocumentTypeId())
+                    .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
                     .processType(PeppolProcessTypeId.valueOf(document.getProfileId()))
                     .sender(new ParticipantId(document.getSenderId()))
                     .receiver(new ParticipantId(document.getRecipientId()))

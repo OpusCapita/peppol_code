@@ -1,8 +1,6 @@
 package com.opuscapita.peppol.commons.container.document;
 
 import com.opuscapita.peppol.commons.container.document.impl.Archetype;
-import eu.peppol.identifier.CustomizationIdentifier;
-import eu.peppol.identifier.PeppolDocumentTypeId;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
@@ -141,16 +139,6 @@ public abstract class BaseDocument {
     @NotNull
     public String getCustomizationId() {
         return customizationId;
-    }
-
-    @NotNull
-    public PeppolDocumentTypeId getPeppolDocumentTypeId() {
-        return new PeppolDocumentTypeId(
-                getRootNode().getNamespaceURI(),
-                getRootNode().getLocalName(),
-                new CustomizationIdentifier(getCustomizationId()),
-                getVersionId()
-        );
     }
 
     @NotNull

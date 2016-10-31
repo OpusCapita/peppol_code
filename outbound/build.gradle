@@ -40,6 +40,8 @@ dependencies {
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
+    compile fileTree(dir: '../common-oxalis/libs', include: '*.jar')
+
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
