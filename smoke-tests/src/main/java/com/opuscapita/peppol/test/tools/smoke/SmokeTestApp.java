@@ -3,8 +3,8 @@ package com.opuscapita.peppol.test.tools.smoke;
 import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
 import com.opuscapita.peppol.test.tools.smoke.configs.SmokeTestConfig;
 import com.opuscapita.peppol.test.tools.smoke.configs.util.SmokeTestConfigReader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -26,12 +26,15 @@ public class SmokeTestApp {
 
         SmokeTestConfig config = new SmokeTestConfigReader().initConfig(configFile);
         List<CheckResult> checkResults = config.runChecks();
-        printResult(checkResults);
+        processCheckResults(checkResults);
     }
 
-    private static void printResult(List<CheckResult> checkResults) {
+    private static void processCheckResults(List<CheckResult> checkResults) {
         for(CheckResult result : checkResults){
-            logger.info(result.toString());
+            if (!result.isPassed())
+                logger.warn(result.toString());
+            else
+                logger.info(result.toString());
         }
     }
 }

@@ -3,8 +3,8 @@ package com.opuscapita.peppol.test.tools.smoke.configs.util;
 import com.opuscapita.peppol.test.tools.smoke.checks.Check;
 import com.opuscapita.peppol.test.tools.smoke.checks.ChecksFactory;
 import com.opuscapita.peppol.test.tools.smoke.configs.SmokeTestConfig;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
