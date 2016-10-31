@@ -8,8 +8,31 @@ buildscript {
     }
 }
 
+
 /*apply plugin: 'groovy'*/
 apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mainClassName = 'com.opuscapita.peppol.test.tools.smoke.SmokeTestApp'
+
+sourceSets {
+    main.java.srcDir "src/main/java"
+    main.resources.srcDir "src/main/resources"
+}
+
+jar {
+    baseName = 'smoke-tests'
+    version = '0.0.1-SNAPSHOT'
+    manifest {
+        attributes(
+                'Main-Class': 'com.opuscapita.peppol.test.tools.smoke.SmokeTestApp'
+        )
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
 
 repositories {
     mavenCentral()
