@@ -1,11 +1,12 @@
 package com.opuscapita.peppol.commons.model;
 
+import com.opuscapita.peppol.commons.container.route.TransportType;
+
 /**
  * Created with IntelliJ IDEA.
  * User: KACENAR1
  * Date: 14.14.2
  * Time: 13:16
- * To change this template use File | Settings | File Templates.
  */
 public class PeppolEvent {
 

@@ -24,6 +24,7 @@ public class ContainerMessage implements Serializable {
     private final String fileName;
     private final Route route;
     private final Properties metadata = new Properties();
+    private String transactionId;
 
     public ContainerMessage(@NotNull String metadata, @NotNull String fileName, @NotNull Endpoint source) {
         this(null, metadata, source, fileName, null);
@@ -98,4 +99,12 @@ public class ContainerMessage implements Serializable {
         return new Gson().toJson(this).getBytes();
     }
 
+    @Nullable
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(@NotNull String transactionId) {
+        this.transactionId = transactionId;
+    }
 }

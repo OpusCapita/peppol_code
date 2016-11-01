@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.events.persistence.controller;
 
 
+import com.opuscapita.peppol.commons.container.route.TransportType;
 import com.opuscapita.peppol.commons.model.*;
 import com.opuscapita.peppol.events.persistence.model.*;
 import org.slf4j.Logger;

@@ -49,9 +49,8 @@ public class EventQueueListener {
     public void handleError(String message, String customerId, Exception e) {
         try {
             errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event", extractFileNameFromMessage(message));
-        } catch (Exception wierd) {
-            logger.error("reporting to service now threw exception: ");
-            wierd.printStackTrace();
+        } catch (Exception weird) {
+            logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }

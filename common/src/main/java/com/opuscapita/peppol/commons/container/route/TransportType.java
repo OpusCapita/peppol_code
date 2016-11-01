@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.commons.model;
+package com.opuscapita.peppol.commons.container.route;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.List;
  * User: KACENAR1
  * Date: 13.29.11
  * Time: 15:11
- * To change this template use File | Settings | File Templates.
  */
 public enum TransportType {
     OUT_IN("OUT-in"), OUT_REPROCESS("OUT-reprocess"), OUT_PEPPOL("OUT-peppol"), OUT_PEPPOL_FINAL("OUT-peppol-final"), OUT_SMTP("OUT-smtp"),
