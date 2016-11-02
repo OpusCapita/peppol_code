@@ -17,8 +17,8 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'internal_routing'
-    version = '0.0.1-SNAPSHOT'
+    baseName = 'internal-routing'
+    version = ''
 }
 
 sourceCompatibility = 1.8
