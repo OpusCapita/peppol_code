@@ -9,7 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.RetryCallback;
+import org.springframework.retry.RetryContext;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
+
+import java.net.ConnectException;
 
 /**
  * Created by KALNIDA1 on 2016.07.12..
@@ -29,13 +34,24 @@ public class EventQueueListener {
     @Autowired
     Gson gson;
 
+
+    @Autowired
+    private RetryTemplate retryTemplate;
+
     public synchronized void receiveMessage(byte[] data) {
         String message = new String(data).replace("\"urn\"", "urn"); //Sort of hack
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(message);
             customerId = peppolEvent.getTransportType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
-            persistenceController.storePeppolEvent(peppolEvent);
+            retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
+                @Override
+                public Void doWithRetry(RetryContext context) throws ConnectException {
+                    logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");
+                    persistenceController.storePeppolEvent(peppolEvent);
+                    return null;
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
             handleError(message, customerId, e);

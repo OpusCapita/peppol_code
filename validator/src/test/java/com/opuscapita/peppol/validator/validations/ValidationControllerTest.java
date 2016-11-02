@@ -7,7 +7,6 @@ import com.opuscapita.peppol.validator.TestConfig;
 import com.opuscapita.peppol.validator.validations.common.ValidationResult;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,9 @@ import static org.junit.Assert.fail;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)
-@Ignore("Fails because requires RabbitMQ, to be fixed by Daniil")
 public class ValidationControllerTest {
+    String[] documentProfilesToBeTested = {"svefaktura1", "austria", "difi", "simpler_invoicing"};
+
     @Autowired
     ValidationController validationController;
 
@@ -43,23 +43,18 @@ public class ValidationControllerTest {
 
     }
 
-    @Test
-    @Ignore("Needs clarifications and fixes?")
-    public void validate() throws Exception {
-        try {
-            validationController.validate(null);
-            fail();
-        } catch (IllegalArgumentException ignored) {
-        }
-    }
 
     @Test
     public void validateSveFaktura1Files() throws Exception {
-        File resourceDir = new File(this.getClass().getResource("/test_data/svefaktura1_files").getFile());
+        Arrays.stream(documentProfilesToBeTested).forEach(this::testDocumentProfileValidation);
+    }
+
+    private void testDocumentProfileValidation(final String documentProfile) {
+        File resourceDir = new File(this.getClass().getResource("/test_data/" + documentProfile + "_files").getFile());
         String[] dataFiles = resourceDir.list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith("xml") && name.toLowerCase().contains("sve1");
+                return name.toLowerCase().endsWith("xml");
             }
         });
 
