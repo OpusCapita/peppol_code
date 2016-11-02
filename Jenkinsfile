@@ -58,27 +58,13 @@ node {
     }
 
     stage('Package') {
-        dir('src/configuration-server') {
-            config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
-        }
-        dir('src/email-notificator') {
-            email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", ".")
-        }
-        dir('src/events-persistence') {
-            events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", ".")
-        }
-        dir('src/inbound') {
-            inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", ".")
-        }
-        dir('src/preprocessing') {
-            preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", ".")
-        }
-        dir('src/support-ui') {
-            support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", ".")
-        }
-        dir('src/transport') {
-            transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", ".")
-        }
+        config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", "configuration-server/")
+        email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", "email-notificator/")
+        events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", "events-persistence/")
+        inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", "inbound/")
+        preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "preprocessing/")
+        support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", "support-ui/")
+        transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", "transport/")
     }
 
     stage('Release') {
