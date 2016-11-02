@@ -6,8 +6,11 @@ def config_server_image
 def email_notificator_image
 def events_persistence_image
 def inbound_image
+def internal_routing_image
+def preprocessing_image
 def support_ui_image
 def transport_image
+def validator_image
 
 def properties  // additional properties loaded from file
 
@@ -28,8 +31,11 @@ node {
                 email-notificator:assemble \
                 events-persistence:assemble \
                 inbound:assemble \
+                internal-routing:assemble \
+                preprocessing:assemble \
                 support-ui:assemble \
-                transport:assemble
+                transport:assemble \
+                validator:assemble
             '''
             properties = loadProperties('gradle.properties')
             releaseVersion = properties.version
@@ -48,31 +54,25 @@ node {
                 email-notificator:check \
                 events-persistence:check \
                 inbound:check \
+                internal-routing:check \
+                preprocessing:check \
                 support-ui:check \
-                transport:check
+                transport:check \
+                validator:check
             '''
         }
     }
 
     stage('Package') {
-        dir('src/configuration-server') {
-            config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", ".")
-        }
-        dir('src/email-notificator') {
-            email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", ".")
-        }
-        dir('src/events-persistence') {
-            events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", ".")
-        }
-        dir('src/inbound') {
-            inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", ".")
-        }
-        dir('src/support-ui') {
-            support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", ".")
-        }
-        dir('src/transport') {
-            transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", ".")
-        }
+        config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", "src/configuration-server/")
+        email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", "src/email-notificator/")
+        events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", "src/events-persistence/")
+        inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", "src/inbound/")
+        internal_routing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/internal-routing:${tag}", "src/internal-routing/")
+        preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "src/preprocessing/")
+        support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", "src/support-ui/")
+        transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", "src/transport/")
+        validator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/validator:${tag}", "src/validator/")
     }
 
     stage('Release') {
@@ -90,10 +90,16 @@ node {
             events_persistence_image.push("${tag}")
             inbound_image.push("latest")
             inbound_image.push("${tag}")
+            internal_routing_image.push("latest")
+            internal_routing_image.push("${tag}")
+            preprocessing_image.push("latest")
+            preprocessing_image.push("${tag}")
             support_ui_image.push("latest")
             support_ui_image.push("${tag}")
             transport_image.push("latest")
             transport_image.push("${tag}")
+            validator_image.push("latest")
+            validator_image.push("${tag}")
         }
     }
 

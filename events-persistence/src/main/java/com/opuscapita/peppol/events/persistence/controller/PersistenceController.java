@@ -7,9 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.retry.RetryCallback;
-import org.springframework.retry.RetryContext;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -46,18 +43,13 @@ public class PersistenceController {
     @Value("${invalid.dir}")
     private String invalidDirPath;
 
-    @Autowired
-    private RetryTemplate retryTemplate;
 
 
 
     @Transactional
     public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
-        retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
-            @Override
-            public Void doWithRetry(RetryContext context) throws ConnectException {
-                logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");
-                refactorIfInbound(peppolEvent);
+
+        refactorIfInbound(peppolEvent);
                 getAccessPoint(peppolEvent);
 
                 Message message = getOrCreateMessage(peppolEvent);
@@ -66,9 +58,7 @@ public class PersistenceController {
                 fileInfoRepository.save(fileInfo);
                 Message persistedMessage = messageRepository.save(message);
                 logger.info("Message persisted with id: " + persistedMessage.getId());
-                return null;
-            }
-        });
+
     }
 
     private FileInfo getFileInfo(Message message, PeppolEvent peppolEvent) {
