@@ -6,6 +6,7 @@ def config_server_image
 def email_notificator_image
 def events_persistence_image
 def inbound_image
+def internal_routing_image
 def preprocessing_image
 def support_ui_image
 def transport_image
@@ -29,6 +30,7 @@ node {
                 email-notificator:assemble \
                 events-persistence:assemble \
                 inbound:assemble \
+                internal-routing:assemble \
                 preprocessing:assemble \
                 support-ui:assemble \
                 transport:assemble
@@ -50,6 +52,7 @@ node {
                 email-notificator:check \
                 events-persistence:check \
                 inbound:check \
+                internal-routing:check \
                 preprocessing:check \
                 support-ui:check \
                 transport:check
@@ -62,6 +65,7 @@ node {
         email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", "src/email-notificator/")
         events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", "src/events-persistence/")
         inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", "src/inbound/")
+        internal_routing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/internal-routing:${tag}", "src/internal-routing/")
         preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "src/preprocessing/")
         support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", "src/support-ui/")
         transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", "src/transport/")
@@ -82,6 +86,8 @@ node {
             events_persistence_image.push("${tag}")
             inbound_image.push("latest")
             inbound_image.push("${tag}")
+            internal_routing_image.push("latest")
+            internal_routing_image.push("${tag}")
             preprocessing_image.push("latest")
             preprocessing_image.push("${tag}")
             support_ui_image.push("latest")
