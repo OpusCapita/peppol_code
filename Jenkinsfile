@@ -34,7 +34,7 @@ node {
                 internal-routing:assemble \
                 preprocessing:assemble \
                 support-ui:assemble \
-                transport:assemble
+                transport:assemble \
                 validator:assemble
             '''
             properties = loadProperties('gradle.properties')
@@ -57,7 +57,7 @@ node {
                 internal-routing:check \
                 preprocessing:check \
                 support-ui:check \
-                transport:check
+                transport:check \
                 validator:check
             '''
         }
