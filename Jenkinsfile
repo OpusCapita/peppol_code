@@ -10,6 +10,7 @@ def internal_routing_image
 def preprocessing_image
 def support_ui_image
 def transport_image
+def validator_image
 
 def properties  // additional properties loaded from file
 
@@ -34,6 +35,7 @@ node {
                 preprocessing:assemble \
                 support-ui:assemble \
                 transport:assemble
+                validator:assemble
             '''
             properties = loadProperties('gradle.properties')
             releaseVersion = properties.version
@@ -56,6 +58,7 @@ node {
                 preprocessing:check \
                 support-ui:check \
                 transport:check
+                validator:check
             '''
         }
     }
@@ -69,6 +72,7 @@ node {
         preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "src/preprocessing/")
         support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", "src/support-ui/")
         transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", "src/transport/")
+        validator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/validator:${tag}", "src/validator/")
     }
 
     stage('Release') {
@@ -94,6 +98,8 @@ node {
             support_ui_image.push("${tag}")
             transport_image.push("latest")
             transport_image.push("${tag}")
+            validator_image.push("latest")
+            validator_image.push("${tag}")
         }
     }
 
