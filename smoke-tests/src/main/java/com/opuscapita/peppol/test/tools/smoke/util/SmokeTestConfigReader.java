@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.test.tools.smoke.configs.util;
+package com.opuscapita.peppol.test.tools.smoke.util;
 
 import com.opuscapita.peppol.test.tools.smoke.checks.Check;
 import com.opuscapita.peppol.test.tools.smoke.checks.ChecksFactory;
@@ -17,8 +17,13 @@ import java.util.Map;
  */
 public class SmokeTestConfigReader {
     private final static Logger logger = LogManager.getLogger(SmokeTestConfigReader.class);
+    private String configFile;
 
-    public SmokeTestConfig initConfig(String configFile) {
+    public SmokeTestConfigReader(String configFile) {
+        this.configFile = configFile;
+    }
+
+    public SmokeTestConfig initConfig() {
         Yaml yaml = new Yaml();
         SmokeTestConfig testConfig = new SmokeTestConfig();
         try {
