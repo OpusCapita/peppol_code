@@ -21,11 +21,11 @@ public class HtmlResultBuilder implements ResultBuilder{
 
 	private Configuration configuration;
 	private String templateDirectory;
-	private String testResultDir;
+	private String testResultFileName;
 	private Logger logger = Logger.getLogger(HtmlResultBuilder.class);
 
-	public HtmlResultBuilder(String resultDirectory, String templateDirectory) {
-		this.testResultDir = resultDirectory;
+	public HtmlResultBuilder(String testResultFileName, String templateDirectory) {
+		this.testResultFileName = testResultFileName;
         this.templateDirectory = templateDirectory;
         loadConfiguration();
 	}
@@ -54,9 +54,9 @@ public class HtmlResultBuilder implements ResultBuilder{
 
         String htmlContent = buildHtmlTestsSummaryString(checkResults, goodChecks, badChecks);
 
-		try(PrintWriter writer = new PrintWriter(testResultDir + "\\test.html")){
+		try(PrintWriter writer = new PrintWriter(testResultFileName)){
 			writer.println(htmlContent);
-            logger.info(HtmlResultBuilder.class + ": result file created: " + testResultDir + "\\test.html");
+            logger.info(HtmlResultBuilder.class + ": result file created: " + testResultFileName);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
             logger.error(HtmlResultBuilder.class + ": Error saving result file " + e);
