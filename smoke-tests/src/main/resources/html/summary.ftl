@@ -95,17 +95,13 @@
                             <table class="table table-bordered table-hover table-condensed"
                                    style="padding:0; margin:0;">
                                 <tr>
-                                    <th>Test</th>
-                                <#--<th>Test file</th>-->
-                                <#--<th>Iteration</th>-->
-                                    <th>Test result</th>
-                                    <th>Comment</th>
+                                    <th style="width: 210px;">Test</th>
+                                    <th style="width: 150px;">Test result</th>
+                                    <th>Details</th>
                                 </tr>
                                 <#list s.details.asserts as d>
                                     <tr>
-                                        <td>${s.details.name}</td>
-                                    <#--	<td style="width: 420px;">${s.info.test_file}</td>-->
-                                    <#--<td style="width: 96px;">${s.info.iteration}</td>	-->
+                                        <td>${d.name}</td>
                                         <td>${d.output_value}</td>
                                         <td>${d.comment}</td>
                                     </tr>
@@ -133,22 +129,14 @@
 
                             <table class="table table-bordered table-hover table-condensed">
                                 <tr>
-                                    <th>Test</th>
-                                    <th>Assert</th>
-                                <#--<th>Test file</th>
-                                <th>Iteration</th>
-                                <th>Test result</th>-->
-                                    <th>Output</th>
-                                    <th>Expected</th>
-                                    <th>Comment</th>
+                                    <th style="width: 210px;">Test</th>
+                                    <th style="width: 150px;">Output</th>
+                                    <th style="width: 150px;">Expected</th>
+                                    <th>Details</th>
                                 </tr>
                                 <#list f.details.asserts as a>
                                     <tr>
-                                        <td>${f.details.name}</td>
                                         <td>${a.name}</td>
-                                    <#--<td>${f.info.test_file}</td>
-                                    <td>${f.info.iteration}</td>
-                                    <td>${f.info.test_result}</td>	-->
                                         <td>${a.output_value}</td>
                                         <td>${a.expected_result}</td>
                                         <td>${a.comment}</td>
@@ -164,4 +152,4 @@
     </div>
 </div>
 </body>
-</html>  
+</html>

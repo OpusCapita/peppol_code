@@ -57,10 +57,10 @@ public class ModuleConfigurationCheck extends Check {
         }
         catch (Exception ex){
             ex.printStackTrace();
-            return new CheckResult(name, false, "configuration check failed " + ex, rawConfig);
+            return new CheckResult(name, false, "Configuration check failed " + ex, rawConfig);
         }
 
-        return new CheckResult(name, result, "configuration check performed", rawConfig);
+        return new CheckResult(name, result, "Configuration check successful", rawConfig);
     }
 
     //comparing expected configuration files and the actual files found on server
