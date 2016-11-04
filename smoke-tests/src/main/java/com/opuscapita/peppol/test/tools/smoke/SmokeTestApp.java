@@ -17,14 +17,14 @@ public class SmokeTestApp {
 
     private final static Logger logger = LogManager.getLogger(SmokeTestApp.class);
     static String configFile;
-    static String testResultDir;
+    static String testResultFileName;
     static String templateDir;
 
     public static void main(String[] args) {
 
         logger.info("SmokeTestApp : Starting!");
         configFile = args[0];
-        testResultDir = args[1];
+        testResultFileName = args[1];
         templateDir = args[2];
 
         if(configFile == null || configFile.isEmpty()){
@@ -32,8 +32,8 @@ public class SmokeTestApp {
             return;
         }
 
-        if(testResultDir == null || testResultDir.isEmpty()){
-            logger.error("Test results directory empty or not specified, exiting!");
+        if(testResultFileName == null || testResultFileName.isEmpty()){
+            logger.error("Test results file name empty or not specified, exiting!");
             return;
         }
 
@@ -45,7 +45,7 @@ public class SmokeTestApp {
         SmokeTestConfig config = new SmokeTestConfigReader(configFile).initConfig();
         List<CheckResult> checkResults = config.runChecks();
         new LoggingResultBuilder().processResult(checkResults);
-        new HtmlResultBuilder(testResultDir, templateDir).processResult(checkResults);
+        new HtmlResultBuilder(testResultFileName, templateDir).processResult(checkResults);
         logger.info("SmokeTestApp: Finished!");
     }
 }
