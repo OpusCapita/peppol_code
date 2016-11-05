@@ -34,7 +34,7 @@ public class RoutingQueueListener {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "ConstantConditions"})
     public synchronized void receiveMessage(byte[] data) {
         String message = new String(data);
 
@@ -42,7 +42,7 @@ public class RoutingQueueListener {
             ContainerMessage cm = gson.fromJson(message, ContainerMessage.class);
             cm = controller.loadRoute(cm);
             logger.debug("Route set to " + cm.getRoute());
-            rabbitTemplate.convertAndSend(cm.getRoute().pop("Route defined: " + cm.getRoute()), cm);
+            rabbitTemplate.convertAndSend(cm.getRoute().pop());
         } catch (Exception e) {
             logger.error("Failed to read message: " + e.getMessage(), e);
             handleError("Internal routing failed to process received AMQP message", "", e);
