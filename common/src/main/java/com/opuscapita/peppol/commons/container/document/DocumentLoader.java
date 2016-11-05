@@ -58,11 +58,11 @@ public class DocumentLoader {
             logger.warn("Unable to parse document " + fileName, e);
             return new InvalidDocument("Unable to parse document", e);
         }
-        return select(document, fileName);
+        return select(document);
     }
 
     @NotNull
-    private BaseDocument select(Document document, String fileName) {
+    private BaseDocument select(Document document) {
         BaseDocument result;
         for (BaseDocument example : examples) {
             if (example.recognize(document)) {

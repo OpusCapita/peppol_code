@@ -39,10 +39,10 @@ public class RoutingController {
             if (source == route.getSource()) {
                 if (route.getMask() != null) {
                     if (baseDocument.getRecipientId().matches(route.getMask())) {
-                        return new ContainerMessage(cm.getBaseDocument(), cm.getSourceMetadata(), cm.getSource(), cm.getFileName(), route);
+                        return cm.setRoute(route);
                     }
                 } else {
-                    return new ContainerMessage(cm.getBaseDocument(), cm.getSourceMetadata(), cm.getSource(), cm.getFileName(), route);
+                    return cm.setRoute(route);
                 }
             }
         }

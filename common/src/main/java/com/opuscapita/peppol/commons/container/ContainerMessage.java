@@ -4,43 +4,43 @@ import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
+import com.opuscapita.peppol.commons.container.route.TransportType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.Properties;
 
 /**
  * Holds the whole data exchange bean inside the application.
  *
  * @author Sergejs.Roze
  */
-@SuppressWarnings("WeakerAccess")
 public class ContainerMessage implements Serializable {
-    public static final String SOURCE_INFO = "source_info";
-
-    private final BaseDocument document;
     private final Endpoint source;
-    private final String fileName;
-    private final Route route;
-    private final Properties metadata = new Properties();
+    private final String sourceMetadata;
+
+    private String fileName;
+
+    private Route route;
+    private BaseDocument document;
     private String transactionId;
+    private TransportType transportType = TransportType.UNKNOWN;
 
     public ContainerMessage(@NotNull String metadata, @NotNull String fileName, @NotNull Endpoint source) {
-        this(null, metadata, source, fileName, null);
-    }
-
-    public ContainerMessage(@NotNull BaseDocument document, @NotNull String fileName, @NotNull Endpoint source) {
-        this(document, fileName, source, fileName, null);
-    }
-
-    public ContainerMessage(@Nullable BaseDocument document, @Nullable String metadata, @NotNull Endpoint source,
-                            @NotNull String fileName, @Nullable Route route) {
-        this.document = document;
-        this.metadata.put(SOURCE_INFO, metadata == null ? "" : metadata);
         this.source = source;
         this.fileName = fileName;
-        this.route = route;
+        this.sourceMetadata = metadata;
+    }
+
+    @NotNull
+    public String getFileName() {
+        return fileName;
+    }
+
+    @NotNull
+    public ContainerMessage setFileName(@NotNull String fileName) {
+        this.fileName = fileName;
+        return this;
     }
 
     @Nullable
@@ -48,18 +48,25 @@ public class ContainerMessage implements Serializable {
         return route;
     }
 
+    @NotNull
+    public ContainerMessage setRoute(@NotNull Route route) {
+        this.route = route;
+        return this;
+    }
+
     @Nullable
     public BaseDocument getBaseDocument() {
         return document;
     }
 
-    public boolean isInbound() {
-        return source == Endpoint.PEPPOL;
+    @NotNull
+    public ContainerMessage setBaseDocument(@NotNull BaseDocument baseDocument) {
+        this.document = baseDocument;
+        return this;
     }
 
-    @NotNull
-    public String getFileName() {
-        return fileName;
+    public boolean isInbound() {
+        return source == Endpoint.PEPPOL;
     }
 
     /**
@@ -73,24 +80,12 @@ public class ContainerMessage implements Serializable {
         return isInbound() ? getBaseDocument().getRecipientId() : getBaseDocument().getSenderId();
     }
 
-    @Override
-    public String toString() {
-        if (document == null) {
-            return fileName + " from " + source;
-        }
-        return document.getClass().getName() + " [" + route + "]";
-    }
-
-    @Nullable
+    @NotNull
     public String getSourceMetadata() {
-        return metadata.getProperty(SOURCE_INFO);
+        return sourceMetadata;
     }
 
     @NotNull
-    public Properties getMetadata() {
-        return metadata;
-    }
-
     public Endpoint getSource() {
         return source;
     }
@@ -104,7 +99,34 @@ public class ContainerMessage implements Serializable {
         return transactionId;
     }
 
-    public void setTransactionId(@NotNull String transactionId) {
+    @NotNull
+    public ContainerMessage setTransactionId(@NotNull String transactionId) {
         this.transactionId = transactionId;
+        return this;
     }
+
+    @NotNull
+    public TransportType getTransportType() {
+        return transportType;
+    }
+
+    @NotNull
+    public ContainerMessage setTransportType(TransportType transportType) {
+        this.transportType = transportType;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        String result = fileName + " from " + source;
+        if (document != null) {
+            result += " [" + document.getClass().getName() + "]";
+        }
+        if (route != null) {
+            result += ":" + route;
+        }
+
+        return result;
+    }
+
 }

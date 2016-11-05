@@ -39,14 +39,14 @@ public class RoutingControllerTest {
 
         ContainerMessage cm;
 
-        cm = new ContainerMessage(new UblDocument(), "test", Endpoint.PEPPOL);
+        cm = new ContainerMessage("test", "test", Endpoint.PEPPOL).setBaseDocument(new UblDocument());
         assertNull(cm.getRoute());
         cm = rc.loadRoute(cm);
         assertNotNull(cm.getRoute());
         assertEquals("r2", cm.getRoute().getDescription());
         assertEquals("r2a", cm.getRoute().pop());
 
-        cm = new ContainerMessage(new UblDocument(), "test", Endpoint.GATEWAY);
+        cm = new ContainerMessage("test", "test", Endpoint.GATEWAY).setBaseDocument(new UblDocument());
         assertNull(cm.getRoute());
         cm = rc.loadRoute(cm);
         assertNotNull(cm.getRoute());
