@@ -18,7 +18,7 @@ apply plugin: 'spring-boot'
 
 jar {
     baseName = 'validator'
-    version = '0.0.1-SNAPSHOT'
+    version = ''
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
