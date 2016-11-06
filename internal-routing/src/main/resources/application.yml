@@ -1,34 +1,37 @@
-routing:
-  routes:
-    - description: 'Peppol to XiB'
-      mask: '007:.*'
-      source: peppol
-      endpoints:
-        - validation
-        - gateway_xib
 
-    - description: 'Peppol to A2A'
-      mask: '.*'
-      source: peppol
-      endpoints:
-        - validation
-        - gateway_a2a
+peppol:
+  internal-routing:
+    queue:
+      in:
+        name: internal-routing
 
-    - description: 'A2A to Peppol'
-      source: gateway_a2a
-      endpoints:
-        - validation
-        - peppol
+    routing:
+      routes:
+        - description: 'Peppol to XiB'
+          mask: '007:.*'
+          source: peppol
+          endpoints:
+            - validation
+            - gateway_xib
 
-    - description: 'XiB to Peppol'
-      source: gateway_xib
-      endpoints:
-        - validation
-        - peppol
+        - description: 'Peppol to A2A'
+          mask: '.*'
+          source: peppol
+          endpoints:
+            - validation
+            - gateway_a2a
 
-amqp:
-  queue:
-    name: internal_routing
+        - description: 'A2A to Peppol'
+          source: gateway_a2a
+          endpoints:
+            - validation
+            - peppol
+
+        - description: 'XiB to Peppol'
+          source: gateway_xib
+          endpoints:
+            - validation
+            - peppol
 
 spring:
   autoconfigure:

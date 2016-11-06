@@ -39,13 +39,10 @@ public class PersistenceController {
     SentFileInfoRepository sentFileInfoRepository;
     @Autowired
     ReprocessFileInfoRepository reprocessFileInfoRepository;
-    @Value("${error.dir}")
+    @Value("${peppol.events-persistence.error.dir}")
     private String errorDirPath;
-    @Value("${invalid.dir}")
+    @Value("${peppol.events-persistence.invalid.dir}")
     private String invalidDirPath;
-
-
-
 
     @Transactional
     public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {

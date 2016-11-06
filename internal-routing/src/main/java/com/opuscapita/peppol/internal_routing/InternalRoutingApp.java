@@ -1,36 +1,46 @@
 package com.opuscapita.peppol.internal_routing;
 
 import com.google.gson.Gson;
-import com.opuscapita.commons.servicenow.ServiceNow;
-import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
-import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.internal_routing.amqp.RoutingQueueListener;
+import com.opuscapita.peppol.commons.template.AbstractQueueListener;
+import com.opuscapita.peppol.internal_routing.controller.RoutingController;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.internal_routing"})
 public class InternalRoutingApp {
-    @Value("${amqp.queue.name}")
+    @Value("${peppol.internal-routing.queue.in.name}")
     private String queueName;
-
-    private final Environment environment;
-
-    @Autowired
-    public InternalRoutingApp(Environment environment) {
-        this.environment = environment;
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(InternalRoutingApp.class, args);
+    }
+
+    @Bean
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson,
+                                        @NotNull RoutingController controller, @NotNull RabbitTemplate rabbitTemplate,
+                                        @NotNull StatusReporter reporter) {
+        return new AbstractQueueListener(errorHandler, reporter, gson) {
+            @SuppressWarnings("ConstantConditions")
+            @Override
+            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
+                cm = controller.loadRoute(cm);
+                logger.debug("Route set to " + cm.getRoute());
+                rabbitTemplate.convertAndSend(cm.getRoute().pop());
+                cm.setStatus("route defined");
+            }
+        };
     }
 
     @SuppressWarnings("Duplicates")
@@ -47,36 +57,13 @@ public class InternalRoutingApp {
 
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
-    MessageListenerAdapter listenerAdapter(RoutingQueueListener receiver) {
+    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     @Bean
-    public Gson gson() {
+    Gson gson() {
         return new Gson();
     }
 
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    public ErrorHandler errorHandler() {
-        return new ErrorHandler();
-    }
-
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    ServiceNowConfiguration serviceNowConfiguration() {
-        return new ServiceNowConfiguration(
-                environment.getProperty("snc.rest.url"),
-                environment.getProperty("snc.rest.username"),
-                environment.getProperty("snc.rest.password"),
-                environment.getProperty("snc.bsc"),
-                environment.getProperty("snc.from"),
-                environment.getProperty("snc.businessGroup"));
-    }
-
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    public ServiceNow serviceNowRest() {
-        return new ServiceNowREST(serviceNowConfiguration());
-    }
 }

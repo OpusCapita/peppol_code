@@ -20,6 +20,9 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa:1.4.1.RELEASE'
     compile project (':common')
     compile project (':common-model')
+    compile 'org.springframework:spring-test:4.3.3.RELEASE'
+
+    compile fileTree(dir: '../common/libs', include: '*.jar')
     compile fileTree(dir: '../common-oxalis/libs', include: '*.jar')
 
     testCompile 'junit:junit:4.12'

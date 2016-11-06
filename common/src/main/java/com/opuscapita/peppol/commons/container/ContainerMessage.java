@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.container.route.TransportType;
+import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +25,7 @@ public class ContainerMessage implements Serializable {
     private Route route;
     private BaseDocument document;
     private String transactionId;
-    private TransportType transportType = TransportType.UNKNOWN;
+    private ProcessingStatus status;
 
     public ContainerMessage(@NotNull String metadata, @NotNull String fileName, @NotNull Endpoint source) {
         this.source = source;
@@ -106,17 +107,43 @@ public class ContainerMessage implements Serializable {
     }
 
     @NotNull
-    public TransportType getTransportType() {
-        return transportType;
+    public ProcessingStatus getProcessingStatus() {
+        if (status == null) {
+            return new ProcessingStatus(TransportType.UNKNOWN, "", fileName);
+        }
+        return status;
     }
 
     @NotNull
-    public ContainerMessage setTransportType(TransportType transportType) {
-        this.transportType = transportType;
+    public ContainerMessage setStatus(@NotNull ProcessingStatus status) {
+        this.status = status;
         return this;
     }
 
+    @NotNull
+    public ContainerMessage setStatus(@NotNull String status) {
+        this.getProcessingStatus().setResult(status);
+        return this;
+    }
+
+    @NotNull
+    public ContainerMessage setStatus(@NotNull TransportType transportType, @NotNull String result) {
+        this.getProcessingStatus().setTransportType(transportType).setResult(result);
+        return this;
+    }
+
+    /**
+     * Returns correlation ID if any or file name as correlation ID. Data is being read from processing status object.
+     *
+     * @return Returns correlation ID if any or file name as correlation ID
+     */
+    @NotNull
+    public String getCorrelationId() {
+        return getProcessingStatus().getCorrelationId();
+    }
+
     @Override
+    @NotNull
     public String toString() {
         String result = fileName + " from " + source;
         if (document != null) {

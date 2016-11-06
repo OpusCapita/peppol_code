@@ -35,7 +35,7 @@ public class RoutingControllerTest {
             }
         };
 
-        RoutingController rc = new RoutingController(conf, null);
+        RoutingController rc = new RoutingController(conf);
 
         ContainerMessage cm;
 

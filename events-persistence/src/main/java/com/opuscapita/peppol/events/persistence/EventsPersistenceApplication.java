@@ -2,10 +2,6 @@ package com.opuscapita.peppol.events.persistence;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.opuscapita.commons.servicenow.ServiceNow;
-import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
-import com.opuscapita.commons.servicenow.ServiceNowREST;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.commons.model.util.PeppolEventDeSerializer;
 import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
@@ -30,12 +26,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.opuscapita.peppol.events.persistence.model")
-@ComponentScan(basePackages = {"com.opuscapita.peppol.events.persistence", "com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons.model"})
+@ComponentScan(basePackages = {"com.opuscapita.peppol.events.persistence", "com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons"})
 @EntityScan(basePackages = {"com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons.model"})
 @EnableTransactionManagement
 @EnableRetry
 public class EventsPersistenceApplication {
-    @Value("${amqp.queueName}")
+    @Value("${peppol.events-persistence.queue.in.name}")
     private String queueName;
 
     @Autowired
@@ -83,25 +79,4 @@ public class EventsPersistenceApplication {
         return new GsonBuilder().registerTypeAdapter(PeppolEvent.class, new PeppolEventDeSerializer()).create();
     }
 
-    @Bean
-    public ErrorHandler errorHandler() {
-        return new ErrorHandler();
-    }
-
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    ServiceNowConfiguration serviceNowConfiguration() {
-        return new ServiceNowConfiguration(
-                environment.getProperty("snc.rest.url"),
-                environment.getProperty("snc.rest.username"),
-                environment.getProperty("snc.rest.password"),
-                environment.getProperty("snc.bsc"),
-                environment.getProperty("snc.from"),
-                environment.getProperty("snc.businessGroup"));
-    }
-
-    @Bean
-    public ServiceNow serviceNowRest() {
-        return new ServiceNowREST(serviceNowConfiguration());
-    }
 }

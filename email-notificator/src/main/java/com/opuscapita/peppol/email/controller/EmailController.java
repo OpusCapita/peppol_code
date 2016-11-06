@@ -31,7 +31,8 @@ public class EmailController {
     private final static Logger logger = LoggerFactory.getLogger(EmailController.class);
     private final CustomerRepository customerRepository;
     private final ErrorHandler errorHandler;
-    @Value("${email.directory}")
+
+    @Value("${peppol.email-notificator.directory}")
     private String directory;
 
     @Autowired

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EmailSender {
-    @Value("${email.sender:'peppol@opuscapita.com'}")
+    @Value("${peppol.email-notificator.sender}")
     private String sender;
 
     private final JavaMailSender mailSender;
@@ -24,6 +24,7 @@ public class EmailSender {
 
     public void sendMessage(@NotNull String to, @NotNull String subject, @NotNull String body) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(sender);
         message.setTo(to.split(","));
         message.setSubject(subject);
         message.setText(body);

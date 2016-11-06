@@ -1,39 +1,34 @@
 package com.opuscapita.peppol.eventing;
 
 import com.google.gson.Gson;
-import com.opuscapita.commons.servicenow.ServiceNow;
-import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
-import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.eventing.amqp.EventingListener;
+import com.opuscapita.peppol.commons.model.PeppolEvent;
+import com.opuscapita.peppol.commons.template.AbstractQueueListener;
+import com.opuscapita.peppol.eventing.controller.ContainerMessageToPeppolEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 
 /**
  * Gets messages from different modules and produces messages for events-persistence.
  *
  * @author Sergejs.Roze
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing"})
 public class EventingApp {
-    private final Environment environment;
-
     @Value("{peppol.eventing.queue.in.name}")
-    private String queueName;
-
-    @Autowired
-    public EventingApp(@NotNull Environment environment) {
-        this.environment = environment;
-    }
+    private String queueIn;
+    @Value("{peppol.eventing.queue.out.name}")
+    private String queueOut;
 
     public static void main(String[] args) {
         SpringApplication.run(EventingApp.class, args);
@@ -45,44 +40,29 @@ public class EventingApp {
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
+        container.setQueueNames(queueIn);
         container.setPrefetchCount(10);
         container.setMessageListener(listenerAdapter);
         return container;
     }
 
     @Bean
-    public Gson gson() {
-        return new Gson();
-    }
-
-    @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
-    MessageListenerAdapter listenerAdapter(EventingListener receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
+    MessageListenerAdapter listenerAdapter(AbstractQueueListener queueListener) {
+        return new MessageListenerAdapter(queueListener, "receiveMessage");
     }
 
     @Bean
-    @ConditionalOnProperty("snc.enabled")
-    public ErrorHandler errorHandler() {
-        return new ErrorHandler();
-    }
-
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    ServiceNowConfiguration serviceNowConfiguration() {
-        return new ServiceNowConfiguration(
-                environment.getProperty("snc.rest.url"),
-                environment.getProperty("snc.rest.username"),
-                environment.getProperty("snc.rest.password"),
-                environment.getProperty("snc.bsc"),
-                environment.getProperty("snc.from"),
-                environment.getProperty("snc.businessGroup"));
-    }
-
-    @Bean
-    public ServiceNow serviceNowRest() {
-        return new ServiceNowREST(serviceNowConfiguration());
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson,
+                                        @NotNull ContainerMessageToPeppolEvent controller, @NotNull RabbitTemplate rabbitTemplate) {
+        return new AbstractQueueListener(errorHandler, null, gson) {
+            @Override
+            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
+                PeppolEvent event = controller.process(cm);
+                rabbitTemplate.convertAndSend(queueOut, event);
+                logger.debug("Peppol event successfully sent");
+            }
+        };
     }
 
 }

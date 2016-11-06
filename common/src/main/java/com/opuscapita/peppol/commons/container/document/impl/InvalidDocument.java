@@ -25,6 +25,29 @@ public class InvalidDocument extends BaseDocument {
         this(reason, null);
     }
 
+    public InvalidDocument(@Nullable BaseDocument original, @NotNull String reason, @Nullable Exception e) {
+        if (original != null) {
+            setCustomizationId(original.getCustomizationId());
+            setProfileId(original.getProfileId());
+            setVersionId(original.getVersionId());
+
+            setDocumentId(original.getDocumentId());
+            setIssueDate(original.getIssueDate());
+            setDueDate(original.getDueDate());
+
+            setSenderId(original.getSenderId());
+            setSenderName(original.getSenderName());
+            setSenderCountryCode(original.getSenderCountryCode());
+
+            setRecipientId(original.getRecipientId());
+            setRecipientName(original.getRecipientName());
+            setRecipientCountryCode(original.getRecipientCountryCode());
+        }
+
+        this.reason = reason;
+        this.e = e;
+    }
+
     @Override
     public boolean fillFields() {
         return false;
