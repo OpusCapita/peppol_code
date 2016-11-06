@@ -1,5 +1,9 @@
 
 peppol:
+  eventing:
+    queue:
+      in:
+        name: eventing
   internal-routing:
     queue:
       in:

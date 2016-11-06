@@ -15,7 +15,7 @@ import java.util.Properties;
 public class InboundProperties {
     private final static Logger logger = LoggerFactory.getLogger(InboundProperties.class);
 
-    public final static String INBOUND_OUTPUT_DIR = "peppol.inbound.directory";
+    public final static String INBOUND_OUTPUT_DIR = "peppol.storage.short";
     public final static String INBOUND_MQ_EXCHANGE = "peppol.inbound.queue.exchange";
     public final static String INBOUND_MQ_QUEUE = "peppol.inbound.queue.name";
     public final static String INBOUND_MQ_HOST = "peppol.inbound.queue.host";

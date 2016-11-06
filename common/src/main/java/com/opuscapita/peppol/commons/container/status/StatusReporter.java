@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class StatusReporter {
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("peppol.eventing.queue.in")
+    @Value("${peppol.eventing.queue.in.name}")
     private String reportDestination;
 
     @Autowired

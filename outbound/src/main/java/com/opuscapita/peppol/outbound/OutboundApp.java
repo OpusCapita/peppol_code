@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Bean;
  */
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.outbound"})
 public class OutboundApp {
-    @Value("${amqp.queue.in.name}")
+    @Value("${peppol.outbound.queue.in.name}")
     private String queueName;
 
     public static void main(String[] args) {
