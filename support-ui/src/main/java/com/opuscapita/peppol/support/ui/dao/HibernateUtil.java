@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -48,11 +49,9 @@ public class HibernateUtil {
                 } else if ("fileName".equals(entry.getKey())) {
                     conjunction.add(Restrictions.like("file.filename", getFormedFileNameRestriction(entry.getValue())));
                 } else if ("invoiceDate".equals(entry.getKey())) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("\"yyyy-MM-dd'T'HH:mm:ss.SSSX\"");
                     try {
-                        Date invoiceDate = sdf.parse(entry.getValue());
-                        conjunction.add(Restrictions.like(entry.getKey(), invoiceDate));
-                    } catch (ParseException e) {
+                        conjunction.add(Restrictions.like(entry.getKey(), getFormedDateRestriction(entry.getValue())));
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
@@ -62,6 +61,13 @@ public class HibernateUtil {
         }
         criteria.add(conjunction);
         return criteria;
+    }
+
+    private static Date getFormedDateRestriction(String dateString) throws ParseException {
+        dateString = dateString.replace("\"", "");
+        dateString = dateString.substring(0, 10);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        return sdf.parse(dateString);
     }
 
     private static String getFormedFileNameRestriction(String fileName) {
