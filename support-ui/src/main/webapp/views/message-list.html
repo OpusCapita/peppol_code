@@ -77,6 +77,10 @@
                     ng-click="showMessageInfo(msg)">
                     {{msg.errorMessage}}
                 </td>
+                <td id="file_name" data-title="'File Name'" ng-click="showMessageInfo(msg)"
+                    filter="{ 'fileName': 'text' }">
+                    {{ showFileName(msg.fileName, 12) }}
+                </td>
             </tr>
             <tr ng-repeat-end ng-show="msg.showMessageDesc">
                 <td colspan="{{colspan}}"> <!--ng-include src="'views/error-description.html'"-->
