@@ -1,8 +1,8 @@
 FROM java:8-jre
 MAINTAINER Edgars.Didrihsons@opuscapita.com
 
-VOLUME "/etc/peppol2.0"
-ENV CONFIG_SERVER_HOME /opt/local/services/peppol2.0/config-server
+VOLUME "/etc/peppol2.0/configuration-server"
+ENV CONFIG_SERVER_HOME /opt/local/services/peppol2.0/configuration-server
 ENV CONFIG_SERVER_CONFIG /etc/peppol2.0/configuration-server
 RUN \
     mkdir -p "${CONFIG_SERVER_HOME}" && \
@@ -18,7 +18,7 @@ ENV JAVA_OPTS "\
     -Dhttp.nonProxyHosts=\"*.local|nocontrol.itella.net\" "
 
 WORKDIR "${CONFIG_SERVER_HOME}"
-ADD ["build/libs/configuration-server-0.0.1-SNAPSHOT.jar", "config-server.jar"]
+ADD ["build/libs/configuration-server.jar", "configuration-server.jar"]
 
 CMD ["java", "-jar", "config-server.jar"]
 
