@@ -30,19 +30,19 @@ public class PreprocessingController {
     /**
      * Parses input container message and creates a new one with a document inside.
      *
-     * @param input the input container message without document.
+     * @param cm the input container message without document.
      * @return the container message without route
      * @throws Exception something went wrong
      */
     @NotNull
-    public ContainerMessage process(@NotNull ContainerMessage input) throws Exception {
-        logger.info("Parsing file: " + input.getFileName());
-        BaseDocument document = documentLoader.load(input.getFileName());
+    public ContainerMessage process(@NotNull ContainerMessage cm) throws Exception {
+        logger.info("Parsing file: " + cm.getFileName());
+        BaseDocument document = documentLoader.load(cm.getFileName());
 
-        String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), input.getFileName());
-        logger.info("Input file " + input.getFileName() + " moved to " + longTerm);
+        String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
+        logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
 
-        return new ContainerMessage(document, input.getSourceMetadata(), input.getSource(), longTerm, null);
+        return cm.setBaseDocument(document).setFileName(longTerm);
     }
 
 }

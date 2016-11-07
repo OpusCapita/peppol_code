@@ -2,7 +2,9 @@ package eu.peppol.persistence;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.storage.StorageImpl;
+import com.opuscapita.peppol.inbound.InboundErrorHandler;
 import com.opuscapita.peppol.inbound.InboundMessageSender;
 import com.opuscapita.peppol.inbound.InboundProperties;
 import eu.peppol.PeppolMessageMetaData;
@@ -24,11 +26,15 @@ import static com.opuscapita.peppol.inbound.InboundProperties.INBOUND_OUTPUT_DIR
 public class ExtendedMessageRepository extends SimpleMessageRepository {
     private static final Logger logger = LoggerFactory.getLogger(ExtendedMessageRepository.class);
     private static final InboundProperties properties = new InboundProperties();
+    private final ErrorHandler errorHandler;
 
+    @SuppressWarnings("ConstantConditions")
     public ExtendedMessageRepository() {
         super(new File(properties.getProperty(INBOUND_OUTPUT_DIR)));
+        errorHandler = new InboundErrorHandler(properties).getErrorHandler();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void saveInboundMessage(PeppolMessageMetaData metadata, InputStream inputStream) throws OxalisMessagePersistenceException {
         logger.info("Received message with Transmission ID = " + metadata.getTransmissionId());
@@ -41,7 +47,8 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
                     .storeTemporary(inputStream, normalizeFilename(metadata.getTransmissionId().toString()) + ".xml");
             logger.info("Message stored as: " + dataFile);
         } catch (Exception e) {
-            // TODO open ticket
+            logger.error("Failed to store incoming message", e);
+            errorHandler.reportToServiceNow("Failed to store incoming message", metadata.getRecipientId().toString(), e);
             throw new OxalisMessagePersistenceException(metadata, e);
         }
 
@@ -53,12 +60,12 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             ContainerMessage cm = prepareMessage(dataFile, metadataString);
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {
-            logger.error("Failed to send file " + metadata.getTransmissionId() + " to MQ: ", e);
-            // TODO open ticket
+            logger.error("Failed to report file " + dataFile + " to MQ: ", e);
+            errorHandler.reportToServiceNow("Failed to report received file to message queue", metadata.getRecipientId().toString(), e);
         }
     }
 
-    protected ContainerMessage prepareMessage(String fileName, String metadata) {
+    private ContainerMessage prepareMessage(String fileName, String metadata) {
         return new ContainerMessage(metadata, fileName, Endpoint.PEPPOL);
     }
 

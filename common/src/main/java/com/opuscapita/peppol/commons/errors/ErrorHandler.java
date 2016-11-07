@@ -1,10 +1,10 @@
 package com.opuscapita.peppol.commons.errors;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -22,16 +22,16 @@ import java.util.Date;
  */
 @Component
 public class ErrorHandler {
-    Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+
+    private final ServiceNow serviceNowRest;
+    private final Environment environment;
 
     @Autowired
-    ServiceNow serviceNowRest;
-
-    @Autowired
-    Environment environment;
-
-    @Autowired
-    Gson gson;
+    public ErrorHandler(@NotNull ServiceNow serviceNowRest, @NotNull Environment environment) {
+        this.serviceNowRest = serviceNowRest;
+        this.environment = environment;
+    }
 
     public void reportToServiceNow(String message, String customerId, Exception e) {
         reportToServiceNow(message, customerId, e, e.getMessage());

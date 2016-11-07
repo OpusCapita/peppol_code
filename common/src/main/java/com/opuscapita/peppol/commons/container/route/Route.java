@@ -18,27 +18,19 @@ public class Route {
     private String mask;
     private Endpoint source;
 
-    private String status = "";
     private int current = 0;
-
-    @Nullable
-    public String pop() {
-        return pop(null);
-    }
 
     /**
      * Returns next process in the route and makes next process current.
      *
-     * @param status the outcome of the finished process, optional
      * @return the next process if any or null when this was the end process
      */
     @Nullable
-    public String pop(@Nullable String status) {
+    public String pop() {
         if (current >= endpoints.size()) {
             return null;
         }
         String e = endpoints.get(current);
-        this.status += status + "\n";
 
         current++;
         return e;
@@ -46,11 +38,6 @@ public class Route {
 
     public boolean isInbound() {
         return source == Endpoint.PEPPOL;
-    }
-
-    @NotNull
-    public String getStatus() {
-        return status;
     }
 
     @Override

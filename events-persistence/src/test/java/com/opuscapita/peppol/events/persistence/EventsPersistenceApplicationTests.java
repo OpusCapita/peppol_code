@@ -23,8 +23,8 @@ import java.io.IOException;
 @Configuration
 @ComponentScan(excludeFilters = @ComponentScan.Filter(value = EventQueueListener.class, type = FilterType.ASSIGNABLE_TYPE))
 @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-public class EventsPersistanceApplicationTests {
-    Logger logger = Logger.getLogger(EventsPersistanceApplicationTests.class);
+public class EventsPersistenceApplicationTests {
+    Logger logger = Logger.getLogger(EventsPersistenceApplicationTests.class);
     String[] negativeFixtures = {
             "",
             "{}",
