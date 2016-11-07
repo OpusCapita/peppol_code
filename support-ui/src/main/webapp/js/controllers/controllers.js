@@ -448,6 +448,8 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
         afterTomorrow.setDate(tomorrow.getDate() + 1);
 
         $scope.changeSelect= function(dt){
+            if (dt == undefined)
+                return;
             console.log("before: " + dt);
             var userDate = new Date();
             dt.setHours(userDate.getHours());
