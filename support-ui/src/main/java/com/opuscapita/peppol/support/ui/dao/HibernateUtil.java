@@ -45,6 +45,8 @@ public class HibernateUtil {
             if (entry.getValue() != null && !entry.getValue().isEmpty()) {
                 if ("status".equals(entry.getKey())) {
                     conjunction.add(Restrictions.eq(entry.getKey(), MessageStatus.valueOf(entry.getValue())));
+                } else if ("fileName".equals(entry.getKey())) {
+                    conjunction.add(Restrictions.like("file.filename", getFormedFileNameRestriction(entry.getValue())));
                 } else if ("invoiceDate".equals(entry.getKey())) {
                     SimpleDateFormat sdf = new SimpleDateFormat("\"yyyy-MM-dd'T'HH:mm:ss.SSSX\"");
                     try {
@@ -60,5 +62,10 @@ public class HibernateUtil {
         }
         criteria.add(conjunction);
         return criteria;
+    }
+
+    private static String getFormedFileNameRestriction(String fileName) {
+        fileName = fileName.trim().replaceAll("%", "\\\\%").replaceAll("_", "\\\\_");
+        return "%" + fileName + "%";
     }
 }

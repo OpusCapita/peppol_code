@@ -1,36 +1,27 @@
 package com.opuscapita.peppol.email;
 
 import com.google.gson.Gson;
-import com.opuscapita.commons.servicenow.ServiceNow;
-import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
-import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.email.amqp.EmailQueueListener;
+import com.opuscapita.peppol.commons.template.AbstractQueueListener;
+import com.opuscapita.peppol.email.controller.EmailController;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.email"})
 @EnableScheduling
 public class EmailNotificatorApp {
-    @Value("${amqp.queue.name}")
+    @Value("${peppol.email-notificator.queue.in.name}")
     private String queueName;
-
-    private final Environment environment;
-
-    @Autowired
-    public EmailNotificatorApp(@NotNull Environment environment) {
-        this.environment = environment;
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(EmailNotificatorApp.class, args);
@@ -55,30 +46,18 @@ public class EmailNotificatorApp {
 
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
-    MessageListenerAdapter listenerAdapter(EmailQueueListener receiver) {
+    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     @Bean
-    @ConditionalOnProperty("snc.enabled")
-    public ErrorHandler errorHandler() {
-        return new ErrorHandler();
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson, @NotNull EmailController controller) {
+        return new AbstractQueueListener(errorHandler, null, gson) {
+            @Override
+            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
+                controller.processMessage(cm);
+            }
+        };
     }
 
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    ServiceNowConfiguration serviceNowConfiguration() {
-        return new ServiceNowConfiguration(
-                environment.getProperty("snc.rest.url"),
-                environment.getProperty("snc.rest.username"),
-                environment.getProperty("snc.rest.password"),
-                environment.getProperty("snc.bsc"),
-                environment.getProperty("snc.from"),
-                environment.getProperty("snc.businessGroup"));
-    }
-
-    @Bean
-    public ServiceNow serviceNowRest() {
-        return new ServiceNowREST(serviceNowConfiguration());
-    }
 }

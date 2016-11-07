@@ -11,7 +11,7 @@ import java.util.List;
  * @author Sergejs.Roze
  */
 @Component
-@ConfigurationProperties(prefix = "routing")
+@ConfigurationProperties(prefix = "peppol.internal-routing.routing")
 public class RoutingConfiguration {
     private List<Route> routes = new ArrayList<>();
 

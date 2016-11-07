@@ -1,24 +1,22 @@
 package com.opuscapita.peppol.transport;
 
 import com.google.gson.Gson;
-import com.opuscapita.commons.servicenow.ServiceNow;
-import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
-import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.route.TransportType;
+import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.transport.amqp.TransportQueueListener;
-import com.opuscapita.peppol.transport.checker.IncomingChecker;
+import com.opuscapita.peppol.commons.template.AbstractQueueListener;
+import com.opuscapita.peppol.transport.contoller.TransportController;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -30,16 +28,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.transport"})
 @EnableScheduling
 public class TransportApp {
-    @Value("${amqp.queue.in.name}")
-    private String queueName;
-
-    private final Environment environment;
-
-    @Autowired
-    public TransportApp(@NotNull Environment environment, @NotNull ApplicationContext context) {
-        this.environment = environment;
-        context.getBean(IncomingChecker.class);
-    }
+    @Value("${peppol.transport.queue.in.name}")
+    private String queueIn;
 
     public static void main(String[] args) {
         SpringApplication.run(TransportApp.class, args);
@@ -47,19 +37,33 @@ public class TransportApp {
 
     @SuppressWarnings("Duplicates")
     @Bean
-    @ConditionalOnProperty("spring.rabbitmq.host")
+    @ConditionalOnProperty({"spring.rabbitmq.host", "peppol.transport.queue.in.enabled"})
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
+        container.setQueueNames(queueIn);
         container.setPrefetchCount(10);
         container.setMessageListener(listenerAdapter);
         return container;
     }
 
     @Bean
-    @ConditionalOnProperty("amqp.queue.in.enabled")
-    MessageListenerAdapter listenerAdapter(TransportQueueListener receiver) {
+    @ConditionalOnProperty("peppol.transport.queue.in.enabled")
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull StatusReporter reporter, @NotNull Gson gson,
+                                        @NotNull TransportController controller) {
+        return new AbstractQueueListener(errorHandler, reporter, gson) {
+            @Override
+            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
+                logger.debug("Storing incoming message: " + cm.getFileName());
+                controller.storeMessage(cm);
+                cm.setStatus(TransportType.IN_OUT, "delivered");
+            }
+        };
+    }
+
+    @Bean
+    @ConditionalOnProperty("peppol.transport.queue.in.enabled")
+    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
@@ -68,27 +72,4 @@ public class TransportApp {
         return new Gson();
     }
 
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    ErrorHandler errorHandler() {
-        return new ErrorHandler();
-    }
-
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    ServiceNowConfiguration serviceNowConfiguration() {
-        return new ServiceNowConfiguration(
-                environment.getProperty("snc.rest.url"),
-                environment.getProperty("snc.rest.username"),
-                environment.getProperty("snc.rest.password"),
-                environment.getProperty("snc.bsc"),
-                environment.getProperty("snc.from"),
-                environment.getProperty("snc.businessGroup"));
-    }
-
-    @Bean
-    @ConditionalOnProperty("snc.enabled")
-    ServiceNow serviceNowRest() {
-        return new ServiceNowREST(serviceNowConfiguration());
-    }
 }

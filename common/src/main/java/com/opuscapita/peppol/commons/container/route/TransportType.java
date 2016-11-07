@@ -1,18 +1,31 @@
-package com.opuscapita.peppol.commons.model;
+package com.opuscapita.peppol.commons.container.route;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: KACENAR1
+ * @author  KACENAR1
  * Date: 13.29.11
- * Time: 15:11
- * To change this template use File | Settings | File Templates.
  */
 public enum TransportType {
-    OUT_IN("OUT-in"), OUT_REPROCESS("OUT-reprocess"), OUT_PEPPOL("OUT-peppol"), OUT_PEPPOL_FINAL("OUT-peppol-final"), OUT_SMTP("OUT-smtp"),
-    IN_IN("IN-in"), IN_OUT("IN-out"), IN_SMTP("IN-smtp"), UNKNOWN("");
+    /** Incoming from gateway to outbound */
+    OUT_IN("OUT-in"),
+    /** From reprocessing to outbound */
+    OUT_REPROCESS("OUT-reprocess"),
+    /** From gateway to Peppol, terminal step */
+    OUT_PEPPOL("OUT-peppol"),
+    /** From reprocessing to Peppol, terminal step */
+    OUT_PEPPOL_FINAL("OUT-peppol-final"),
+    /** Outbound validation failure */
+    OUT_SMTP("OUT_smtp"),
+    /** Just received from Peppol */
+    IN_IN("IN-in"),
+    /** Inbound to gateway, terminal step */
+    IN_OUT("IN-out"),
+    /** Inbound validation failure */
+    IN_SMTP("IN-smtp"),
+    /** Unknown */
+    UNKNOWN("");
 
     private String type;
 

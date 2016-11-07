@@ -46,6 +46,8 @@ public class MessageDTO {
 
     private Direction direction;
 
+    private String fileName;
+
     public Integer getFileId() {
         return fileId;
     }
@@ -180,5 +182,13 @@ public class MessageDTO {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -29,17 +28,16 @@ import static com.opuscapita.peppol.email.controller.EmailController.*;
  * @author Sergejs.Roze
  */
 @Component
-@ConditionalOnProperty("email.scheduler.enabled")
 public class DirectoryChecker {
     private final static Logger logger = LoggerFactory.getLogger(DirectoryChecker.class);
 
-    @Value("${email.directory}")
+    @Value("${peppol.email-notificator.directory}")
     private String directory;
 
-    @Value("${email.sent.directory:''}")
+    @Value("${peppol.email-notificator.sent.directory:}")
     private String sent;
 
-    @Value("${email.wait.seconds:120}")
+    @Value("${peppol.email-notificator.wait.seconds:120}")
     private int seconds;
 
     private final EmailSender emailSender;

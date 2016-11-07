@@ -5,9 +5,10 @@ package com.opuscapita.peppol.commons.container.route;
  *
  * @author Sergejs.Roze
  */
-@SuppressWarnings("unused")
 public enum Endpoint {
     PEPPOL,
     GATEWAY,
-    REST
+    REST,
+    REPROCESS,
+    RETRY
 }

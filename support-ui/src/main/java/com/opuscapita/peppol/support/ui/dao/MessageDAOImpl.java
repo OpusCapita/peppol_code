@@ -294,7 +294,8 @@ public class MessageDAOImpl implements MessageDAO {
                 .add(Projections.property("sender.name"), "senderName")
                 .add(Projections.max("file.arrivedTimeStamp"), "arrivedTimeStamp")
                 .add(Projections.max("file.id"), "fileId")
-                .add(Projections.max("file.fileSize"), "fileSize");
+                .add(Projections.max("file.fileSize"), "fileSize")
+                .add(Projections.max("file.filename"), "fileName");
     }
 
     @Override

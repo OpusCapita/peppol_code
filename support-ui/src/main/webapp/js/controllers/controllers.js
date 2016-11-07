@@ -193,6 +193,11 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             }
             msg.$selected = !msg.$selected;
         };
+        $scope.showFileName = function (fileName, chars) {
+            if (!Boolean(fileName))
+                return '';
+            return (fileName.length <= chars) ? fileName : fileName.substr(0, chars) + '...';
+        };
         $scope.showFullError = function (failed) {
             if (typeof failed.fullError == 'undefined') {
                 var Factory = failed.invalid ? InvalidFactory : FailedFactory;
@@ -370,7 +375,6 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
         $scope.isAllowedToDownload = function (timestamp) {
             var comparingDate = new Date();
             comparingDate.setMonth(comparingDate.getMonth() - 3);
-            console.log("Timestamp diff: " + String(comparingDate.getTime() - timestamp));
             return timestamp > comparingDate.getTime();
         };
 

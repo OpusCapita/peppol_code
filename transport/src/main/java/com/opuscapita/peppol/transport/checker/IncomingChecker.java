@@ -2,12 +2,16 @@ package com.opuscapita.peppol.transport.checker;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.TransportType;
+import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
+import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.storage.Storage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -33,22 +37,24 @@ public class IncomingChecker {
 
     private final RabbitTemplate rabbitTemplate;
     private final Storage storage;
+    private final StatusReporter statusReporter;
 
-    @Value("${transport.file.age.seconds:120}")
+    @Value("${peppol.transport.file.age.seconds:120}")
     private int age;
-    @Value("${transport.input.directory}")
+    @Value("${peppol.transport.input.directory}")
     private String directory;
-    @Value("${transport.input.recursive:false}")
+    @Value("${peppol.transport.input.recursive:false}")
     private boolean recursive;
-    @Value("${transport.input.mask:*.*}")
+    @Value("${peppol.transport.input.mask:*.*}")
     private String mask;
-    @Value("${amqp.queue.out.name:preprocessing}")
+    @Value("${peppol.transport.queue.out.name:preprocessing}")
     private String queue;
 
     @Autowired
-    public IncomingChecker(@NotNull RabbitTemplate rabbitTemplate, @NotNull Storage storage) {
+    public IncomingChecker(@NotNull RabbitTemplate rabbitTemplate, @NotNull Storage storage, @Nullable StatusReporter statusReporter) {
         this.rabbitTemplate = rabbitTemplate;
         this.storage = storage;
+        this.statusReporter = statusReporter;
     }
 
     @Scheduled(fixedRate = 60_000) // 1 minute
@@ -83,10 +89,15 @@ public class IncomingChecker {
     private void send(File file) throws IOException {
         String fileName = storage.moveToTemporary(file);
 
-        ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, Endpoint.GATEWAY);
+        ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, Endpoint.GATEWAY)
+                .setStatus(new ProcessingStatus(TransportType.OUT_IN, "received", fileName));
 
         rabbitTemplate.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to MQ");
+
+        if (statusReporter != null) {
+            statusReporter.report(cm);
+        }
     }
 
 
