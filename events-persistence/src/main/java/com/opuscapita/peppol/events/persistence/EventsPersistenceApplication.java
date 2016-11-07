@@ -24,6 +24,9 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.net.ConnectException;
+import java.util.HashMap;
+
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.opuscapita.peppol.events.persistence.model")
 @ComponentScan(basePackages = {"com.opuscapita.peppol.events.persistence", "com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons"})
@@ -43,7 +46,9 @@ public class EventsPersistenceApplication {
 
     @Bean
     public RetryTemplate retryTemplate() {
-        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, new HashMap<Class<? extends Throwable>, Boolean>() {{
+            put(ConnectException.class, true);
+        }});
         retryPolicy.setMaxAttempts(5);
 
         FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
