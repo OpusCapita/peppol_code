@@ -47,5 +47,7 @@ public class SmokeTestApp {
         new LoggingResultBuilder().processResult(checkResults);
         new HtmlResultBuilder(testResultFileName, templateDir).processResult(checkResults);
         logger.info("SmokeTestApp: Finished!");
+        int fails = (int)checkResults.stream().filter(res -> !res.isPassed()).count();
+        System.exit(fails);
     }
 }
