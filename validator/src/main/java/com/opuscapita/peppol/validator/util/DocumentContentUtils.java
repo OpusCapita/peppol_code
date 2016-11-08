@@ -3,6 +3,7 @@ package com.opuscapita.peppol.validator.util;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -30,6 +31,7 @@ public class DocumentContentUtils {
         StreamResult result = new StreamResult(bos);
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         transformer.transform(domSource, result);
         return bos.toByteArray();
     }

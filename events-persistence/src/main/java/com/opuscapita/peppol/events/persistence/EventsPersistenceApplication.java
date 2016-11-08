@@ -81,7 +81,7 @@ public class EventsPersistenceApplication {
 
     @Bean
     public Gson gson() {
-        return new GsonBuilder().registerTypeAdapter(PeppolEvent.class, new PeppolEventDeSerializer()).create();
+        return new GsonBuilder().disableHtmlEscaping().registerTypeAdapter(PeppolEvent.class, new PeppolEventDeSerializer()).create();
     }
 
 }
