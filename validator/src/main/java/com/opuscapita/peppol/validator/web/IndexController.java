@@ -50,6 +50,8 @@ public class IndexController {
             ValidationResult validationResult = validationController.validate(containerMessage);
             System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
             validationResult.getErrors().forEach(error -> System.out.println(error.toString()));
+            result.addObject("status", validationResult.isPassed());
+            result.addObject("errors", validationResult.getErrors());
         } catch (IOException e) {
             e.printStackTrace();
         }
