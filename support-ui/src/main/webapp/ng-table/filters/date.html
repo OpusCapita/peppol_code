@@ -1,6 +1,6 @@
-<div class="input-group datepicker" style="max-width: 200px;">
+<div class="input-group datepicker" style="max-width: 180px;">
     <input
-            type="text"
+            type="datetime"
             name="{{column.filterName}}"
             id="input_{{name}}"
             class="input-filter form-control"
@@ -9,7 +9,6 @@
             ng-change="changeSelect(params.filter()[name])"
             is-open="popup.opened"
             close-text="Close"
-            datepicker-options="dateOptions"
             ng-required="true"
             close-on-date-selection="true"/>
     <span class="input-group-btn">

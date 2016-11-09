@@ -27,6 +27,9 @@ public interface XsdValidator {
 
     default void validateAgainstXsd(byte[] data, String xsdPath) throws SAXException, TransformerException, IOException {
         File xsd = new File(xsdPath);
+        if (!xsd.exists() || !xsd.canRead()) {
+            throw new IOException("SBDH XSD File not found or can not be read.");
+        }
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(xsd.toURI().toURL());
         javax.xml.validation.Validator validator = schema.newValidator();
