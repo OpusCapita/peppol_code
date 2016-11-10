@@ -8,7 +8,8 @@ ENV INBOUND_CONFIG "/etc/peppol2.0/inbound"
 RUN \
     mkdir -p "${INBOUND_HOME}" && \
     mkdir -p "${INBOUND_CONFIG}" && \
-    ln -s "${INBOUND_CONFIG}/" "${INBOUND_HOME}/config"
+    ln -s "${INBOUND_CONFIG}/" "${INBOUND_HOME}/config" && \
+    ln -s "${INBOUND_CONFIG}/application.properties" "${INBOUND_HOME}/application.properties"
 
 ENV JAVA_OPTS "\
     -Dhttp.proxyHost=10.202.9.33 \
