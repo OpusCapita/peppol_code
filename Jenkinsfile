@@ -6,6 +6,7 @@ def tag = "latest"
 def config_server_image
 def email_notificator_image
 def events_persistence_image
+def eventing_image
 def inbound_image
 def internal_routing_image
 def preprocessing_image
@@ -38,6 +39,7 @@ node {
                     configuration-server:assemble \
                     email-notificator:assemble \
                     events-persistence:assemble \
+                    eventing:assemble \
                     inbound:assemble \
                     internal-routing:assemble \
                     preprocessing:assemble \
@@ -72,6 +74,7 @@ node {
                     configuration-server:check \
                     email-notificator:check \
                     events-persistence:check \
+                    eventing:check \
                     inbound:check \
                     internal-routing:check \
                     preprocessing:check \
@@ -92,6 +95,7 @@ node {
         config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", "src/configuration-server/")
         email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", "src/email-notificator/")
         events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", "src/events-persistence/")
+        eventing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/eventing:${tag}", "src/eventing/")
         inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", "src/inbound/")
         internal_routing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/internal-routing:${tag}", "src/internal-routing/")
         preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "src/preprocessing/")
@@ -118,6 +122,8 @@ node {
             email_notificator_image.push("${tag}")
             events_persistence_image.push("latest")
             events_persistence_image.push("${tag}")
+            eventing_image.push("latest")
+            eventing_image.push("${tag}")
             inbound_image.push("latest")
             inbound_image.push("${tag}")
             internal_routing_image.push("latest")
