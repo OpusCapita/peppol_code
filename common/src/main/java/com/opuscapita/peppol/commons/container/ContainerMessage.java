@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.container.route.TransportType;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
+import com.opuscapita.peppol.commons.validation.ValidationResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,7 @@ public class ContainerMessage implements Serializable {
     private BaseDocument document;
     private String transactionId;
     private ProcessingStatus status;
+    private ValidationResult validationResult;
 
     public ContainerMessage(@NotNull String metadata, @NotNull String fileName, @NotNull Endpoint source) {
         this.source = source;
@@ -156,4 +158,11 @@ public class ContainerMessage implements Serializable {
         return result;
     }
 
+    public ValidationResult getValidationResult() {
+        return validationResult;
+    }
+
+    public void setValidationResult(ValidationResult validationResult) {
+        this.validationResult = validationResult;
+    }
 }

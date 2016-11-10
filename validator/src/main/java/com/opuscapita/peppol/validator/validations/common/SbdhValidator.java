@@ -1,7 +1,9 @@
 package com.opuscapita.peppol.validator.validations.common;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.validator.validations.common.util.ValidationErrorBuilder;
+import com.opuscapita.peppol.commons.validation.ValidationError;
+import com.opuscapita.peppol.commons.validation.XsdValidator;
+import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

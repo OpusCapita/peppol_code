@@ -1,6 +1,6 @@
-package com.opuscapita.peppol.validator.validations.common.util;
+package com.opuscapita.peppol.commons.validation.util;
 
-import com.opuscapita.peppol.validator.validations.common.ValidationError;
+import com.opuscapita.peppol.commons.validation.ValidationError;
 
 /**
  * Created by bambr on 16.22.9.

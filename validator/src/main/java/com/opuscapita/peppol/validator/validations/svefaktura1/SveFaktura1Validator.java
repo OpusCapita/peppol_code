@@ -1,10 +1,10 @@
 package com.opuscapita.peppol.validator.validations.svefaktura1;
 
 import com.opuscapita.peppol.commons.container.document.impl.Archetype;
-import com.opuscapita.peppol.validator.validations.common.BasicValidator;
-import com.opuscapita.peppol.validator.validations.common.ValidationError;
-import com.opuscapita.peppol.validator.validations.common.ValidationResult;
-import com.opuscapita.peppol.validator.validations.common.util.ValidationErrorBuilder;
+import com.opuscapita.peppol.commons.validation.BasicValidator;
+import com.opuscapita.peppol.commons.validation.ValidationError;
+import com.opuscapita.peppol.commons.validation.ValidationResult;
+import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

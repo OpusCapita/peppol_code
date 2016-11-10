@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.validator.util;
+package com.opuscapita.peppol.commons.container.document;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

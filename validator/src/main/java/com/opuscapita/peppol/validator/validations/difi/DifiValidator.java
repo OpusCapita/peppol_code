@@ -1,9 +1,9 @@
 package com.opuscapita.peppol.validator.validations.difi;
 
 import com.opuscapita.peppol.commons.container.document.impl.Archetype;
-import com.opuscapita.peppol.validator.validations.common.BasicValidator;
-import com.opuscapita.peppol.validator.validations.common.ValidationError;
-import com.opuscapita.peppol.validator.validations.common.ValidationResult;
+import com.opuscapita.peppol.commons.validation.BasicValidator;
+import com.opuscapita.peppol.commons.validation.ValidationError;
+import com.opuscapita.peppol.commons.validation.ValidationResult;
 import no.difi.vefa.validator.Validator;
 import no.difi.vefa.validator.ValidatorBuilder;
 import no.difi.vefa.validator.api.Validation;
