@@ -35,5 +35,5 @@ dependencies {
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
-    compile project(':events-persistence')
+    compile project(':common-model')
 }

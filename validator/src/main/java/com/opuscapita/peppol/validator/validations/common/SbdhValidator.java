@@ -19,10 +19,11 @@ public class SbdhValidator implements XsdValidator {
 
     @Override
     public List<ValidationError> performXsdValidation(ContainerMessage containerMessage) {
+        String contentRootNode = containerMessage.getBaseDocument().getRootNode().getNodeName();
         try {
             validateAgainstXsd(containerMessage, xsdPath);
         } catch (Exception e) {
-            if (!e.getMessage().contains("cvc-elt.1: Cannot find the declaration of element 'Invoice'")) {
+            if (!e.getMessage().contains("cvc-elt.1: Cannot find the declaration of element '" + contentRootNode + "'")) {
                 return new ArrayList<ValidationError>() {{
                     add(ValidationErrorBuilder.aValidationError().withTitle("SBDH validation failure").withDetails(e.getMessage()).build());
                 }};
