@@ -11,6 +11,6 @@ RUN \
     ln -s "${EVENTS_PERSISTENCE_CONFIG}" "${EVENTS_PERSISTENCE_HOME}/config"
 
 WORKDIR "${EVENTS_PERSISTENCE_HOME}"
-ADD ["build/libs/events-persistence.jar", "${EVENTS_PERSISTENCE_HOME}/events-persistence.jar"]
+ADD ["build/libs/events-persistence.jar", "events-persistence.jar"]
 
-CMD ["java", "-jar", "${EVENTS_PERSISTENCE_HOME}/events-persistence.jar"]
+CMD ["java", "-jar", "events-persistence.jar"]
