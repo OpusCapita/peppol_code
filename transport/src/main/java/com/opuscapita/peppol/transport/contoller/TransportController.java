@@ -20,7 +20,7 @@ import java.io.IOException;
 public class TransportController {
     private static final Logger logger = LoggerFactory.getLogger(TransportController.class);
 
-    @Value("${transport.output.directory}")
+    @Value("${peppol.transport.output.directory}")
     private String directory;
 
     public void storeMessage(@NotNull ContainerMessage cm) throws IOException {

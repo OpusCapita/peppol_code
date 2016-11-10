@@ -59,7 +59,7 @@ public class PreprocessingApp {
         return new AbstractQueueListener(errorHandler, reporter, gson) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
-                logger.debug("Reading file " + cm.getFileName());
+                logger.debug("Message received " + cm.getFileName());
                 cm = controller.process(cm);
                 cm.setStatus("file read");
                 rabbitTemplate.convertAndSend(queueOut, cm);
