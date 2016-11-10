@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
-import com.opuscapita.peppol.validator.validations.common.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -49,7 +49,8 @@ public class EventQueueListener {
         ContainerMessage containerMessage = gson.fromJson(message, ContainerMessage.class);
         customerId = containerMessage.getCustomerId();
         ValidationResult validationResult = validationController.validate(containerMessage);
-        rabbitTemplate.convertAndSend(outgoingQueueName, validationResult);
+        containerMessage.setValidationResult(validationResult);
+        rabbitTemplate.convertAndSend(containerMessage.getRoute().pop(), containerMessage);
         try {
 
         } catch (Exception e) {

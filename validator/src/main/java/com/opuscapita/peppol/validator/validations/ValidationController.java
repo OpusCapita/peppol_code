@@ -1,10 +1,14 @@
 package com.opuscapita.peppol.validator.validations;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.DocumentContentUtils;
 import com.opuscapita.peppol.commons.container.document.impl.Archetype;
-import com.opuscapita.peppol.validator.util.DocumentContentUtils;
-import com.opuscapita.peppol.validator.validations.common.*;
-import com.opuscapita.peppol.validator.validations.common.util.ValidationErrorBuilder;
+import com.opuscapita.peppol.commons.validation.BasicValidator;
+import com.opuscapita.peppol.commons.validation.ValidationError;
+import com.opuscapita.peppol.commons.validation.ValidationResult;
+import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
+import com.opuscapita.peppol.validator.validations.common.SbdhValidator;
+import com.opuscapita.peppol.validator.validations.common.ValidatorFactory;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

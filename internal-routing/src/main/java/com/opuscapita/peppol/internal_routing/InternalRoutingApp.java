@@ -37,7 +37,7 @@ public class InternalRoutingApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 cm = controller.loadRoute(cm);
                 logger.debug("Route set to " + cm.getRoute());
-                rabbitTemplate.convertAndSend(cm.getRoute().pop());
+                rabbitTemplate.convertAndSend(cm.getRoute().pop(), cm);
                 cm.setStatus("route defined");
             }
         };

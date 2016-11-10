@@ -1,7 +1,7 @@
-package com.opuscapita.peppol.validator.validations.common;
+package com.opuscapita.peppol.commons.validation;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.validator.util.DocumentContentUtils;
+import com.opuscapita.peppol.commons.container.document.DocumentContentUtils;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
