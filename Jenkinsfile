@@ -9,6 +9,7 @@ def events_persistence_image
 def eventing_image
 def inbound_image
 def internal_routing_image
+def outbound_image
 def preprocessing_image
 def support_ui_image
 def transport_image
@@ -42,6 +43,7 @@ node {
                     eventing:assemble \
                     inbound:assemble \
                     internal-routing:assemble \
+                    outbound:assemble \
                     preprocessing:assemble \
                     support-ui:assemble \
                     transport:assemble \
@@ -77,6 +79,7 @@ node {
                     eventing:check \
                     inbound:check \
                     internal-routing:check \
+                    outbound:check \
                     preprocessing:check \
                     support-ui:check \
                     transport:check \
@@ -98,6 +101,7 @@ node {
         eventing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/eventing:${tag}", "src/eventing/")
         inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", "src/inbound/")
         internal_routing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/internal-routing:${tag}", "src/internal-routing/")
+        outbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/outbound:${tag}", "src/outbound/")
         preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "src/preprocessing/")
         support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", "src/support-ui/")
         transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", "src/transport/")
@@ -128,6 +132,8 @@ node {
             inbound_image.push("${tag}")
             internal_routing_image.push("latest")
             internal_routing_image.push("${tag}")
+            outbound_image.push("latest")
+            outbound_image.push("${tag}")
             preprocessing_image.push("latest")
             preprocessing_image.push("${tag}")
             support_ui_image.push("latest")
