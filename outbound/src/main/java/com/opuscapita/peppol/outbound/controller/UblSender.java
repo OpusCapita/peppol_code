@@ -24,7 +24,7 @@ import java.io.InputStream;
 public class UblSender {
 
     @NotNull
-    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
+    TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
         OxalisOutboundModule oxalisOutboundModule = new OxalisOutboundModule();
         TransmissionRequestBuilder requestBuilder = oxalisOutboundModule.getTransmissionRequestBuilder();
         BaseDocument document = cm.getBaseDocument();
