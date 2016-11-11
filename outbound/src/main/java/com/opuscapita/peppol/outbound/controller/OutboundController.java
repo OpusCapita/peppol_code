@@ -1,7 +1,6 @@
 package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.outbound.controller.sf1.Svefaktura1Sender;
 import eu.peppol.outbound.transmission.TransmissionResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,15 +21,12 @@ public class OutboundController {
     private boolean sendingEnabled;
 
     private final UblSender ublSender;
-    private final Svefaktura1Sender svefaktura1Sender; // reserved, not in use
     private final OutboundErrorHandler outboundErrorHandler;
     private final TestSender testSender;
 
     @Autowired
-    public OutboundController(@NotNull UblSender ublSender, @NotNull Svefaktura1Sender svefaktura1Sender,
-                              @NotNull OutboundErrorHandler outboundErrorHandler, @Nullable TestSender testSender) {
+    public OutboundController(@NotNull UblSender ublSender, @NotNull OutboundErrorHandler outboundErrorHandler, @Nullable TestSender testSender) {
         this.ublSender = ublSender;
-        this.svefaktura1Sender = svefaktura1Sender;
         this.outboundErrorHandler = outboundErrorHandler;
         this.testSender = testSender;
     }
@@ -56,7 +52,7 @@ public class OutboundController {
                     case INVALID:
                         throw new IllegalArgumentException("Unable to send invalid documents");
                     case SVEFAKTURA1:
-                        transmissionResponse = ublSender.send(cm);
+                        transmissionResponse = ublSender.send(cm); // the same as UBL since Oxalis 4
                         break;
                     default:
                         transmissionResponse = ublSender.send(cm);
