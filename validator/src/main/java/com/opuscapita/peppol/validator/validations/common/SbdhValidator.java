@@ -25,7 +25,7 @@ public class SbdhValidator implements XsdValidator {
         try {
             validateAgainstXsd(containerMessage, xsdPath);
         } catch (Exception e) {
-            if (!e.getMessage().contains("cvc-elt.1: Cannot find the declaration of element '" + contentRootNode + "'")) {
+            if (!(e.getMessage().contains("Cannot find the declaration of element '" + contentRootNode + "'") || (e.getMessage().contains("Invalid content was found starting with element '" + contentRootNode + "'")))) {
                 return new ArrayList<ValidationError>() {{
                     add(ValidationErrorBuilder.aValidationError().withTitle("SBDH validation failure").withDetails(e.getMessage()).build());
                 }};

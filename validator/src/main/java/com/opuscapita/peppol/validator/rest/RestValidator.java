@@ -8,10 +8,8 @@ import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
 import com.opuscapita.peppol.validator.validations.ValidationController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,8 +25,10 @@ public class RestValidator {
     @Autowired
     DocumentLoader documentLoader;
 
-    @RequestMapping(value = "/validate", method = RequestMethod.POST)
-    public ValidationResult validate(@RequestParam("file") MultipartFile file, @RequestParam(name = "test", required = false, defaultValue = "false") boolean useTestArtifacts) {
+    @RequestMapping(value = "/validate", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public
+    @ResponseBody
+    ValidationResult validate(@RequestParam("file") MultipartFile file, @RequestParam(name = "test", required = false, defaultValue = "false") boolean useTestArtifacts) {
         ValidationResult validationResult;
         ContainerMessage containerMessage;
         try {
