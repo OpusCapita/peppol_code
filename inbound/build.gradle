@@ -17,9 +17,10 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.1.RELEASE'
     compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa:1.4.1.RELEASE'
+
     compile project (':common')
-    compile project (':common-model')
+
+    compile 'org.springframework:spring-core:4.3.3.RELEASE'
     compile 'org.springframework:spring-test:4.3.3.RELEASE'
 
     compile fileTree(dir: '../common/libs', include: '*.jar')

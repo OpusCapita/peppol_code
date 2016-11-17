@@ -11,14 +11,14 @@ html(class: 'no-js') {
         link(rel:'stylesheet', href:'/css/main.css')
     }
     body() {
-        div(id: 'wrap') {
+        div(id: 'wrap', style: 'height: 100vh') {
             div(id: 'header') {
                 div(class: 'wrap') {
                     a(href: '/', id: 'logo') {
                         img(src: '/images/logo.png', '')
                     }
                 }
-                span(id: 'header_title', 'PEPPOL AP VALIDATION UI')
+                span(id: 'header_title', 'PEPPOL AP VALIDATOR')
                 div(id: 'header_menu_bar') {
                     span(class: 'glyphicon glyphicon-user','')
                     i('Welcome, user :)')

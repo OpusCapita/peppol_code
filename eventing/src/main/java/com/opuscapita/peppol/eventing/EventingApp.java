@@ -25,9 +25,9 @@ import org.springframework.context.annotation.Bean;
  */
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing"})
 public class EventingApp {
-    @Value("{peppol.eventing.queue.in.name}")
+    @Value("${peppol.eventing.queue.in.name}")
     private String queueIn;
-    @Value("{peppol.eventing.queue.out.name}")
+    @Value("${peppol.eventing.queue.out.name}")
     private String queueOut;
 
     public static void main(String[] args) {

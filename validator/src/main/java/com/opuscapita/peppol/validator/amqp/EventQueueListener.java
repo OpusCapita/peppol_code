@@ -37,8 +37,8 @@ public class EventQueueListener {
     @Autowired
     RabbitTemplate rabbitTemplate;
 
-    @Value("${peppol.validation.respond-queue}")
-    String outgoingQueueName;
+    @Value("${peppol.eventing.queue.in.name}")
+    String eventingQueueName;
 
     public synchronized void receiveMessage(byte[] data) {
         String message = new String(data);
@@ -75,7 +75,7 @@ public class EventQueueListener {
 
     public void handleError(String message, String customerId, Exception e) {
         errorHandler.reportToServiceNow(message, customerId, e, "Validation failed exceptionally");
-        errorHandler.reportFailureToAmqp(message, e, rabbitTemplate, outgoingQueueName);
+        errorHandler.reportFailureToAmqp(message, e, rabbitTemplate, eventingQueueName);
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
 }
