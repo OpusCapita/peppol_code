@@ -1,13 +1,16 @@
 package com.opuscapita.peppol.test.tools.integration.util;
 
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
+import com.opuscapita.peppol.test.tools.integration.test.IntegrationTest;
+import com.opuscapita.peppol.test.tools.integration.test.IntegrationTestFactory;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by gamanse1 on 2016.11.14..
@@ -31,7 +34,7 @@ public class IntegrationTestConfigReader {
                 String moduleName = module.getKey();
                 Map<String,?> moduleConfig = (Map<String, ?>) module.getValue();
 
-                Test test = TestFactory.createTest(moduleName, moduleConfig);
+                IntegrationTest test = IntegrationTestFactory.createTest(moduleName, moduleConfig);
                 testConfig.addTest(test);
             }
         }
