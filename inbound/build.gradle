@@ -13,6 +13,11 @@ repositories {
     mavenCentral()
 }
 
+// probably this is an overkill and we don't need everything inside
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.1.RELEASE'
