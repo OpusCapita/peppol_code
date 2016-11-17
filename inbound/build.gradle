@@ -20,6 +20,7 @@ jar {
 
 configurations {
     runtime.exclude group: 'org.bouncycastle'
+    runtime.exclude group: 'org.springframework'
 }
 
 dependencies {
