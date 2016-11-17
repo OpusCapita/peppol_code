@@ -2,7 +2,6 @@ package eu.peppol.persistence;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.storage.StorageImpl;
 import com.opuscapita.peppol.inbound.InboundErrorHandler;
 import com.opuscapita.peppol.inbound.InboundMessageSender;
@@ -26,12 +25,12 @@ import static com.opuscapita.peppol.inbound.InboundProperties.INBOUND_OUTPUT_DIR
 public class ExtendedMessageRepository extends SimpleMessageRepository {
     private static final Logger logger = LoggerFactory.getLogger(ExtendedMessageRepository.class);
     private static final InboundProperties properties = new InboundProperties();
-    private final ErrorHandler errorHandler;
+    private final InboundErrorHandler errorHandler;
 
     @SuppressWarnings("ConstantConditions")
     public ExtendedMessageRepository() {
         super(new File(properties.getProperty(INBOUND_OUTPUT_DIR)));
-        errorHandler = new InboundErrorHandler(properties).getErrorHandler();
+        errorHandler = new InboundErrorHandler(properties);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -48,7 +47,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             logger.info("Message stored as: " + dataFile);
         } catch (Exception e) {
             logger.error("Failed to store incoming message", e);
-            errorHandler.reportToServiceNow("Failed to store incoming message", metadata.getRecipientId().toString(), e);
+            errorHandler.report("Failed to store incoming message", e.getMessage(), metadata.getRecipientId().toString());
             throw new OxalisMessagePersistenceException(metadata, e);
         }
 
@@ -61,7 +60,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {
             logger.error("Failed to report file " + dataFile + " to MQ: ", e);
-            errorHandler.reportToServiceNow("Failed to report received file to message queue", metadata.getRecipientId().toString(), e);
+            errorHandler.report("Failed to report received file to message queue", e.getMessage(), metadata.getRecipientId().toString());
         }
     }
 

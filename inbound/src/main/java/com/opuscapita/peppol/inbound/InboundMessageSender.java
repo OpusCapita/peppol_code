@@ -15,6 +15,7 @@ import static com.opuscapita.peppol.inbound.InboundProperties.*;
 /**
  * @author Sergejs.Roze
  */
+@SuppressWarnings("ConstantConditions")
 public class InboundMessageSender {
     private final static Logger logger = LoggerFactory.getLogger(InboundMessageSender.class);
 
