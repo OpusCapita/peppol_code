@@ -14,6 +14,15 @@ buildscript {
     }
 }
 
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile('log4j:log4j:1.2.17')
+    compile('com.intellij:annotations:12.0')
+    compile('org.yaml:snakeyaml:1.17')
+    compile('com.rabbitmq:amqp-client:3.6.5')
 }
