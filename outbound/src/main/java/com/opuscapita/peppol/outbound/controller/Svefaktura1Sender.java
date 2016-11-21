@@ -13,14 +13,14 @@ import javax.annotation.PostConstruct;
  */
 @Component
 public class Svefaktura1Sender extends UblSender {
+    @Autowired
+    OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
     private TransmissionRequestBuilder requestBuilder;
     private OxalisOutboundModule oxalisOutboundModule;
-    private OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
 
     @PostConstruct
     @Autowired
-    public void initialize(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
-        this.oxalisOutboundModuleWrapper = oxalisOutboundModuleWrapper;
+    public void initialize() {
         oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
         requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
     }

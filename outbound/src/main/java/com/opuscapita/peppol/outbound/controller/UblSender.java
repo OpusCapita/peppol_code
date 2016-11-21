@@ -21,15 +21,14 @@ import java.io.InputStream;
  */
 @Component
 public class UblSender {
-
-    private OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
+    @Autowired
+    OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
     private OxalisOutboundModule oxalisOutboundModule;
     private TransmissionRequestBuilder requestBuilder;
 
+
     @PostConstruct
-    @Autowired
-    public void initialize(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
-        this.oxalisOutboundModuleWrapper = oxalisOutboundModuleWrapper;
+    public void initialize() {
         oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
         requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
     }
