@@ -11,7 +11,7 @@ html(class: 'no-js') {
         link(rel:'stylesheet', href:'$root/css/main.css')
     }
     body() {
-        div(id: 'wrap') {
+        div(id: 'wrap', style: 'height: 100vh') {
             div(id: 'header') {
                 div(class: 'wrap') {
                     a(href: '$root/', id: 'logo') {

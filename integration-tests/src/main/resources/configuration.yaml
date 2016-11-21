@@ -1,3 +1,6 @@
+configurations:
+    databases:
+        db1: jdbc://username:password@localhost:3306/database
 tests:
    validation:
      producers:
