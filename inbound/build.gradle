@@ -19,15 +19,17 @@ jar {
 }
 
 configurations {
-    runtime.exclude group: 'org.bouncycastle'
-    runtime.exclude group: 'org.springframework'
+    all*.exclude group: 'org.bouncycastle'
+    all*.exclude group: 'org.springframework'
 }
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.1.RELEASE'
 
-    compile project (':common')
+    compile project (':common') {
+        // exclude group: 'org.springframework'
+    }
 
     compile fileTree(dir: '../common/libs', include: 'service-now-connector-all.jar')
     compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api-4.0.0-SNAPSHOT.jar')
