@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class OxalisOutboundModuleWrapper {
     OxalisOutboundModule oxalisOutboundModule;
 
-    public OxalisOutboundModuleWrapper(OxalisOutboundModule oxalisOutboundModule) {
+    public OxalisOutboundModuleWrapper() {
         this.oxalisOutboundModule = new OxalisOutboundModule();
     }
 
