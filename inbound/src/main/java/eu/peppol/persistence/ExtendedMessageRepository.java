@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.storage.StorageImpl;
 import com.opuscapita.peppol.inbound.InboundErrorHandler;
 import com.opuscapita.peppol.inbound.InboundMessageSender;
 import com.opuscapita.peppol.inbound.InboundProperties;
+import com.opuscapita.peppol.inbound.MetadataUtils;
 import eu.peppol.PeppolMessageMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +52,11 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             throw new OxalisMessagePersistenceException(metadata, e);
         }
 
-        String metadataString = getHeadersAsJSON(metadata);
-        logger.debug("Message metadata: " + metadataString);
-
         // send file to MQ, no exception to sending AP here anymore, file already available
         try {
+            String metadataString = MetadataUtils.getHeadersAsJson(metadata);
+            logger.debug("Message metadata: " + metadataString);
+
             ContainerMessage cm = prepareMessage(dataFile, metadataString);
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {
