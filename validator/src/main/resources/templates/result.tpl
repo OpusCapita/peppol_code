@@ -18,7 +18,7 @@ html(class: 'no-js') {
                         img(src: "$root/images/logo.png", '')
                     }
                 }
-                span(id: 'header_title', 'PEPPOL AP VALIDATION UI')
+                span(id: 'header_title', 'PEPPOL AP VALIDATION')
                 div(id: 'header_menu_bar') {
                     span(class: 'glyphicon glyphicon-user','')
                     i('Welcome, user :)')
@@ -37,7 +37,7 @@ html(class: 'no-js') {
                         div() {
                             span('Validation errors:'+errors.size())
                             for(Object error: errors) {
-                                div(error.title)
+                                div(style: 'font-color: red;', error.title)
                                 div(error.details)
                                 hr('')
                             }
