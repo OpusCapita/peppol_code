@@ -21,7 +21,7 @@ public class FileProducer implements Producer {
         this.sourceFileName = sourceFile;
         this.destinationFileName = destinationFile;
     }
-
+    /*takes files from directory -> uploads via web -> takes page html result -> stores it into folder */
     @Override
     public void run() {
         try{
