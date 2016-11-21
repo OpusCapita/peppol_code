@@ -17,4 +17,9 @@ public class RestProducer implements Producer{
         this.endpoint = endpoint;
         this.method = method;
     }
+
+    @Override
+    public void run() {
+
+    }
 }

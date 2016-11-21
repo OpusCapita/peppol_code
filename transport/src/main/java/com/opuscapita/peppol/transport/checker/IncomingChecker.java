@@ -5,10 +5,12 @@ import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.TransportType;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.storage.Storage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +40,7 @@ public class IncomingChecker {
     private final RabbitTemplate rabbitTemplate;
     private final Storage storage;
     private final StatusReporter statusReporter;
+    private final ErrorHandler errorHandler;
 
     @Value("${peppol.transport.file.age.seconds:120}")
     private int age;
@@ -51,15 +54,21 @@ public class IncomingChecker {
     private String queue;
 
     @Autowired
-    public IncomingChecker(@NotNull RabbitTemplate rabbitTemplate, @NotNull Storage storage, @Nullable StatusReporter statusReporter) {
+    public IncomingChecker(@NotNull RabbitTemplate rabbitTemplate, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
+                           @NotNull ErrorHandler errorHandler) {
         this.rabbitTemplate = rabbitTemplate;
         this.storage = storage;
         this.statusReporter = statusReporter;
+        this.errorHandler = errorHandler;
     }
 
     @Scheduled(fixedRate = 60_000) // 1 minute
-    public void check() throws IOException {
-        receive(new File(directory));
+    public void check() {
+        try {
+            receive(new File(directory));
+        } catch (Exception e) {
+            errorHandler.reportToServiceNow("Failed to process input data: " + ExceptionUtils.getStackTrace(e), "n/a", e, "Failed to read input file");
+        }
     }
 
     private void receive(File directory) throws IOException {

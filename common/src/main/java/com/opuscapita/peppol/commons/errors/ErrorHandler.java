@@ -53,9 +53,10 @@ public class ErrorHandler {
         jse.printStackTrace(new PrintWriter(stackTraceWriter));
         String correlationId = correlationIdPrefix + generateFailedMessageCorrelationId(jse);
         Yaml yaml = new Yaml();
-        Object yamlifiedMessaged = yaml.load(message);
+        Object yamlifiedMessaged = yaml.load("\"" + message + "\"");
         try {
-            serviceNowRest.insert(new SncEntity(shortDescription, yaml.dump(yamlifiedMessaged) + "\n\r" + dumpFileName + "\n\r" + stackTraceWriter.toString(), correlationId, customerId, 0));
+            serviceNowRest.insert(new SncEntity(shortDescription, yaml.dump(yamlifiedMessaged) + "\n\r" + dumpFileName + "\n\r" + stackTraceWriter.toString(),
+                    correlationId, customerId, 0));
         } catch (IOException e) {
             logger.error("Unable to create SNC ticket", e);
         }
