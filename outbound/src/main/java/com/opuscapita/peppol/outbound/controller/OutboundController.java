@@ -16,19 +16,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class OutboundController {
     private final static Logger logger = LoggerFactory.getLogger(OutboundController.class);
-
+    private final UblSender ublSender;
+    private final Svefaktura1Sender svefaktura1Sender;
+    private final OutboundErrorHandler outboundErrorHandler;
+    private final TestSender testSender;
     @Value("${peppol.outbound.sending.enabled:false}")
     private boolean sendingEnabled;
 
-    private final UblSender ublSender;
-    private final OutboundErrorHandler outboundErrorHandler;
-    private final TestSender testSender;
-
     @Autowired
-    public OutboundController(@NotNull UblSender ublSender, @NotNull OutboundErrorHandler outboundErrorHandler, @Nullable TestSender testSender) {
+    public OutboundController(@NotNull UblSender ublSender, @NotNull OutboundErrorHandler outboundErrorHandler, @Nullable TestSender testSender, @NotNull Svefaktura1Sender svefaktura1Sender) {
         this.ublSender = ublSender;
         this.outboundErrorHandler = outboundErrorHandler;
         this.testSender = testSender;
+        this.svefaktura1Sender = svefaktura1Sender;
     }
 
     public void send(@NotNull ContainerMessage cm) {
@@ -52,7 +52,7 @@ public class OutboundController {
                     case INVALID:
                         throw new IllegalArgumentException("Unable to send invalid documents");
                     case SVEFAKTURA1:
-                        transmissionResponse = ublSender.send(cm); // the same as UBL since Oxalis 4
+                        transmissionResponse = svefaktura1Sender.send(cm); // the same as UBL since Oxalis 4
                         break;
                     default:
                         transmissionResponse = ublSender.send(cm);

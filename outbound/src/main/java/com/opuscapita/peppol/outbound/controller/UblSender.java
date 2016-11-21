@@ -6,13 +6,12 @@ import com.opuscapita.peppol.outbound.util.OxalisUtils;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.outbound.OxalisOutboundModule;
-import eu.peppol.outbound.transmission.TransmissionRequest;
-import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
-import eu.peppol.outbound.transmission.TransmissionResponse;
-import eu.peppol.outbound.transmission.Transmitter;
+import eu.peppol.outbound.transmission.*;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,17 +22,28 @@ import java.io.InputStream;
 @Component
 public class UblSender {
 
+    private OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
+    private OxalisOutboundModule oxalisOutboundModule;
+    private TransmissionRequestBuilder requestBuilder;
+
+    @PostConstruct
+    @Autowired
+    public void initialize(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
+        this.oxalisOutboundModuleWrapper = oxalisOutboundModuleWrapper;
+        oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
+        requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
+    }
+
+
     @NotNull
     TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
-        OxalisOutboundModule oxalisOutboundModule = new OxalisOutboundModule();
-        TransmissionRequestBuilder requestBuilder = oxalisOutboundModule.getTransmissionRequestBuilder();
         BaseDocument document = cm.getBaseDocument();
         if (document == null) {
             throw new IllegalArgumentException("There is no document in message");
         }
 
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
-            requestBuilder = requestBuilder
+            TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
                     .processType(PeppolProcessTypeId.valueOf(document.getProfileId()))
                     .sender(new ParticipantId(document.getSenderId()))
