@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -25,6 +27,9 @@ public class IndexController {
     ValidationController validationController;
 
     @Autowired
+    ServletContext servletContext;
+
+    @Autowired
     DocumentLoader documentLoader;
 
     public IndexController() {
@@ -34,7 +39,7 @@ public class IndexController {
     @GetMapping("/")
     public ModelAndView index(HttpServletRequest request) {
         ModelAndView result = new ModelAndView("index");
-
+        result.addObject("root", servletContext.getRealPath(File.separator));
         return result;
     }
 
@@ -43,6 +48,7 @@ public class IndexController {
         System.out.println("Got: " + dataFile.getOriginalFilename() + " as " + dataFile.getName());
 
         ModelAndView result = new ModelAndView("result");
+        result.addObject("root", servletContext.getRealPath(File.separator));
         try {
             ContainerMessage containerMessage = new ContainerMessage(
                     dataFile.getName(), dataFile.getName(), Endpoint.REST)
