@@ -10,22 +10,24 @@ import java.io.File;
  */
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(Producer.class);
-    private String sourceFileName;
+    private String sourceFolder;
     private String destinationQueue;
 
-    public MqProducer(String sourceFileName, String destinationQueue) {
-        this.sourceFileName = sourceFileName;
+    public MqProducer(String sourceFolder, String destinationQueue) {
+        this.sourceFolder = sourceFolder;
         this.destinationQueue = destinationQueue;
     }
 
     @Override
     public void run() {
         try {
-            File sourceFile = new File(sourceFileName);
-            if (!sourceFile.exists()) {
-                logger.error(this.sourceFileName + " doesn't exist!");
+            File directory = new File(sourceFolder);
+            if (!directory.isDirectory()) {
+                logger.error(this.sourceFolder + " doesn't exist!");
                 return;
             }
+
+
         } catch (Exception ex) {
             logger.error("Error running MqProducer!", ex);
         }

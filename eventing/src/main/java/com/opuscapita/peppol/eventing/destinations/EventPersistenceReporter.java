@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.eventing.controller;
+package com.opuscapita.peppol.eventing.destinations;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
@@ -6,17 +6,40 @@ import com.opuscapita.peppol.commons.model.PeppolEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
+ * Gets data from inside the container message and sends it as a events-persistence event.
+ *
  * @author Sergejs.Roze
  */
 @Component
-public class ContainerMessageToPeppolEvent {
-    private final static Logger logger = LoggerFactory.getLogger(ContainerMessageToPeppolEvent.class);
+@Lazy
+public class EventPersistenceReporter {
+    private final static Logger logger = LoggerFactory.getLogger(EventPersistenceReporter.class);
+
+    @Value("${peppol.eventing.queue.out.name}")
+    private String queueOut;
+
+    private final RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    public EventPersistenceReporter(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
+    public void process(@NotNull ContainerMessage cm) {
+        PeppolEvent event = convert(cm);
+        rabbitTemplate.convertAndSend(queueOut, event);
+        logger.debug("Peppol event successfully sent");
+    }
 
     @NotNull
-    public PeppolEvent process(@NotNull ContainerMessage cm) {
+    private PeppolEvent convert(@NotNull ContainerMessage cm) {
         logger.debug("Message received");
 
         PeppolEvent result = new PeppolEvent();

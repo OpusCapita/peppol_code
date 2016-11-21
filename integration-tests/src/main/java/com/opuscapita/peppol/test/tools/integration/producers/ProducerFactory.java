@@ -17,9 +17,9 @@ public class ProducerFactory {
         Map<String,String> properties = (Map<String, String>) producerConfig.getValue();
         switch (name){
             case "file producer":
-                 return new FileProducer(properties.get("source file"),properties.get("destination file"));
+                 return new FileProducer(properties.get("source directory"),properties.get("destination directory"));
             case "mq producer":
-                return new MqProducer(properties.get("source file"), properties.get("destination queue"));
+                return new MqProducer(properties.get("source directory"), properties.get("destination queue"));
             case "rest producer":
                 return new RestProducer(properties.get("source file"), properties.get("rest template file"),
                         properties.get("rest endpoint") ,properties.get("rest method"));

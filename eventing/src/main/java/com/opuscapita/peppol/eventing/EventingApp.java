@@ -3,13 +3,11 @@ package com.opuscapita.peppol.eventing;
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
-import com.opuscapita.peppol.eventing.controller.ContainerMessageToPeppolEvent;
+import com.opuscapita.peppol.eventing.destinations.EventPersistenceReporter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +25,6 @@ import org.springframework.context.annotation.Bean;
 public class EventingApp {
     @Value("${peppol.eventing.queue.in.name}")
     private String queueIn;
-    @Value("${peppol.eventing.queue.out.name}")
-    private String queueOut;
 
     public static void main(String[] args) {
         SpringApplication.run(EventingApp.class, args);
@@ -53,14 +49,12 @@ public class EventingApp {
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson,
-                                        @NotNull ContainerMessageToPeppolEvent controller, @NotNull RabbitTemplate rabbitTemplate) {
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson, @NotNull EventPersistenceReporter eventPersistenceReporter) {
         return new AbstractQueueListener(errorHandler, null, gson) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
-                PeppolEvent event = controller.process(cm);
-                rabbitTemplate.convertAndSend(queueOut, event);
-                logger.debug("Peppol event successfully sent");
+                // add other handlers here, e.g. NTT
+                eventPersistenceReporter.process(cm);
             }
         };
     }

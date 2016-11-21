@@ -1,14 +1,11 @@
-configurations:
-    databases:
-        db1: jdbc://username:password@localhost:3306/database
 tests:
    validation:
      producers:
        file producer:
-         source file: source.xml
-         destination file: input.xml
+         source directory: validationSourceTestDir/
+         destination directory: testOutDir/
        mq producer:
-         source file: source.json
+         source directory: mqTestDir/
          destination queue: queue name
        rest producer:
          source file: source.xml
@@ -42,8 +39,8 @@ tests:
    support-ui:
       producers:
         file producer:
-          source file: source.xml
-          destination file: input.xml
+          source directory: support-uiSourceTestDir/
+          destination directory: defineLaterDirectory/
         db producer:
            source query: query
       subscribers:
