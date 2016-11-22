@@ -40,7 +40,14 @@ public class StorageImpl implements Storage {
     @Override
     public String moveToTemporary(@NotNull File source) throws IOException {
         File dir = createDailyDirectory();
-        File result = new File(dir, source.getName());
+
+        // if the file already exists - add a number on the end until there is no such file
+        File result;
+        String tmp = ""; int i = 0;
+        do {
+            result = new File(dir, source.getName() + tmp);
+            tmp = "_" + i++;
+        } while (result.exists());
 
         FileUtils.moveFile(source, result);
 
@@ -79,7 +86,14 @@ public class StorageImpl implements Storage {
             }
         }
 
-        File result = new File(dir, file.getName());
+        // if the file already exists - add a number on the end until there is no such file
+        File result;
+        String tmp = ""; int i = 0;
+        do {
+            result = new File(dir, file.getName() + tmp);
+            tmp = "_" + i++;
+        } while (result.exists());
+
         FileUtils.moveFile(file, result);
 
         return result.getAbsolutePath();

@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * @author Sergejs.Roze
  */
-@SpringBootApplication(scanBasePackages = { "com.opuscapita.peppol.commons", "com.opuscapita.peppol.outbound" })
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.outbound", "eu.peppol.outbound.transmission"})
 public class OutboundApp {
     @Value("${peppol.outbound.queue.in.name}")
     private String queueName;

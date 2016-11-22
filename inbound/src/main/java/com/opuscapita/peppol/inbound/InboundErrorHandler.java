@@ -1,31 +1,44 @@
 package com.opuscapita.peppol.inbound;
 
-import com.opuscapita.commons.servicenow.ServiceNow;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.commons.template.ServiceNowConfigurator;
+import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
+import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.commons.servicenow.SncEntity;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.mock.env.MockEnvironment;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @author Sergejs.Roze
  */
 public class InboundErrorHandler {
-    private final ErrorHandler errorHandler;
+    private static final Logger logger = LoggerFactory.getLogger(InboundErrorHandler.class);
+
+    private final ServiceNowREST serviceNow;
 
     public InboundErrorHandler(@NotNull InboundProperties properties) {
-        MockEnvironment environment = new MockEnvironment();
-        for (Object key : properties.getProperties().keySet()) {
-            String value = properties.getProperty((String) key);
-            environment.setProperty((String) key, value);
-        }
-
-        ServiceNowConfigurator configurator = new ServiceNowConfigurator();
-        ServiceNow serviceNow = configurator.serviceNowRest(environment);
-        errorHandler = new ErrorHandler(serviceNow, environment);
+        InboundProperties p = properties;
+        ServiceNowConfiguration cfg = new ServiceNowConfiguration(
+                p.getProperty("snc.rest.url"),
+                p.getProperty("snc.rest.username"),
+                p.getProperty("snc.rest.password"),
+                p.getProperty("snc.bsc"),
+                p.getProperty("snc.from"),
+                p.getProperty("snc.businessGroup"));
+        serviceNow = new ServiceNowREST(cfg);
     }
 
-    public ErrorHandler getErrorHandler() {
-        return errorHandler;
+    public void report(@NotNull String message, @NotNull String detailed, @Nullable String customerId) {
+        SncEntity report = new SncEntity(message, detailed, UUID.randomUUID().toString(), customerId == null ? "Peppol inbound" : customerId, 0);
+
+        try {
+            serviceNow.insert(report);
+        } catch (IOException e) {
+            logger.error("Failed to open ServiceNow ticket about " + message + " (" + detailed + ")", e);
+        }
     }
 
 }

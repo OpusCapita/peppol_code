@@ -18,18 +18,22 @@ jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
+configurations {
+    all*.exclude group: 'org.bouncycastle'
+    all*.exclude group: 'org.springframework'
+}
+
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.1.RELEASE'
-    compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
 
-    compile project (':common')
+    compile project (':common') {
+        // exclude group: 'org.springframework'
+    }
 
-    compile 'org.springframework:spring-core:4.3.3.RELEASE'
-    compile 'org.springframework:spring-test:4.3.3.RELEASE'
-
-    compile fileTree(dir: '../common/libs', include: '*.jar')
-    compile fileTree(dir: '../common-oxalis/libs', include: '*.jar')
+    compile fileTree(dir: '../common/libs', include: 'service-now-connector-all.jar')
+    compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api-4.0.0-SNAPSHOT.jar')
+    compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-commons-4.0.0-SNAPSHOT.jar')
 
     testCompile 'junit:junit:4.12'
 }

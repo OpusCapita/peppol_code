@@ -3,10 +3,12 @@ package com.opuscapita.peppol.commons.container.status;
 import com.opuscapita.peppol.commons.container.route.TransportType;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 /**
  * @author Sergejs.Roze
  */
-public class ProcessingStatus {
+public class ProcessingStatus implements Serializable {
     private TransportType transportType;
     private String result;
     private final String correlationId;

@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
@@ -25,6 +27,9 @@ public class IndexController {
     ValidationController validationController;
 
     @Autowired
+    ServletContext servletContext;
+
+    @Autowired
     DocumentLoader documentLoader;
 
     public IndexController() {
@@ -34,7 +39,7 @@ public class IndexController {
     @GetMapping("/")
     public ModelAndView index(HttpServletRequest request) {
         ModelAndView result = new ModelAndView("index");
-
+        result.addObject("root", servletContext.getContextPath());
         return result;
     }
 
@@ -43,10 +48,9 @@ public class IndexController {
         System.out.println("Got: " + dataFile.getOriginalFilename() + " as " + dataFile.getName());
 
         ModelAndView result = new ModelAndView("result");
+        result.addObject("root", servletContext.getContextPath());
         try {
-            ContainerMessage containerMessage = new ContainerMessage(
-                    dataFile.getName(), dataFile.getName(), Endpoint.REST)
-                    .setBaseDocument(documentLoader.load(dataFile.getInputStream(), dataFile.getName()));
+            ContainerMessage containerMessage = loadContainerMessageFromMultipartFile(dataFile);
             ValidationResult validationResult = validationController.validate(containerMessage);
             System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
             validationResult.getErrors().forEach(error -> System.out.println(error.toString()));
@@ -56,5 +60,12 @@ public class IndexController {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @NotNull
+    protected ContainerMessage loadContainerMessageFromMultipartFile(MultipartFile dataFile) throws IOException {
+        return new ContainerMessage(
+                dataFile.getName(), dataFile.getName(), Endpoint.REST)
+                .setBaseDocument(documentLoader.load(dataFile.getInputStream(), dataFile.getName()));
     }
 }
