@@ -28,7 +28,7 @@ public class LinkCheck extends Check {
             result = new CheckResult(name, goodResponse, "HTTP Status code: " + conn.getResponseCode(), rawConfig);
         } catch (Exception ex) {
             ex.printStackTrace();
-            result = new CheckResult(name, false, "the link not reachable, " + ex, rawConfig);
+            result = new CheckResult(name, false, rawConfig.get("reference") + " link is not reachable, " + ex, rawConfig);
         }
         return result;
     }

@@ -6,7 +6,7 @@ tests:
    configuration-server:
      type: reference
      params:
-       reference: http://localhost:441/admin/health
+       reference: http://localhost:440/admin/health
    queue:
      type: queue
      params:
