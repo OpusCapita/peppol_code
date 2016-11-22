@@ -12,15 +12,17 @@ import java.util.Map;
  */
 public class ConsumerFactory {
 
-    public static Consumer createConsumer(Map.Entry<String, ?> consumerConfig) {
+    public static Consumer createConsumer(Map.Entry<String, ?> consumerConfig, Map<String, String> genericConfiguration) {
         String name = consumerConfig.getKey();
         Map<String ,Object> properties = (Map<String, Object>) consumerConfig.getValue();
 
         switch (name){
             case "queue msg count check":
                 return new QueueConsumer((List<String>)properties.get("subscribers"),properties.get("expected value"));
-            case "DB query":
-                return new DbConsumer(properties.get("expected value"));
+            case "DB check":
+                String connectionKey = (String) properties.get("connection string");
+                String dbConnectionString = genericConfiguration.get(connectionKey);
+                return new DbConsumer(dbConnectionString, properties.get("expected value"));
             case "selenium check":
                 return new SeleniumConsumer(properties.get("expected value"));
             default:
