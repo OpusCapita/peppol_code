@@ -97,12 +97,13 @@ public class IncomingChecker {
 
     private void send(File file) throws IOException {
         String fileName = storage.moveToTemporary(file);
+        logger.info("File moved to " + fileName);
 
         ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, Endpoint.GATEWAY)
                 .setStatus(new ProcessingStatus(TransportType.OUT_IN, "received", fileName));
 
         rabbitTemplate.convertAndSend(queue, cm);
-        logger.info("File " + cm.getFileName() + " processed and sent to MQ");
+        logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");
 
         if (statusReporter != null) {
             statusReporter.report(cm);
