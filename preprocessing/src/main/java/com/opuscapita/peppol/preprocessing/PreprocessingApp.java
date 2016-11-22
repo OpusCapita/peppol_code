@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.preprocessing;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -40,11 +39,6 @@ public class PreprocessingApp {
     }
 
     @Bean
-    Gson gson() {
-        return new Gson();
-    }
-
-    @Bean
     @NotNull
     MessageListenerAdapter listenerAdapter(@NotNull AbstractQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
@@ -52,9 +46,9 @@ public class PreprocessingApp {
 
     @Bean
     @NotNull
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull StatusReporter reporter, @NotNull Gson gson,
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull StatusReporter reporter,
                                         @NotNull PreprocessingController controller, @NotNull RabbitTemplate rabbitTemplate) {
-        return new AbstractQueueListener(errorHandler, reporter, gson) {
+        return new AbstractQueueListener(errorHandler, reporter) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Message received, file id: " + cm.getFileName());

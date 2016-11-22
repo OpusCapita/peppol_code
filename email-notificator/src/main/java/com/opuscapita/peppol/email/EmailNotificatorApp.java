@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.email;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -40,19 +39,14 @@ public class EmailNotificatorApp {
     }
 
     @Bean
-    public Gson gson() {
-        return new Gson();
-    }
-
-    @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
     MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson, @NotNull EmailController controller) {
-        return new AbstractQueueListener(errorHandler, null, gson) {
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EmailController controller) {
+        return new AbstractQueueListener(errorHandler, null) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 controller.processMessage(cm);

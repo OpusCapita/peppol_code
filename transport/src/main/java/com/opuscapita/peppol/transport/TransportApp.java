@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.transport;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.TransportType;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
@@ -49,9 +48,8 @@ public class TransportApp {
 
     @Bean
     @ConditionalOnProperty("peppol.transport.queue.in.enabled")
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull StatusReporter reporter, @NotNull Gson gson,
-                                        @NotNull TransportController controller) {
-        return new AbstractQueueListener(errorHandler, reporter, gson) {
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull StatusReporter reporter, @NotNull TransportController controller) {
+        return new AbstractQueueListener(errorHandler, reporter) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.debug("Storing incoming message: " + cm.getFileName());
@@ -65,11 +63,6 @@ public class TransportApp {
     @ConditionalOnProperty("peppol.transport.queue.in.enabled")
     MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
-    }
-
-    @Bean
-    Gson gson() {
-        return new Gson();
     }
 
 }
