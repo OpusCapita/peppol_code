@@ -4,7 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.XsdValidator;
 import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,16 +16,16 @@ import java.util.List;
  */
 @Component
 public class Svefaktura1XsdValidator implements XsdValidator {
-    @Value("${peppol.validator.svefaktura1.xsd.path}")
-    String xsdPath;
+    @Autowired
+    Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
 
     @Override
     public List<ValidationError> performXsdValidation(ContainerMessage containerMessage) {
         try {
-            validateAgainstXsd(containerMessage, xsdPath);
+            validateAgainstXsd(containerMessage, svefaktura1ValidatorConfig.getSvefaktura1XsdPath());
         } catch (Exception e) {
             return new ArrayList<ValidationError>() {{
-                add(ValidationErrorBuilder.aValidationError().withTitle("SBDH validation failure").withDetails(e.getMessage()).build());
+                add(ValidationErrorBuilder.aValidationError().withTitle("XSD validation failure").withDetails(e.getMessage()).build());
             }};
 
         }
@@ -34,10 +34,10 @@ public class Svefaktura1XsdValidator implements XsdValidator {
 
     public List<ValidationError> performXsdValidation(byte[] data) {
         try {
-            validateAgainstXsd(data, xsdPath);
+            validateAgainstXsd(data, svefaktura1ValidatorConfig.getSvefaktura1XsdPath());
         } catch (Exception e) {
             return new ArrayList<ValidationError>() {{
-                add(ValidationErrorBuilder.aValidationError().withTitle("SBDH validation failure").withDetails(e.getMessage()).build());
+                add(ValidationErrorBuilder.aValidationError().withTitle("XSD validation failure").withDetails(e.getMessage()).build());
             }};
 
         }

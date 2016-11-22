@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.container.route;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @author Sergejs.Roze
  */
 @SuppressWarnings("unused")
-public class Route {
+public class Route implements Serializable {
     private List<String> endpoints = new ArrayList<>();
     private String description;
     private String mask;
