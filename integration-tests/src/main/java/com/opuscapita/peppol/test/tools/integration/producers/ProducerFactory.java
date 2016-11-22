@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class ProducerFactory {
 
-    public static Producer createProducer(Map.Entry<String, ?> producerConfig) {
+    public static Producer createProducer(Map.Entry<String, ?> producerConfig, Map<String, String> genericConfiguration) {
         String name = producerConfig.getKey();
         Map<String,String> properties = (Map<String, String>) producerConfig.getValue();
         switch (name){

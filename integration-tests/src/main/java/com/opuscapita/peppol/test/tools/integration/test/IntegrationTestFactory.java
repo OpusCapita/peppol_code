@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class IntegrationTestFactory {
     private final static Logger logger = LogManager.getLogger(IntegrationTestFactory.class);
 
-    public static IntegrationTest createTest(String moduleName, Map<String, ?> moduleSettings) {
+    public static IntegrationTest createTest(String moduleName, Map<String, ?> moduleSettings, Map<String, String> genericConfiguration) {
         if (moduleName == null || moduleName.isEmpty()) {
             logger.error("module name not specified!");
             return null;
@@ -32,9 +32,9 @@ public class IntegrationTestFactory {
         Map<String,?> subscribersConfiguration = (Map<String, ?>) moduleSettings.get("subscribers");
         Map<String,?> consumersConfiguration = (Map<String, ?>) moduleSettings.get("consumers");
 
-        List<Producer> producers = producersConfiguration.entrySet().stream().map(entry -> ProducerFactory.createProducer(entry)).collect(Collectors.toList());
-        List<Subscriber> subscribers = subscribersConfiguration.entrySet().stream().map(entry -> SubscriberFactory.createSubscriber(entry)).collect(Collectors.toList());
-        List<Consumer> consumers = consumersConfiguration.entrySet().stream().map(entry -> ConsumerFactory.createConsumer(entry)).collect(Collectors.toList());
+        List<Producer> producers = producersConfiguration.entrySet().stream().map(entry -> ProducerFactory.createProducer(entry, genericConfiguration)).collect(Collectors.toList());
+        List<Subscriber> subscribers = subscribersConfiguration.entrySet().stream().map(entry -> SubscriberFactory.createSubscriber(entry, genericConfiguration)).collect(Collectors.toList());
+        List<Consumer> consumers = consumersConfiguration.entrySet().stream().map(entry -> ConsumerFactory.createConsumer(entry, genericConfiguration)).collect(Collectors.toList());
 
         return new IntegrationTest(moduleName, producers, subscribers, consumers);
     }

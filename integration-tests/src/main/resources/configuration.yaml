@@ -1,3 +1,6 @@
+configurations:
+    databases:
+        db1: jdbc://username:password@localhost:3306/database
 tests:
    validation:
      producers:
@@ -34,7 +37,8 @@ tests:
        snc subscriber:
          timeout: 500
      consumers:
-       DB query:
+       DB check:
+         connection string: db1
          expected value: 500
    support-ui:
       producers:

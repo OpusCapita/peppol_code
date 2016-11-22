@@ -153,17 +153,21 @@ node {
     stage('Deploy Stage') {
         dir('infra/ap2/ansible') {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-                sh "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' --timeout=25 peppol-components.yml"
+                sh "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' --timeout=25 peppol-components.yml -v"
             }
         }
     }
 
     stage('Smoke Test') {
+        def smoke_test_result
         dir('infra/ap2/ansible') {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-                sh "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' --timeout=25 smoke-tests.yml"
+                smoke_test_result = sh returnStatus: true, script: "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} provisioning=true' --timeout=25 smoke-tests.yml"
             }
             archiveArtifacts artifacts: 'test/smoke-tests-results.html'
+        }
+        if (smoke_test_result != 0) {
+            error 'Smoke tests have failed. Check the log for details.'
         }
     }
 }

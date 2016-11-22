@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by gamanse1 on 2016.11.16..
  */
 public class SubscriberFactory {
-    public static Subscriber createSubscriber(Map.Entry<String, ?> subscriberConfig) {
+    public static Subscriber createSubscriber(Map.Entry<String, ?> subscriberConfig, Map<String, String> genericConfiguration) {
         String name = subscriberConfig.getKey();
         Map<String, Object> properties = (Map<String, Object>) subscriberConfig.getValue();
         switch (name){

@@ -51,6 +51,9 @@ public class StorageImpl implements Storage {
 
         FileUtils.moveFile(source, result);
 
+        if (!result.exists()) {
+            throw new IOException("Failed to move file " + source + " to " + result);
+        }
         return result.getAbsolutePath();
     }
 
@@ -95,6 +98,9 @@ public class StorageImpl implements Storage {
         } while (result.exists());
 
         FileUtils.moveFile(file, result);
+        if (!result.exists()) {
+            throw new IOException("Failed to move file " + file + " to " + result);
+        }
 
         return result.getAbsolutePath();
     }

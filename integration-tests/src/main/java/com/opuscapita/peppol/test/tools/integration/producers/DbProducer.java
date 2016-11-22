@@ -9,4 +9,9 @@ public class DbProducer implements Producer {
     public DbProducer(String query) {
         this.query = query;
     }
+
+    @Override
+    public void run() {
+
+    }
 }
