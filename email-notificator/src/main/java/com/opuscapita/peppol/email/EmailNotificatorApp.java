@@ -19,6 +19,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.email"})
 @EnableScheduling
 public class EmailNotificatorApp {
+    @Value("${peppol.component.name}")
+    private String componentName;
+
     @Value("${peppol.email-notificator.queue.in.name}")
     private String queueName;
 

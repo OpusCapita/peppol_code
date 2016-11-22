@@ -1,7 +1,6 @@
 package com.opuscapita.peppol.transport;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.route.TransportType;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -27,6 +26,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.transport"})
 @EnableScheduling
 public class TransportApp {
+    @Value("${peppol.component.name}")
+    private String componentName;
     @Value("${peppol.transport.queue.in.name}")
     private String queueIn;
 
@@ -54,7 +55,7 @@ public class TransportApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.debug("Storing incoming message: " + cm.getFileName());
                 controller.storeMessage(cm);
-                cm.setStatus(TransportType.IN_OUT, "delivered");
+                cm.setStatus(componentName, "delivered");
             }
         };
     }

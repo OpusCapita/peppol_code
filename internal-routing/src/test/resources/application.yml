@@ -1,5 +1,7 @@
 
 peppol:
+  component:
+    name: internal-routing
   eventing:
     queue:
       in:

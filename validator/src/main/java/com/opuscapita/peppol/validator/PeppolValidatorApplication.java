@@ -18,6 +18,8 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
 public class PeppolValidatorApplication {
+    @Value("${peppol.component.name}")
+    String componentName;
     @Value("${peppol.validator.svefaktura1.schematron.path}")
     String svefaktur1SchematronXslPath;
     @Value("${peppol.validator.svefaktura1.xsd.path}")

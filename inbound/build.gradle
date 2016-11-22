@@ -27,9 +27,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.1.RELEASE'
 
-    compile project (':common') {
-        // exclude group: 'org.springframework'
-    }
+    compile project (':common')
 
     compile fileTree(dir: '../common/libs', include: 'service-now-connector-all.jar')
     compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api-4.0.0-SNAPSHOT.jar')

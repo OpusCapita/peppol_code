@@ -18,6 +18,8 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.preprocessing"})
 public class PreprocessingApp {
+    @Value("${peppol.component.name}")
+    private String componentName;
     @Value("${peppol.preprocessing.queue.in.name}")
     private String queueIn;
     @Value("${peppol.preprocessing.queue.out.name}")
@@ -53,7 +55,7 @@ public class PreprocessingApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Message received, file id: " + cm.getFileName());
                 cm = controller.process(cm);
-                cm.setStatus("file read");
+                cm.setStatus(componentName, "file read");
                 rabbitTemplate.convertAndSend(queueOut, cm);
                 logger.info("Successfully processed and delivered to " + queueOut + " queue");
             }

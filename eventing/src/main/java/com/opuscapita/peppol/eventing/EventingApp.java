@@ -25,6 +25,9 @@ public class EventingApp {
     @Value("${peppol.eventing.queue.in.name}")
     private String queueIn;
 
+    @Value("${peppol.component.name}")
+    private String componentName;
+
     public static void main(String[] args) {
         SpringApplication.run(EventingApp.class, args);
     }

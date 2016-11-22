@@ -21,6 +21,9 @@ public class InternalRoutingApp {
     @Value("${peppol.internal-routing.queue.in.name}")
     private String queueName;
 
+    @Value("${peppol.component.name}")
+    private String componentName;
+
     public static void main(String[] args) {
         SpringApplication.run(InternalRoutingApp.class, args);
     }
@@ -38,7 +41,7 @@ public class InternalRoutingApp {
 
                 String queueOut = cm.getRoute().pop();
                 rabbitTemplate.convertAndSend(queueOut, cm);
-                cm.setStatus("route defined");
+                cm.setStatus(componentName, "route set");
                 logger.info("Route defined, message sent to " + queueOut + " queue");
             }
         };

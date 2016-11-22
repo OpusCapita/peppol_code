@@ -1,7 +1,6 @@
 package com.opuscapita.peppol.outbound;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.route.TransportType;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -24,6 +23,9 @@ public class OutboundApp {
     @Value("${peppol.outbound.queue.in.name}")
     private String queueName;
 
+    @Value("${peppol.component.name}")
+    private String componentName;
+
     public static void main(String[] args) {
         SpringApplication.run(OutboundApp.class, args);
     }
@@ -37,7 +39,7 @@ public class OutboundApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 controller.send(cm);
                 logger.debug("Message " + cm.getFileName() + "delivered with transaction id = " + cm.getTransactionId());
-                cm.setStatus(TransportType.OUT_PEPPOL_FINAL, "delivered");
+                cm.setStatus(componentName, "delivered");
             }
         };
     }
