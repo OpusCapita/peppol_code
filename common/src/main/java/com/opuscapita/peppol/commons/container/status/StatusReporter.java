@@ -28,12 +28,13 @@ public class StatusReporter {
         rabbitTemplate.convertAndSend(reportDestination, cm);
     }
 
-    public void reportError(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String error) {
+    public void reportError(@NotNull ContainerMessage cm, @Nullable Exception e) {
+        ProcessingStatus status = cm.getProcessingStatus();
         if (!(cm.getBaseDocument() instanceof InvalidDocument)) {
-            cm.setBaseDocument(new InvalidDocument(cm.getBaseDocument(), error, e));
+            cm.setBaseDocument(new InvalidDocument(cm.getBaseDocument(), status.getResult(), e));
         }
 
-        rabbitTemplate.convertAndSend(reportDestination, cm.setStatus(error));
+        rabbitTemplate.convertAndSend(reportDestination, cm);
     }
 
 }

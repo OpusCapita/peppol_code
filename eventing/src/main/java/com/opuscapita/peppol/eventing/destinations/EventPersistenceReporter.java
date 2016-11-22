@@ -57,7 +57,7 @@ public class EventPersistenceReporter {
             result.setRecipientCountryCode(cm.getBaseDocument().getRecipientCountryCode());
             result.setTransactionId(cm.getTransactionId());
 
-            result.setTransportType(cm.getProcessingStatus().getTransportType());
+            // result.setTransportType(cm.getProcessingStatus().getTransportType()); TODO
 
             if (cm.getBaseDocument() instanceof InvalidDocument) {
                 InvalidDocument invalid = (InvalidDocument) cm.getBaseDocument();

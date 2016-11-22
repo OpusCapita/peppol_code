@@ -29,6 +29,7 @@ public class HealthCheck extends Check {
 
             JsonObject jsonObj = new Gson().fromJson(is, JsonObject.class);
             String statusValue = jsonObj.get("status").toString();
+            statusValue = statusValue.replaceAll("\"","");
             boolean statusCheck = statusValue.toUpperCase().equals("UP");
 
             return new CheckResult(name, statusCheck, "Health check performed for: " +

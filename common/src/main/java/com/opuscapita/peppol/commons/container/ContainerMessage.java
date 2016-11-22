@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
-import com.opuscapita.peppol.commons.container.route.TransportType;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import org.jetbrains.annotations.NotNull;
@@ -111,7 +110,7 @@ public class ContainerMessage implements Serializable {
     @NotNull
     public ProcessingStatus getProcessingStatus() {
         if (status == null) {
-            return new ProcessingStatus(TransportType.UNKNOWN, "", fileName);
+            return new ProcessingStatus("", "", fileName);
         }
         return status;
     }
@@ -123,14 +122,8 @@ public class ContainerMessage implements Serializable {
     }
 
     @NotNull
-    public ContainerMessage setStatus(@NotNull String status) {
-        this.getProcessingStatus().setResult(status);
-        return this;
-    }
-
-    @NotNull
-    public ContainerMessage setStatus(@NotNull TransportType transportType, @NotNull String result) {
-        this.getProcessingStatus().setTransportType(transportType).setResult(result);
+    public ContainerMessage setStatus(@NotNull String componentName, @NotNull String result) {
+        this.status = this.getProcessingStatus().setComponentName(componentName).setResult(result);
         return this;
     }
 

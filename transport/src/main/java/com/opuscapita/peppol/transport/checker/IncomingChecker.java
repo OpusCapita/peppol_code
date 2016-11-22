@@ -2,7 +2,6 @@ package com.opuscapita.peppol.transport.checker;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.TransportType;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -42,6 +41,8 @@ public class IncomingChecker {
     private final StatusReporter statusReporter;
     private final ErrorHandler errorHandler;
 
+    @Value("${peppol.component.name}")
+    private String componentName;
     @Value("${peppol.transport.file.age.seconds:120}")
     private int age;
     @Value("${peppol.transport.input.directory}")
@@ -100,7 +101,7 @@ public class IncomingChecker {
         logger.info("File moved to: " + fileName);
 
         ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, Endpoint.GATEWAY)
-                .setStatus(new ProcessingStatus(TransportType.OUT_IN, "received", fileName));
+                .setStatus(new ProcessingStatus(componentName, "received", fileName));
 
         rabbitTemplate.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");

@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.template;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -27,33 +28,39 @@ public abstract class AbstractQueueListener {
 
     @SuppressWarnings({"unused", "ConstantConditions"})
     public synchronized void receiveMessage(@NotNull ContainerMessage cm) {
-        logger.debug("Message received, file id: " + cm == null ? "ERROR" : cm.getFileName());
+        logger.debug("Message received, file id: " + cm == null ? "UNAVAILABLE" : cm.getFileName());
 
         try {
             processMessage(cm);
-            logger.debug("Message processed");
-
             reporter.report(cm);
         } catch (Exception e) {
-            handleError("Failed to process message", cm.getCustomerId() == null ? "" : cm.getCustomerId(), e, cm);
+            handleError(cm.getCustomerId() == null ? "n/a" : cm.getCustomerId(), e, cm);
         }
     }
 
     protected abstract void processMessage(@NotNull ContainerMessage cm) throws Exception;
 
-    private void handleError(@NotNull String message, @NotNull String customerId, @NotNull Exception e, @Nullable ContainerMessage cm) {
+    private void handleError(@NotNull String customerId, @NotNull Exception e, @Nullable ContainerMessage cm) {
         try {
             if (errorHandler != null) {
-                errorHandler.reportToServiceNow(message, customerId, e);
+                errorHandler.reportToServiceNow(e.getMessage(), customerId, e);
             }
-            logger.error(message + ", customer: " + customerId, e);
+            String fileName = (cm == null ? "n/a" : cm.getFileName());
 
-            if (cm != null && reporter != null) {
-                reporter.reportError(cm, e, message);
-            }
+            logger.warn("Message processing failed. File id: " + fileName + ", " +  (StringUtils.isBlank(customerId) ? "n/a" : customerId), e);
+
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
+
+        if (reporter != null) {
+            if (cm != null) {
+                reporter.reportError(cm, e);
+            } else {
+                logger.warn("No container message present, cannot report to eventing");
+            }
+        }
+
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
     }
 
