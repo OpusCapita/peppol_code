@@ -4,25 +4,25 @@ html(class: 'no-js') {
         meta(charset: 'utf-8')
         meta('http-equiv': 'X-UA-Compatible', 'content': 'IE=edge')
         meta(name: 'viewport', content: 'width=device-width, initial-scale=1')
-        link(rel: 'icon', href: '$root/favicon.ico')
+        link(rel: 'icon', href: "$root/favicon.ico")
         title('Peppol Standalone Validator')
-        link(rel:'stylesheet', href:'$root/css/bootstrap.min.css')
-        link(rel:'stylesheet', href:'$root/css/oc-style.css')
-        link(rel:'stylesheet', href:'$root/css/main.css')
+        link(rel:'stylesheet', href:"$root/css/bootstrap.min.css")
+        link(rel:'stylesheet', href:"$root/css/oc-style.css")
+        link(rel:'stylesheet', href:"$root/css/main.css")
     }
     body() {
         div(id: 'wrap', style: 'height: 100vh') {
             div(id: 'header') {
                 div(class: 'wrap') {
-                    a(href: '$root/', id: 'logo') {
-                        img(src: '$root/images/logo.png', '')
+                    a(href: "$root/", id: 'logo') {
+                        img(src: "$root/images/logo.png", '')
                     }
                 }
-                span(id: 'header_title', 'PEPPOL AP VALIDATION UI')
+                span(id: 'header_title', 'PEPPOL AP VALIDATION')
                 div(id: 'header_menu_bar') {
                     span(class: 'glyphicon glyphicon-user','')
                     i('Welcome, user :)')
-                    a(href: '$root#logout', 'Sign out(not working anyway)')
+                    a(href: "$root#logout", 'Sign out(not working anyway)')
                 }
             }
             div(id: 'main') {
@@ -30,14 +30,14 @@ html(class: 'no-js') {
                     div() {
                         span('Validation status: '+status)
                         span() {
-                            a(href: '/', class: 'btn-success', style: 'padding: 5px;margin-left: 15px;', 'New validation')
+                            a(href: "$root/", class: 'btn-success', style: 'padding: 5px;margin-left: 15px;', 'New validation')
                         }
                     }
                     if(!status) {
                         div() {
                             span('Validation errors:'+errors.size())
                             for(Object error: errors) {
-                                div(error.title)
+                                div(style: 'font-color: red;', error.title)
                                 div(error.details)
                                 hr('')
                             }

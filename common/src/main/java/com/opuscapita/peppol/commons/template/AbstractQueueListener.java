@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.commons.template;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
-import org.springframework.context.annotation.Bean;
 
 /**
  * Base class for a standard listener that reads container message and processes it.
@@ -21,25 +19,15 @@ public abstract class AbstractQueueListener {
 
     private final ErrorHandler errorHandler;
     private final StatusReporter reporter;
-    private final Gson gson;
 
-    protected AbstractQueueListener(@Nullable ErrorHandler errorHandler, @Nullable StatusReporter statusReporter, @NotNull Gson gson) {
+    protected AbstractQueueListener(@Nullable ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
         this.errorHandler = errorHandler;
         this.reporter = statusReporter;
-        this.gson = gson;
     }
 
     @SuppressWarnings({"unused", "ConstantConditions"})
-    public synchronized void receiveMessage(byte[] data) {
-        ContainerMessage cm = null;
-
-        try {
-            String message = new String(data);
-            logger.debug("Message received");
-            cm = gson.fromJson(message, ContainerMessage.class);
-        } catch (Exception e) {
-            handleError("Failed to parse incoming message", "", e, null);
-        }
+    public synchronized void receiveMessage(@NotNull ContainerMessage cm) {
+        logger.debug("Message received, file id: " + cm == null ? "ERROR" : cm.getFileName());
 
         try {
             processMessage(cm);
@@ -67,11 +55,6 @@ public abstract class AbstractQueueListener {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
-    }
-
-    @Bean
-    Gson gson() {
-        return new Gson();
     }
 
 }

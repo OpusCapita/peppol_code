@@ -6,13 +6,15 @@ import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import java.io.Serializable;
+
 /**
  * Main abstract class for all documents even invalid ones.
  *
  * @author Sergejs.Roze
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class BaseDocument {
+public abstract class BaseDocument implements Serializable {
     public static final String UNKNOWN_RECIPIENT = "";
     public static final String UNKNOWN_SENDER = "";
     public static final String UNKNOWN_VERSION_ID = "";

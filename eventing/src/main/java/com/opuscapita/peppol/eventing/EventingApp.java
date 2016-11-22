@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.eventing;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -49,8 +48,8 @@ public class EventingApp {
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson, @NotNull EventPersistenceReporter eventPersistenceReporter) {
-        return new AbstractQueueListener(errorHandler, null, gson) {
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EventPersistenceReporter eventPersistenceReporter) {
+        return new AbstractQueueListener(errorHandler, null) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 // add other handlers here, e.g. NTT

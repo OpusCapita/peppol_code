@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.internal_routing;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -15,7 +14,6 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.internal_routing"})
@@ -28,24 +26,26 @@ public class InternalRoutingApp {
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson,
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
                                         @NotNull RoutingController controller, @NotNull RabbitTemplate rabbitTemplate,
                                         @NotNull StatusReporter reporter) {
-        return new AbstractQueueListener(errorHandler, reporter, gson) {
+        return new AbstractQueueListener(errorHandler, reporter) {
             @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 cm = controller.loadRoute(cm);
                 logger.debug("Route set to " + cm.getRoute());
-                rabbitTemplate.convertAndSend(cm.getRoute().pop(), cm);
+
+                String queueOut = cm.getRoute().pop();
+                rabbitTemplate.convertAndSend(queueOut, cm);
                 cm.setStatus("route defined");
+                logger.info("Route defined, message sent to " + queueOut + " queue");
             }
         };
     }
 
     @SuppressWarnings("Duplicates")
     @Bean
-    @ConditionalOnProperty("spring.rabbitmq.host")
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
@@ -56,14 +56,8 @@ public class InternalRoutingApp {
     }
 
     @Bean
-    @ConditionalOnProperty("spring.rabbitmq.host")
     MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
-    }
-
-    @Bean
-    Gson gson() {
-        return new Gson();
     }
 
 }

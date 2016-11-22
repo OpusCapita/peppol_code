@@ -35,7 +35,7 @@ public class EventPersistenceReporter {
     public void process(@NotNull ContainerMessage cm) {
         PeppolEvent event = convert(cm);
         rabbitTemplate.convertAndSend(queueOut, event);
-        logger.debug("Peppol event successfully sent");
+        logger.info("Peppol event successfully sent to " + queueOut + " queue");
     }
 
     @NotNull

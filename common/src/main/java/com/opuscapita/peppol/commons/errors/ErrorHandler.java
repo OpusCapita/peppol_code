@@ -4,7 +4,9 @@ import com.google.gson.JsonObject;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -42,7 +44,7 @@ public class ErrorHandler {
     }
 
     public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription, String correlationIdPrefix) {
-        String dumpFileName = storeMessageToDisk(message);
+        String dumpFileName = storeMessageToDisk(message, e);
         logger.warn("Dumped erroneous message to: " + dumpFileName);
         createSncTicket(dumpFileName, message, customerId, e, shortDescription, correlationIdPrefix);
         logger.warn("ServiceNow ticket created with reference to: " + dumpFileName);
@@ -66,12 +68,15 @@ public class ErrorHandler {
         return jse.getClass().getName();
     }
 
-    protected String storeMessageToDisk(String message) {
+    protected String storeMessageToDisk(@NotNull String message, @Nullable Exception exp) {
         String messageDumpBaseFolderPath = getMessageDumpBaseFolderPath();
         String messageDumpFileName = generateMessageDumpFileName();
         File dumpFile = new File(messageDumpBaseFolderPath, messageDumpFileName);
         try (FileOutputStream fos = new FileOutputStream(dumpFile)) {
-            fos.write(message.getBytes());
+            fos.write((message + "\n\n").getBytes());
+            if (exp != null) {
+                fos.write(ExceptionUtils.getStackTrace(exp).getBytes());
+            }
         } catch (IOException e) {
             logger.error("Failed to store message to disk ( " + dumpFile.getAbsolutePath() + " )", e);
             logger.error("Failed message: " + message);
@@ -86,7 +91,7 @@ public class ErrorHandler {
     private String generateMessageDumpFileName() {
         String uniqueSuffix = RandomStringUtils.randomAlphanumeric(5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd_HH.mm.ss.SSS_z_");
-        return dateFormat.format(new Date()) + uniqueSuffix + ".json";
+        return dateFormat.format(new Date()) + uniqueSuffix + ".txt";
     }
 
     public void reportFailureToAmqp(String message, Exception e, RabbitTemplate rabbitTemplate, String outgoingQueueName) {
