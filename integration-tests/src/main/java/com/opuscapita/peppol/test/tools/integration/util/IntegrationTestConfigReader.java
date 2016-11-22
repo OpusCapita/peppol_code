@@ -10,6 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,6 +20,8 @@ public class IntegrationTestConfigReader {
 
     private final static Logger logger = LogManager.getLogger(IntegrationTestConfigReader.class);
     private String configFile;
+    private Map<String, String> genericConfiguration = new HashMap<>();
+
     public IntegrationTestConfigReader(String configFile) {
         this.configFile = configFile;
     }
@@ -29,12 +32,15 @@ public class IntegrationTestConfigReader {
         try{
             Map<String, ArrayList> yamlParser  = (Map<String, ArrayList>) yaml
                     .load(new FileInputStream(new File(configFile)));
+            Map<String, Object> configuration = (Map<String, Object>) yamlParser.get("configurations");
             Map<String, Object> modules = (Map<String, Object>) yamlParser.get("tests");
+            loadConfiguration(configuration);
+
             for(Map.Entry<String,Object> module : modules.entrySet()){
                 String moduleName = module.getKey();
                 Map<String,?> moduleConfig = (Map<String, ?>) module.getValue();
 
-                IntegrationTest test = IntegrationTestFactory.createTest(moduleName, moduleConfig);
+                IntegrationTest test = IntegrationTestFactory.createTest(moduleName, moduleConfig, genericConfiguration);
                 testConfig.addTest(test);
             }
         }
@@ -43,5 +49,10 @@ public class IntegrationTestConfigReader {
             logger.error("Error reading config file: "+configFile, ex);
         }
         return testConfig;
+    }
+
+    private void loadConfiguration(Map<String, Object> configuration) {
+        Map<String, String> databases = (Map<String, String>) configuration.get("databases");
+        genericConfiguration.putAll(databases);
     }
 }
