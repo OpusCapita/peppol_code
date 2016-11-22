@@ -34,14 +34,14 @@ html(class: 'no-js') {
                     div(id: 'result')
                 }
             }
-            footer(id: 'footer') {
-                div(class: 'wrap') {
-                    span(class: 'right') {
-                        a(href: 'http://www.itella.com', target: '_blank', 'Part of Itella Group')
-                    }
-                    section(class: 'copy') {
-                        span('© OpusCapita 2016')
-                    }
+        }
+        footer(id: 'footer') {
+            div(class: 'wrap') {
+                span(class: 'right') {
+                    a(href: 'http://www.itella.com', target: '_blank', 'Part of Itella Group')
+                }
+                section(class: 'copy') {
+                    span('© OpusCapita 2016')
                 }
             }
         }
