@@ -66,7 +66,7 @@ recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
 def emailNotify(String whom, String message) {
     def changes = getChangeString()
 
-    mail to: whom, cc: recipients.devops
+    mail to: whom, cc: recipients.devops,
         subject: "Job '${JOB_NAME}': build ${BUILD_NUMBER} has failed!",
         body: """
 ${message}
