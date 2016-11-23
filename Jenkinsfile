@@ -57,7 +57,7 @@ def getChangeString() {
 
 
 // define mailing list aliases
-def recipients = [:]
+recipients = [:]
 recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Gamans Sergejs <Sergejs.Gamans@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
 recipients.devops = "Didrihsons Edgars <Edgars.Didrihsons@opuscapita.com>"
 recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
