@@ -229,7 +229,7 @@ node {
             archiveArtifacts artifacts: 'test/smoke-tests-results.html'
         }
         if (status != 0) {
-            failBuild notify: "${recipients.testers}, ${infra_author}, ${code_author}" message: 'Smoke tests have failed. Check the log for details.'
+            failBuild notify: "${recipients.testers}, ${infra_author}, ${code_author}", message: 'Smoke tests have failed. Check the log for details.'
         }
     }
 }
