@@ -66,7 +66,7 @@ recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
 def emailNotify(String whom, String message) {
     def changes = getChangeString()
 
-    mail to: whom, cc: recipients.devops
+    mail to: whom, cc: recipients.devops,
         subject: "Job '${JOB_NAME}': build ${BUILD_NUMBER} has failed!",
         body: """
 ${message}
@@ -84,8 +84,8 @@ ${changes}
 """
 }
 
-def failBuild(String email_recipients, message) {
-    emailNotify whom: email_recipients, message: message
+def failBuild(String email_recipients, String message) {
+    emailNotify(email_recipients, message)
     error message
 }
 
@@ -229,7 +229,7 @@ node {
             archiveArtifacts artifacts: 'test/smoke-tests-results.html'
         }
         if (status != 0) {
-            failBuild notify: "${recipients.testers}, ${infra_author}, ${code_author}" message: 'Smoke tests have failed. Check the log for details.'
+            failBuild("${recipients.testers}, ${infra_author}, ${code_author}", 'Smoke tests have failed. Check the log for details.')
         }
     }
 }
