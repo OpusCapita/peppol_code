@@ -13,7 +13,7 @@ tests:
        exchange: peppol
        queue: persistence email-notifications persistence-test routing transport-in transport-out
        host: localhost
-       port: 5673
+       port: 5672
        username: guest
        password: guest
        virtual host: /
@@ -30,7 +30,7 @@ tests:
      type: MQ-connection
      params:
        host: s-l-web1.ocnet.local
-       port: 15672
+       port: 5672
        username: guest
        password: guest
        virtual-host: /

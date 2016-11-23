@@ -22,7 +22,6 @@ public class MqConnectionCheck extends Check {
     @Override
     public CheckResult run() {
         Connection connection = null;
-        Channel channel = null;
         CheckResult checkResult = null;
         try {
             ConnectionFactory factory = new ConnectionFactory();
@@ -32,6 +31,7 @@ public class MqConnectionCheck extends Check {
             factory.setPassword(rawConfig.get("password"));
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
+            Channel channel = connection.createChannel();
             checkResult = new CheckResult(name, true, "MQ Connection check succeeded ", rawConfig);
 
         } catch (Exception ex){
@@ -40,8 +40,6 @@ public class MqConnectionCheck extends Check {
         }
         finally {
             try {
-                if (channel != null)
-                    channel.close();
                 if (connection != null)
                     connection.close();
             } catch (Exception inore){}

@@ -27,10 +27,10 @@ public class QueuesCheck extends Check {
         String[] queues = rawConfig.get("queue").trim().split(" ");
         try{
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("localhost");
-            factory.setPort(15672);
-            factory.setUsername("guest");
-            factory.setPassword("guest");
+            factory.setHost(rawConfig.get("host"));
+            factory.setPort((int)(Object)rawConfig.get("port"));
+            factory.setUsername(rawConfig.get("username"));
+            factory.setPassword(rawConfig.get("password"));
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
             channel = connection.createChannel();
