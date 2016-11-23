@@ -29,17 +29,33 @@ tests:
    events-persistence:
      producers:
        mq producer:
-         source file: source.json
-         destination queue: queue name
+         destination queue: events-persistence
+         source file1: /tmp1/
+         source file2: /tmp2/
+         source file3: /tmp3/        
+         DB delete1: delete from messages where invoice_number="60445647"
+         DB delete2: delete from access_points where ap_id="123456" and ap_name="TEST"
      subscribers:
        mq subscriber:
          timeout: 500
        snc subscriber:
          timeout: 500
      consumers:
-       DB check:
+       DB test1:
+         name: Message "status" can be seen in DB- positive test
          connection string: db1
-         expected value: 500
+         query: select count(*) from messages where invoice_number="60445647"
+         expected value: 1
+       DB test2:
+         name: New access point -> new entry in DB- positive
+         connection string: db1
+         query: select count(*) from access_points where ap_id="123456" and ap_name="TEST"
+         expected value: 1
+       DB test3:
+         name: Existing access point -> new entry in DB- negative
+         connection string: db1
+         query: select count(*) from access_points where ap_id="123456" and ap_name="TEST"
+         expected value: 1                           
    support-ui:
       producers:
         file producer:
