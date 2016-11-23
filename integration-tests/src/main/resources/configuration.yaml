@@ -30,11 +30,8 @@ tests:
      producers:
        mq producer:
          destination queue: events-persistence
-         source file1: /tmp1/
-         source file2: /tmp2/
-         source file3: /tmp3/        
-         DB delete1: delete from messages where invoice_number="60445647"
-         DB delete2: delete from access_points where ap_id="123456" and ap_name="TEST"
+         source directory: /tmp1/       
+         DB delete: delete from messages where invoice_number="60445647"; delete from access_points where ap_id="123456" and ap_name="TEST"
      subscribers:
        mq subscriber:
          timeout: 500
@@ -55,7 +52,23 @@ tests:
          name: Existing access point -> new entry in DB- negative
          connection string: db1
          query: select count(*) from access_points where ap_id="123456" and ap_name="TEST"
-         expected value: 1                           
+         expected value: 1   
+       SNC test1:
+        name: Invalid message error case- ticket is sent to SNC (snc stub)
+        expression: grep "7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml" *
+        expected value: true 
+       SNC test2:
+        name: Not JSON file in input- Error case -> ticket to SNC
+        expression: grep "nojson" *
+        expected value: true  
+       SNC test3:
+        name: Invalid msg field lenghts and corrupted contents- negative test
+        expression: grep "7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml" *
+        expected value: true 
+       SNC test4:
+        name: correlationID start with invoice file name for SNC tickets- positive test
+        expression: find -regex ".*\.\(7ecd16db-bfc1-4374-9be7-3ec00a56e9f8\)"
+        expected value: true                    
    support-ui:
       producers:
         file producer:
