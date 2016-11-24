@@ -38,10 +38,18 @@ public class QueuesCheck extends Check {
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
             channel = connection.createChannel();
+            boolean success = true;
             for(String queue : queues) {
-                channel.queueDeclare(queue, true, false, false, null);
-                channel.basicPublish("", queue, null, _mesage.getBytes("UTF-8"));
+                try {
+                    channel.queueDeclarePassive(queue);
+                }
+                catch (Exception ex){
+                    logger.warn("Error: Queue " + queue +" not found!");
+                    success = false;
+                }
             }
+            if(!success)
+                throw new Exception("Queue not found!");
             checkResult = new CheckResult(name, true, "Queues check succeeded ", rawConfig);
         } catch (Exception ex){
             ex.printStackTrace();
