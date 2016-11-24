@@ -13,7 +13,7 @@ import java.util.Map;
 public class ProducerFactory {
 
     public static Producer createProducer(Map.Entry<String, ?> producerConfig, Map<String, String> genericConfiguration) {
-        String name = producerConfig.getKey();
+        String name = producerConfig.getKey().toLowerCase();
         Map<String,String> properties = (Map<String, String>) producerConfig.getValue();
         switch (name){
             case "file producer":
