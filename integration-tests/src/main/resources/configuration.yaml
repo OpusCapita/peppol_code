@@ -40,9 +40,8 @@ tests:
          mq connection: mq1
          destination queue: events-persistence
          source directory: envents-persistenceTest/
-         DB preprocess:
-             connection string: db1
-             querry: delete from messages where invoice_number="60445647"; delete from access_points where ap_id="123456" and ap_name="TEST"
+         db connection: db1
+         DB preprocess querry: delete from messages where invoice_number="60445647"; delete from access_points where ap_id="123456" and ap_name="TEST"
      subscribers:
        mq subscriber:
          timeout: 500

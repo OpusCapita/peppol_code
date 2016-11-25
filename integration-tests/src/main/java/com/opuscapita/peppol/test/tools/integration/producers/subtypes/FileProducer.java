@@ -14,9 +14,9 @@ public class FileProducer implements Producer {
     private String sourceFolder;
     private String destinationFileName;
 
-    public FileProducer(String sourceFolder, String destinationFile) {
-        this.sourceFolder = sourceFolder;
-        this.destinationFileName = destinationFile;
+    public FileProducer(Object sourceFolder, Object destinationFile) {
+        this.sourceFolder = (String) sourceFolder;
+        this.destinationFileName = (String) destinationFile;
     }
     /*takes files from directory -> uploads via web -> takes page html result -> stores it into folder */
     @Override

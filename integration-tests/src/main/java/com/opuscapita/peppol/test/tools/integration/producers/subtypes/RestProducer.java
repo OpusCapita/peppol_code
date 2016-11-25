@@ -11,11 +11,11 @@ public class RestProducer implements Producer{
     private final String endpoint;
     private final String method;
 
-    public RestProducer(String file, String template, String endpoint, String method) {
-        this.file = file;
-        this.template = template;
-        this.endpoint = endpoint;
-        this.method = method;
+    public RestProducer(Object file, Object template, Object endpoint, Object method) {
+        this.file = (String) file;
+        this.template = (String) template;
+        this.endpoint = (String) endpoint;
+        this.method = (String) method;
     }
 
     @Override

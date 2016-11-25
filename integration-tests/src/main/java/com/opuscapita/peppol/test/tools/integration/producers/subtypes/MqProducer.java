@@ -14,16 +14,26 @@ import java.util.Map;
  */
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(Producer.class);
+    private final String dbConnection;
+    private final String querry;
+    private Map<String, String> dbPreprocessSettting = null;
     private Map<String, String> mqSettings;
     private String sourceFolder;
     private String destinationQueue;
 
-    public MqProducer(Map<String, String> mqSettings, String sourceFolder, String destinationQueue) {
+    public MqProducer(Map<String, String> mqSettings, String sourceFolder, String destinationQueue, String dbConnection, String querry) {
         this.mqSettings = mqSettings;
         this.sourceFolder = sourceFolder;
         this.destinationQueue = destinationQueue;
+        this.dbConnection = dbConnection;
+        this.querry = querry;
     }
 
+    /*
+    * Check if files exist in directory-> exit if no
+    * Check if DB preprocess specified -> Try to connect and run preprocess querry -> exit if fails
+    * Check if able to connect to MQ -> exit if no
+    * */
     @Override
     public void run() {
         Connection connection = null;
@@ -42,6 +52,7 @@ public class MqProducer implements Producer {
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
             channel = connection.createChannel();
+            //TODO add Mq header and send to destinationQueue
         } catch (Exception ex) {
             logger.error("Error running MqProducer!", ex);
         } finally {
