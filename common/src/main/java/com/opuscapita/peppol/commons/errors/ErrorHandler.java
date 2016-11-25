@@ -91,7 +91,7 @@ public class ErrorHandler {
     private String generateMessageDumpFileName() {
         String uniqueSuffix = RandomStringUtils.randomAlphanumeric(5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd_HH.mm.ss.SSS_z_");
-        return dateFormat.format(new Date()) + uniqueSuffix + ".txt";
+        return dateFormat.format(new Date()) + uniqueSuffix + ".json";
     }
 
     public void reportFailureToAmqp(String message, Exception e, RabbitTemplate rabbitTemplate, String outgoingQueueName) {
