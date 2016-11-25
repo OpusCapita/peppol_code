@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.eventing.destinations;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
@@ -26,15 +27,19 @@ public class EventPersistenceReporter {
     private String queueOut;
 
     private final RabbitTemplate rabbitTemplate;
+    private final Gson gson;
 
     @Autowired
-    public EventPersistenceReporter(RabbitTemplate rabbitTemplate) {
+    public EventPersistenceReporter(@NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
         this.rabbitTemplate = rabbitTemplate;
+        this.gson = gson;
     }
 
     public void process(@NotNull ContainerMessage cm) {
         PeppolEvent event = convert(cm);
-        rabbitTemplate.convertAndSend(queueOut, event);
+        String result = gson.toJson(event);
+        rabbitTemplate.convertAndSend(queueOut, result);
+
         logger.info("Peppol event successfully sent to " + queueOut + " queue");
     }
 
