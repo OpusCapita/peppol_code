@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class ConsumerFactory {
 
-    public static Consumer createConsumer(Map.Entry<String, ?> consumerConfig, Map<String, String> genericConfiguration) {
+    public static Consumer createConsumer(Map.Entry<String, ?> consumerConfig, Map<String, Object> genericConfiguration) {
         String name = consumerConfig.getKey().toLowerCase();
         Map<String ,Object> properties = (Map<String, Object>) consumerConfig.getValue();
 
@@ -23,7 +23,7 @@ public class ConsumerFactory {
             case "db check":
             case "db test":
                 String connectionKey = (String) properties.get("connection string");
-                String dbConnectionString = genericConfiguration.get(connectionKey);
+                String dbConnectionString = (String) genericConfiguration.get(connectionKey);
                 return new DbConsumer(dbConnectionString, properties.get("expected value"));
             case "selenium check":
                 return new SeleniumConsumer(properties.get("expected value"));

@@ -20,7 +20,7 @@ public class IntegrationTestConfigReader {
 
     private final static Logger logger = LogManager.getLogger(IntegrationTestConfigReader.class);
     private String configFile;
-    private Map<String, String> genericConfiguration = new HashMap<>();
+    private Map<String, Object> genericConfiguration = new HashMap<>();
 
     public IntegrationTestConfigReader(String configFile) {
         this.configFile = configFile;

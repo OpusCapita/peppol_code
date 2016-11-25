@@ -1,14 +1,22 @@
 configurations:
     databases:
         db1: jdbc://username:password@localhost:3306/database
+    queues:
+        mq1:
+            host: localhost
+            port: 5672
+            username: guest
+            password: guest
+            virtual host: /
 tests:
    validation:
      producers:
        file producer:
-         source directory: validationSourceTestDir/
+         source directory: validationTest/
          destination directory: testOutDir/
        mq producer:
-         source directory: mqTestDir/
+         mq connection: mq1
+         source directory: validationMqTest/
          destination queue: queue name
        rest producer:
          source file: source.xml
@@ -29,9 +37,12 @@ tests:
    events-persistence:
      producers:
        mq producer:
+         mq connection: mq1
          destination queue: events-persistence
-         source directory: /tmp1/       
-         DB delete: delete from messages where invoice_number="60445647"; delete from access_points where ap_id="123456" and ap_name="TEST"
+         source directory: envents-persistenceTest/
+         DB preprocess:
+             connection string: db1
+             querry: delete from messages where invoice_number="60445647"; delete from access_points where ap_id="123456" and ap_name="TEST"
      subscribers:
        mq subscriber:
          timeout: 500
@@ -72,7 +83,7 @@ tests:
    support-ui:
       producers:
         file producer:
-          source directory: support-uiSourceTestDir/
+          source directory: support-uiTest/
           destination directory: defineLaterDirectory/
         db producer:
            source query: query
@@ -85,7 +96,7 @@ tests:
    inbound:
      producers:
        file producer:
-         source directory: inboundTestDir/
+         source directory: inboundTest/
          destination directory: /tmp/
          commandline: docker exec -it inbound ./send-to-peppol.sh -f /tmp/*svefaktura_removed_sensetive_info.xml
      subscribers:
@@ -94,11 +105,11 @@ tests:
         snc subscriber:
           timeout: 500
      consumers:
-      SNC test:
+      snc test:
         name: Invalid message error case- ticket is sent to SNC (snc stub)
         expression: grep "invalid_svefaktura_removed_sensetive_info.xml" *
         expected value: true 
-      File test:
+      file test:
        name: Look for inbound files in long term storage
        dir: /var/lib/docker/volumes/peppol2.0/data/storage
        expression: grep "valid_svefaktura_removed_sensetive_info.xml" *

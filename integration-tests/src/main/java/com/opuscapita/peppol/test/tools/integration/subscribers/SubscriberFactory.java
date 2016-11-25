@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by gamanse1 on 2016.11.16..
  */
 public class SubscriberFactory {
-    public static Subscriber createSubscriber(Map.Entry<String, ?> subscriberConfig, Map<String, String> genericConfiguration) {
+    public static Subscriber createSubscriber(Map.Entry<String, ?> subscriberConfig, Map<String, Object> genericConfiguration) {
         String name = subscriberConfig.getKey().toLowerCase();
         Map<String, Object> properties = (Map<String, Object>) subscriberConfig.getValue();
         switch (name){

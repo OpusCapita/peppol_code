@@ -12,14 +12,16 @@ import java.util.Map;
  */
 public class ProducerFactory {
 
-    public static Producer createProducer(Map.Entry<String, ?> producerConfig, Map<String, String> genericConfiguration) {
+    public static Producer createProducer(Map.Entry<String, ?> producerConfig, Map<String, Object> genericConfiguration) {
         String name = producerConfig.getKey().toLowerCase();
         Map<String,String> properties = (Map<String, String>) producerConfig.getValue();
         switch (name){
             case "file producer":
                  return new FileProducer(properties.get("source directory"),properties.get("destination directory"));
             case "mq producer":
-                return new MqProducer(properties.get("source directory"), properties.get("destination queue"));
+                Map<String, Object> mqGenericSettings = (Map<String, Object>) genericConfiguration.get("queues");
+                String settingKey = properties.get("mq connection");
+                return new MqProducer((Map<String, String>) mqGenericSettings.get(settingKey), properties.get("source directory"), properties.get("destination queue"));
             case "rest producer":
                 return new RestProducer(properties.get("source file"), properties.get("rest template file"),
                         properties.get("rest endpoint") ,properties.get("rest method"));
