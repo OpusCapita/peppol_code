@@ -1,9 +1,11 @@
 package com.opuscapita.peppol.commons.validation;
 
+import java.io.Serializable;
+
 /**
  * Created by Daniil on 03.05.2016.
  */
-public class ValidationError {
+public class ValidationError implements Serializable {
     private String title;
     private String details;
 
