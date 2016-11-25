@@ -41,7 +41,7 @@ public abstract class AbstractQueueListener {
     }
 
     public synchronized void receiveMessage(@NotNull byte[] bytes) {
-        logger.debug("Message received as bytes array, assuming JSON");
+        logger.info("Message received as bytes array, assuming JSON");
 
         ContainerMessage cm;
         try {
