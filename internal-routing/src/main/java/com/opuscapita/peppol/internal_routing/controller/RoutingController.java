@@ -29,6 +29,7 @@ public class RoutingController {
 
     @SuppressWarnings("ConstantConditions")
     public ContainerMessage loadRoute(ContainerMessage cm) throws IOException {
+        logger.info("Processing message " + cm.getFileName());
         Endpoint source = cm.getSource();
         BaseDocument baseDocument = cm.getBaseDocument();
         for (Route route : routingConfiguration.getRoutes()) {

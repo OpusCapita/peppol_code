@@ -61,6 +61,7 @@ public class IncomingChecker {
         this.storage = storage;
         this.statusReporter = statusReporter;
         this.errorHandler = errorHandler;
+        logger.info("Transport started for directory " + directory);
     }
 
     @Scheduled(fixedRate = 60_000) // 1 minute
@@ -68,7 +69,8 @@ public class IncomingChecker {
         try {
             receive(new File(directory));
         } catch (Exception e) {
-            errorHandler.reportToServiceNow("Failed to process input data: " + ExceptionUtils.getStackTrace(e), "n/a", e, "Failed to read input file");
+            errorHandler.reportToServiceNow("Failed to process input data: " + ExceptionUtils.getStackTrace(e), "n/a", e,
+                    "Failed to read input file");
         }
     }
 
