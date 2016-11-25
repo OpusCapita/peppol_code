@@ -34,14 +34,16 @@ public abstract class AbstractQueueListener {
 
         try {
             processMessage(cm);
-            reporter.report(cm);
+            if (reporter != null) {
+                reporter.report(cm);
+            }
         } catch (Exception e) {
             handleError(cm.getCustomerId() == null ? "n/a" : cm.getCustomerId(), e, cm);
         }
     }
 
     public synchronized void receiveMessage(@NotNull byte[] bytes) {
-        logger.info("Message received as bytes array, assuming JSON");
+        logger.debug("Message received as bytes array, assuming JSON");
 
         ContainerMessage cm;
         try {
