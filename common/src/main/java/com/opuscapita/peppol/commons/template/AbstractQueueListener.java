@@ -34,7 +34,9 @@ public abstract class AbstractQueueListener {
 
         try {
             processMessage(cm);
-            reporter.report(cm);
+            if (reporter != null) {
+                reporter.report(cm);
+            }
         } catch (Exception e) {
             handleError(cm.getCustomerId() == null ? "n/a" : cm.getCustomerId(), e, cm);
         }
@@ -58,7 +60,8 @@ public abstract class AbstractQueueListener {
     private void handleError(@NotNull String customerId, @NotNull Exception e, @Nullable ContainerMessage cm) {
         try {
             if (errorHandler != null) {
-                errorHandler.reportToServiceNow(e.getMessage(), customerId, e);
+                String message = cm == null ? "no content available" : new String(cm.getBytes());
+                errorHandler.reportToServiceNow(message, customerId, e);
             }
             String fileName = (cm == null ? "n/a" : cm.getFileName());
 

@@ -42,7 +42,7 @@ public class InternalRoutingApp {
                 String queueOut = cm.getRoute().pop();
                 rabbitTemplate.convertAndSend(queueOut, cm);
                 cm.setStatus(componentName, "route set");
-                logger.info("Route defined, message sent to " + queueOut + " queue");
+                logger.info("Route for " + cm.getFileName() + " defined, message sent to " + queueOut + " queue");
             }
         };
     }

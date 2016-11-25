@@ -6,6 +6,10 @@ peppol:
     queue:
       in:
         name: eventing
+  email-notificator:
+    queue:
+      in:
+        name: email-notificator
   internal-routing:
     queue:
       in:

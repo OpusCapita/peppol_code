@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.storage.Storage;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,9 @@ public class PreprocessingController {
      */
     @NotNull
     public ContainerMessage process(@NotNull ContainerMessage cm) throws Exception {
+        if (StringUtils.isBlank(cm.getFileName())) {
+            throw new IllegalArgumentException("File name is empty in received message");
+        }
         logger.info("Parsing file: " + cm.getFileName());
         BaseDocument document = documentLoader.load(cm.getFileName());
 
