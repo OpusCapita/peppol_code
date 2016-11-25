@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -40,26 +41,30 @@ public class EventQueueListener {
     @Value("${peppol.eventing.queue.in.name}")
     String eventingQueueName;
 
-    public synchronized void receiveMessage(byte[] data) {
-        String message = new String(data);
-        String customerId;
-        System.out.println("*******************************************************");
-        System.out.println(message);
-        System.out.println("*******************************************************");
-        ContainerMessage containerMessage = gson.fromJson(message, ContainerMessage.class);
-        customerId = containerMessage.getCustomerId();
+    public synchronized void receiveMessage(@NotNull ContainerMessage containerMessage) {
+        String customerId = containerMessage.getCustomerId();
         ValidationResult validationResult = validationController.validate(containerMessage);
         containerMessage.setValidationResult(validationResult);
         rabbitTemplate.convertAndSend(containerMessage.getRoute().pop(), containerMessage);
         try {
-
+            // what? @SR
         } catch (Exception e) {
-            e.printStackTrace();
+            String message = new String(containerMessage.getBytes());
             if (customerId == null) {
                 customerId = populateCustomerIdWhenPossible(message);
             }
             handleError(message, customerId, e);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public synchronized void receiveMessage(@NotNull byte[] data) {
+        String message = new String(data);
+        System.out.println("*******************************************************");
+        System.out.println(message);
+        System.out.println("*******************************************************");
+        ContainerMessage containerMessage = gson.fromJson(message, ContainerMessage.class);
+        receiveMessage(containerMessage);
     }
 
     private String populateCustomerIdWhenPossible(String message) {
