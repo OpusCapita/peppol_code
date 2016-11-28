@@ -41,19 +41,12 @@ public class StorageImpl implements Storage {
     public String moveToTemporary(@NotNull File source) throws IOException {
         File dir = createDailyDirectory();
 
-        // if the file already exists - add a number on the end until there is no such file
-        File result;
-        String tmp = ""; int i = 0;
-        do {
-            result = new File(dir, source.getName() + tmp);
-            tmp = "_" + i++;
-        } while (result.exists());
-
+        File result = StorageUtils.prepareUnique(dir, source.getName());
         FileUtils.moveFile(source, result);
-
         if (!result.exists()) {
             throw new IOException("Failed to move file " + source + " to " + result);
         }
+
         return result.getAbsolutePath();
     }
 
@@ -80,7 +73,7 @@ public class StorageImpl implements Storage {
     public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
         senderId = normalizeFilename(senderId);
         recipientId = normalizeFilename(recipientId);
-        String date = new SimpleDateFormat("yyyymmdd").format(new Date());
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         File dir = new File(longTerm + File.separator + senderId + File.separator + recipientId + File.separator + date);
         if (!dir.exists()) {
@@ -89,14 +82,7 @@ public class StorageImpl implements Storage {
             }
         }
 
-        // if the file already exists - add a number on the end until there is no such file
-        File result;
-        String tmp = ""; int i = 0;
-        do {
-            result = new File(dir, file.getName() + tmp);
-            tmp = "_" + i++;
-        } while (result.exists());
-
+        File result = StorageUtils.prepareUnique(dir, file.getName());
         FileUtils.moveFile(file, result);
         if (!result.exists()) {
             throw new IOException("Failed to move file " + file + " to " + result);

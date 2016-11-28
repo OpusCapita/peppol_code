@@ -22,6 +22,12 @@ public class TestTypeNot extends BaseDocument {
     @NotNull
     @Override
     public Archetype getArchetype() {
-        return null;
+        return Archetype.INVALID;
+    }
+
+    @NotNull
+    @Override
+    public String getDocumentType() {
+        return "n/a";
     }
 }

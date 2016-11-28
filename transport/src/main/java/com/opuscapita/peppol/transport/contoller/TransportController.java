@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.transport.contoller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.storage.StorageUtils;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -22,12 +23,38 @@ public class TransportController {
 
     @Value("${peppol.transport.output.directory}")
     private String directory;
+    @Value("${peppol.transport.output.template:%FILENAME%}")
+    private String template;
 
     public void storeMessage(@NotNull ContainerMessage cm) throws IOException {
         File input = new File(cm.getFileName());
+        File output = new File(directory, TemplateTools.templateToPath(template, cm));
 
-        FileUtils.copyFileToDirectory(input, new File(directory));
-        logger.info("File " + cm.getFileName() + " stored to " + directory);
+        copyFile(input, output);
+
+        logger.info("File " + cm.getFileName() + " copied to " + output);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    protected void copyFile(@NotNull File input, @NotNull File output) throws IOException {
+        File result = output;
+        if (output.exists()) {
+            result = StorageUtils.prepareUnique(new File(output.getParent()), output.getName());
+            logger.warn("File " + output.getAbsolutePath() + " exists, storing file as " + result.getAbsolutePath());
+        }
+
+        new File(output.getParent()).mkdirs();
+        FileUtils.copyFile(input, result);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    void setDirectory(@NotNull String directory) {
+        this.directory = directory;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    void setTemplate(@NotNull String template) {
+        this.template = template;
     }
 
 }
