@@ -48,4 +48,10 @@ public class SveFaktura1Document extends BaseDocument {
     public Archetype getArchetype() {
         return Archetype.SVEFAKTURA1;
     }
+
+    @NotNull
+    @Override
+    public String getDocumentType() {
+        return getRootNode() == null ? "NA" : getRootNode().getLocalName();
+    }
 }

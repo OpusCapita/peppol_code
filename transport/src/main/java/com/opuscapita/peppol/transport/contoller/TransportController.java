@@ -22,6 +22,8 @@ public class TransportController {
 
     @Value("${peppol.transport.output.directory}")
     private String directory;
+    @Value("${peppol.transport.output.template:%FILENAME%}")
+    private String template;
 
     public void storeMessage(@NotNull ContainerMessage cm) throws IOException {
         File input = new File(cm.getFileName());
