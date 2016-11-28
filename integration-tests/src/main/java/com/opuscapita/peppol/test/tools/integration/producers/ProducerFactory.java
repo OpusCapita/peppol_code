@@ -19,12 +19,12 @@ public class ProducerFactory {
             case "file producer":
                  return new FileProducer(properties.get("source directory"),properties.get("destination directory"));
             case "mq producer":
-                Map<String, Object> mqGenericSettings = (Map<String, Object>) genericConfiguration.get("queues");
-                Map<String, String> dbGenericSettings = (Map<String, String>) genericConfiguration.get("databases");
                 String mqKey = properties.get("mq connection");
                 String dbKey = properties.get("db connection");
-                return new MqProducer((Map<String, String>) mqGenericSettings.get(mqKey), properties.get("source directory"),
-                        properties.get("destination queue"), dbGenericSettings.get(dbKey), properties.get("DB preprocess"));
+                String dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
+                String dbPreprocessQuery = (dbKey == null) ? null : properties.get("DB preprocess querry");
+                return new MqProducer((Map<String, String>) genericConfiguration.get(mqKey), properties.get("source directory"),
+                        properties.get("destination queue"), dbConnection, dbPreprocessQuery);
             case "rest producer":
                 return new RestProducer(properties.get("source file"), properties.get("rest template file"),
                         properties.get("rest endpoint") ,properties.get("rest method"));

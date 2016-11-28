@@ -53,6 +53,8 @@ public class IntegrationTestConfigReader {
 
     private void loadConfiguration(Map<String, Object> configuration) {
         Map<String, String> databases = (Map<String, String>) configuration.get("databases");
+        Map<String, String> queues = (Map<String, String>) configuration.get("queues");
         genericConfiguration.putAll(databases);
+        genericConfiguration.putAll(queues);
     }
 }

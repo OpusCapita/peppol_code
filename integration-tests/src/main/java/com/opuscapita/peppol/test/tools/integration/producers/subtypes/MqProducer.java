@@ -7,7 +7,10 @@ import com.rabbitmq.client.ConnectionFactory;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by gamanse1 on 2016.11.14..
@@ -15,18 +18,18 @@ import java.util.Map;
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(Producer.class);
     private final String dbConnection;
-    private final String querry;
+    private final String dbPreprocessQuery;
     private Map<String, String> dbPreprocessSettting = null;
     private Map<String, String> mqSettings;
     private String sourceFolder;
     private String destinationQueue;
 
-    public MqProducer(Map<String, String> mqSettings, String sourceFolder, String destinationQueue, String dbConnection, String querry) {
+    public MqProducer(Map<String, String> mqSettings, String sourceFolder, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
         this.mqSettings = mqSettings;
         this.sourceFolder = sourceFolder;
         this.destinationQueue = destinationQueue;
         this.dbConnection = dbConnection;
-        this.querry = querry;
+        this.dbPreprocessQuery = dbPreprocessQuery;
     }
 
     /*
@@ -44,6 +47,27 @@ public class MqProducer implements Producer {
                 logger.error(this.sourceFolder + " doesn't exist!");
                 return;
             }
+        } catch (Exception ex) {
+            logger.error("Error reading: " + sourceFolder, ex);
+            return;
+        }
+
+        try {
+            if (dbPreprocessNeeded()) {
+                logger.info("Starting DB preprocess query execution!");
+                Properties props = new Properties();
+                props.put("useJDBCCompliantTimezoneShift", "true");
+                props.put("serverTimezone", "UTC");
+                java.sql.Connection conn = DriverManager.getConnection(dbConnection, props);
+                PreparedStatement statement = conn.prepareStatement(dbPreprocessQuery);
+                statement.executeUpdate();
+            }
+        } catch (Exception ex1) {
+            logger.info("Error executing DB preprocess query!", ex1);
+            return;
+        }
+
+        try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(mqSettings.get("host"));
             factory.setPort((int) (Object) mqSettings.get("port"));
@@ -52,9 +76,11 @@ public class MqProducer implements Producer {
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
             channel = connection.createChannel();
+            logger.info("Created channel for MQ!");
+
             //TODO add Mq header and send to destinationQueue
-        } catch (Exception ex) {
-            logger.error("Error running MqProducer!", ex);
+        } catch (Exception ex2) {
+            logger.error("Error running MqProducer!", ex2);
         } finally {
             try {
                 if (connection != null)
@@ -65,4 +91,9 @@ public class MqProducer implements Producer {
             }
         }
     }
+
+    private boolean dbPreprocessNeeded() {
+        return (dbConnection != null && !dbConnection.isEmpty() && dbPreprocessQuery != null && !dbPreprocessQuery.isEmpty());
+    }
+
 }
