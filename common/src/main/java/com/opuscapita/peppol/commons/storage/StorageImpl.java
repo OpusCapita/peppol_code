@@ -73,7 +73,7 @@ public class StorageImpl implements Storage {
     public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
         senderId = normalizeFilename(senderId);
         recipientId = normalizeFilename(recipientId);
-        String date = new SimpleDateFormat("yyyymmdd").format(new Date());
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         File dir = new File(longTerm + File.separator + senderId + File.separator + recipientId + File.separator + date);
         if (!dir.exists()) {
