@@ -60,9 +60,6 @@ public class EventQueueListener {
     @SuppressWarnings("unused")
     public synchronized void receiveMessage(@NotNull byte[] data) {
         String message = new String(data);
-        System.out.println("*******************************************************");
-        System.out.println(message);
-        System.out.println("*******************************************************");
         ContainerMessage containerMessage = gson.fromJson(message, ContainerMessage.class);
         receiveMessage(containerMessage);
     }
