@@ -53,15 +53,16 @@ public class RoutingController {
                 if (route.getMask() != null) {
                     if (baseDocument.getRecipientId().matches(route.getMask())) {
                         logger.debug("Route selected by source and mask");
-                        return cm.setRoute(route);
+                        return cm.setRoute(new Route(route));
                     }
                 } else {
                     logger.debug("Route selected by source");
-                    return cm.setRoute(route);
+                    return cm.setRoute(new Route(route));
                 }
             }
         }
         throw new IllegalArgumentException("Cannot define route for " + cm.getFileName());
     }
+
 
 }

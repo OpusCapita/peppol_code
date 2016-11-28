@@ -21,6 +21,20 @@ public class Route implements Serializable {
 
     private int current = 0;
 
+    public Route() {}
+
+    /**
+     * Copy constructor.
+     *
+     * @param other the other route to be used as an example
+     */
+    public Route(@NotNull Route other) {
+        this.endpoints = other.getEndpoints();
+        this.description = other.getDescription();
+        this.mask = other.getMask();
+        this.source = other.getSource();
+    }
+
     /**
      * Returns next process in the route and makes next process current.
      *
