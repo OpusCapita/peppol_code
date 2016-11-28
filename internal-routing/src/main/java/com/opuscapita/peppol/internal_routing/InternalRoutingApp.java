@@ -37,7 +37,7 @@ public class InternalRoutingApp {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 cm = controller.loadRoute(cm);
-                logger.debug("Route set to " + cm.getRoute());
+                logger.info("Route set to " + cm.getRoute());
 
                 String queueOut = cm.getRoute().pop();
                 rabbitTemplate.convertAndSend(queueOut, cm);

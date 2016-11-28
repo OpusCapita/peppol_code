@@ -101,11 +101,11 @@ public class SveFaktura1Validator implements BasicValidator {
     }
 
     private void extractErrorsAndWarnings(Document resultDocument, List<ValidationError> errors) {
-        try {
+        /*try {
             debugLogDomDocument(resultDocument);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         NodeList failedAsserts = resultDocument.getElementsByTagName("svrl:failed-assert");
         for (int i = 0; i < failedAsserts.getLength(); i++) {
             Node failedAssert = failedAsserts.item(i);

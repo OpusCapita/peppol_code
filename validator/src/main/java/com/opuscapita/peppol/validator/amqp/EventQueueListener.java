@@ -43,11 +43,11 @@ public class EventQueueListener {
 
     public synchronized void receiveMessage(@NotNull ContainerMessage containerMessage) {
         String customerId = containerMessage.getCustomerId();
-        ValidationResult validationResult = validationController.validate(containerMessage);
-        containerMessage.setValidationResult(validationResult);
-        rabbitTemplate.convertAndSend(containerMessage.getRoute().pop(), containerMessage);
+
         try {
-            // what? @SR
+            ValidationResult validationResult = validationController.validate(containerMessage);
+            containerMessage.setValidationResult(validationResult);
+            rabbitTemplate.convertAndSend(containerMessage.getRoute().pop(), containerMessage);
         } catch (Exception e) {
             String message = new String(containerMessage.getBytes());
             if (customerId == null) {
@@ -60,9 +60,6 @@ public class EventQueueListener {
     @SuppressWarnings("unused")
     public synchronized void receiveMessage(@NotNull byte[] data) {
         String message = new String(data);
-        System.out.println("*******************************************************");
-        System.out.println(message);
-        System.out.println("*******************************************************");
         ContainerMessage containerMessage = gson.fromJson(message, ContainerMessage.class);
         receiveMessage(containerMessage);
     }
