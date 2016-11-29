@@ -17,7 +17,7 @@ tests:
        mq producer:
          mq connection: mq1
          source directory: validationMqTest/
-         destination queue: queue name
+         destination queue: validation-integration-test
        rest producer:
          source file: source.xml
          rest template file: file
@@ -25,6 +25,8 @@ tests:
          rest method: get/post
      subscribers:
         mq subscriber:
+          mq connection: mq1
+          source queue: validation-integration-test
           timeout: 500
         snc subscriber:
           timeout: 500
@@ -38,12 +40,14 @@ tests:
      producers:
        mq producer:
          mq connection: mq1
-         destination queue: events-persistence
+         destination queue: events-persistence-integration-test
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\
          db connection: db1
          DB preprocess querry: delete from messages where invoice_number='60445647'; delete from access_points where ap_id='123456' and ap_name='TEST'
      subscribers:
        mq subscriber:
+         mq connection: mq1
+         source-queue: events-persistence-integration-test
          timeout: 500
        snc subscriber:
          timeout: 500

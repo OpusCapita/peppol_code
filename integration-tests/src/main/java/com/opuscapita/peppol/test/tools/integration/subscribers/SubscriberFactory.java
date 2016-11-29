@@ -16,7 +16,8 @@ public class SubscriberFactory {
         Map<String, Object> properties = (Map<String, Object>) subscriberConfig.getValue();
         switch (name){
             case "mq subscriber":
-                return new MqSubscriber(properties.get("timeout"));
+                String mqKey = (String) properties.get("mq connection");
+                return new MqSubscriber(properties.get("timeout"), (Map<String, String>) genericConfiguration.get(mqKey), properties.get("source-queue"));
             case "snc subscriber":
                 return new SncSubscriber(properties.get("timeout"));
             case "db subscriber":
