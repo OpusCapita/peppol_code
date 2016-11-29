@@ -1,9 +1,6 @@
 package com.opuscapita.peppol.test.tools.integration.consumers;
 
-import com.opuscapita.peppol.test.tools.integration.consumers.subtypes.DbConsumer;
-import com.opuscapita.peppol.test.tools.integration.consumers.subtypes.QueueConsumer;
-import com.opuscapita.peppol.test.tools.integration.consumers.subtypes.SeleniumConsumer;
-import com.opuscapita.peppol.test.tools.integration.consumers.subtypes.SncConsumer;
+import com.opuscapita.peppol.test.tools.integration.consumers.subtypes.*;
 
 import java.util.List;
 import java.util.Map;
@@ -29,10 +26,16 @@ public class ConsumerFactory {
                 return new SeleniumConsumer(properties.get("expected value"));
             case "snc test":
             case "snc check":
-                String testName = (String) properties.get("name");
+                String sncTestName = (String) properties.get("name");
                 String expression = (String) properties.get("expression");
                 boolean expected = (boolean) properties.get("expected value");
-                return new SncConsumer(testName, expression, expected);
+                return new SncConsumer(sncTestName, expression, expected);
+            case "file test":
+            case "file check":
+                String fileTestName = (String) properties.get("name");
+                String directory = (String) properties.get("dir");
+                String fileTestExpression = (String) properties.get("expression");
+                return new FileConsumer(fileTestName, directory, fileTestExpression);
             default:
                 throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + name);
         }

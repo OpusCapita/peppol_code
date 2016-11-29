@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.validator.amqp.QueuesConfig;
 import com.opuscapita.peppol.validator.validations.difi.DifiValidatorConfig;
 import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1ValidatorConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import java.nio.file.Paths;
  * Created by bambr on 16.17.10.
  */
 @Configuration
-@ComponentScan(basePackages = {"com.opuscapita.peppol"}, excludeFilters = @ComponentScan.Filter(value = {PeppolValidatorApplication.class, QueuesConfig.class}, type = FilterType.ASSIGNABLE_TYPE))
+@ComponentScan(basePackages = {"com.opuscapita.peppol"}, excludeFilters = @ComponentScan.Filter(value = {PeppolValidatorApplication.class}, type = FilterType.ASSIGNABLE_TYPE))
 public class TestConfig {
     @Autowired
     private Environment environment;

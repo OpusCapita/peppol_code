@@ -4,9 +4,21 @@ import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.template.AbstractQueueListener;
+import com.opuscapita.peppol.commons.validation.ValidationResult;
+import com.opuscapita.peppol.validator.validations.ValidationController;
 import com.opuscapita.peppol.validator.validations.difi.DifiValidatorConfig;
 import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1ValidatorConfig;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -94,6 +106,45 @@ public class PeppolValidatorApplication {
         TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
         factory.addConnectorCustomizers((TomcatConnectorCustomizer) connector -> ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(-1));
         return factory;
+    }
+
+    @Bean
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
+                                        @NotNull ValidationController controller, @NotNull RabbitTemplate rabbitTemplate,
+                                        @NotNull StatusReporter reporter) {
+        return new AbstractQueueListener(errorHandler, reporter) {
+            @SuppressWarnings("ConstantConditions")
+            @Override
+            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
+
+                ValidationResult validationResult = controller.validate(cm);
+                cm.setValidationResult(validationResult);
+                if (!validationResult.isPassed()) {
+                    throw new RuntimeException("Validation failed");
+                }
+
+                String queueOut = cm.getRoute().pop();
+                rabbitTemplate.convertAndSend(queueOut, cm);
+                cm.setStatus(componentName, "validation passed");
+                logger.info("Validation passed for" + cm.getFileName() + ", message sent to " + queueOut + " queue");
+            }
+        };
+    }
+
+    @SuppressWarnings("Duplicates")
+    @Bean
+    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(queueName);
+        container.setPrefetchCount(10);
+        container.setMessageListener(listenerAdapter);
+        return container;
+    }
+
+    @Bean
+    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
+        return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
 }
