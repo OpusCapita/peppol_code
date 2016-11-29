@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -44,9 +46,11 @@ public class PersistenceController {
     @Value("${peppol.events-persistence.invalid.dir}")
     private String invalidDirPath;
 
-    @Transactional
-    public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
 
+    @Transactional
+    @Retryable(include = ConnectException.class, maxAttempts = 5, backoff = @Backoff(10000L))
+    public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
+        logger.info("About to store peppol event " + peppolEvent);
         refactorIfInbound(peppolEvent);
                 getAccessPoint(peppolEvent);
 
@@ -283,4 +287,6 @@ public class PersistenceController {
         }
         return null;
     }
+
+
 }
