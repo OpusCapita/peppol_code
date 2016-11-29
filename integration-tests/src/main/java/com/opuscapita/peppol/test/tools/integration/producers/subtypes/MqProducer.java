@@ -1,5 +1,8 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.DocumentLoader;
+import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -7,6 +10,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.Map;
@@ -23,6 +28,7 @@ public class MqProducer implements Producer {
     private Map<String, String> mqSettings;
     private String sourceFolder;
     private String destinationQueue;
+    private DocumentLoader documentLoader = new DocumentLoader();
 
     public MqProducer(Map<String, String> mqSettings, String sourceFolder, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
         this.mqSettings = mqSettings;
@@ -41,8 +47,9 @@ public class MqProducer implements Producer {
     public void run() {
         Connection connection = null;
         Channel channel = null;
+        File directory = null;
         try {
-            File directory = new File(sourceFolder);
+            directory = new File(sourceFolder);
             if (!directory.isDirectory()) {
                 logger.error(this.sourceFolder + " doesn't exist!");
                 return;
@@ -77,7 +84,19 @@ public class MqProducer implements Producer {
             connection = factory.newConnection();
             channel = connection.createChannel();
             logger.info("Created channel for MQ!");
-
+            channel.queueDeclare(destinationQueue, false, false, true, null);
+            for (File file : directory.listFiles()) {
+                if (file.isFile()) {
+                    try (InputStream is = new FileInputStream(file.getAbsolutePath())) {
+                        ContainerMessage message = new ContainerMessage("integration-test", file.getName(), Endpoint.TEST)
+                                .setBaseDocument(documentLoader.load(is, file.getName()));
+                        channel.basicPublish("", destinationQueue, null, message.getBytes());
+                    } catch (Exception ex3) {
+                        ex3.printStackTrace();
+                        logger.error("Error sending to MQ", ex3);
+                    }
+                }
+            }
             //TODO add Mq header and send to destinationQueue
         } catch (Exception ex2) {
             logger.error("Error running MqProducer!", ex2);
@@ -94,6 +113,10 @@ public class MqProducer implements Producer {
 
     private boolean dbPreprocessNeeded() {
         return (dbConnection != null && !dbConnection.isEmpty() && dbPreprocessQuery != null && !dbPreprocessQuery.isEmpty());
+    }
+
+    private ContainerMessage prepareMessage(String fileName, String metadata) {
+        return new ContainerMessage(metadata, fileName, Endpoint.PEPPOL);
     }
 
 }

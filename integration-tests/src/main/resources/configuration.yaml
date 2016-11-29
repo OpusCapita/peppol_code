@@ -16,7 +16,7 @@ tests:
          destination directory: testOutDir/
        mq producer:
          mq connection: mq1
-         source directory: validationMqTest/
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inboundTest
          destination queue: validation-integration-test
        rest producer:
          source file: source.xml
