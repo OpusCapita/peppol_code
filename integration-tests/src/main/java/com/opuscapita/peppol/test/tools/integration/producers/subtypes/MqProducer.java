@@ -1,17 +1,15 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.Map;
@@ -21,18 +19,18 @@ import java.util.Properties;
  * Created by gamanse1 on 2016.11.14..
  */
 public class MqProducer implements Producer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(Producer.class);
+    private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
     private final String dbConnection;
     private final String dbPreprocessQuery;
     private Map<String, String> dbPreprocessSettting = null;
     private Map<String, String> mqSettings;
-    private String sourceFolder;
+    private String sourceDirectory;
     private String destinationQueue;
     private DocumentLoader documentLoader = new DocumentLoader();
 
-    public MqProducer(Map<String, String> mqSettings, String sourceFolder, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
+    public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
         this.mqSettings = mqSettings;
-        this.sourceFolder = sourceFolder;
+        this.sourceDirectory = sourceDirectory;
         this.destinationQueue = destinationQueue;
         this.dbConnection = dbConnection;
         this.dbPreprocessQuery = dbPreprocessQuery;
@@ -49,13 +47,13 @@ public class MqProducer implements Producer {
         Channel channel = null;
         File directory = null;
         try {
-            directory = new File(sourceFolder);
+            directory = new File(sourceDirectory);
             if (!directory.isDirectory()) {
-                logger.error(this.sourceFolder + " doesn't exist!");
+                logger.error(this.sourceDirectory + " doesn't exist!");
                 return;
             }
         } catch (Exception ex) {
-            logger.error("Error reading: " + sourceFolder, ex);
+            logger.error("Error reading: " + sourceDirectory, ex);
             return;
         }
 
@@ -75,26 +73,29 @@ public class MqProducer implements Producer {
         }
 
         try {
-            ConnectionFactory factory = new ConnectionFactory();
+           /* ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(mqSettings.get("host"));
             factory.setPort((int) (Object) mqSettings.get("port"));
             factory.setUsername(mqSettings.get("username"));
             factory.setPassword(mqSettings.get("password"));
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
-            channel = connection.createChannel();
+            channel = connection.createChannel();*/
             logger.info("Created channel for MQ!");
-            channel.queueDeclare(destinationQueue, false, false, true, null);
+            //   channel.queueDeclare(destinationQueue, false, false, true, null);
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    try (InputStream is = new FileInputStream(file.getAbsolutePath())) {
-                        ContainerMessage message = new ContainerMessage("integration-test", file.getName(), Endpoint.TEST)
-                                .setBaseDocument(documentLoader.load(is, file.getName()));
-                        channel.basicPublish("", destinationQueue, null, message.getBytes());
-                    } catch (Exception ex3) {
-                        ex3.printStackTrace();
-                        logger.error("Error sending to MQ", ex3);
-                    }
+                    //TODO: check mb creating container message here is not needed
+                    ContainerMessage cm = new ContainerMessage("integration-test", file.getName(), Endpoint.TEST);
+
+                    byte[] bytes = cm.getBytes();
+                    String result = new String(bytes);
+
+                    ContainerMessage cm2 = new Gson().fromJson(result, ContainerMessage.class);
+                    /*ContainerMessage message = new ContainerMessage("integration-test", file.getName(), Endpoint.TEST)
+                            .setBaseDocument(documentLoader.load(file));*/
+                    //channel.basicPublish("", destinationQueue, null, cm2.getBytes());
+                    String t = ";";
                 }
             }
             //TODO add Mq header and send to destinationQueue

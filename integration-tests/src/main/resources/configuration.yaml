@@ -11,7 +11,7 @@ configurations:
 tests:
    validation:
      producers:
-       file producer:
+       web ui producer:
          source directory: validationTest/
          destination directory: testOutDir/
        mq producer:
@@ -41,7 +41,7 @@ tests:
        mq producer:
          mq connection: mq1
          destination queue: events-persistence-integration-test
-         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test
          db connection: db1
          DB preprocess querry: delete from messages where invoice_number='60445647'; delete from access_points where ap_id='123456' and ap_name='TEST'
      subscribers:

@@ -1,9 +1,6 @@
 package com.opuscapita.peppol.test.tools.integration.producers;
 
-import com.opuscapita.peppol.test.tools.integration.producers.subtypes.DbProducer;
-import com.opuscapita.peppol.test.tools.integration.producers.subtypes.FileProducer;
-import com.opuscapita.peppol.test.tools.integration.producers.subtypes.MqProducer;
-import com.opuscapita.peppol.test.tools.integration.producers.subtypes.RestProducer;
+import com.opuscapita.peppol.test.tools.integration.producers.subtypes.*;
 
 import java.util.Map;
 
@@ -30,6 +27,8 @@ public class ProducerFactory {
                         properties.get("rest endpoint") ,properties.get("rest method"));
             case "db producer":
                 return new DbProducer(properties.get("source query"));
+            case "web ui producer":
+                return new WebUiProducer(properties.get("source directory"));
             default:
                 throw new IllegalArgumentException("invalid producer configuration, unable to create producer");
 
