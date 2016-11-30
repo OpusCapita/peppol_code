@@ -1,4 +1,4 @@
-FROM d-l-tools.ocnet.local:443/peppol2.0/tomcat:8
+FROM d-l-tools.ocnet.local:443/tomcat:8
 
 ENV PEPPOL_CONFIG_PATH /etc/peppol2.0/support-ui
 RUN mkdir -p "${PEPPOL_CONFIG_PATH}"
