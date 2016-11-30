@@ -1,4 +1,4 @@
-FROM d-l-tools.ocnet.local:443/peppol2.0/lib/oxalis:4
+FROM d-l-tools.ocnet.local:443/oxalis:4
 MAINTAINER Edgars.Didrihsons@opuscapita.com
 
 VOLUME "/etc/peppol2.0/inbound"
