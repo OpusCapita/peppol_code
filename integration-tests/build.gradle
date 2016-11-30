@@ -1,16 +1,20 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'spring-boot'
 
 sourceCompatibility = 1.8
 
 buildscript {
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+    }
     repositories {
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath "org.hidetake:gradle-ssh-plugin:2.7.0"
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
@@ -21,9 +25,12 @@ repositories {
 
 
 dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
     compile project(':common')
     compile('log4j:log4j:1.2.17')
     compile('com.intellij:annotations:12.0')
     compile('org.yaml:snakeyaml:1.17')
     compile('com.rabbitmq:amqp-client:3.6.5')
+    compile('mysql:mysql-connector-java:6.0.4')
 }

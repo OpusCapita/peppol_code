@@ -1,6 +1,9 @@
 package com.opuscapita.peppol.email.sender;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,8 +15,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EmailSender {
+    private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
+
     @Value("${peppol.email-notificator.sender}")
     private String sender;
+    @Value("${peppol.email-notificator.test.recipient:''}")
+    private String testRecipient;
 
     private final JavaMailSender mailSender;
 
@@ -22,14 +29,28 @@ public class EmailSender {
         this.mailSender = mailSender;
     }
 
-    public void sendMessage(@NotNull String to, @NotNull String subject, @NotNull String body) {
+    void sendMessage(@NotNull String to, @NotNull String subject, @NotNull String body) {
+        String[] recipients;
+        if (StringUtils.isNotBlank(testRecipient)) {
+            logger.warn("The list of recipients is: '" + to + "' but the test recipient is set to '" + testRecipient +
+                    "' and will be used instead. Remove peppol.email-notificator.test.recipient parameter in order to use real list");
+            recipients = getRecipients(testRecipient);
+        } else {
+            recipients = getRecipients(to);
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(sender);
-        message.setTo(to.split(","));
+        message.setTo(recipients);
         message.setSubject(subject);
         message.setText(body);
 
         mailSender.send(message);
+    }
+
+    @NotNull
+    String[] getRecipients(@NotNull String to) {
+        return StringUtils.split(to, " ,;\t");
     }
 
 }

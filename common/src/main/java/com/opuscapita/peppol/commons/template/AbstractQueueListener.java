@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.template;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -20,6 +21,7 @@ public abstract class AbstractQueueListener {
 
     private final ErrorHandler errorHandler;
     private final StatusReporter reporter;
+    private final Gson gson = new Gson();
 
     protected AbstractQueueListener(@Nullable ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
         this.errorHandler = errorHandler;
@@ -32,10 +34,25 @@ public abstract class AbstractQueueListener {
 
         try {
             processMessage(cm);
-            reporter.report(cm);
+            if (reporter != null) {
+                reporter.report(cm);
+            }
         } catch (Exception e) {
             handleError(cm.getCustomerId() == null ? "n/a" : cm.getCustomerId(), e, cm);
         }
+    }
+
+    public synchronized void receiveMessage(@NotNull byte[] bytes) {
+        logger.debug("Message received as bytes array, assuming JSON");
+
+        ContainerMessage cm;
+        try {
+            cm = gson.fromJson(new String(bytes), ContainerMessage.class);
+        } catch (Exception e) {
+            handleError("n/a", e, null);
+            return;
+        }
+        receiveMessage(cm);
     }
 
     protected abstract void processMessage(@NotNull ContainerMessage cm) throws Exception;
@@ -43,11 +60,12 @@ public abstract class AbstractQueueListener {
     private void handleError(@NotNull String customerId, @NotNull Exception e, @Nullable ContainerMessage cm) {
         try {
             if (errorHandler != null) {
-                errorHandler.reportToServiceNow(e.getMessage(), customerId, e);
+                String message = cm == null ? "no content available" : new String(cm.getBytes());
+                errorHandler.reportToServiceNow(message, customerId, e);
             }
             String fileName = (cm == null ? "n/a" : cm.getFileName());
 
-            logger.warn("Message processing failed. File id: " + fileName + ", " +  (StringUtils.isBlank(customerId) ? "n/a" : customerId), e);
+            logger.warn("Message processing failed. File id: " + fileName + ", " + (StringUtils.isBlank(customerId) ? "n/a" : customerId), e);
 
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);

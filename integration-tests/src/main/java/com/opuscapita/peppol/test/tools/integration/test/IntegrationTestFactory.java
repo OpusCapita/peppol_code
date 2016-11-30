@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class IntegrationTestFactory {
     private final static Logger logger = LogManager.getLogger(IntegrationTestFactory.class);
 
-    public static IntegrationTest createTest(String moduleName, Map<String, ?> moduleSettings, Map<String, String> genericConfiguration) {
+    public static IntegrationTest createTest(String moduleName, Map<String, ?> moduleSettings, Map<String, Object> genericConfiguration) {
         if (moduleName == null || moduleName.isEmpty()) {
             logger.error("module name not specified!");
             return null;

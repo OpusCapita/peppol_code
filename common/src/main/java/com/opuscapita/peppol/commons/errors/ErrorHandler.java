@@ -21,6 +21,8 @@ import java.util.Date;
 
 /**
  * Created by Daniil on 19.07.2016.
+ *
+ * TODO separate between our errors that should be handled by DTP and service desk related stuff
  */
 @Component
 public class ErrorHandler {
@@ -50,7 +52,7 @@ public class ErrorHandler {
         logger.warn("ServiceNow ticket created with reference to: " + dumpFileName);
     }
 
-    protected void createSncTicket(String dumpFileName, String message, String customerId, Exception jse, String shortDescription, String correlationIdPrefix) {
+    private void createSncTicket(String dumpFileName, String message, String customerId, Exception jse, String shortDescription, String correlationIdPrefix) {
         StringWriter stackTraceWriter = new StringWriter();
         jse.printStackTrace(new PrintWriter(stackTraceWriter));
         String correlationId = correlationIdPrefix + generateFailedMessageCorrelationId(jse);
@@ -68,7 +70,7 @@ public class ErrorHandler {
         return jse.getClass().getName();
     }
 
-    protected String storeMessageToDisk(@NotNull String message, @Nullable Exception exp) {
+    private String storeMessageToDisk(@NotNull String message, @Nullable Exception exp) {
         String messageDumpBaseFolderPath = getMessageDumpBaseFolderPath();
         String messageDumpFileName = generateMessageDumpFileName();
         File dumpFile = new File(messageDumpBaseFolderPath, messageDumpFileName);
@@ -85,13 +87,13 @@ public class ErrorHandler {
     }
 
     private String getMessageDumpBaseFolderPath() {
-        return environment.getProperty("persistence.events.error.dumps.path", "/tmp/");
+        return environment.getProperty("peppol.error.handler.dump.directory", "/tmp/");
     }
 
     private String generateMessageDumpFileName() {
         String uniqueSuffix = RandomStringUtils.randomAlphanumeric(5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd_HH.mm.ss.SSS_z_");
-        return dateFormat.format(new Date()) + uniqueSuffix + ".txt";
+        return dateFormat.format(new Date()) + uniqueSuffix + ".json";
     }
 
     public void reportFailureToAmqp(String message, Exception e, RabbitTemplate rabbitTemplate, String outgoingQueueName) {

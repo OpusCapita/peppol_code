@@ -1,15 +1,23 @@
 configurations:
     databases:
-        db1: jdbc://username:password@localhost:3306/database
+        db1: jdbc:mysql://oxalis:grAm0f0n_1982-X_@t-l-mysql01.ocnet.local:3306/oxalis?allowMultiQueries=true
+    queues:
+        mq1:
+            host: localhost
+            port: 5672
+            username: guest
+            password: guest
+            virtual host: /
 tests:
    validation:
      producers:
-       file producer:
-         source directory: validationSourceTestDir/
+       web ui producer:
+         source directory: validationTest/
          destination directory: testOutDir/
        mq producer:
-         source directory: mqTestDir/
-         destination queue: queue name
+         mq connection: mq1
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inboundTest
+         destination queue: validation-integration-test
        rest producer:
          source file: source.xml
          rest template file: file
@@ -17,6 +25,8 @@ tests:
          rest method: get/post
      subscribers:
         mq subscriber:
+          mq connection: mq1
+          source queue: validation-integration-test
           timeout: 500
         snc subscriber:
           timeout: 500
@@ -29,50 +39,54 @@ tests:
    events-persistence:
      producers:
        mq producer:
-         destination queue: events-persistence
-         source directory: /tmp1/       
-         DB delete: delete from messages where invoice_number="60445647"; delete from access_points where ap_id="123456" and ap_name="TEST"
+         mq connection: mq1
+         destination queue: events-persistence-integration-test
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test
+         db connection: db1
+         DB preprocess querry: delete from messages where invoice_number='60445647'; delete from access_points where ap_id='123456' and ap_name='TEST'
      subscribers:
        mq subscriber:
+         mq connection: mq1
+         source-queue: events-persistence-integration-test
          timeout: 500
        snc subscriber:
          timeout: 500
      consumers:
-       DB test1:
+       DB test:
          name: Message "status" can be seen in DB- positive test
          connection string: db1
          query: select count(*) from messages where invoice_number="60445647"
          expected value: 1
-       DB test2:
+       DB test:
          name: New access point -> new entry in DB- positive
          connection string: db1
          query: select count(*) from access_points where ap_id="123456" and ap_name="TEST"
          expected value: 1
-       DB test3:
+       DB test:
          name: Existing access point -> new entry in DB- negative
          connection string: db1
          query: select count(*) from access_points where ap_id="123456" and ap_name="TEST"
          expected value: 1   
-       SNC test1:
+       SNC test:
         name: Invalid message error case- ticket is sent to SNC (snc stub)
         expression: grep "7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml" *
         expected value: true 
-       SNC test2:
+       SNC test:
         name: Not JSON file in input- Error case -> ticket to SNC
         expression: grep "nojson" *
         expected value: true  
-       SNC test3:
+       SNC test:
         name: Invalid msg field lenghts and corrupted contents- negative test
         expression: grep "7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml" *
         expected value: true 
-       SNC test4:
+       SNC test:
         name: correlationID start with invoice file name for SNC tickets- positive test
         expression: find -regex ".*\.\(7ecd16db-bfc1-4374-9be7-3ec00a56e9f8\)"
         expected value: true                    
    support-ui:
       producers:
         file producer:
-          source directory: support-uiSourceTestDir/
+          source directory: support-uiTest/
           destination directory: defineLaterDirectory/
         db producer:
            source query: query
@@ -82,3 +96,24 @@ tests:
       consumers:
          selenium check:
            expected value: 500
+   inbound:
+     producers:
+       file producer:
+         source directory: inboundTest/
+         destination directory: /tmp/
+         commandline: docker exec -it inbound ./send-to-peppol.sh -f /tmp/*svefaktura_removed_sensetive_info.xml
+     subscribers:
+        file subscriber:
+          timeout: 500
+        snc subscriber:
+          timeout: 500
+     consumers:
+      snc test:
+        name: Invalid message error case- ticket is sent to SNC (snc stub)
+        expression: grep "invalid_svefaktura_removed_sensetive_info.xml" *
+        expected value: true 
+      file test:
+       name: Look for inbound files in long term storage
+       dir: /var/lib/docker/volumes/peppol2.0/data/storage
+       expression: grep "valid_svefaktura_removed_sensetive_info.xml" *
+       expected value: true                

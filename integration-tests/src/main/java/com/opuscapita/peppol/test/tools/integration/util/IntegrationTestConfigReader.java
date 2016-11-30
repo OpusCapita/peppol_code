@@ -20,7 +20,7 @@ public class IntegrationTestConfigReader {
 
     private final static Logger logger = LogManager.getLogger(IntegrationTestConfigReader.class);
     private String configFile;
-    private Map<String, String> genericConfiguration = new HashMap<>();
+    private Map<String, Object> genericConfiguration = new HashMap<>();
 
     public IntegrationTestConfigReader(String configFile) {
         this.configFile = configFile;
@@ -53,6 +53,8 @@ public class IntegrationTestConfigReader {
 
     private void loadConfiguration(Map<String, Object> configuration) {
         Map<String, String> databases = (Map<String, String>) configuration.get("databases");
+        Map<String, String> queues = (Map<String, String>) configuration.get("queues");
         genericConfiguration.putAll(databases);
+        genericConfiguration.putAll(queues);
     }
 }

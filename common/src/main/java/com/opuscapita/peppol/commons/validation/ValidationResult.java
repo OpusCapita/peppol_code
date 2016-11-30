@@ -2,13 +2,14 @@ package com.opuscapita.peppol.commons.validation;
 
 import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Daniil on 03.05.2016.
  */
-public class ValidationResult {
+public class ValidationResult implements Serializable {
     private final Archetype validationType;
     boolean passed;
     List<ValidationError> errors = new ArrayList<>();

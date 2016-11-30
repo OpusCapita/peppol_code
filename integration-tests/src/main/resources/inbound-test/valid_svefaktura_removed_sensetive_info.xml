@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+	<StandardBusinessDocumentHeader>
+		<HeaderVersion>1.0</HeaderVersion>
+		<Sender>
+			<Identifier Authority="iso6523-actorid-upis">0007:1234567891011</Identifier>
+		</Sender>
+		<Receiver>
+			<Identifier Authority="iso6523-actorid-upis">0007:1234567891</Identifier>
+		</Receiver>
+		<DocumentIdentification>
+			<Standard>urn:sfti:documents:BasicInvoice:1:0</Standard>
+			<TypeVersion>1.0</TypeVersion>
+			<InstanceIdentifier>00000022-b022-4024-a026-000000000000</InstanceIdentifier>
+			<Type>Invoice</Type>
+			<CreationDateAndTime>2016-06-15T05:08:34Z</CreationDateAndTime>
+		</DocumentIdentification>
+		<BusinessScope>
+			<Scope>
+				<Type>DOCUMENTID</Type>
+				<InstanceIdentifier>urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0</InstanceIdentifier>
+			</Scope>
+			<Scope>
+				<Type>PROCESSID</Type>
+				<InstanceIdentifier>urn:sfti:services:documentprocessing:BasicInvoice:1:0</InstanceIdentifier>
+			</Scope>
+		</BusinessScope>
+	</StandardBusinessDocumentHeader>
+    <Invoice xmlns:cac="urn:sfti:CommonAggregateComponents:1:0"
+             xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0"
+             xmlns="urn:sfti:documents:BasicInvoice:1:0"
+    >
+		<ID>12345678</ID>
+		<cbc:IssueDate>2016-06-15</cbc:IssueDate>
+		<InvoiceTypeCode>380</InvoiceTypeCode>
+		<cbc:Note></cbc:Note>
+		<InvoiceCurrencyCode codeListID="ISO 4217 Alpha" codeListAgencyID="6" codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Currency" codeListVersionID="0.3" codeListURI="http://www.bsi-global.com/Technical%2BInformation/Publications/_Publications/tig90x.doc" codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:CurrencyCode:1:0" languageID="en">SEK</InvoiceCurrencyCode>
+		<LineItemCountNumeric>13</LineItemCountNumeric>
+		<AdditionalDocumentReference>
+			<cac:ID identificationSchemeID="CT">175612</cac:ID>
+		</AdditionalDocumentReference>
+		<AdditionalDocumentReference>
+			<cac:ID identificationSchemeID="DQ">16170441</cac:ID>
+		</AdditionalDocumentReference>
+		<cac:BuyerParty>
+			<cac:Party>
+				<cac:PartyName>
+					<cbc:Name>opuscapita</cbc:Name>
+				</cac:PartyName>
+				<cac:Address>
+					<cbc:StreetName>some address </cbc:StreetName>
+					<cbc:CityName>some address</cbc:CityName>
+					<cbc:PostalZone>12345</cbc:PostalZone>
+				</cac:Address>
+				<cac:PartyTaxScheme>
+					<cac:CompanyID>1234567891</cac:CompanyID>
+					<cac:TaxScheme>
+						<cac:ID>SWT</cac:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+			</cac:Party>
+		</cac:BuyerParty>
+		<cac:SellerParty>
+			<cac:Party>
+				<cac:PartyIdentification>
+					<cac:ID identificationSchemeAgencyID="9">1234567891011</cac:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>Fake party name</cbc:Name>
+				</cac:PartyName>
+				<cac:Address>
+					<cbc:Postbox>Box 704</cbc:Postbox>
+					<cbc:StreetName>some address</cbc:StreetName>
+					<cbc:CityName>some address</cbc:CityName>
+					<cbc:PostalZone>12345</cbc:PostalZone>
+					<cac:Country>
+						<cac:IdentificationCode codeListID="ISO3166-1" codeListAgencyID="6" codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Country" codeListVersionID="0.3" codeListURI="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1-semic.txt" codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:CountryIdentificationCode:1:0" languageID="en">SE</cac:IdentificationCode>
+					</cac:Country>
+				</cac:Address>
+				<cac:PartyTaxScheme>
+					<cac:CompanyID>1234567891</cac:CompanyID>
+					<cbc:ExemptionReason>F-skattebevis finns</cbc:ExemptionReason>
+					<cac:RegistrationAddress>
+						<cac:ID>1234567891</cac:ID>
+						<cbc:CityName>Stockholm</cbc:CityName>
+						<cac:Country>
+							<cac:IdentificationCode codeListID="ISO3166-1" codeListAgencyID="6" codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Country" codeListVersionID="0.3" codeListURI="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1-semic.txt" codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:CountryIdentificationCode:1:0" languageID="en">SE</cac:IdentificationCode>
+						</cac:Country>
+					</cac:RegistrationAddress>
+					<cac:TaxScheme>
+						<cac:ID>SWT</cac:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyTaxScheme>
+					<cac:CompanyID>SE123456789101</cac:CompanyID>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+			</cac:Party>
+			<cac:AccountsContact>
+				<cbc:Telephone>123456789</cbc:Telephone>
+			</cac:AccountsContact>
+		</cac:SellerParty>
+		<cac:Delivery>
+			<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			<cac:DeliveryAddress>
+				<cbc:StreetName>some address</cbc:StreetName>
+				<cbc:Department>some department</cbc:Department>
+				<cbc:CityName> some city</cbc:CityName>
+				<cbc:PostalZone>12345</cbc:PostalZone>
+			</cac:DeliveryAddress>
+		</cac:Delivery>
+		<cac:PaymentMeans>
+			<cac:PaymentMeansTypeCode codeListID="UN/ECE 4461" codeListAgencyID="6" codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Payment Means" codeListVersionID="D03A" codeListURI="http://www.unece.org/trade/untdid/d03a/tred/tred4461.htm" codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:PaymentMeansCode:1:0">1</cac:PaymentMeansTypeCode>
+			<cbc:DuePaymentDate>2016-07-20</cbc:DuePaymentDate>
+			<cac:PayeeFinancialAccount>
+				<cac:ID>12345678</cac:ID>
+				<cac:FinancialInstitutionBranch>
+					<cac:FinancialInstitution>
+						<cac:ID>BGABSESS</cac:ID>
+					</cac:FinancialInstitution>
+				</cac:FinancialInstitutionBranch>
+				<cac:PaymentInstructionID>12345678</cac:PaymentInstructionID>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:TaxTotal>
+			<cbc:TotalTaxAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">241.11</cbc:TotalTaxAmount>
+			<cac:TaxSubTotal>
+				<cbc:TaxableAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">2009.27</cbc:TaxableAmount>
+				<cbc:TaxAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">241.11</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubTotal>
+		</cac:TaxTotal>
+		<cac:LegalTotal>
+			<cbc:LineExtensionTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3"></cbc:LineExtensionTotalAmount>
+			<cbc:TaxExclusiveTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">2009.27</cbc:TaxExclusiveTotalAmount>
+			<cbc:TaxInclusiveTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">2250.38</cbc:TaxInclusiveTotalAmount>
+		</cac:LegalTotal>
+		<cac:InvoiceLine>
+			<cac:ID>1</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">55.55</cbc:LineExtensionAmount>
+			<cbc:Note>Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">55.55</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>2</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="KG">1.03</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">62.56</cbc:LineExtensionAmount>
+			<cbc:Note>Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">60.74</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>3</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="KG">4.94</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">351.53</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">71.16</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>4</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">431.75</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">431.75</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>5</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">41.10</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">41.10</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>6</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">5</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">298.15</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">59.63</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>7</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">5</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">402.65</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">80.53</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>8</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">12.13</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">12.13</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>9</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">76.36</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">76.36</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>10</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">40.08</cbc:LineExtensionAmount>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">40.08</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>11</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">27.35</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">27.35</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>12</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">41.10</cbc:LineExtensionAmount>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">41.10</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>13</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">168.96</cbc:LineExtensionAmount>
+			<cbc:Note>note</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>opuscapita</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2016-06-14T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>Description</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>123456</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">168.96</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<RequisitionistDocumentReference>
+			<cac:ID>RequisitionistDocumentReference</cac:ID>
+		</RequisitionistDocumentReference>
+	</Invoice>
+</StandardBusinessDocument>

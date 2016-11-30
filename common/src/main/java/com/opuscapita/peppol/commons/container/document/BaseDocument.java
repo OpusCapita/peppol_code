@@ -197,4 +197,7 @@ public abstract class BaseDocument implements Serializable {
     public void setCustomizationId(String customizationId) {
         this.customizationId = customizationId;
     }
+
+    @NotNull
+    public abstract String getDocumentType();
 }

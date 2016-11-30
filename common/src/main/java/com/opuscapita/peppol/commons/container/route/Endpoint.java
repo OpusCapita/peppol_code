@@ -10,5 +10,6 @@ public enum Endpoint {
     GATEWAY,
     REST,
     REPROCESS,
-    RETRY
+    RETRY,
+    TEST
 }

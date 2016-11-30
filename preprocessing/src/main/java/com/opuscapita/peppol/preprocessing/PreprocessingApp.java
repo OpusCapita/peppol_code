@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.preprocessing;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -24,6 +25,8 @@ public class PreprocessingApp {
     private String queueIn;
     @Value("${peppol.preprocessing.queue.out.name}")
     private String queueOut;
+    @Value("${peppol.email-notificator.queue.in.name}")
+    private String errorQueue;
 
     public static void main(String[] args) {
         SpringApplication.run(PreprocessingApp.class, args);
@@ -56,7 +59,11 @@ public class PreprocessingApp {
                 logger.info("Message received, file id: " + cm.getFileName());
                 cm = controller.process(cm);
                 cm.setStatus(componentName, "file read");
-                rabbitTemplate.convertAndSend(queueOut, cm);
+                if (cm.getBaseDocument() instanceof InvalidDocument) {
+                    rabbitTemplate.convertAndSend(errorQueue, cm);
+                } else {
+                    rabbitTemplate.convertAndSend(queueOut, cm);
+                }
                 logger.info("Successfully processed and delivered to " + queueOut + " queue");
             }
         };

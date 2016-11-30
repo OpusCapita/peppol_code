@@ -11,7 +11,7 @@ tests:
      type: queue
      params:
        exchange: peppol
-       queue: persistence email-notifications persistence-test routing transport-in transport-out
+       queue: events-persistence email-notificator persistence-test routing transport-in transport-out
        host: localhost
        port: 5672
        username: guest

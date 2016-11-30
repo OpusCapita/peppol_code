@@ -8,8 +8,8 @@ import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 public class DbProducer implements Producer {
     private String query;
 
-    public DbProducer(String query) {
-        this.query = query;
+    public DbProducer(Object query) {
+        this.query = (String) query;
     }
 
     @Override

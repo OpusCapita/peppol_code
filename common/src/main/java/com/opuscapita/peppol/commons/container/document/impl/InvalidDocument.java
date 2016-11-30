@@ -64,6 +64,12 @@ public class InvalidDocument extends BaseDocument {
         return Archetype.INVALID;
     }
 
+    @NotNull
+    @Override
+    public String getDocumentType() {
+        return "INVALID";
+    }
+
     public String getReason() {
         return reason;
     }
