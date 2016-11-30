@@ -13,7 +13,7 @@ tests:
      producers:
        web ui producer:
          source directory: validationTest/
-         destination directory: testOutDir/
+         destination link:
        mq producer:
          mq connection: mq1
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inboundTest

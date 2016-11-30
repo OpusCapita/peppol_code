@@ -11,9 +11,11 @@ import java.io.File;
 public class WebUiProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(WebUiProducer.class);
     private String sourceDirectory;
+    private String link;
 
-    public WebUiProducer(String sourceDirectory) {
+    public WebUiProducer(String sourceDirectory, String link) {
         this.sourceDirectory = sourceDirectory;
+        this.link = link;
     }
 
     @Override

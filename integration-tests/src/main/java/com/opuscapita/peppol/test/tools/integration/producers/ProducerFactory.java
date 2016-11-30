@@ -28,7 +28,7 @@ public class ProducerFactory {
             case "db producer":
                 return new DbProducer(properties.get("source query"));
             case "web ui producer":
-                return new WebUiProducer(properties.get("source directory"));
+                return new WebUiProducer(properties.get("source directory"), properties.get("destination link"));
             default:
                 throw new IllegalArgumentException("invalid producer configuration, unable to create producer");
 
