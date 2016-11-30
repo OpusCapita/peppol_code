@@ -87,7 +87,7 @@ public class ErrorHandler {
     }
 
     private String getMessageDumpBaseFolderPath() {
-        return environment.getProperty("persistence.events.error.dumps.path", "/tmp/");
+        return environment.getProperty("peppol.error.handler.dump.directory", "/tmp/");
     }
 
     private String generateMessageDumpFileName() {
