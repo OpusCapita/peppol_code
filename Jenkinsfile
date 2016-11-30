@@ -21,6 +21,7 @@ def validator_image
 
 // test application images
 def smoke_tests_image
+def integration_tests_image
 
 // additional properties loaded from file
 def properties  
@@ -119,6 +120,12 @@ node {
                 '''
             }
 
+            dir('integration-tests') {
+                sh '''
+                    bash gradlew assemble
+                '''
+            }
+
             // load additional properties
             properties = loadProperties('gradle.properties')
             releaseVersion = properties.version
@@ -153,6 +160,10 @@ node {
             dir('smoke-tests') {
                 sh 'bash gradlew check'
             }
+
+            dir('integration-tests') {
+                sh 'bash gradlew check'
+            }
         }
     }
 
@@ -172,6 +183,7 @@ node {
 
         // build docker images for the test modules
         smoke_tests_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/smoke-tests:${tag}", "src/smoke-tests/")
+        integration_tests_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/integration-tests:${tag}", "src/integration-tests/")
     }
 
     stage('Release') {
@@ -209,6 +221,8 @@ node {
             // push test images to registry
             smoke_tests_image.push("latest")
             smoke_tests_image.push("${tag}")
+            integration_tests_image.push("latest")
+            integration_tests_image.push("${tag}")
         }
     }
 
@@ -232,5 +246,16 @@ node {
             failBuild("${recipients.testers}, ${infra_author}, ${code_author}", 'Smoke tests have failed. Check the log for details.')
         }
     }
-}
 
+     stage('Integration Test') {
+        dir('infra/ap2/ansible') {
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
+                status = sh returnStatus: true, script: "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} provisioning=true' --timeout=25 integration-tests.yml"
+            }
+            archiveArtifacts artifacts: 'test/integration-tests-results.html'
+        }
+        if (status != 0) {
+            failBuild("${recipients.testers}, ${infra_author}, ${code_author}", 'Integration tests have failed. Check the log for details.')
+        }
+    }
+}
