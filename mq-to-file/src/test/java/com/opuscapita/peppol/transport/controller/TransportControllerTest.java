@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.transport.contoller;
+package com.opuscapita.peppol.transport.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;

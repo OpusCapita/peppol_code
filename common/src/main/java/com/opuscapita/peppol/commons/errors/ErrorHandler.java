@@ -37,18 +37,18 @@ public class ErrorHandler {
         this.environment = environment;
     }
 
-    public void reportToServiceNow(String message, String customerId, Exception e) {
-        reportToServiceNow(message, customerId, e, e.getMessage());
+    public void reportToServiceNow(String json, String customerId, Exception e) {
+        reportToServiceNow(json, customerId, e, e.getMessage());
     }
 
-    public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription) {
-        reportToServiceNow(message, customerId, e, shortDescription, "");
+    public void reportToServiceNow(String json, String customerId, Exception e, String shortDescription) {
+        reportToServiceNow(json, customerId, e, shortDescription, "");
     }
 
-    public void reportToServiceNow(String message, String customerId, Exception e, String shortDescription, String correlationIdPrefix) {
-        String dumpFileName = storeMessageToDisk(message, e);
+    public void reportToServiceNow(String json, String customerId, Exception e, String shortDescription, String correlationIdPrefix) {
+        String dumpFileName = storeMessageToDisk(json, e);
         logger.warn("Dumped erroneous message to: " + dumpFileName);
-        createSncTicket(dumpFileName, message, customerId, e, shortDescription, correlationIdPrefix);
+        createSncTicket(dumpFileName, json, customerId, e, shortDescription, correlationIdPrefix);
         logger.warn("ServiceNow ticket created with reference to: " + dumpFileName);
     }
 
