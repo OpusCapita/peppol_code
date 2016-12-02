@@ -56,5 +56,6 @@ public class IntegrationTestConfigReader {
         Map<String, String> queues = (Map<String, String>) configuration.get("queues");
         genericConfiguration.putAll(databases);
         genericConfiguration.putAll(queues);
+        genericConfiguration.put("selenide result folder", configuration.get("selenide result folder"));
     }
 }

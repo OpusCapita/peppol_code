@@ -38,6 +38,12 @@ public class ConsumerFactory {
                 String directory = (String) properties.get("dir");
                 String fileTestExpression = (String) properties.get("expression");
                 return new FileConsumer(fileTestName, directory, fileTestExpression);
+            case "web ui check":
+            case "web ui test":
+                String directoryKey = (String) properties.get("source directory");
+                String webUiDirectory = (String) genericConfiguration.get(directoryKey);
+                boolean expectedResult = (boolean) properties.get("expected value");
+                return new WebUiConsumer(webUiDirectory, expectedResult);
             default:
                 throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + name);
         }

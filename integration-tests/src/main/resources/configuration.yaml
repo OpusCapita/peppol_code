@@ -8,13 +8,14 @@ configurations:
             username: guest
             password: guest
             virtual host: /
+    selenide result folder: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-web-ui-result
 tests:
    validation:
      producers:
        web ui producer:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-web-ui-test
          destination link: http://localhost:441/
-         result directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-web-ui-result
+         result directory: selenide result folder
        mq producer:
          mq connection: mq1
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inboundTest
@@ -37,6 +38,9 @@ tests:
            - mq subscriber
            - snc subscriber
           expected value: 500
+        web ui check:
+            source directory: selenide result folder
+            expected value: true
    events-persistence:
      producers:
        mq producer:
