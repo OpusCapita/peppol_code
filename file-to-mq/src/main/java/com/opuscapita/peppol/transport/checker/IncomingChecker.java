@@ -9,7 +9,6 @@ import com.opuscapita.peppol.commons.storage.Storage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,12 +29,9 @@ import java.util.Iterator;
  * Checks configured directory periodically and sends file to MQ.
  * Supports recursive walk through the directories.
  *
- * @deprecated Use file-to-mq instead, this one will be removed soon
- *
  * @author Sergejs.Roze
  */
 @Component
-@Deprecated
 public class IncomingChecker {
     private static final Logger logger = LoggerFactory.getLogger(IncomingChecker.class);
 
@@ -46,15 +42,15 @@ public class IncomingChecker {
 
     @Value("${peppol.component.name}")
     private String componentName;
-    @Value("${peppol.transport.file.age.seconds:120}")
+    @Value("${peppol.file-to-mq.file.age.seconds:120}")
     private int age;
-    @Value("${peppol.transport.input.directory}")
+    @Value("${peppol.file-to-mq.input.directory}")
     private String directory;
-    @Value("${peppol.transport.input.recursive:false}")
+    @Value("${peppol.file-to-mq.input.recursive:false}")
     private boolean recursive;
-    @Value("${peppol.transport.input.mask:*.*}")
+    @Value("${peppol.file-to-mq.input.mask:*.*}")
     private String mask;
-    @Value("${peppol.transport.queue.out.name:preprocessing}")
+    @Value("${peppol.file-to-mq.queue.out.name:preprocessing}")
     private String queue;
 
     @Autowired
@@ -69,11 +65,18 @@ public class IncomingChecker {
 
     @Scheduled(fixedRate = 60_000) // 1 minute
     public void check() {
+        File dir = new File(directory);
+
+        if (!dir.exists() || !dir.isDirectory()) {
+            String msg = directory + " is not a valid directory, please check the configuration";
+            logger.error(msg);
+            errorHandler.reportToServiceNow("", "n/a", new IllegalArgumentException(msg), msg);
+        }
+
         try {
-            receive(new File(directory));
+            receive(dir);
         } catch (Exception e) {
-            errorHandler.reportToServiceNow("Failed to process input data: " + ExceptionUtils.getStackTrace(e), "n/a", e,
-                    "Failed to read input file");
+            errorHandler.reportToServiceNow("", "n/a", e, "Failed to read input file: " + e.getMessage());
         }
     }
 
@@ -115,6 +118,5 @@ public class IncomingChecker {
             statusReporter.report(cm);
         }
     }
-
 
 }

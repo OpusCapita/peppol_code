@@ -5,12 +5,14 @@ include "configuration-server"
 include "email-notificator"
 include "eventing"
 include "events-persistence"
+include 'file-to-mq'
 include "inbound"
+include "integration-tests"
 include "internal-routing"
-// include "testapp"
+include 'mq-to-file'
 include "transport"
 include "outbound"
 include "preprocessing"
 include "support-ui"
 include "validator"
-include "integration-tests"
+
