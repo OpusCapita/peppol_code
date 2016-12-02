@@ -12,8 +12,9 @@ tests:
    validation:
      producers:
        web ui producer:
-         source directory: validationTest/
-         destination link:
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-web-ui-test
+         destination link: http://localhost:441/
+         result directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-web-ui-result
        mq producer:
          mq connection: mq1
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inboundTest

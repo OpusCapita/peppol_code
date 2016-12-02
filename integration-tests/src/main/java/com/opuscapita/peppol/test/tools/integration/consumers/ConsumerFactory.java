@@ -21,7 +21,9 @@ public class ConsumerFactory {
             case "db test":
                 String connectionKey = (String) properties.get("connection string");
                 String dbConnectionString = (String) genericConfiguration.get(connectionKey);
-                return new DbConsumer(dbConnectionString, properties.get("expected value"));
+                String consumerName = (String) properties.get("name");
+                String query = (String) properties.get("query");
+                return new DbConsumer(consumerName, dbConnectionString, query, properties.get("expected value"));
             case "selenium check":
                 return new SeleniumConsumer(properties.get("expected value"));
             case "snc test":
