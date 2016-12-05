@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
@@ -10,6 +9,8 @@ import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.Map;
@@ -85,15 +86,7 @@ public class MqProducer implements Producer {
             //   channel.queueDeclare(destinationQueue, false, false, true, null);
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    //TODO: check mb creating container message here is not needed
-                    ContainerMessage cm = new ContainerMessage("integration-test", file.getName(), Endpoint.TEST);
-
-                    byte[] bytes = cm.getBytes();
-                    String result = new String(bytes);
-
-                    ContainerMessage cm2 = new Gson().fromJson(result, ContainerMessage.class);
-                    /*ContainerMessage message = new ContainerMessage("integration-test", file.getName(), Endpoint.TEST)
-                            .setBaseDocument(documentLoader.load(file));*/
+                    String message = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
                     //channel.basicPublish("", destinationQueue, null, cm2.getBytes());
                     String t = ";";
                 }

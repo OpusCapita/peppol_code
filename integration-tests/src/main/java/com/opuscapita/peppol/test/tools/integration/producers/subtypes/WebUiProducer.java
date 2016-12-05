@@ -30,7 +30,6 @@ public class WebUiProducer implements Producer {
 
     @Override
     public void run() {
-
         Properties results = new Properties();
         File directory = null;
         try {
@@ -44,6 +43,8 @@ public class WebUiProducer implements Producer {
             return;
         }
         try {
+            if (true)
+                return;
             //selenide here
             for (File file : directory.listFiles()) {
                 open(link);

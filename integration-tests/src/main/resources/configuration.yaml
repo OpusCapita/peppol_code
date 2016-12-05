@@ -21,7 +21,7 @@ tests:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inboundTest
          destination queue: validation-integration-test
        rest producer:
-         source file: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
          rest template file: file
          rest endpoint: value
          rest method: get/post

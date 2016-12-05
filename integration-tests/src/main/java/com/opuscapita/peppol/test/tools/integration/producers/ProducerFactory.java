@@ -23,7 +23,7 @@ public class ProducerFactory {
                 return new MqProducer((Map<String, String>) genericConfiguration.get(mqKey), properties.get("source directory"),
                         properties.get("destination queue"), dbConnection, dbPreprocessQuery);
             case "rest producer":
-                return new RestProducer(properties.get("source file"), properties.get("rest template file"),
+                return new RestProducer(properties.get("source directory"), properties.get("rest template file"),
                         properties.get("rest endpoint") ,properties.get("rest method"));
             case "db producer":
                 return new DbProducer(properties.get("source query"));
