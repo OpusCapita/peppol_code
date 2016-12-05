@@ -3,6 +3,9 @@ package com.opuscapita.peppol.support.ui.config;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
@@ -23,7 +26,7 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-//@EnableCaching
+@EnableCaching
 @ComponentScan(basePackages = {"com.opuscapita.peppol.support.ui"},
         excludeFilters = {@ComponentScan.Filter(type = FilterType.CUSTOM, value = {WebPackageFilter.class})})
 @PropertySource({"file:${PEPPOL_CONFIG_PATH}/jdbc.properties", "file:${PEPPOL_CONFIG_PATH}/config.properties"})
@@ -36,6 +39,11 @@ public class RootConfiguration {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager("cacheManager");
     }
 
     @Bean
@@ -54,7 +62,6 @@ public class RootConfiguration {
         dataSource.setMaxPoolSize(Integer.parseInt(environment.getProperty("maxPoolSize")));
         dataSource.setMaxIdleTime(Integer.parseInt(environment.getProperty("maxIdleTime")));
         dataSource.setCheckoutTimeout(Integer.parseInt(environment.getProperty("timeout")));
-
         return dataSource;
     }
 
