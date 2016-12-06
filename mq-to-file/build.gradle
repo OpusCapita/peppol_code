@@ -15,7 +15,7 @@ apply plugin: 'java'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'transport'
+    baseName = 'mq-to-file'
     version = ''
 }
 sourceCompatibility = 1.8
