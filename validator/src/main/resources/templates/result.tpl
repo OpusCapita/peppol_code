@@ -28,7 +28,7 @@ html(class: 'no-js') {
             div(id: 'main') {
                 div(class: 'content') {
                     div() {
-                        span('Validation status: '+status)
+                        span('Validation status: '+status, id: 'validationStatus')
                         span() {
                             a(href: "$root/", class: 'btn-success', style: 'padding: 5px;margin-left: 15px;', 'New validation')
                         }

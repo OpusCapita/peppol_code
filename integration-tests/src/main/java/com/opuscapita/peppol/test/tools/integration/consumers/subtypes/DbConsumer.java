@@ -7,10 +7,14 @@ import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
  */
 public class DbConsumer implements Consumer {
     private final String connectionString;
+    private final String name;
+    private String query;
     private Object expectedValue;
 
-    public DbConsumer(String dbConnectionString, Object expectedValue) {
+    public DbConsumer(String consumerName, String dbConnectionString, String query, Object expectedValue) {
+        this.name = consumerName;
         this.connectionString = dbConnectionString;
+        this.query = query;
         this.expectedValue = expectedValue;
     }
 

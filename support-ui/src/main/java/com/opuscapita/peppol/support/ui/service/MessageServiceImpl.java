@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -214,31 +215,37 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Cacheable("allMessages")
     public int getAllMessageCount() throws HibernateException {
         return messageDAO.getAllMessageCount();
     }
 
     @Override
+    @Cacheable("invalidMessages")
     public int getInvalidMessageCount() throws HibernateException {
         return messageDAO.getInvalidMessageCount();
     }
 
     @Override
+    @Cacheable("failedMessages")
     public int getFailedMessageCount() throws HibernateException {
         return messageDAO.getFailedMessageCount();
     }
 
     @Override
+    @Cacheable("sentMessages")
     public int getSentMessageCount() throws HibernateException {
         return messageDAO.getSentMessageCount();
     }
 
     @Override
+    @Cacheable("reprocessedMessages")
     public int getReprocessedMessageCount() throws HibernateException {
         return messageDAO.getReprocessedMessageCount();
     }
 
     @Override
+    @Cacheable("processingMessages")
     public int getProcessingMessageCount() throws HibernateException {
         return messageDAO.getProcessingMessageCount();
     }

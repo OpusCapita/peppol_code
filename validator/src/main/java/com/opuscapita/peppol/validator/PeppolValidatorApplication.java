@@ -30,6 +30,7 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
 public class PeppolValidatorApplication {
+    private final Environment environment;
     @Value("${peppol.component.name}")
     String componentName;
     @Value("${peppol.validator.svefaktura1.schematron.path}")
@@ -46,8 +47,13 @@ public class PeppolValidatorApplication {
     String austrianValidationArtifactsPath;
     @Value("${peppol.validation.consume-queue}")
     private String queueName;
+    @Value("${peppol.email-notificator.queue.in.name}")
+    private String errorQueue;
+
     @Autowired
-    private Environment environment;
+    public PeppolValidatorApplication(@NotNull Environment environment) {
+        this.environment = environment;
+    }
 
     public static void main(String[] args) {
         try {
@@ -119,14 +125,17 @@ public class PeppolValidatorApplication {
 
                 ValidationResult validationResult = controller.validate(cm);
                 cm.setValidationResult(validationResult);
+
                 if (!validationResult.isPassed()) {
-                    throw new RuntimeException("Validation failed");
+                    rabbitTemplate.convertAndSend(errorQueue, cm);
+                    logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
+                    return;
                 }
 
                 String queueOut = cm.getRoute().pop();
                 rabbitTemplate.convertAndSend(queueOut, cm);
                 cm.setStatus(componentName, "validation passed");
-                logger.info("Validation passed for" + cm.getFileName() + ", message sent to " + queueOut + " queue");
+                logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
             }
         };
     }

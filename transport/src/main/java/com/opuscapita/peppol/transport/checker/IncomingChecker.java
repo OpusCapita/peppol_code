@@ -30,9 +30,12 @@ import java.util.Iterator;
  * Checks configured directory periodically and sends file to MQ.
  * Supports recursive walk through the directories.
  *
+ * @deprecated Use file-to-mq instead, this one will be removed soon
+ *
  * @author Sergejs.Roze
  */
 @Component
+@Deprecated
 public class IncomingChecker {
     private static final Logger logger = LoggerFactory.getLogger(IncomingChecker.class);
 

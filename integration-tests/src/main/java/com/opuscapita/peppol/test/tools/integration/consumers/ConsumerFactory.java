@@ -21,7 +21,9 @@ public class ConsumerFactory {
             case "db test":
                 String connectionKey = (String) properties.get("connection string");
                 String dbConnectionString = (String) genericConfiguration.get(connectionKey);
-                return new DbConsumer(dbConnectionString, properties.get("expected value"));
+                String consumerName = (String) properties.get("name");
+                String query = (String) properties.get("query");
+                return new DbConsumer(consumerName, dbConnectionString, query, properties.get("expected value"));
             case "selenium check":
                 return new SeleniumConsumer(properties.get("expected value"));
             case "snc test":
@@ -36,6 +38,12 @@ public class ConsumerFactory {
                 String directory = (String) properties.get("dir");
                 String fileTestExpression = (String) properties.get("expression");
                 return new FileConsumer(fileTestName, directory, fileTestExpression);
+            case "web ui check":
+            case "web ui test":
+                String directoryKey = (String) properties.get("source directory");
+                String webUiDirectory = (String) genericConfiguration.get(directoryKey);
+                boolean expectedResult = (boolean) properties.get("expected value");
+                return new WebUiConsumer(webUiDirectory, expectedResult);
             default:
                 throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + name);
         }

@@ -21,10 +21,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * Application that stores files to gateways and checks incoming files from gateways.
  * Can be used for local directories too.
  *
+ * @deprecated use file-to-mq and mq-to-file instead, this is going to be removed
+ *
  * @author Sergejs.Roze
  */
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.transport"})
 @EnableScheduling
+@Deprecated
 public class TransportApp {
     @Value("${peppol.component.name}")
     private String componentName;
