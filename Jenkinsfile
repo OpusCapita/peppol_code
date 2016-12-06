@@ -11,12 +11,13 @@ def config_server_image
 def email_notificator_image
 def events_persistence_image
 def eventing_image
+def file_to_mq_image
 def inbound_image
 def internal_routing_image
+def mq_to_file_image
 def outbound_image
 def preprocessing_image
 def support_ui_image
-def transport_image
 def validator_image
 
 // test application images
@@ -104,12 +105,13 @@ node {
                     email-notificator:assemble \
                     events-persistence:assemble \
                     eventing:assemble \
+                    file-to-mq:assemble \
                     inbound:assemble \
                     internal-routing:assemble \
+                    mq-to-file:assemble \
                     outbound:assemble \
                     preprocessing:assemble \
                     support-ui:assemble \
-                    transport:assemble \
                     validator:assemble
             '''
 
@@ -147,12 +149,13 @@ node {
                     email-notificator:check \
                     events-persistence:check \
                     eventing:check \
+                    file-to-mq:check \
                     inbound:check \
                     internal-routing:check \
+                    mq-to-file:check \
                     outbound:check \
                     preprocessing:check \
                     support-ui:check \
-                    transport:check \
                     validator:check
             '''
             
@@ -173,12 +176,13 @@ node {
         email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", "src/email-notificator/")
         events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", "src/events-persistence/")
         eventing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/eventing:${tag}", "src/eventing/")
+        file_to_mq_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/file-to-mq:${tag}", "src/file-to-mq/")
         inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", "src/inbound/")
         internal_routing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/internal-routing:${tag}", "src/internal-routing/")
+        mq_to_file_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/mq-to-file:${tag}", "src/mq-to-file/")
         outbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/outbound:${tag}", "src/outbound/")
         preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "src/preprocessing/")
         support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", "src/support-ui/")
-        transport_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/transport:${tag}", "src/transport/")
         validator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/validator:${tag}", "src/validator/")
 
         // build docker images for the test modules
@@ -203,18 +207,20 @@ node {
             events_persistence_image.push("${tag}")
             eventing_image.push("latest")
             eventing_image.push("${tag}")
+            file_to_mq_image.push("latest")
+            file_to_mq_image.push("${tag}")
             inbound_image.push("latest")
             inbound_image.push("${tag}")
             internal_routing_image.push("latest")
             internal_routing_image.push("${tag}")
+            mq_to_file_image.push("latest")
+            mq_to_file_image.push("${tag}")
             outbound_image.push("latest")
             outbound_image.push("${tag}")
             preprocessing_image.push("latest")
             preprocessing_image.push("${tag}")
             support_ui_image.push("latest")
             support_ui_image.push("${tag}")
-            transport_image.push("latest")
-            transport_image.push("${tag}")
             validator_image.push("latest")
             validator_image.push("${tag}")
 
