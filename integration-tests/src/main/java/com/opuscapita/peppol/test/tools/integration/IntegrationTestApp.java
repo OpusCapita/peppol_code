@@ -17,13 +17,13 @@ public class IntegrationTestApp {
 
     public static void main(String[] args) {
         logger.info("IntegrationTestApp : Starting!");
-        configFile = args[0];
 
-        if(configFile == null || configFile.isEmpty()){
+
+        if (args.length < 1 || args[0] == null || args[0].isEmpty()) {
             logger.error("Configuration file not specified, exiting!");
             System.exit(1);
         }
-
+        configFile = args[0];
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile).initConfig();
         List<TestResult> testResults = config.runTests();
 
