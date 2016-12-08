@@ -23,12 +23,12 @@ public class ProducerFactory {
                 return new MqProducer((Map<String, String>) genericConfiguration.get(mqKey), properties.get("source directory"),
                         properties.get("destination queue"), dbConnection, dbPreprocessQuery);
             case "rest producer":
-                return new RestProducer(properties.get("source directory"), properties.get("rest template file"),
-                        properties.get("rest endpoint") ,properties.get("rest method"));
+                String restResultDirectory = (String) genericConfiguration.get("validation result folder");
+                return new RestProducer(properties.get("source directory"), properties.get("destination link"),properties.get("rest method"), restResultDirectory);
             case "db producer":
                 return new DbProducer(properties.get("source query"));
             case "web ui producer":
-                String resultDirectory = (String) genericConfiguration.get("selenide result folder");
+                String resultDirectory = (String) genericConfiguration.get("validation result folder");
                 return new WebUiProducer(properties.get("source directory"), properties.get("destination link"), resultDirectory);
             default:
                 throw new IllegalArgumentException("invalid producer configuration, unable to create producer");

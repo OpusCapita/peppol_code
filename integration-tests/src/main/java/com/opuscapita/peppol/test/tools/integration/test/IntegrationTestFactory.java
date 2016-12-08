@@ -9,6 +9,8 @@ import com.opuscapita.peppol.test.tools.integration.subscribers.SubscriberFactor
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
  */
 public class IntegrationTestFactory {
     private final static Logger logger = LogManager.getLogger(IntegrationTestFactory.class);
+    private static Map<String, Consumer> consumers = new HashMap<>();
 
     public static IntegrationTest createTest(String moduleName, Map<String, ?> moduleSettings, Map<String, Object> genericConfiguration) {
         if (moduleName == null || moduleName.isEmpty()) {
@@ -33,9 +36,13 @@ public class IntegrationTestFactory {
         Map<String,?> consumersConfiguration = (Map<String, ?>) moduleSettings.get("consumers");
 
         List<Producer> producers = producersConfiguration.entrySet().stream().map(entry -> ProducerFactory.createProducer(entry, genericConfiguration)).collect(Collectors.toList());
-        List<Subscriber> subscribers = subscribersConfiguration.entrySet().stream().map(entry -> SubscriberFactory.createSubscriber(entry, genericConfiguration)).collect(Collectors.toList());
-        List<Consumer> consumers = consumersConfiguration.entrySet().stream().map(entry -> ConsumerFactory.createConsumer(entry, genericConfiguration)).collect(Collectors.toList());
+        for (Map.Entry<String, ?> consumerConfig : consumersConfiguration.entrySet()) {
+            Consumer consumer = ConsumerFactory.createConsumer(consumerConfig, genericConfiguration);
+            consumers.put(consumer.getId(),consumer);
+        }
+        List<Subscriber> subscribers = subscribersConfiguration.entrySet().stream().map(entry -> SubscriberFactory.createSubscriber(entry, genericConfiguration, consumers)).collect(Collectors.toList());
 
-        return new IntegrationTest(moduleName, producers, subscribers, consumers);
+
+        return new IntegrationTest(moduleName, producers, subscribers, new ArrayList<>(consumers.values()));
     }
 }
