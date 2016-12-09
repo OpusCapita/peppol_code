@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.amqp.support.converter.JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,6 +40,7 @@ public class PreprocessingApp {
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queueIn);
         container.setPrefetchCount(10);
+        container.setMessageConverter(new JsonMessageConverter());
         container.setMessageListener(listenerAdapter);
         return container;
     }
