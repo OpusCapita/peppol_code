@@ -27,37 +27,6 @@ def smoke_tests_image
 // additional properties loaded from file
 def properties  
 
-def Properties loadProperties(String filename) {
-    Properties properties = new Properties()
-    String content = readFile "${filename}"
-    properties.load(new StringReader(content));
-    return properties
-}
-
-
-@NonCPS
-def getChangeString() {
-    MAX_MSG_LEN = 100
-    def changeString = ""
-
-    echo "Gathering SCM changes"
-    def changeLogSets = currentBuild.changeSets
-    for (int i = 0; i < changeLogSets.size(); i++) {
-        def entries = changeLogSets[i].items
-        for (int j = 0; j < entries.length; j++) {
-            def entry = entries[j]
-            truncated_msg = entry.msg.take(MAX_MSG_LEN)
-            changeString += " - ${truncated_msg} [${entry.author}]\n"
-        }
-    }
-
-    if (!changeString?.trim()) {
-        changeString = " - No new changes"
-    }
-    return changeString
-}
-
-
 // define mailing list aliases
 recipients = [:]
 recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Gamans Sergejs <Sergejs.Gamans@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
@@ -65,31 +34,6 @@ recipients.devops = "Didrihsons Edgars <Edgars.Didrihsons@opuscapita.com>"
 recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
 recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
 
-def emailNotify(String whom, String message) {
-    def changes = getChangeString()
-
-    mail to: whom, cc: recipients.devops,
-        subject: "Job '${JOB_NAME}': build ${BUILD_NUMBER} has failed!",
-        body: """
-${message}
-Please go to ${BUILD_URL} and fix the build!
-
-Build status: ${currentBuild.result}
-Build URL: ${BUILD_URL}
-Project: ${JOB_NAME}
-Date of build: ${currentBuild.startTimeInMillis}
-Build duration: ${currentBuild.duration}
-
-CHANGE SET
-${changes}
-
-"""
-}
-
-def failBuild(String email_recipients, String message) {
-    emailNotify(email_recipients, message)
-    error message
-}
 
 node {
     stage('Build') {
@@ -232,20 +176,17 @@ node {
         }
     }
 
-    def ansible_hosts = "stage.hosts"
+    milestone label: 'staging'
     stage('Deploy Stage') {
         dir('infra/ap2/ansible') {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-                sh "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' --timeout=25 peppol-components.yml -v"
-            }
+			ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo')
         }
     }
 
+    milestone label: 'testing'
     stage('Smoke Test') {
         dir('infra/ap2/ansible') {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-                status = sh returnStatus: true, script: "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} provisioning=true' --timeout=25 smoke-tests.yml"
-            }
+			ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
             archiveArtifacts artifacts: 'test/smoke-tests-results.html'
         }
         if (status != 0) {
@@ -255,13 +196,75 @@ node {
 
     /* stage('Integration Test') {
         dir('infra/ap2/ansible') {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-                status = sh returnStatus: true, script: "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} provisioning=true' --timeout=25 integration-tests.yml"
-            }
+			ansiblePlaybook('integration-tests.yml', 'stage.hosts', 'ansible-sudo')
             archiveArtifacts artifacts: 'test/integration-tests-results.html'
         }
         if (status != 0) {
             failBuild("${recipients.testers}, ${infra_author}, ${code_author}", 'Integration tests have failed. Check the log for details.')
         }
     }*/
+}
+
+// execute ansible playbook on hosts using the credentials provided
+def ansiblePlaybook(playbook, hosts, credentials) {
+    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentials, passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
+        sh "ansible-playbook -i '${hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' ${playbook}"
+    }
+}
+
+
+def Properties loadProperties(String filename) {
+    Properties properties = new Properties()
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
+    return properties
+}
+
+
+@NonCPS
+def getChangeString() {
+    MAX_MSG_LEN = 100
+    def changeString = ""
+
+    echo "Gathering SCM changes"
+    def changeLogSets = currentBuild.changeSets
+    for (int i = 0; i < changeLogSets.size(); i++) {
+        def entries = changeLogSets[i].items
+        for (int j = 0; j < entries.length; j++) {
+            def entry = entries[j]
+            truncated_msg = entry.msg.take(MAX_MSG_LEN)
+            changeString += " - ${truncated_msg} [${entry.author}]\n"
+        }
+    }
+
+    if (!changeString?.trim()) {
+        changeString = " - No new changes"
+    }
+    return changeString
+}
+
+def emailNotify(String whom, String message) {
+    def changes = getChangeString()
+
+    mail to: whom, cc: recipients.devops,
+        subject: "Job '${JOB_NAME}': build ${BUILD_NUMBER} has failed!",
+        body: """
+${message}
+Please go to ${BUILD_URL} and fix the build!
+
+Build status: ${currentBuild.result}
+Build URL: ${BUILD_URL}
+Project: ${JOB_NAME}
+Date of build: ${currentBuild.startTimeInMillis}
+Build duration: ${currentBuild.duration}
+
+CHANGE SET
+${changes}
+
+"""
+}
+
+def failBuild(String email_recipients, String message) {
+    emailNotify(email_recipients, message)
+    error message
 }
