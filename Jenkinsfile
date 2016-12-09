@@ -179,17 +179,13 @@ node {
     def ansible_hosts = "stage.hosts"
     stage('Deploy Stage') {
         dir('infra/ap2/ansible') {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-                sh "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' --timeout=25 peppol-components.yml -v"
-            }
+			ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo')
         }
     }
 
     stage('Smoke Test') {
         dir('infra/ap2/ansible') {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-                status = sh returnStatus: true, script: "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} provisioning=true' --timeout=25 smoke-tests.yml"
-            }
+			ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
             archiveArtifacts artifacts: 'test/smoke-tests-results.html'
         }
         if (status != 0) {
@@ -199,9 +195,7 @@ node {
 
     /* stage('Integration Test') {
         dir('infra/ap2/ansible') {
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ansible-sudo', passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-                status = sh returnStatus: true, script: "ansible-playbook -i '${ansible_hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} provisioning=true' --timeout=25 integration-tests.yml"
-            }
+			ansiblePlaybook('integration-tests.yml', 'stage.hosts', 'ansible-sudo')
             archiveArtifacts artifacts: 'test/integration-tests-results.html'
         }
         if (status != 0) {
@@ -210,6 +204,12 @@ node {
     }*/
 }
 
+// execute ansible playbook on hosts using the credentials provided
+def ansiblePlaybook(playbook, hosts, credentials) {
+    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentials, passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
+        sh "ansible-playbook -i '${hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' ${playbook}"
+    }
+}
 
 
 def Properties loadProperties(String filename) {
