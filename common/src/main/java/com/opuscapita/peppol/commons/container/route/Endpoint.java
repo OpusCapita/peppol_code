@@ -11,5 +11,6 @@ public enum Endpoint {
     REST,
     REPROCESS,
     RETRY,
-    TEST
+    TEST,
+    QUEUE
 }
