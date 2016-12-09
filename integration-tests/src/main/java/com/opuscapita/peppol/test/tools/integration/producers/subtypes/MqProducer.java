@@ -9,8 +9,6 @@ import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.Map;
@@ -86,12 +84,12 @@ public class MqProducer implements Producer {
             //   channel.queueDeclare(destinationQueue, false, false, true, null);
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    String message = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
-                    //channel.basicPublish("", destinationQueue, null, cm2.getBytes());
+                    ContainerMessage containerMessage = new ContainerMessage(file.getName(), file.getName(), Endpoint.PEPPOL)
+                            .setBaseDocument(documentLoader.load(file));
+                    //channel.basicPublish("", destinationQueue, null, containerMessage.getBytes());
                     String t = ";";
                 }
             }
-            //TODO add Mq header and send to destinationQueue
         } catch (Exception ex2) {
             logger.error("Error running MqProducer!", ex2);
         } finally {
@@ -102,6 +100,7 @@ public class MqProducer implements Producer {
                     channel.close();
             } catch (Exception inore) {
             }
+            return;
         }
     }
 

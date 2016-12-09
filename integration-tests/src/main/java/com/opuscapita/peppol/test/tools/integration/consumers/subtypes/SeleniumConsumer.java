@@ -5,10 +5,11 @@ import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 /**
  * Created by gamanse1 on 2016.11.17..
  */
-public class SeleniumConsumer implements Consumer {
+public class SeleniumConsumer extends Consumer {
     private Object expectedValue;
 
-    public SeleniumConsumer(Object expectedValue) {
+    public SeleniumConsumer(String id, Object expectedValue) {
+        super(id);
         this.expectedValue = expectedValue;
     }
 

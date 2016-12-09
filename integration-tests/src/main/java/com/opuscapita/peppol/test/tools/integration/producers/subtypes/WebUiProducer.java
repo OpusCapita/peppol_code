@@ -2,12 +2,14 @@ package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import org.apache.log4j.LogManager;
+import org.openqa.selenium.By;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.close;
 import static com.codeborne.selenide.Selenide.open;
 
 /**
@@ -43,24 +45,22 @@ public class WebUiProducer implements Producer {
             return;
         }
         try {
-            if (true)
-                return;
             //selenide here
             for (File file : directory.listFiles()) {
                 open(link);
-                $("#datafile").uploadFile(file);
+                $(By.id("datafile")).uploadFile(file);
                 $("#submit").click();
                 String testResult = $("#validationStatus").getText();
                 results.put(file.getName(), testResult.replaceAll("Validation status: ", ""));
             }
+            close();
             saveResult(results);
-        } catch (Exception ex) {
-            logger.error("Error running web ui producer: ", ex);
+        } catch (Throwable th) {
+            logger.error("Error running web ui producer: ", th);
             return;
         }
     }
 
-    //Storing producer result
     private void saveResult(Properties results) throws Exception {
         results.store(new FileOutputStream(resultDirectory + "\\webUiResult"), null);
     }

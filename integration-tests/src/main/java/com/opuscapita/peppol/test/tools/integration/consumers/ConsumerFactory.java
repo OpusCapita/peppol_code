@@ -13,37 +13,34 @@ public class ConsumerFactory {
     public static Consumer createConsumer(Map.Entry<String, ?> consumerConfig, Map<String, Object> genericConfiguration) {
         String name = consumerConfig.getKey().toLowerCase();
         Map<String ,Object> properties = (Map<String, Object>) consumerConfig.getValue();
-
+        String id = String.valueOf(properties.get("id"));
         switch (name){
             case "queue msg count check":
-                return new QueueConsumer((List<String>)properties.get("subscribers"),properties.get("expected value"));
+                return new QueueConsumer(id, (List<String>)properties.get("subscribers"),properties.get("expected value"));
             case "db check":
             case "db test":
                 String connectionKey = (String) properties.get("connection string");
                 String dbConnectionString = (String) genericConfiguration.get(connectionKey);
                 String consumerName = (String) properties.get("name");
                 String query = (String) properties.get("query");
-                return new DbConsumer(consumerName, dbConnectionString, query, properties.get("expected value"));
+                return new DbConsumer(id, consumerName, dbConnectionString, query, properties.get("expected value"));
             case "selenium check":
-                return new SeleniumConsumer(properties.get("expected value"));
+                return new SeleniumConsumer(id, properties.get("expected value"));
             case "snc test":
             case "snc check":
                 String sncTestName = (String) properties.get("name");
                 String expression = (String) properties.get("expression");
                 boolean expected = (boolean) properties.get("expected value");
-                return new SncConsumer(sncTestName, expression, expected);
+                return new SncConsumer(id, sncTestName, expression, expected);
             case "file test":
             case "file check":
                 String fileTestName = (String) properties.get("name");
                 String directory = (String) properties.get("dir");
                 String fileTestExpression = (String) properties.get("expression");
-                return new FileConsumer(fileTestName, directory, fileTestExpression);
+                return new FileConsumer(id, fileTestName, directory, fileTestExpression);
             case "web ui check":
             case "web ui test":
-                String directoryKey = (String) properties.get("source directory");
-                String webUiDirectory = (String) genericConfiguration.get(directoryKey);
-                boolean expectedResult = (boolean) properties.get("expected value");
-                return new WebUiConsumer(webUiDirectory, expectedResult);
+                return new WebUiConsumer(id, properties.get("expected value"));
             default:
                 throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + name);
         }

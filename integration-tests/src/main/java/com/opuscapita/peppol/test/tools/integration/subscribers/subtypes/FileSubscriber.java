@@ -7,7 +7,10 @@ import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
  */
 public class FileSubscriber extends Subscriber {
 
-    public FileSubscriber(Object timeout) {
+    private final String sourceFolder;
+
+    public FileSubscriber(Object sourceFolder, Object timeout) {
         super(timeout);
+        this.sourceFolder = (String) sourceFolder;
     }
 }

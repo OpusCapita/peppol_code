@@ -8,39 +8,42 @@ configurations:
             username: guest
             password: guest
             virtual host: /
-    selenide result folder: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-web-ui-result
+    validation result folder: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result
 tests:
    validation:
      producers:
        web ui producer:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
          destination link: http://localhost:441/
-         result directory: selenide result folder
+         result directory: validation result folder
        mq producer:
          mq connection: mq1
-         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inboundTest
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
          destination queue: validation-integration-test
        rest producer:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         rest template file: file
-         rest endpoint: value
-         rest method: get/post
+         destination link: http://localhost:441/validate
+         result directory: validation result folder
+         rest method: post
      subscribers:
         mq subscriber:
           mq connection: mq1
           source queue: validation-integration-test
           timeout: 500
+          consumers: 1
         snc subscriber:
+          consumers: 2
           timeout: 500
+        file subscriber:
+          source directory: selenide result folder
+          consumers: 2
      consumers:
         queue msg count check:
-          subscribers:
-           - mq subscriber
-           - snc subscriber
-          expected value: 500
+            id: 1
+            expected value: 500
         web ui check:
-            source directory: selenide result folder
-            expected value: true
+            id: 2
+            expected value: 5
    events-persistence:
      producers:
        mq producer:

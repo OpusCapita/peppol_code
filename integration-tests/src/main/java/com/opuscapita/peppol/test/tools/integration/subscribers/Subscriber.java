@@ -15,4 +15,12 @@ public abstract class Subscriber {
     public Subscriber(Object timeout) {
         this.timeout = timeout;
     }
+
+    public List<Consumer> getConsumers() {
+        return consumers;
+    }
+
+    public void setConsumers(List<Consumer> consumers) {
+        this.consumers = consumers;
+    }
 }
