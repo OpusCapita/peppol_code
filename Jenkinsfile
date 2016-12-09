@@ -176,13 +176,14 @@ node {
         }
     }
 
-    def ansible_hosts = "stage.hosts"
+    milestone label: 'staging'
     stage('Deploy Stage') {
         dir('infra/ap2/ansible') {
 			ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo')
         }
     }
 
+    milestone label: 'testing'
     stage('Smoke Test') {
         dir('infra/ap2/ansible') {
 			ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
