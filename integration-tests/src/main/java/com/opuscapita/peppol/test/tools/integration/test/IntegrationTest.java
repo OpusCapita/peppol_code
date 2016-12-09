@@ -24,6 +24,7 @@ public class IntegrationTest {
 
     public TestResult run() {
         producers.forEach(producer -> producer.run());
+        subscribers.forEach(sub -> sub.run());
         return null;
     }
 }

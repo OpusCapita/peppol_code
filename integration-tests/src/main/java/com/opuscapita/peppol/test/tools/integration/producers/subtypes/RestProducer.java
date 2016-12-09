@@ -75,7 +75,7 @@ public class RestProducer implements Producer {
             return;
         try {
             FileWriter writer = null;
-            writer = new FileWriter(restResultDirectory+"\\restResult.txt");
+            writer = new FileWriter(restResultDirectory+"\\restResult");
             for (String str : results) {
                 writer.write(str+"\n");
             }

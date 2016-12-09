@@ -41,6 +41,9 @@ public class ConsumerFactory {
             case "web ui check":
             case "web ui test":
                 return new WebUiConsumer(id, properties.get("expected value"));
+            case "rest test":
+            case "rest check":
+                return new RestConsumer(id);
             default:
                 throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + name);
         }

@@ -35,7 +35,7 @@ public class SubscriberFactory {
                 subscriber = new DbSubscriber(properties.get("timeout"));
                 break;
             case "file subscriber":
-                subscriber = new FileSubscriber(properties.get("source directory"), properties.get("timeout"));
+                subscriber = new FileSubscriber(properties.get("source file"), properties.get("timeout"));
                 break;
             default:
                 logger.error("Invalid subscriber configuration, unable to create subscriber: " + name);

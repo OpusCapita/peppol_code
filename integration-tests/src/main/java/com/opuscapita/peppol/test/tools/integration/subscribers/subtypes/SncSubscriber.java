@@ -9,4 +9,9 @@ public class SncSubscriber extends Subscriber {
     public SncSubscriber(Object timeout) {
         super(timeout);
     }
+
+    @Override
+    public void run() {
+
+    }
 }

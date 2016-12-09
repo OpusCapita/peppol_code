@@ -32,15 +32,15 @@ public class IntegrationTestFactory {
             return null;
         }
         Map<String,?> producersConfiguration = (Map<String, ?>) moduleSettings.get("producers");
-        Map<String,?> subscribersConfiguration = (Map<String, ?>) moduleSettings.get("subscribers");
-        Map<String,?> consumersConfiguration = (Map<String, ?>) moduleSettings.get("consumers");
+        List<Map<String,?>> subscribersConfiguration = (List<Map<String, ?>>) moduleSettings.get("subscribers");
+        List<Map<String,?>> consumersConfiguration = (List<Map<String, ?>>) moduleSettings.get("consumers");
 
         List<Producer> producers = producersConfiguration.entrySet().stream().map(entry -> ProducerFactory.createProducer(entry, genericConfiguration)).collect(Collectors.toList());
-        for (Map.Entry<String, ?> consumerConfig : consumersConfiguration.entrySet()) {
-            Consumer consumer = ConsumerFactory.createConsumer(consumerConfig, genericConfiguration);
+        for (Map<String, ?> consumerConfig : consumersConfiguration) {
+            Consumer consumer = ConsumerFactory.createConsumer(consumerConfig.entrySet().iterator().next(), genericConfiguration);
             consumers.put(consumer.getId(),consumer);
         }
-        List<Subscriber> subscribers = subscribersConfiguration.entrySet().stream().map(entry -> SubscriberFactory.createSubscriber(entry, genericConfiguration, consumers)).collect(Collectors.toList());
+        List<Subscriber> subscribers = subscribersConfiguration.stream().map(subscriber -> SubscriberFactory.createSubscriber(subscriber.entrySet().iterator().next(), genericConfiguration, consumers)).collect(Collectors.toList());
 
 
         return new IntegrationTest(moduleName, producers, subscribers, new ArrayList<>(consumers.values()));

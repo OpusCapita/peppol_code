@@ -19,4 +19,6 @@ public abstract class Consumer {
     public void setId(String id) {
         this.id = id;
     }
+
+    public abstract void consume(String consumable);
 }
