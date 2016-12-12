@@ -170,6 +170,10 @@ public class PeppolEvent {
         return sendingProtocol;
     }
 
+    public void setSendingProtocol(String sendingProtocol) {
+        this.sendingProtocol = sendingProtocol;
+    }
+
     public String getDocumentType() {
         return documentType;
     }
@@ -178,7 +182,27 @@ public class PeppolEvent {
         this.documentType = documentType;
     }
 
-    public void setSendingProtocol(String sendingProtocol) {
-        this.sendingProtocol = sendingProtocol;
+    @Override
+    public String toString() {
+        return "PeppolEvent{" +
+                "transportType=" + transportType +
+                ", fileName='" + fileName + '\'' +
+                ", fileSize=" + fileSize +
+                ", errorFilePath='" + errorFilePath + '\'' +
+                ", invoiceId='" + invoiceId + '\'' +
+                ", senderId='" + senderId + '\'' +
+                ", senderName='" + senderName + '\'' +
+                ", senderCountryCode='" + senderCountryCode + '\'' +
+                ", recipientId='" + recipientId + '\'' +
+                ", recipientName='" + recipientName + '\'' +
+                ", recipientCountryCode='" + recipientCountryCode + '\'' +
+                ", invoiceDate='" + invoiceDate + '\'' +
+                ", dueDate='" + dueDate + '\'' +
+                ", errorMessage='" + errorMessage + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", documentType='" + documentType + '\'' +
+                ", commonName='" + commonName + '\'' +
+                ", sendingProtocol='" + sendingProtocol + '\'' +
+                '}';
     }
 }

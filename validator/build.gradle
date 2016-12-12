@@ -35,6 +35,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-groovy-templates')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-amqp')
+    compile("org.springframework.hateoas:spring-hateoas:0.12.0.RELEASE")
     compile 'no.difi.vefa:validator-core:2.0.2'
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
