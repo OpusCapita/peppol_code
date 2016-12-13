@@ -10,7 +10,6 @@ include "inbound"
 include "integration-tests"
 include "internal-routing"
 include 'mq-to-file'
-include "transport"
 include "outbound"
 include "preprocessing"
 include "support-ui"
