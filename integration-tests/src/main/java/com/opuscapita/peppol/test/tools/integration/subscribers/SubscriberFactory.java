@@ -32,10 +32,12 @@ public class SubscriberFactory {
                 subscriber = new SncSubscriber(properties.get("timeout"));
                 break;
             case "db subscriber":
-                subscriber = new DbSubscriber(properties.get("timeout"));
+                String dbKey = (String) properties.get("db connection");
+                String dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
+                subscriber = new DbSubscriber(properties.get("timeout"), dbConnection, properties.get("query"));
                 break;
             case "file subscriber":
-                subscriber = new FileSubscriber(properties.get("source file"), properties.get("timeout"));
+                subscriber = new FileSubscriber(properties.get("timeout"), properties.get("source file"));
                 break;
             default:
                 logger.error("Invalid subscriber configuration, unable to create subscriber: " + name);
