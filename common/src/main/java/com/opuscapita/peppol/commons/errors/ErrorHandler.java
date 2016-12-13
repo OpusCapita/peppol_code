@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.commons.errors;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -13,7 +15,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ import java.util.Date;
 
 /**
  * Created by Daniil on 19.07.2016.
- *
+ * <p>
  * TODO separate between our errors that should be handled by DTP and service desk related stuff
  */
 @Component
@@ -56,14 +57,31 @@ public class ErrorHandler {
         StringWriter stackTraceWriter = new StringWriter();
         jse.printStackTrace(new PrintWriter(stackTraceWriter));
         String correlationId = correlationIdPrefix + generateFailedMessageCorrelationId(jse);
-        Yaml yaml = new Yaml();
-        Object yamlifiedMessaged = yaml.load("\"" + message + "\"");
+        String humanReadableMessage = makeMessageHumanReadable(message);
         try {
-            serviceNowRest.insert(new SncEntity(shortDescription, yaml.dump(yamlifiedMessaged) + "\n\r" + dumpFileName + "\n\r" + stackTraceWriter.toString(),
+            serviceNowRest.insert(new SncEntity(shortDescription, humanReadableMessage + "\n\r" + dumpFileName + "\n\r" + stackTraceWriter.toString(),
                     correlationId, customerId, 0));
         } catch (IOException e) {
             logger.error("Unable to create SNC ticket", e);
         }
+    }
+
+    /**
+     * Make the message "great", errm... human readable again :)
+     *
+     * @param message
+     * @return indented contents of json as a plain text or just a message itself, in any case { and } and " and ' are removed.
+     */
+    private String makeMessageHumanReadable(String message) {
+        String detailedDescription = "";
+        try {
+            JsonObject jsonMessage = new JsonParser().parse(message).getAsJsonObject();
+            detailedDescription = new GsonBuilder().setPrettyPrinting().create().toJson(jsonMessage);
+        } catch (Exception e) {
+            detailedDescription = message;
+        }
+        detailedDescription = detailedDescription.replaceAll("\\{|\\}|\\\"|\\'", "");
+        return detailedDescription;
     }
 
     private String generateFailedMessageCorrelationId(Exception jse) {
