@@ -13,7 +13,7 @@ public class FileSubscriber extends Subscriber {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(FileSubscriber.class);
     private final String sourceFile;
 
-    public FileSubscriber(Object sourceFile, Object timeout) {
+    public FileSubscriber(Object timeout, Object sourceFile) {
         super(timeout);
         this.sourceFile = (String) sourceFile;
     }
