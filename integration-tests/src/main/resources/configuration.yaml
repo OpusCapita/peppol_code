@@ -113,7 +113,8 @@ tests:
            source query: query
       subscribers:
         - db subscriber:
-            timeout: 500
+            db connection: db1
+            query: select 1
       consumers:
          - selenium check:
             id: 11

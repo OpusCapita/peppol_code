@@ -1,12 +1,12 @@
 package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 
-import com.opuscapita.peppol.test.tools.integration.producers.subtypes.MqProducer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
 
-import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,9 +24,10 @@ public class MqSubscriber extends Subscriber {
     }
 
     @Override
-    public void run() {
+    public List<TestResult> run() {
         Connection connection = null;
         Channel channel = null;
 
+        return testResults;
     }
 }

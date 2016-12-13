@@ -2,9 +2,11 @@ package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by gamanse1 on 2016.11.24..
@@ -19,20 +21,22 @@ public class FileSubscriber extends Subscriber {
     }
 
     @Override
-    public void run() {
+    public List<TestResult> run() {
         File file = null;
         try {
             file = new File(sourceFile);
             if (!file.isFile()) {
                 logger.error(this.sourceFile + " doesn't exist!");
-                return;
+                return null;
             }
         } catch (Exception ex) {
             logger.error("Error reading: " + sourceFile, ex);
-            return;
+            return null;
         }
         for (Consumer consumer : consumers) {
-            consumer.consume(sourceFile);
+            TestResult testResult = consumer.consume(sourceFile);
+            testResults.add(testResult);
         }
+        return testResults;
     }
 }
