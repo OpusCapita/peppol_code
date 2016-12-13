@@ -19,11 +19,11 @@ public class ConsumerFactory {
                 return new QueueConsumer(id, (List<String>)properties.get("subscribers"),properties.get("expected value"));
             case "db check":
             case "db test":
-                String connectionKey = (String) properties.get("connection string");
-                String dbConnectionString = (String) genericConfiguration.get(connectionKey);
+                //String connectionKey = (String) properties.get("connection string");
+                //String dbConnectionString = (String) genericConfiguration.get(connectionKey);
                 String consumerName = (String) properties.get("name");
-                String query = (String) properties.get("query");
-                return new DbConsumer(id, consumerName, dbConnectionString, query, properties.get("expected value"));
+                //String query = (String) properties.get("query");
+                return new DbConsumer(id, consumerName, properties.get("expected value"));
             case "selenium check":
                 return new SeleniumConsumer(id, properties.get("expected value"));
             case "snc test":

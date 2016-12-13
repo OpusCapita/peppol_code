@@ -26,7 +26,7 @@ repositories {
 
 
 dependencies {
-    runtime 'com.h2database:h2'
+   /* runtime 'com.h2database:h2'*/
     runtime('mysql:mysql-connector-java:5.1.25')
     runtime('org.postgresql:postgresql')
     compile 'org.springframework.boot:spring-boot-starter-actuator'

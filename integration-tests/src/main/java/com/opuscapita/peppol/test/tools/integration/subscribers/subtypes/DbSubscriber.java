@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 
+import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.util.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class DbSubscriber extends Subscriber {
 
     @Override
     public void run() {
+        //next() getInt(1)
+        ResultSet resultSet = null;
         try {
             Properties props = new Properties();
             props.put("useJDBCCompliantTimezoneShift", "true");
@@ -34,9 +37,11 @@ public class DbSubscriber extends Subscriber {
             java.sql.Connection conn = null;
             conn = DriverManager.getConnection(dbConnection, props);
             PreparedStatement statement = conn.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            String t = "";
-            //next() getString("column_name")
+            resultSet = statement.executeQuery();
+            resultSet.next();
+            for (Consumer consumer : consumers) {
+                consumer.consume(resultSet.getString(1));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

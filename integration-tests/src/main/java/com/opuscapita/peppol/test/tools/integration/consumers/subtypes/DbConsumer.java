@@ -6,16 +6,12 @@ import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
  * Created by gamanse1 on 2016.11.17..
  */
 public class DbConsumer extends Consumer {
-    private final String connectionString;
     private final String name;
-    private String query;
     private Object expectedValue;
 
-    public DbConsumer(String id, String consumerName, String dbConnectionString, String query, Object expectedValue) {
+    public DbConsumer(String id, String consumerName, Object expectedValue) {
         super(id);
         this.name = consumerName;
-        this.connectionString = dbConnectionString;
-        this.query = query;
         this.expectedValue = expectedValue;
     }
 
@@ -26,6 +22,7 @@ public class DbConsumer extends Consumer {
 
     @Override
     public void consume(String consumable) {
-
+        boolean result = Integer.valueOf(consumable).equals((Integer)expectedValue);
+        String test = "";
     }
 }
