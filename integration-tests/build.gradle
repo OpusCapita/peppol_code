@@ -17,11 +17,6 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
-/*jar {
-    baseName = 'integration-tests'
-    version = ''
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}*/
 
 repositories {
     mavenCentral()
