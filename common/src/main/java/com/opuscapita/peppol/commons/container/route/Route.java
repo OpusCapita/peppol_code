@@ -14,6 +14,8 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class Route implements Serializable {
+    public final static String PARAMETERS_SEPARATOR = ":";
+
     private List<String> endpoints = new ArrayList<>();
     private String description;
     private String mask;
@@ -45,10 +47,21 @@ public class Route implements Serializable {
         if (current >= endpoints.size()) {
             return null;
         }
-        String e = endpoints.get(current);
+        String result = endpoints.get(current++);
 
-        current++;
-        return e;
+        if (result.contains(PARAMETERS_SEPARATOR)) {
+            return result.substring(0, result.indexOf(PARAMETERS_SEPARATOR));
+        }
+
+        return result;
+    }
+
+    @Nullable
+    public String popWithParameters() {
+        if (current >= endpoints.size()) {
+            return null;
+        }
+        return endpoints.get(current++);
     }
 
     public boolean isInbound() {
@@ -82,6 +95,7 @@ public class Route implements Serializable {
         return mask;
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void setMask(@Nullable String mask) {
         this.mask = mask;
     }
@@ -96,7 +110,7 @@ public class Route implements Serializable {
     }
 
     @NotNull
-    public List<String> getEndpoints() {
+    private List<String> getEndpoints() {
         return endpoints;
     }
 
