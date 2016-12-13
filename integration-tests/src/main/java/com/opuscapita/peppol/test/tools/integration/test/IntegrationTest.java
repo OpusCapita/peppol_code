@@ -4,6 +4,7 @@ import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +23,10 @@ public class IntegrationTest {
         this.consumers = consumers;
     }
 
-    public TestResult run() {
-        producers.forEach(producer -> producer.run());
-        subscribers.forEach(sub -> sub.run());
-        return null;
+    public List<TestResult> run() {
+        producers.forEach(Producer::run);
+        List<TestResult> testResults = new ArrayList<>();
+        subscribers.stream().map(Subscriber::run).forEach(testResults::addAll);
+        return testResults;
     }
 }

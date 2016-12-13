@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 
 /**
  * Created by gamanse1 on 2016.12.02..
@@ -22,7 +23,8 @@ public class WebUiConsumer extends Consumer {
     }
 
     @Override
-    public void consume(String consumable) {
+    public TestResult consume(String consumable) {
 
+        return null;
     }
 }

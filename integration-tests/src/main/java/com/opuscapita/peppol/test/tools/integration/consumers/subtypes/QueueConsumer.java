@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class QueueConsumer extends Consumer {
     }
 
     @Override
-    public void consume(String consumable) {
+    public TestResult consume(String consumable) {
 
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 
 /**
  * Created by gamanse1 on 2016.11.17..
@@ -21,8 +22,11 @@ public class DbConsumer extends Consumer {
     }
 
     @Override
-    public void consume(String consumable) {
-        boolean result = Integer.valueOf(consumable).equals((Integer)expectedValue);
-        String test = "";
+    public TestResult consume(String consumable) {
+        TestResult testResult;
+        boolean passed = Integer.valueOf(consumable).equals(expectedValue);
+        String details = (passed) ? "successfully fetched data from DB!" :
+                "Got value " + consumable + " but expected: " + expectedValue;
+        return new TestResult(name,passed,details);
     }
 }

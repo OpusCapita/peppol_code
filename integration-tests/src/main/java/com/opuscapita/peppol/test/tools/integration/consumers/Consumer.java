@@ -1,5 +1,7 @@
 package com.opuscapita.peppol.test.tools.integration.consumers;
 
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
+
 /**
  * Created by gamanse1 on 2016.11.14..
  */
@@ -20,5 +22,5 @@ public abstract class Consumer {
         this.id = id;
     }
 
-    public abstract void consume(String consumable);
+    public abstract TestResult consume(String consumable);
 }

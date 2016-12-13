@@ -1,15 +1,17 @@
 package com.opuscapita.peppol.test.tools.integration.subscribers;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by gamanse1 on 2016.11.14..
  */
 public abstract class Subscriber {
-    //timeout, ждёт результат выполнения модуля
     protected List<Consumer> consumers;
+    protected List<TestResult> testResults = new ArrayList<>();
     private Object timeout;
 
     public Subscriber(Object timeout) {
@@ -24,5 +26,5 @@ public abstract class Subscriber {
         this.consumers = consumers;
     }
 
-    public abstract void run();
+    public abstract List<TestResult> run();
 }

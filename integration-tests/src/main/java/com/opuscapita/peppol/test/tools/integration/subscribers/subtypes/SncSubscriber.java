@@ -1,6 +1,9 @@
 package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
+
+import java.util.List;
 
 /**
  * Created by gamanse1 on 2016.11.17..
@@ -11,7 +14,8 @@ public class SncSubscriber extends Subscriber {
     }
 
     @Override
-    public void run() {
+    public List<TestResult> run() {
 
+        return testResults;
     }
 }

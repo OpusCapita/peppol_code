@@ -2,6 +2,7 @@ package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
+import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -27,8 +29,7 @@ public class DbSubscriber extends Subscriber {
     }
 
     @Override
-    public void run() {
-        //next() getInt(1)
+    public List<TestResult> run() {
         ResultSet resultSet = null;
         try {
             Properties props = new Properties();
@@ -40,10 +41,12 @@ public class DbSubscriber extends Subscriber {
             resultSet = statement.executeQuery();
             resultSet.next();
             for (Consumer consumer : consumers) {
-                consumer.consume(resultSet.getString(1));
+                TestResult testResult = consumer.consume(resultSet.getString(1));
+                testResults.add(testResult);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return testResults;
     }
 }
