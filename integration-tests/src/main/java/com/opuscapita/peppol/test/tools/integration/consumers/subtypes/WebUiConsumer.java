@@ -20,4 +20,9 @@ public class WebUiConsumer extends Consumer {
     public boolean isDone() {
         return false;
     }
+
+    @Override
+    public void consume(String consumable) {
+
+    }
 }

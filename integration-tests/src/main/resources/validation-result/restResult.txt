@@ -1,7 +1,0 @@
-{"validationType":"UBL","passed":true,"errors":[]}
-{"validationType":"UBL","passed":true,"errors":[]}
-{"validationType":"UBL","passed":true,"errors":[]}
-{"validationType":"UBL","passed":true,"errors":[]}
-{"validationType":"SVEFAKTURA1","passed":true,"errors":[]}
-{"validationType":"UBL","passed":true,"errors":[]}
-{"validationType":"UBL","passed":true,"errors":[]}

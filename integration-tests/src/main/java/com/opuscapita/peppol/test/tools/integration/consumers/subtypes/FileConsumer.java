@@ -21,4 +21,9 @@ public class FileConsumer extends Consumer {
     public boolean isDone() {
         return false;
     }
+
+    @Override
+    public void consume(String consumable) {
+
+    }
 }

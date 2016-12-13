@@ -160,7 +160,8 @@ public class PersistenceController {
     protected void addSentInfo(FileInfo fileInfo, PeppolEvent peppolEvent) {
         SentFileInfo sentFileInfo = new SentFileInfo();
         sentFileInfo.setSentFile(fileInfo);
-        sentFileInfo.setTransmissionId(peppolEvent.getTransactionId());
+        String prefix = peppolEvent.getTransportType().name().split("_")[0];
+        sentFileInfo.setTransmissionId(prefix + peppolEvent.getTransactionId());
         sentFileInfo.setApProtocol(peppolEvent.getSendingProtocol());
         if (peppolEvent.getCommonName() != null) {
             // CN example: "O=Telenor Norge AS,CN=APP_1000000030,C=NO"

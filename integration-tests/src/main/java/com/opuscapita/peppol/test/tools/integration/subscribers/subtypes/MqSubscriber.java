@@ -17,4 +17,9 @@ public class MqSubscriber extends Subscriber {
         this.mqSettings = mqSettings;
         this.queue = (String) queue;
     }
+
+    @Override
+    public void run() {
+
+    }
 }

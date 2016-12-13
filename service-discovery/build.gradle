@@ -17,7 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'preprocessing'
+    baseName = 'service-discovery'
     version = ''
 }
 sourceCompatibility = 1.8
@@ -29,17 +29,27 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
+
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-starter-amqp'
-    compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
-    compile 'org.springframework.retry:spring-retry'
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-groovy-templates')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile 'org.springframework.cloud:spring-cloud-starter-eureka-server'
+    compile('org.springframework.boot:spring-boot-starter-amqp')
+    compile 'no.difi.vefa:validator-core:2.0.2'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
     compile project(':common')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    optional "org.springframework.boot:spring-boot-configuration-processor"
 }
 
+compileJava.dependsOn(processResources)
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Brixton.SR7'
+    }
+}
 
 eclipse {
     classpath {

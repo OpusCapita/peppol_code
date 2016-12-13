@@ -9,7 +9,7 @@ import java.util.List;
  */
 public abstract class Subscriber {
     //timeout, ждёт результат выполнения модуля
-    List<Consumer> consumers;
+    protected List<Consumer> consumers;
     private Object timeout;
 
     public Subscriber(Object timeout) {
@@ -23,4 +23,6 @@ public abstract class Subscriber {
     public void setConsumers(List<Consumer> consumers) {
         this.consumers = consumers;
     }
+
+    public abstract void run();
 }

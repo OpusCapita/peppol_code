@@ -7,7 +7,6 @@ import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.TestConfig;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class ValidationControllerTest {
 
 
     @Test
-    @Ignore("Caused by: org.springframework.amqp.rabbit.listener.QueuesNotAvailableException")
+    //@Ignore("Caused by: org.springframework.amqp.rabbit.listener.QueuesNotAvailableException")
     public void validateSveFaktura1Files() throws Exception {
         Arrays.stream(documentProfilesToBeTested).forEach(this::testDocumentProfileValidation);
     }
