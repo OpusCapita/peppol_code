@@ -27,39 +27,59 @@ import java.util.TreeSet;
 public class PersistenceController {
     Logger logger = LoggerFactory.getLogger(PersistenceController.class);
 
-    @Autowired
+
     AccessPointRepository accessPointRepository;
-    @Autowired
+
     MessageRepository messageRepository;
-    @Autowired
+
     CustomerRepository customerRepository;
-    @Autowired
+
     FileInfoRepository fileInfoRepository;
-    @Autowired
+
     FailedFileInfoRepository failedFileInfoRepository;
-    @Autowired
+
     SentFileInfoRepository sentFileInfoRepository;
-    @Autowired
+
     ReprocessFileInfoRepository reprocessFileInfoRepository;
+
     @Value("${peppol.events-persistence.error.dir}")
     private String errorDirPath;
     @Value("${peppol.events-persistence.invalid.dir}")
     private String invalidDirPath;
 
+    @Autowired
+    public PersistenceController(
+            AccessPointRepository accessPointRepository,
+            MessageRepository messageRepository,
+            CustomerRepository customerRepository,
+            FileInfoRepository fileInfoRepository,
+            FailedFileInfoRepository failedFileInfoRepository,
+            SentFileInfoRepository sentFileInfoRepository,
+            ReprocessFileInfoRepository reprocessFileInfoRepository
+    ) {
+        this.accessPointRepository = accessPointRepository;
+        this.messageRepository = messageRepository;
+        this.customerRepository = customerRepository;
+        this.fileInfoRepository = fileInfoRepository;
+        this.failedFileInfoRepository = failedFileInfoRepository;
+        this.sentFileInfoRepository = sentFileInfoRepository;
+        this.reprocessFileInfoRepository = reprocessFileInfoRepository;
+
+    }
 
     @Transactional
     @Retryable(include = ConnectException.class, maxAttempts = 5, backoff = @Backoff(10000L))
     public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
         logger.info("About to store peppol event " + peppolEvent);
         refactorIfInbound(peppolEvent);
-                getAccessPoint(peppolEvent);
+        getAccessPoint(peppolEvent);
 
-                Message message = getOrCreateMessage(peppolEvent);
-                FileInfo fileInfo = getFileInfo(message, peppolEvent);
-                setFileInfoStatus(fileInfo, peppolEvent, message);
-                fileInfoRepository.save(fileInfo);
-                Message persistedMessage = messageRepository.save(message);
-                logger.info("Message persisted with id: " + persistedMessage.getId());
+        Message message = getOrCreateMessage(peppolEvent);
+        FileInfo fileInfo = getFileInfo(message, peppolEvent);
+        setFileInfoStatus(fileInfo, peppolEvent, message);
+        fileInfoRepository.save(fileInfo);
+        Message persistedMessage = messageRepository.save(message);
+        logger.info("Message persisted with id: " + persistedMessage.getId());
 
     }
 

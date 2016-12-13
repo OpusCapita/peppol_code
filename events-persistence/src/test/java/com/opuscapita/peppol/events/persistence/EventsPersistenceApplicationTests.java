@@ -1,12 +1,16 @@
 package com.opuscapita.peppol.events.persistence;
 
+import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.SncEntity;
+import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
+import com.opuscapita.peppol.events.persistence.controller.PersistenceController;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +19,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.StreamUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.util.Arrays;
+import java.util.stream.StreamSupport;
+
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,6 +36,9 @@ import java.io.IOException;
 @ComponentScan(excludeFilters = @ComponentScan.Filter(value = EventQueueListener.class, type = FilterType.ASSIGNABLE_TYPE))
 @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
 public class EventsPersistenceApplicationTests {
+    @Autowired
+    PersistenceController persistenceController;
+
     Logger logger = Logger.getLogger(EventsPersistenceApplicationTests.class);
     String[] negativeFixtures = {
             "",
@@ -55,6 +70,23 @@ public class EventsPersistenceApplicationTests {
 
     @Test
     public void contextLoads() {
+    }
+
+    @Test
+    public void testStorePeppolEvent() {
+        String[] testDataFiles = {"/OCIN00871839_Norengros_test_case.json", "/Invalid-msg-field-lenghts-and-corrupted-contents-negative-test.json"};
+
+        Gson gson = new Gson();
+        Arrays.asList(testDataFiles).forEach(testDataFile -> {
+            try {
+                PeppolEvent peppolEvent = gson.fromJson(new BufferedReader(new InputStreamReader(EventsPersistenceApplicationTests.class.getResource(testDataFile).openStream())), PeppolEvent.class);
+                persistenceController.storePeppolEvent(peppolEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                fail(e.getMessage());
+            }
+        });
+
     }
 
 }
