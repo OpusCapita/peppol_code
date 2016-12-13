@@ -1,0 +1,8 @@
+---
+- name: Check if file exist in long term storage
+- stat: path=/peppol/data/storage/9908_937270062/9908_937789416/20161208/
+    register: p
+- assert:
+    that:
+       - p.stat.exists and p.stat.isdir
+...
