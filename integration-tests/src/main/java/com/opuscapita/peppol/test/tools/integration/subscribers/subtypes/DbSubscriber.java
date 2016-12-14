@@ -3,8 +3,6 @@ package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import com.opuscapita.peppol.test.tools.integration.util.StorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,8 +17,7 @@ import java.util.Properties;
 public class DbSubscriber extends Subscriber {
     private final String dbConnection;
     private final String query;
-    @Autowired
-    StorageService storageService;
+
 
     public DbSubscriber(Object timeout, String dbConnection, Object query) {
         super(timeout);
