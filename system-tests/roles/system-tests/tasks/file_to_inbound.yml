@@ -1,6 +1,6 @@
 ---
 - name: Copy file to inbound
-  command: docker exec inbound ./send-to-peppol.sh -f /tmp/git/test-materials/suite/ehf_2.0_bii4_no.xml
+  shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
   register: inbound_output
 - name: find transmissionId
   shell: echo "{{inbound_output.stdout_lines[-5:]}}" |grep -oh 'transmissionId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
