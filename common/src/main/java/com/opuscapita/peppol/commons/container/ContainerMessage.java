@@ -92,7 +92,7 @@ public class ContainerMessage implements Serializable {
         return source;
     }
 
-    public byte[] getBytes() {
+    public byte[] convertToJsonByteArray() {
         return new Gson().toJson(this).getBytes();
     }
 

@@ -64,7 +64,6 @@ public abstract class AbstractQueueListener {
                 logger.error("Failed to deserialize the message from AMQP: " + e1.getMessage());
                 handleError("n/a", e1, null);
             }
-            return;
         }
     }
 
@@ -73,7 +72,7 @@ public abstract class AbstractQueueListener {
     private void handleError(@NotNull String customerId, @NotNull Exception e, @Nullable ContainerMessage cm) {
         try {
             if (errorHandler != null) {
-                String message = cm == null ? "no content available" : new String(cm.getBytes());
+                String message = cm == null ? "no content available" : new String(cm.convertToJsonByteArray());
                 errorHandler.reportToServiceNow(message, customerId, e);
             }
             String fileName = (cm == null ? "n/a" : cm.getFileName());

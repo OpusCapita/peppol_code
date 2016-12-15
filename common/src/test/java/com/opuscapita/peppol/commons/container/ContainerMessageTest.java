@@ -15,7 +15,7 @@ public class ContainerMessageTest {
     public void testSerialization() throws Exception {
         ContainerMessage cm = new ContainerMessage("metadata", "test.xml", Endpoint.PEPPOL);
 
-        byte[] bytes = cm.getBytes();
+        byte[] bytes = cm.convertToJsonByteArray();
         String result = new String(bytes);
 
         ContainerMessage cm2 = new Gson().fromJson(result, ContainerMessage.class);

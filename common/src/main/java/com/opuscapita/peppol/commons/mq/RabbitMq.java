@@ -30,7 +30,7 @@ public class RabbitMq implements MessageQueue {
             channel = connection.createChannel();
 
             channel.queueDeclare(queueName, true, false, false, null); // maybe not the best set of options
-            channel.basicPublish(exchange == null ? "" : exchange, queueName, null, message.getBytes());
+            channel.basicPublish(exchange == null ? "" : exchange, queueName, null, message.convertToJsonByteArray());
 
         } finally {
             if (channel != null) {
@@ -42,7 +42,7 @@ public class RabbitMq implements MessageQueue {
         }
     }
 
-    protected Connection getConnection(MqProperties mqProperties) throws IOException, TimeoutException {
+    private Connection getConnection(MqProperties mqProperties) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(mqProperties.getHost());
         if (mqProperties.getPort() != 0) {
