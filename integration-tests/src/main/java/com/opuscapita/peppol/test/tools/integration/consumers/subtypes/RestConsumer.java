@@ -20,7 +20,7 @@ public class RestConsumer extends Consumer {
     }
 
     @Override
-    public TestResult consume(String consumable) {
+    public TestResult consume(Object consumable) {
         String test = "{\"validationType\":\"UBL\",\"passed\":true,\"errors\":[]}";
         ValidationResult result = new Gson().fromJson(test,ValidationResult.class);
         String h = "l";

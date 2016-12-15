@@ -29,7 +29,7 @@ public class SubscriberFactory {
                 subscriber = new MqSubscriber(properties.get("timeout"), (Map<String, String>) genericConfiguration.get(mqKey), properties.get("source-queue"));
                 break;
             case "snc subscriber":
-                subscriber = new SncSubscriber(properties.get("timeout"));
+                subscriber = new SncSubscriber(properties.get("timeout"), properties.get("source directory"));
                 break;
             case "db subscriber":
                 String dbKey = (String) properties.get("db connection");
