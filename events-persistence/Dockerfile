@@ -13,4 +13,4 @@ RUN \
 WORKDIR "${EVENTS_PERSISTENCE_HOME}"
 ADD ["build/libs/events-persistence.jar", "events-persistence.jar"]
 
-CMD ["java", "-jar", "events-persistence.jar"]
+CMD java $JAVA_OPTS -jar events-persistence.jar

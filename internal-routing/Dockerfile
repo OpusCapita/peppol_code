@@ -13,5 +13,5 @@ RUN \
 WORKDIR "${INTERNAL_ROUTING_HOME}"
 ADD ["build/libs/internal-routing.jar", "internal-routing.jar"]
 
-CMD ["java", "-jar", "internal-routing.jar"]
+CMD java $JAVA_OPTS -jar internal-routing.jar
 

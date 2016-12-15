@@ -22,5 +22,5 @@ public abstract class Consumer {
         this.id = id;
     }
 
-    public abstract TestResult consume(String consumable);
+    public abstract TestResult consume(Object consumable);
 }

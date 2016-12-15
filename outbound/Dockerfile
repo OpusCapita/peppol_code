@@ -13,5 +13,5 @@ RUN \
 WORKDIR "${OUTBOUND_HOME}"
 ADD ["build/libs/outbound.jar", "outbound.jar"]
 
-CMD ["java", "-jar", "outbound.jar"]
+CMD java $JAVA_OPTS -jar outbound.jar
 

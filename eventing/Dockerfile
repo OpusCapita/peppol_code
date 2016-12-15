@@ -13,5 +13,5 @@ RUN \
 WORKDIR "${EVENTING_HOME}"
 ADD ["build/libs/eventing.jar", "eventing.jar"]
 
-CMD ["java", "-jar", "eventing.jar"]
+CMD java $JAVA_OPTS -jar eventing.jar
 

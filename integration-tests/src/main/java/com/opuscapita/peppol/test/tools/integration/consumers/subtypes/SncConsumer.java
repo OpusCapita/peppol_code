@@ -10,13 +10,11 @@ public class SncConsumer extends Consumer {
 
 
     private final String name;
-    private final String expression;
-    private final boolean expected;
+    private final String expected;
 
-    public SncConsumer(String id, String name, String expression, boolean expected) {
+    public SncConsumer(String id, String name, String expected) {
         super(id);
         this.name = name;
-        this.expression = expression;
         this.expected = expected;
     }
 
@@ -26,7 +24,7 @@ public class SncConsumer extends Consumer {
     }
 
     @Override
-    public TestResult consume(String consumable) {
+    public TestResult consume(Object consumable) {
 
         return null;
     }

@@ -50,8 +50,8 @@ public class SveFaktura1Validator implements BasicValidator {
 
     @Override
     public ValidationResult validate(byte[] data) {
-        System.out.println("Validating: ");
-        System.out.println(new String(data));
+        /*System.out.println("Validating: ");
+        System.out.println(new String(data));*/
         List<ValidationError> errors = new ArrayList<>();
         ValidationResult result = new ValidationResult(Archetype.SVEFAKTURA1);
         svefaktura1XsdValidator.performXsdValidation(data);

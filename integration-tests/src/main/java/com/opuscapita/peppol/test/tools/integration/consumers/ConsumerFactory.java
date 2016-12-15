@@ -29,9 +29,8 @@ public class ConsumerFactory {
             case "snc test":
             case "snc check":
                 String sncTestName = (String) properties.get("name");
-                String expression = (String) properties.get("expression");
-                boolean expected = (boolean) properties.get("expected value");
-                return new SncConsumer(id, sncTestName, expression, expected);
+                String expected = (String) properties.get("expected value");
+                return new SncConsumer(id, sncTestName, expected);
             case "file test":
             case "file check":
                 String fileTestName = (String) properties.get("name");

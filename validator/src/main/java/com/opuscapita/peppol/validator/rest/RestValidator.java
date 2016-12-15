@@ -7,6 +7,8 @@ import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
 import com.opuscapita.peppol.validator.validations.ValidationController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -25,18 +27,22 @@ public class RestValidator {
     @Autowired
     DocumentLoader documentLoader;
 
+    Logger logger = LoggerFactory.getLogger(RestValidator.class);
+
     @RequestMapping(value = "/validate", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public
     @ResponseBody
     ValidationResult validate(@RequestParam("file") MultipartFile file, @RequestParam(name = "test", required = false, defaultValue = "false") boolean useTestArtifacts) {
+        logger.info("About to validate file: " + file.getOriginalFilename());
         ValidationResult validationResult;
         ContainerMessage containerMessage;
         try {
             containerMessage = new ContainerMessage("REST /validate", file.getName(), Endpoint.REST)
                     .setBaseDocument(documentLoader.load(file.getInputStream(), file.getName()));
             validationResult = validationController.validate(containerMessage);
-
+            logger.info("Validation performed normally with result: " + validationResult.isPassed());
         } catch (IOException e) {
+            logger.error("Validation failed with error: " + e.getMessage());
             e.printStackTrace();
             validationResult = new ValidationResult(Archetype.INVALID);
             validationResult.addError(ValidationErrorBuilder.aValidationError().withTitle("I/O failure when validating via ReST")

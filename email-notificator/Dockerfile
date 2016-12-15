@@ -13,5 +13,5 @@ RUN \
 WORKDIR "${EMAIL_NOTIFICATOR_HOME}"
 ADD ["build/libs/email-notificator.jar", "email-notificator.jar"]
 
-CMD ["java", "-jar", "email-notificator.jar"]
+CMD java $JAVA_OPTS -jar email-notificator.jar
 

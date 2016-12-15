@@ -13,4 +13,4 @@ RUN \
 WORKDIR "${SMOKE_TESTS_HOME}"
 ADD ["build/libs/integration-tests.jar", "integration-tests.jar"]
 
-ENTRYPOINT ["java", "-jar", "integration-testsjar"]
+ENTRYPOINT ["java", "$JAVA_OPTS", "-jar", "integration-testsjar"]

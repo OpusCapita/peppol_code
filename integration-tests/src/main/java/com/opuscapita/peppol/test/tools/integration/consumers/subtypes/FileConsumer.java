@@ -24,7 +24,7 @@ public class FileConsumer extends Consumer {
     }
 
     @Override
-    public TestResult consume(String consumable) {
+    public TestResult consume(Object consumable) {
 
         return null;
     }
