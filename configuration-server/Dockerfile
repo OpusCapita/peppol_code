@@ -20,6 +20,6 @@ ENV JAVA_OPTS "\
 WORKDIR "${CONFIG_SERVER_HOME}"
 ADD ["build/libs/configuration-server.jar", "configuration-server.jar"]
 
-CMD ["java", "-jar", "configuration-server.jar"]
+CMD ["java", "$JAVA_OPTS", "-jar", "configuration-server.jar"]
 
 EXPOSE 8888

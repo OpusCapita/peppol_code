@@ -13,5 +13,5 @@ RUN \
 WORKDIR "${TRANSPORT_HOME}"
 ADD ["build/libs/file-to-mq.jar", "file-to-mq.jar"]
 
-CMD ["java", "-jar", "file-to-mq.jar"]
+CMD ["java", "$JAVA_OPTS", "-jar", "file-to-mq.jar"]
 

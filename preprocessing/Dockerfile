@@ -13,5 +13,5 @@ RUN \
 WORKDIR "${PREPROCESSING_HOME}"
 ADD ["build/libs/preprocessing.jar", "preprocessing.jar"]
 
-CMD ["java", "-jar", "preprocessing.jar"]
+CMD ["java", "$JAVA_OPTS", "-jar", "preprocessing.jar"]
 
