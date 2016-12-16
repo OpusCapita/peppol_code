@@ -24,7 +24,7 @@ public abstract class AbstractQueueListener {
 
     private final ErrorHandler errorHandler;
     private final StatusReporter reporter;
-    private final Gson gson = new Gson();
+    private final Gson gson = ContainerMessage.prepareGson();
 
     protected AbstractQueueListener(@Nullable ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
         this.errorHandler = errorHandler;
