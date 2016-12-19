@@ -5,14 +5,6 @@ def tag = "latest"
 // additional properties loaded from file
 def properties  
 
-// TODO: move to global pipeline lib
-def Properties loadProperties(String filename) {
-    Properties properties = new Properties()
-    String content = readFile "${filename}"
-    properties.load(new StringReader(content));
-    return properties
-}
-
 node {
     stage('Build') {
         dir('src') {
@@ -81,6 +73,14 @@ stage('Deploy Stage') {
     }
 }
 
+
+// TODO: move to global pipeline lib
+def Properties loadProperties(String filename) {
+    Properties properties = new Properties()
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
+    return properties
+}
 
 def ansiblePlaybook(playbook, hosts, credentials) {
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentials, passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
