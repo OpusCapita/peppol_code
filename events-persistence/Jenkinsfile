@@ -1,0 +1,89 @@
+#!groovy
+def releaseVersion
+def tag = "latest"
+
+// additional properties loaded from file
+def properties  
+
+// TODO: move to global pipeline lib
+def Properties loadProperties(String filename) {
+    Properties properties = new Properties()
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
+    return properties
+}
+
+node {
+    stage('Build') {
+        dir('src') {
+            // get latest version of code
+            git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
+
+            // assemble modules
+            sh 'bash gradlew clean events-persistence:assemble'
+            dir('events-persistence/build/libs') {
+                archiveArtifacts artifacts: 'events-persistence.jar'
+                stash includes: 'events-persistence.jar', name: 'events-persistence'
+            }
+            
+            // load additional properties
+            properties = loadProperties('gradle.properties')
+            releaseVersion = properties.version
+            tag = "${releaseVersion}-${env.BUILD_NUMBER}"
+        } 
+        dir('infra') {
+            // get latest version of infrastructure
+            git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
+        }
+
+    }
+
+    stage('Unit Test') {
+        dir('src') {
+            // check modules
+            sh 'bash gradlew events-persistence:check'
+        }
+    }
+
+    milestone label: 'staging'
+    stage('Deploy Stage') {
+        dir('infra/ap/ansible') {
+            dir('roles/events-persistence/files') {
+                unstash 'events-persistence'
+            }
+            ansiblePlaybook('events-persistence.yml', 'stage.hosts', 'ansible-sudo')
+        }
+    }
+
+    stage('Smoke Test') {
+        dir('infra/ap/ansible') {
+            ansiblePlaybook('test-peppol-events-persistence.yml', 'stage.hosts', 'ansible-sudo')
+        }
+    }
+}
+
+milestone label: 'acceptance'
+stage('Acceptance Test') {
+    timeout(time: 7, unit: 'DAYS') {
+        input message: 'Deploy events-persistence to production?', ok: 'Sure'
+    }
+}
+
+milestone label: 'production'
+stage('Deploy Stage') {
+    node {
+        dir('infra/ap/ansible') {
+            dir('roles/events-persistence/files') {
+                unstash 'events-persistence'
+            }
+            ansiblePlaybook('events-persistence.yml', 'production.hosts', 'ansible-sudo')
+        }
+    }
+}
+
+
+def ansiblePlaybook(playbook, hosts, credentials) {
+    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentials, passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
+        sh "ansible-playbook -i '${hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' ${playbook}"
+    }
+}
