@@ -1,7 +1,9 @@
 package com.opuscapita.peppol.commons.container;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.document.GsonDocumentAdapter;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
@@ -22,8 +24,8 @@ public class ContainerMessage implements Serializable {
 
     private String fileName;
 
-    private Route route;
     private BaseDocument document;
+    private Route route;
     private String transactionId;
     private ProcessingStatus status;
     private ValidationResult validationResult;
@@ -32,6 +34,28 @@ public class ContainerMessage implements Serializable {
         this.source = source;
         this.fileName = fileName;
         this.sourceMetadata = metadata;
+    }
+
+    /**
+     * Returns GSON serializer/deserializer that must be used in order to properly handle org.w3c.dom.Document
+     *
+     * @return GSON serializer
+     */
+    @NotNull
+    public static Gson prepareGson() {
+        return ContainerMessage.prepareGson(null);
+    }
+
+    /**
+     * Returns GSON serializer/deserializer that must be used in order to properly handle org.w3c.dom.Document
+     *
+     * @return GSON serializer
+     */
+    @NotNull
+    private static Gson prepareGson(@Nullable String fileName) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(BaseDocument.class, new GsonDocumentAdapter(fileName));
+        return gsonBuilder.create();
     }
 
     @NotNull
@@ -92,8 +116,8 @@ public class ContainerMessage implements Serializable {
         return source;
     }
 
-    public byte[] getBytes() {
-        return new Gson().toJson(this).getBytes();
+    public byte[] convertToJsonByteArray() {
+        return prepareGson(getFileName()).toJson(this).getBytes();
     }
 
     @Nullable

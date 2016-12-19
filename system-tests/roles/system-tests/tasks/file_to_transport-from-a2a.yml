@@ -1,7 +1,0 @@
----
-- name: Copy file to outbound from-a2a dir
-  become: yes
-  copy:
-    src: suite/ehf_2.0_bii4_no.xml
-    dest: /var/lib/docker/volumes/peppol2.0/data/transport/from-a2a
-...

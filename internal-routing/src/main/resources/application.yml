@@ -1,0 +1,66 @@
+#
+#peppol:
+#  component:
+#    name: internal-routing
+#  eventing:
+#    queue:
+#      in:
+#        name: eventing
+#  email-notificator:
+#    queue:
+#      in:
+#        name: email-notificator
+#  internal-routing:
+#    queue:
+#      in:
+#        name: internal-routing
+#  storage:
+#    short: /tmp
+#    long: /tmp
+#
+#    routing:
+#      routes:
+#        - description: 'Peppol to XiB'
+#          mask: '007:.*'
+#          source: peppol
+#          endpoints:
+#            - validation
+#            - gateway_xib
+#
+#        - description: 'Peppol to A2A'
+#          mask: '.*'
+#          source: peppol
+#          endpoints:
+#            - validation
+#            - gateway_a2a
+#
+#        - description: 'A2A to Peppol'
+#          source: gateway_a2a
+#          endpoints:
+#            - validation
+#            - peppol
+#
+#        - description: 'XiB to Peppol'
+#          source: gateway_xib
+#          endpoints:
+#            - validation
+#            - peppol
+#
+#spring:
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+#      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+#      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+#      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+#
+#snc:
+#  enabled: true
+#  rest:
+#    url: localhost
+#    username: test
+#    password: test
+#  bsc: test
+#  from: test
+#  businessGroup: test
+#
