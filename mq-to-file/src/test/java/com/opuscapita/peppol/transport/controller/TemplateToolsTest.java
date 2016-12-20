@@ -17,7 +17,7 @@ public class TemplateToolsTest {
 
     @Test
     public void templateToPath() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", Endpoint.GATEWAY);
+        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", Endpoint.Type.TEST));
         try (InputStream is = TemplateToolsTest.class.getResourceAsStream("/valid/ehf.xml")) {
             BaseDocument bd = new DocumentLoader().load(is, "/tmp/test.xml");
             cm.setBaseDocument(bd);

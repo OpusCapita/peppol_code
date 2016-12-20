@@ -50,6 +50,7 @@ public class ValidationControllerTest {
         Arrays.stream(documentProfilesToBeTested).forEach(this::testDocumentProfileValidation);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void testDocumentProfileValidation(final String documentProfile) {
         File resourceDir = new File(this.getClass().getResource("/test_data/" + documentProfile + "_files").getFile());
         String[] dataFiles = resourceDir.list(new FilenameFilter() {
@@ -61,16 +62,17 @@ public class ValidationControllerTest {
 
         Arrays.stream(dataFiles).map(fileName -> {
             System.out.println(fileName);
-            File result = new File(resourceDir, fileName);
-            return result;
+            return new File(resourceDir, fileName);
         }).filter(fileToCheck -> fileToCheck.isFile() && fileToCheck.exists()).forEach(file -> {
             try {
-                ContainerMessage containerMessage = new ContainerMessage(file.getName(), file.getName(), Endpoint.PEPPOL)
+                ContainerMessage containerMessage = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
                         .setBaseDocument(documentLoader.load(file));
                 ValidationResult result = validationController.validate(containerMessage);
                 System.out.println("result: " + result.isPassed() + " on " + file.getName());
                 result.getErrors().forEach(System.out::println);
-                if ((result.isPassed() && file.getName().contains("invalid")) || (!result.isPassed() && file.getName().contains("Valid") && !file.getName().contains("invalid"))) {
+                if ((result.isPassed() && file.getName().contains("invalid"))
+                        || (!result.isPassed() && file.getName().contains("Valid")
+                        && !file.getName().contains("invalid"))) {
                     fail("Failed on expected validation result: " + result.isPassed() + " on " + file.getName());
                 }
             } catch (Exception e) {

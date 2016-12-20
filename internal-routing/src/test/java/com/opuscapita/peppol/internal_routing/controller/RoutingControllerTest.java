@@ -16,18 +16,17 @@ import static org.junit.Assert.*;
  * @author Sergejs.Roze
  */
 public class RoutingControllerTest {
-
     @Test
     public void loadRoute() throws Exception {
         Route r1 = new Route();
         r1.setDescription("r1");
         r1.setEndpoints(Arrays.asList("r1a", "r1b", "r1c"));
-        r1.setSource(Endpoint.GATEWAY);
+        r1.setSource("test1");
 
         Route r2 = new Route();
         r2.setDescription("r2");
         r2.setEndpoints(Arrays.asList("r2a", "r2b"));
-        r2.setSource(Endpoint.PEPPOL);
+        r2.setSource("test2");
 
         RoutingConfiguration conf = new RoutingConfiguration() {
             @Override
@@ -40,19 +39,22 @@ public class RoutingControllerTest {
 
         ContainerMessage cm;
 
-        cm = new ContainerMessage("test", "test", Endpoint.PEPPOL).setBaseDocument(new UblDocument());
+        cm = new ContainerMessage("test", "test", new Endpoint("test2", Endpoint.Type.PEPPOL)).setBaseDocument(new UblDocument());
         assertNull(cm.getRoute());
         cm = rc.loadRoute(cm);
         assertNotNull(cm.getRoute());
         assertEquals("r2", cm.getRoute().getDescription());
         assertEquals("r2a", cm.getRoute().pop());
+        assertEquals("r2b", cm.getRoute().pop());
 
-        cm = new ContainerMessage("test", "test", Endpoint.GATEWAY).setBaseDocument(new UblDocument());
+        cm = new ContainerMessage("test", "test", new Endpoint("test1", Endpoint.Type.PEPPOL)).setBaseDocument(new UblDocument());
         assertNull(cm.getRoute());
         cm = rc.loadRoute(cm);
         assertNotNull(cm.getRoute());
         assertEquals("r1", cm.getRoute().getDescription());
         assertEquals("r1a", cm.getRoute().pop());
+        assertEquals("r1b", cm.getRoute().pop());
+        assertEquals("r1c", cm.getRoute().pop());
     }
 
     // there was a bug that route defined once was assigned to different objects and damaged
@@ -60,7 +62,7 @@ public class RoutingControllerTest {
     @Test
     public void loadTwice() throws Exception {
         Route route = new Route();
-        route.setSource(Endpoint.PEPPOL);
+        route.setSource("test");
         route.setEndpoints(Arrays.asList("A", "B", "C"));
 
         RoutingConfiguration conf = new RoutingConfiguration() {
@@ -72,8 +74,8 @@ public class RoutingControllerTest {
 
         RoutingController rc = new RoutingController(conf);
 
-        ContainerMessage cm1 = new ContainerMessage("test1", "test1", Endpoint.PEPPOL);
-        ContainerMessage cm2 = new ContainerMessage("test2", "test2", Endpoint.PEPPOL);
+        ContainerMessage cm1 = new ContainerMessage("test1", "test1", new Endpoint("test", Endpoint.Type.TEST));
+        ContainerMessage cm2 = new ContainerMessage("test2", "test2", new Endpoint("test", Endpoint.Type.TEST));
 
         cm1 = rc.loadRoute(cm1);
         assertEquals("A", cm1.getRoute().pop());

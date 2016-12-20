@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.inbound;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ public class InboundProperties {
 
     public final static String INBOUND_OUTPUT_DIR = "peppol.storage.short";
 
-    final static String COMPONENT_NAME = "peppol.component.name";
+    public final static String COMPONENT_NAME = "peppol.component.name";
     final static String INBOUND_MQ_EXCHANGE = "peppol.inbound.queue.exchange";
     final static String INBOUND_MQ_QUEUE = "peppol.inbound.queue.name";
     final static String INBOUND_MQ_HOST = "peppol.inbound.queue.host";
@@ -49,6 +50,10 @@ public class InboundProperties {
         if (it.getProperty(INBOUND_MQ_HOST) == null) {
             logger.warn("Configuration property " + INBOUND_MQ_HOST + " not found, using 'localhost' instead");
             it.setProperty(INBOUND_MQ_HOST, "localhost");
+        }
+        if (StringUtils.isBlank(it.getProperty(COMPONENT_NAME))) {
+            logger.warn("Configuration property " + COMPONENT_NAME + " is missing, using 'inbound' instead");
+            it.setProperty(COMPONENT_NAME, "inbound");
         }
     }
 

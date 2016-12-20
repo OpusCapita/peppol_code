@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
  * @author Sergejs.Roze
  */
 public class PreprocessingControllerTest {
+    private final static Endpoint ENDPOINT = new Endpoint("test", Endpoint.Type.PEPPOL);
 
     // faked document loader that loads file by name from resources not directly from disk
     private DocumentLoader dl = new DocumentLoader() {
@@ -38,13 +39,13 @@ public class PreprocessingControllerTest {
         when(storage.moveToLongTerm("9908:980361330", "9908:923609016", "/valid.xml")).thenReturn("long_term");
 
         PreprocessingController controller = new PreprocessingController(dl, storage);
-        ContainerMessage cm = controller.process(new ContainerMessage("metadata", "/valid.xml", Endpoint.PEPPOL));
+        ContainerMessage cm = controller.process(new ContainerMessage("metadata", "/valid.xml", ENDPOINT));
 
         assertNotNull(cm);
         assertNotNull(cm.getBaseDocument());
         assertNull(cm.getRoute());
         assertEquals("metadata", cm.getSourceMetadata());
-        assertEquals(Endpoint.PEPPOL, cm.getSource());
+        assertEquals(ENDPOINT, cm.getSource());
         assertEquals("9908:923609016", cm.getCustomerId());
         assertEquals("long_term", cm.getFileName());
     }
@@ -55,7 +56,7 @@ public class PreprocessingControllerTest {
         when(storage.moveToLongTerm("", "", "/not_xml.xml")).thenReturn("long_term");
 
         PreprocessingController controller = new PreprocessingController(dl, storage);
-        ContainerMessage cm = controller.process(new ContainerMessage("metadata", "/not_xml.xml", Endpoint.PEPPOL));
+        ContainerMessage cm = controller.process(new ContainerMessage("metadata", "/not_xml.xml", ENDPOINT));
 
         assertNotNull(cm);
         assertNotNull(cm.getBaseDocument());
@@ -71,7 +72,7 @@ public class PreprocessingControllerTest {
         PreprocessingController controller = new PreprocessingController(dl, storage);
 
         try {
-            controller.process(new ContainerMessage("metadata", "_no_such_file", Endpoint.GATEWAY));
+            controller.process(new ContainerMessage("metadata", "_no_such_file", ENDPOINT));
             fail();
         } catch (Exception ignore) {}
     }

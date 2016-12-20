@@ -17,6 +17,7 @@ import java.util.Properties;
 /**
  * Created by gamanse1 on 2016.11.14..
  */
+@SuppressWarnings("Duplicates")
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
     private final String dbConnection;
@@ -84,7 +85,7 @@ public class MqProducer implements Producer {
             //   channel.queueDeclare(destinationQueue, false, false, true, null);
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    ContainerMessage containerMessage = new ContainerMessage(file.getName(), file.getName(), Endpoint.PEPPOL)
+                    ContainerMessage containerMessage = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
                             .setBaseDocument(documentLoader.load(file));
                     //channel.basicPublish("", destinationQueue, null, containerMessage.getBytes());
                     String t = ";";
@@ -109,7 +110,7 @@ public class MqProducer implements Producer {
     }
 
     private ContainerMessage prepareMessage(String fileName, String metadata) {
-        return new ContainerMessage(metadata, fileName, Endpoint.PEPPOL);
+        return new ContainerMessage(metadata, fileName, new Endpoint("test", Endpoint.Type.PEPPOL));
     }
 
 }

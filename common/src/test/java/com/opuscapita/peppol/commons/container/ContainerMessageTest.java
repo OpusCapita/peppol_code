@@ -31,7 +31,7 @@ public class ContainerMessageTest {
             }
         }
 
-        ContainerMessage cm = new ContainerMessage("metadata", tmp.getAbsolutePath(), Endpoint.PEPPOL);
+        ContainerMessage cm = new ContainerMessage("metadata", tmp.getAbsolutePath(), new Endpoint("test", Endpoint.Type.PEPPOL));
 
         try (InputStream is = ContainerMessageTest.class.getResourceAsStream("/valid/valid.german.xml")) {
             DocumentLoader dl = new DocumentLoader();
