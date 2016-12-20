@@ -43,13 +43,13 @@ node {
             dir('roles/events-persistence/files') {
                 unstash 'events-persistence'
             }
-            ansiblePlaybook('events-persistence.yml', 'stage.hosts', 'ansible-sudo')
+            ansiblePlaybook('events-persistence.yml', 'stage.hosts', 'ansible-sudo-x')
         }
     }
 
     stage('Smoke Test') {
         dir('infra/ap/ansible') {
-            ansiblePlaybook('test-peppol-events-persistence.yml', 'stage.hosts', 'ansible-sudo')
+            ansiblePlaybook('test-peppol-events-persistence.yml', 'stage.hosts', 'ansible-sudo-x')
         }
     }
 }
@@ -68,7 +68,7 @@ stage('Deploy to Production') {
             dir('roles/events-persistence/files') {
                 unstash 'events-persistence'
             }
-            ansiblePlaybook('events-persistence.yml', 'production.hosts', 'ansible-sudo')
+            ansiblePlaybook('events-persistence.yml', 'production.hosts', 'ansible-sudo-x')
         }
     }
 }

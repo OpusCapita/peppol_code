@@ -43,13 +43,13 @@ node {
             dir('roles/validator/files') {
                 unstash 'validator'
             }
-            ansiblePlaybook('validator.yml', 'stage.hosts', 'ansible-sudo')
+            ansiblePlaybook('validator.yml', 'stage.hosts', 'ansible-sudo-x')
         }
     }
 
     stage('Smoke Test') {
         dir('infra/ap/ansible') {
-            ansiblePlaybook('test-peppol-validator.yml', 'stage.hosts', 'ansible-sudo')
+            ansiblePlaybook('test-peppol-validator.yml', 'stage.hosts', 'ansible-sudo-x')
         }
     }
 }
@@ -68,7 +68,7 @@ stage('Deploy to Production') {
             dir('roles/validator/files') {
                 unstash 'validator'
             }
-            ansiblePlaybook('validator.yml', 'production.hosts', 'ansible-sudo')
+            ansiblePlaybook('validator.yml', 'production.hosts', 'ansible-sudo-x')
         }
     }
 }
