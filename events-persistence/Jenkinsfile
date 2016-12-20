@@ -38,7 +38,7 @@ node {
     }
 
     milestone label: 'staging'
-    stage('Deploy Stage') {
+    stage('Deploy to Stage') {
         dir('infra/ap/ansible') {
             dir('roles/events-persistence/files') {
                 unstash 'events-persistence'
@@ -62,7 +62,7 @@ stage('Acceptance Test') {
 }
 
 milestone label: 'production'
-stage('Deploy Stage') {
+stage('Deploy to Production') {
     node {
         dir('infra/ap/ansible') {
             dir('roles/events-persistence/files') {
