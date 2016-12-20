@@ -56,7 +56,7 @@ node {
 
 milestone label: 'acceptance'
 stage('Acceptance Test') {
-    timeout(time: 7, unit: 'DAYS') {
+    timeout(time: 3, unit: 'DAYS') {
         input message: 'Deploy events-persistence to production?', ok: 'Sure'
     }
 }
