@@ -108,7 +108,7 @@ public class IncomingChecker {
         String fileName = storage.moveToTemporary(file);
         logger.info("File moved to: " + fileName);
 
-        ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, Endpoint.GATEWAY)
+        ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, new Endpoint(componentName, Endpoint.Type.GATEWAY))
                 .setStatus(new ProcessingStatus(componentName, "received", fileName));
 
         rabbitTemplate.convertAndSend(queue, cm);

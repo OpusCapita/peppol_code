@@ -21,13 +21,16 @@ import java.io.IOException;
  */
 @RestController("/rest")
 public class RestValidator {
-    @Autowired
-    ValidationController validationController;
+    private final ValidationController validationController;
+    private final DocumentLoader documentLoader;
+
+    private final static Logger logger = LoggerFactory.getLogger(RestValidator.class);
 
     @Autowired
-    DocumentLoader documentLoader;
-
-    Logger logger = LoggerFactory.getLogger(RestValidator.class);
+    public RestValidator(ValidationController validationController, DocumentLoader documentLoader) {
+        this.validationController = validationController;
+        this.documentLoader = documentLoader;
+    }
 
     @RequestMapping(value = "/validate", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public
@@ -37,7 +40,7 @@ public class RestValidator {
         ValidationResult validationResult;
         ContainerMessage containerMessage;
         try {
-            containerMessage = new ContainerMessage("REST /validate", file.getName(), Endpoint.REST)
+            containerMessage = new ContainerMessage("REST /validate", file.getName(), new Endpoint("validator_rest", Endpoint.Type.REST))
                     .setBaseDocument(documentLoader.load(file.getInputStream(), file.getName()));
             validationResult = validationController.validate(containerMessage);
             logger.info("Validation performed normally with result: " + validationResult.isPassed());

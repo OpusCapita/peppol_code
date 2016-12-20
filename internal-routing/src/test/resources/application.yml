@@ -10,6 +10,9 @@ peppol:
     queue:
       in:
         name: email-notificator
+  storage:
+    short: /tmp
+    long: /tmp
   internal-routing:
     queue:
       in:

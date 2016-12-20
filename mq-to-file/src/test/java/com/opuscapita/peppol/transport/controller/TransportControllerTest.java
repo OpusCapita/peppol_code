@@ -24,7 +24,7 @@ public class TransportControllerTest {
 
     @Test
     public void storeMessage() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", Endpoint.PEPPOL);
+        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", Endpoint.Type.PEPPOL));
 
         BaseDocument doc = mock(BaseDocument.class);
         when(doc.getArchetype()).thenReturn(Archetype.UBL);

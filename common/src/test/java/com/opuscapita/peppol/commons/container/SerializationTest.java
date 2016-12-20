@@ -17,9 +17,10 @@ import static org.junit.Assert.assertNotNull;
 public class SerializationTest {
 
     // since we serialize objects using standard Java, let's check that ContainerMessage can really be serialized
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testSerialization() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "filename1", Endpoint.GATEWAY);
+        ContainerMessage cm = new ContainerMessage("metadata", "filename1", new Endpoint("test", Endpoint.Type.GATEWAY));
         cm.setTransactionId("666");
         cm.setStatus("component", "result");
 
@@ -27,7 +28,7 @@ public class SerializationTest {
         route.setEndpoints(Arrays.asList("a", "b", "c"));
         route.setDescription("description");
         route.setMask("mask");
-        route.setSource(Endpoint.PEPPOL);
+        route.setSource("test");
         cm.setRoute(route);
 
         try (InputStream is = SerializationTest.class.getResourceAsStream("/valid/ehf.xml")) {
@@ -44,11 +45,11 @@ public class SerializationTest {
         assertEquals("result", result.getProcessingStatus().getResult());
         assertEquals("metadata", result.getSourceMetadata());
         assertEquals("filename1", result.getFileName());
-        assertEquals(Endpoint.GATEWAY, result.getSource());
+        assertEquals(new Endpoint("test", Endpoint.Type.GATEWAY), result.getSource());
         assertEquals("a", result.getRoute().pop());
         assertEquals("description", result.getRoute().getDescription());
         assertEquals("mask", result.getRoute().getMask());
-        assertEquals(Endpoint.PEPPOL, result.getRoute().getSource());
+        assertEquals("test", result.getRoute().getSource());
         assertNotNull(result.getBaseDocument());
     }
 

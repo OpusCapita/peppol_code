@@ -63,9 +63,9 @@ public class IndexController {
     }
 
     @NotNull
-    protected ContainerMessage loadContainerMessageFromMultipartFile(MultipartFile dataFile) throws IOException {
+    private ContainerMessage loadContainerMessageFromMultipartFile(MultipartFile dataFile) throws IOException {
         return new ContainerMessage(
-                dataFile.getName(), dataFile.getName(), Endpoint.REST)
+                dataFile.getName(), dataFile.getName(), new Endpoint("validator_rest", Endpoint.Type.REST))
                 .setBaseDocument(documentLoader.load(dataFile.getInputStream(), dataFile.getName()));
     }
 }

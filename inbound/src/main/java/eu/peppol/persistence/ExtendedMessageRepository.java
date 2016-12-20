@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.InputStream;
 
+import static com.opuscapita.peppol.inbound.InboundProperties.COMPONENT_NAME;
 import static com.opuscapita.peppol.inbound.InboundProperties.INBOUND_OUTPUT_DIR;
 
 
@@ -57,7 +58,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             String metadataString = MetadataUtils.getHeadersAsJson(metadata);
             logger.debug("Message metadata: " + metadataString);
 
-            ContainerMessage cm = prepareMessage(dataFile, metadataString);
+            ContainerMessage cm = prepareMessage(dataFile, metadataString, properties.getProperty(COMPONENT_NAME));
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {
             logger.error("Failed to report file " + dataFile + " to MQ: ", e);
@@ -65,8 +66,8 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
         }
     }
 
-    private ContainerMessage prepareMessage(String fileName, String metadata) {
-        return new ContainerMessage(metadata, fileName, Endpoint.PEPPOL);
+    private ContainerMessage prepareMessage(String fileName, String metadata, String componentName) {
+        return new ContainerMessage(metadata, fileName, new Endpoint(componentName, Endpoint.Type.PEPPOL));
     }
 
 }

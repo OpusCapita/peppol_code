@@ -24,7 +24,7 @@ public class Route implements Serializable {
     private List<String> endpoints = new ArrayList<>();
     private String description;
     private String mask;
-    private Endpoint source;
+    private String source;
 
     private int current = 0;
 
@@ -106,10 +106,6 @@ public class Route implements Serializable {
         return result;
     }
 
-    public boolean isInbound() {
-        return source == Endpoint.PEPPOL;
-    }
-
     @Override
     public String toString() {
         String result = description;
@@ -143,11 +139,11 @@ public class Route implements Serializable {
     }
 
     @NotNull
-    public Endpoint getSource() {
+    public String getSource() {
         return source;
     }
 
-    public void setSource(@NotNull Endpoint source) {
+    public void setSource(@NotNull String source) {
         this.source = source;
     }
 

@@ -30,6 +30,13 @@ public class ContainerMessage implements Serializable {
     private ProcessingStatus status;
     private ValidationResult validationResult;
 
+    /**
+     * Instantiates new container of the message.
+     *
+     * @param metadata some voluntary data provided by the originator of the message
+     * @param fileName the file name to be used for the document
+     * @param source the originator of the message
+     */
     public ContainerMessage(@NotNull String metadata, @NotNull String fileName, @NotNull Endpoint source) {
         this.source = source;
         this.fileName = fileName;
@@ -46,11 +53,6 @@ public class ContainerMessage implements Serializable {
         return ContainerMessage.prepareGson(null);
     }
 
-    /**
-     * Returns GSON serializer/deserializer that must be used in order to properly handle org.w3c.dom.Document
-     *
-     * @return GSON serializer
-     */
     @NotNull
     private static Gson prepareGson(@Nullable String fileName) {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -91,8 +93,14 @@ public class ContainerMessage implements Serializable {
         return this;
     }
 
+    /**
+     * Checks whether this document is inbound or outbound. All documents that originated from Peppol
+     * network are considered being inbound, all others - outbound.
+     *
+     * @return true if this is inbound document
+     */
     public boolean isInbound() {
-        return source == Endpoint.PEPPOL;
+        return source.isInbound();
     }
 
     /**

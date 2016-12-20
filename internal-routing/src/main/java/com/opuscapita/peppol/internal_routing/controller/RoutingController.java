@@ -3,7 +3,6 @@ package com.opuscapita.peppol.internal_routing.controller;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * @author Sergejs.Roze
@@ -36,20 +36,20 @@ public class RoutingController {
     @SuppressWarnings("ConstantConditions")
     public ContainerMessage loadRoute(ContainerMessage cm) throws IOException {
         logger.info("Processing message " + cm.getFileName());
-        Endpoint source = cm.getSource();
+        String source = cm.getSource().getName();
         BaseDocument baseDocument = cm.getBaseDocument();
 
         if (baseDocument instanceof InvalidDocument) {
             Route error = new Route();
             error.setDescription("ERROR");
             error.setEndpoints(Collections.singletonList(errorQueue));
-            error.setSource(cm.getSource());
+            error.setSource(cm.getSource().getName());
             cm.setRoute(error);
             return cm;
         }
 
         for (Route route : routingConfiguration.getRoutes()) {
-            if (source == route.getSource()) {
+            if (Objects.equals(source, route.getSource())) {
                 if (route.getMask() != null) {
                     if (baseDocument.getRecipientId().matches(route.getMask())) {
                         logger.debug("Route selected by source and mask");
