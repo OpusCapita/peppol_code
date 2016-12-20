@@ -38,7 +38,7 @@ node {
     }
 
     milestone label: 'staging'
-    stage('Deploy Stage') {
+    stage('Deploy to Stage') {
         dir('infra/ap/ansible') {
             dir('roles/validator/files') {
                 unstash 'validator'
@@ -56,13 +56,13 @@ node {
 
 milestone label: 'acceptance'
 stage('Acceptance Test') {
-    timeout(time: 7, unit: 'DAYS') {
+    timeout(time: 3, unit: 'DAYS') {
         input message: 'Deploy validator to production?', ok: 'Sure'
     }
 }
 
 milestone label: 'production'
-stage('Deploy Stage') {
+stage('Deploy to Production') {
     node {
         dir('infra/ap/ansible') {
             dir('roles/validator/files') {
