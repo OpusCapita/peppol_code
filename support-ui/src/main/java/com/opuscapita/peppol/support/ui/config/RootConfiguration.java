@@ -5,7 +5,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
@@ -15,6 +16,7 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -43,7 +45,19 @@ public class RootConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("cacheManager");
+        // configure and return an implementation of Spring's CacheManager SPI
+        SimpleCacheManager cacheManager = new SimpleCacheManager ();
+        cacheManager.setCaches(Arrays.asList(
+                new ConcurrentMapCache("reprocessedMessages"),
+                new ConcurrentMapCache("allMessages"),
+                new ConcurrentMapCache("invalidMessages"),
+                new ConcurrentMapCache("failedMessages"),
+                new ConcurrentMapCache("sentMessages"),
+                new ConcurrentMapCache("processingMessages"),
+                new ConcurrentMapCache("invalidInboundMessages"),
+                new ConcurrentMapCache("allInboundMessages")
+        ));
+        return cacheManager;
     }
 
     @Bean
