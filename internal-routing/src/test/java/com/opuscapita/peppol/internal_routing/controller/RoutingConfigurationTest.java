@@ -25,5 +25,6 @@ public class RoutingConfigurationTest {
     public void testLoader() {
         assertNotNull(routingConfiguration);
         assertEquals(4, routingConfiguration.getRoutes().size());
+        assertEquals(2, routingConfiguration.getRoutes().get(0).getEndpoints().size());
     }
 }
