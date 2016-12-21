@@ -110,13 +110,14 @@ tests:
       producers:
         file producer:
           source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\support-ui-test
-          destination directory: C:\
+          destination directory: C:\peppol-ap-testout\failed
         db producer:
-           source query: query
+           db connection: db1
+           source query:
       subscribers:
-        - db subscriber:
-            db connection: db1
-            query: select 1
+          - file subscriber:
+              timeout: 500
+              source file: C:\peppol-ap-testout\failed
       consumers:
          - selenium check:
             id: 11
@@ -130,6 +131,7 @@ tests:
      subscribers:
         - file subscriber:
             timeout: 500
+            source file: C:\peppol-ap-testout\failed
         - snc subscriber:
             source directory: C:\test
             timeout: 500
@@ -137,7 +139,7 @@ tests:
       - snc test:
           id: 12
           name: Invalid message error case- ticket is sent to SNC (snc stub)
-          expected value: invalid_svefaktura_removed_sensetive_info.xml
+          expected value: invalid_svefaktura.xml
       - file test:
           id: 13
           name: Look for inbound files in long term storage
