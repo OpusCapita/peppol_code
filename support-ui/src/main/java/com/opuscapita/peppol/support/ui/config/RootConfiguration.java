@@ -1,12 +1,12 @@
 package com.opuscapita.peppol.support.ui.config;
 
+import com.google.common.cache.CacheBuilder;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
@@ -16,8 +16,8 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.Arrays;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,19 +45,18 @@ public class RootConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        // configure and return an implementation of Spring's CacheManager SPI
-        SimpleCacheManager cacheManager = new SimpleCacheManager ();
-        cacheManager.setCaches(Arrays.asList(
-                new ConcurrentMapCache("reprocessedMessages"),
-                new ConcurrentMapCache("allMessages"),
-                new ConcurrentMapCache("invalidMessages"),
-                new ConcurrentMapCache("failedMessages"),
-                new ConcurrentMapCache("sentMessages"),
-                new ConcurrentMapCache("processingMessages"),
-                new ConcurrentMapCache("invalidInboundMessages"),
-                new ConcurrentMapCache("allInboundMessages")
-        ));
-        return cacheManager;
+        GuavaCacheManager cacheManager = new GuavaCacheManager("allMessages",
+                "invalidMessages",
+                "failedMessages",
+                "sentMessages",
+                "reprocessedMessages",
+                "processingMessages",
+                "invalidInboundMessages",
+                "allInboundMessages");
+
+        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder().maximumSize(1).expireAfterWrite(5, TimeUnit.MINUTES);
+        cacheManager.setCacheBuilder(cacheBuilder);
+        return  cacheManager;
     }
 
     @Bean
