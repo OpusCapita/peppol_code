@@ -3,7 +3,7 @@ package com.opuscapita.peppol.inbound;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.mq.MqProperties;
-import com.opuscapita.peppol.commons.mq.RabbitMq;
+import com.opuscapita.peppol.commons.mq.RabbitMqStandalone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +26,9 @@ public class InboundMessageSender {
     }
 
     public void send(ContainerMessage cm) throws IOException, TimeoutException {
-        MessageQueue mq = new RabbitMq();
+        MessageQueue mq = new RabbitMqStandalone(prepareMqProperties());
         logger.debug("Sending message to MQ about file: " + cm.getFileName());
-        mq.send(prepareMqProperties(), properties.getProperty(INBOUND_MQ_EXCHANGE), properties.getProperty(INBOUND_MQ_QUEUE), cm);
+        mq.send(properties.getProperty(INBOUND_MQ_EXCHANGE), properties.getProperty(INBOUND_MQ_QUEUE), cm);
     }
 
     private MqProperties prepareMqProperties() {
