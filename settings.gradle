@@ -14,5 +14,6 @@ include "outbound"
 include "preprocessing"
 include "support-ui"
 include "validator"
-include 'service-discovery'
+include "service-discovery"
+include "zuul-proxy"
 

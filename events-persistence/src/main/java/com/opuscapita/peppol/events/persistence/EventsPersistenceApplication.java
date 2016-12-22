@@ -2,6 +2,7 @@ package com.opuscapita.peppol.events.persistence;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.opuscapita.peppol.commons.errors.PeppolFailureAnalyser;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.commons.model.util.PeppolEventDeSerializer;
 import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
@@ -14,6 +15,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.diagnostics.FailureAnalyzer;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
@@ -32,6 +35,7 @@ import java.util.HashMap;
 @ComponentScan(basePackages = {"com.opuscapita.peppol.events.persistence", "com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons"})
 @EntityScan(basePackages = {"com.opuscapita.peppol.events.persistence.model", "com.opuscapita.peppol.commons.model"})
 @EnableTransactionManagement
+@EnableDiscoveryClient
 @EnableRetry
 public class EventsPersistenceApplication {
     @Value("${peppol.events-persistence.queue.in.name}")
@@ -59,6 +63,11 @@ public class EventsPersistenceApplication {
         template.setBackOffPolicy(backOffPolicy);
 
         return template;
+    }
+
+    @Bean
+    public FailureAnalyzer failureAnalyzer() {
+        return new PeppolFailureAnalyser();
     }
 
     @SuppressWarnings("Duplicates")

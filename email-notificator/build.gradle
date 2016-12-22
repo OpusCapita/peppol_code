@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.1.RELEASE'
+        springBootVersion = '1.4.2.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -48,4 +48,11 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.easymock:easymock:3.4'
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Brixton.SR7'
+    }
 }

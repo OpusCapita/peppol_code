@@ -3,12 +3,12 @@ package com.opuscapita.peppol.configuration.server;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.config.server.EnableConfigServer;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @EnableAutoConfiguration
 @EnableConfigServer
+@EnableDiscoveryClient
 @SpringBootApplication
 public class ConfigurationServerApplication {
 
