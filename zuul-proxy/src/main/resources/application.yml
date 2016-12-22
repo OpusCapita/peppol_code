@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: 'zuul-proxy'
+
+server:
+  port: ${PORT:8989}
+zuul:
+  routes:
+    validator: /validator/**
