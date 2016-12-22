@@ -26,14 +26,15 @@ repositories {
 
 
 dependencies {
-   /* runtime 'com.h2database:h2'*/
+    runtime 'com.h2database:h2'
     runtime('mysql:mysql-connector-java:5.1.25')
-    runtime('org.postgresql:postgresql')
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile 'org.springframework.boot:spring-boot-starter-jdbc'
+   /* runtime('org.postgresql:postgresql')*/
+    compile ('org.springframework.boot:spring-boot-starter-actuator')
+    //compile ('org.springframework.boot:spring-boot-starter-data-jpa')
+    //compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
+    //compile ('org.springframework.boot:spring-boot-starter-jdbc')
     compile project(':common')
-    compile project(':common-model')
+    /*compile project(':common-model')*/
     compile 'log4j:log4j:1.2.17'
     compile 'com.intellij:annotations:12.0'
     compile 'org.yaml:snakeyaml:1.17'

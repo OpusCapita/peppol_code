@@ -6,7 +6,6 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -16,17 +15,20 @@ import java.util.concurrent.TimeoutException;
  *
  * @author Sergejs.Roze
  */
-@Component
-public class RabbitMq implements MessageQueue {
+public class RabbitMqStandalone implements MessageQueue {
+    private final MqProperties properties;
+
+    public RabbitMqStandalone(@NotNull MqProperties properties) {
+        this.properties = properties;
+    }
 
     @Override
-    public void send(
-            @NotNull MqProperties mqProperties, @Nullable String exchange, @NotNull String queueName, @NotNull ContainerMessage message)
+    public void send(@Nullable String exchange, @NotNull String queueName, @NotNull ContainerMessage message)
             throws IOException, TimeoutException {
         Connection connection = null;
         Channel channel = null;
         try {
-            connection = getConnection(mqProperties);
+            connection = getConnection(properties);
             channel = connection.createChannel();
 
             channel.queueDeclare(queueName, true, false, false, null); // maybe not the best set of options
