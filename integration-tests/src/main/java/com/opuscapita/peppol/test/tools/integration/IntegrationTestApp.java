@@ -47,7 +47,7 @@ public class IntegrationTestApp {
 
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile).initConfig();
         List<TestResult> testResults = config.runTests();
-
+        new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
         logger.info("IntegrationTestApp : Ended!");
     }
 

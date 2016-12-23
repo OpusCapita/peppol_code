@@ -40,4 +40,5 @@ dependencies {
     compile 'org.yaml:snakeyaml:1.17'
     compile 'com.rabbitmq:amqp-client:3.6.5'
     compile 'com.codeborne:selenide:4.0'
+    compile 'org.freemarker:freemarker:2.3.21'
 }
