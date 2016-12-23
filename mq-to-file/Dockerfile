@@ -1,5 +1,5 @@
 FROM d-l-tools.ocnet.local:443/openjdk:8-peppol
-MAINTAINER Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>
+LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 VOLUME "/etc/peppol2.0/mq-to-file"
 ENV TRANSPORT_HOME "/opt/local/services/peppol2.0/mq-to-file"

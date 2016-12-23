@@ -1,5 +1,5 @@
 FROM d-l-tools.ocnet.local:443/oxalis:4
-MAINTAINER Edgars.Didrihsons@opuscapita.com
+LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 VOLUME "/etc/peppol2.0/inbound"
 ENV INBOUND_HOME "/opt/local/services/peppol2.0/inbound"

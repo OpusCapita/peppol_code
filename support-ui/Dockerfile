@@ -1,4 +1,5 @@
 FROM d-l-tools.ocnet.local:443/tomcat:8
+LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV PEPPOL_CONFIG_PATH /etc/peppol2.0/support-ui
 RUN mkdir -p "${PEPPOL_CONFIG_PATH}"
