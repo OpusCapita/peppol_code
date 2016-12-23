@@ -12,13 +12,15 @@ public class ProducerFactory {
     public static Producer createProducer(Map.Entry<String, ?> producerConfig, Map<String, Object> genericConfiguration) {
         String name = producerConfig.getKey().toLowerCase();
         Map<String,String> properties = (Map<String, String>) producerConfig.getValue();
+        String dbKey;
+        String dbConnection;
         switch (name){
             case "file producer":
                  return new FileProducer(properties.get("source directory"),properties.get("destination directory"));
             case "mq producer":
                 String mqKey = properties.get("mq connection");
-                String dbKey = properties.get("db connection");
-                String dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
+                dbKey = properties.get("db connection");
+                dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
                 String dbPreprocessQuery = (dbKey == null) ? null : properties.get("DB preprocess querry");
                 return new MqProducer((Map<String, String>) genericConfiguration.get(mqKey), properties.get("source directory"),
                         properties.get("destination queue"), dbConnection, dbPreprocessQuery);
@@ -26,7 +28,9 @@ public class ProducerFactory {
                 String restResultDirectory = (String) genericConfiguration.get("validation result folder");
                 return new RestProducer(properties.get("source directory"), properties.get("destination link"),properties.get("rest method"), restResultDirectory);
             case "db producer":
-                return new DbProducer(properties.get("source query"));
+                dbKey = properties.get("db connection");
+                dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
+                return new DbProducer(dbConnection, properties.get("source query"));
             case "web ui producer":
                 String resultDirectory = (String) genericConfiguration.get("validation result folder");
                 return new WebUiProducer(properties.get("source directory"), properties.get("destination link"), resultDirectory);

@@ -25,7 +25,6 @@ import java.util.List;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = "com.opuscapita.peppol.commons")
-//@EntityScan(basePackages = "com.opuscapita.peppol.commons.model")
 public class IntegrationTestApp {
     private final static Logger logger = LogManager.getLogger(IntegrationTestApp.class);
     static String configFile;

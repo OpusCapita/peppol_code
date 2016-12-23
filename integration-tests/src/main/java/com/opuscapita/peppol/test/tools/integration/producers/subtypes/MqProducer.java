@@ -22,7 +22,6 @@ public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
     private final String dbConnection;
     private final String dbPreprocessQuery;
-    private Map<String, String> dbPreprocessSettting = null;
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;

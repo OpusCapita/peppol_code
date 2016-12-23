@@ -125,8 +125,8 @@ tests:
    inbound:
      producers:
        file producer:
-         source directory: inboundTest/
-         destination directory: /tmp/
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inbound-test
+         destination directory: C:\tmp\
          commandline: docker exec -it inbound ./send-to-peppol.sh -f /tmp/*svefaktura_removed_sensetive_info.xml
      subscribers:
         - file subscriber:

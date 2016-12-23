@@ -23,9 +23,8 @@ public class SncSubscriber extends Subscriber {
         if(sourceDirectory == null || sourceDirectory.isEmpty())
             return testResults;
         File directory = new File(sourceDirectory);
-        File[] files = directory.listFiles();
         for(Consumer consumer : consumers) {
-            TestResult testResult = consumer.consume(files);
+            TestResult testResult = consumer.consume(directory);
             testResults.add(testResult);
         }
         return testResults;

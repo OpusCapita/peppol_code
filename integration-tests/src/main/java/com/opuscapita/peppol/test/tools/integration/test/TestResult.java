@@ -8,6 +8,12 @@ public class TestResult {
     final boolean passed;
     final String details;
 
+    public TestResult() {
+        this.name = "empty";
+        this.passed = false;
+        this. details = "empty";
+    }
+
     public TestResult(String name, boolean passed, String details) {
         this.name = name;
         this.passed = passed;

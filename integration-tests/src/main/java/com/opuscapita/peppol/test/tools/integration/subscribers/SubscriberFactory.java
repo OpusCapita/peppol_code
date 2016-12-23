@@ -5,6 +5,7 @@ import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.DbSubsc
 import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.FileSubscriber;
 import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.MqSubscriber;
 import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.SncSubscriber;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -20,9 +21,9 @@ public class SubscriberFactory {
     public static Subscriber createSubscriber(Map.Entry<String, ?> subscriberConfig, Map<String, Object> genericConfiguration, Map<String, Consumer> existingConsumers) {
         String name = subscriberConfig.getKey().toLowerCase();
         Map<String, Object> properties = (Map<String, Object>) subscriberConfig.getValue();
-        String[] consumerIds = (String.valueOf(properties.get("consumers"))).split(" ");
+        String[] consumerIds = properties.get("consumers") == null? ArrayUtils.EMPTY_STRING_ARRAY : (String.valueOf(properties.get("consumers"))).split(" ");
         Subscriber subscriber = null;
-        List<Consumer> consumers = new ArrayList<Consumer>();
+        List<Consumer> consumers = new ArrayList<>();
         switch (name){
             case "mq subscriber":
                 String mqKey = (String) properties.get("mq connection");

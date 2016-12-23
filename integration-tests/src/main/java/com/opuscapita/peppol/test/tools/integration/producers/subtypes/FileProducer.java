@@ -25,12 +25,17 @@ public class FileProducer implements Producer {
     @Override
     public void run() {
         try {
-            File folder = new File(this.sourceFolder);
-            if (!folder.exists()) {
-                logger.error(this.sourceFolder + " doesn't exist!");
+            File source = new File(this.sourceFolder);
+            File destination = new File(this.destinationFolder);
+            if (!source.exists()) {
+                logger.warn("File producer: " + this.sourceFolder + " doesn't exist, exiting!");
                 return;
             }
-            File[] files = folder.listFiles();
+            if (!destination.exists()) {
+                logger.warn("File producer: " + this.destinationFolder + " doesn't exist, exiting!");
+                return;
+            }
+            File[] files = source.listFiles();
             for (File file : files) {
                 if (file.isFile()) {
                     processFile(file);

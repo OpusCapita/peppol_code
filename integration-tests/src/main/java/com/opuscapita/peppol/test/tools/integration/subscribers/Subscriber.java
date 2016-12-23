@@ -10,7 +10,7 @@ import java.util.List;
  * Created by gamanse1 on 2016.11.14..
  */
 public abstract class Subscriber {
-    protected List<Consumer> consumers;
+    protected List<Consumer> consumers = new ArrayList<>();
     protected List<TestResult> testResults = new ArrayList<>();
     private Object timeout;
 

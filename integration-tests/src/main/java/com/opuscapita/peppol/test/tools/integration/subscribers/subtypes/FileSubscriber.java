@@ -34,8 +34,10 @@ public class FileSubscriber extends Subscriber {
             return null;
         }
         for (Consumer consumer : consumers) {
-            TestResult testResult = consumer.consume(sourceFile);
-            testResults.add(testResult);
+            if(consumer!= null) {
+                TestResult testResult = consumer.consume(sourceFile);
+                testResults.add(testResult);
+            }
         }
         return testResults;
     }
