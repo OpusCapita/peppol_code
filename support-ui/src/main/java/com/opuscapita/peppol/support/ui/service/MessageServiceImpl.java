@@ -261,11 +261,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Cacheable("invalidInboundMessages")
     public int getInvalidInboundMessageCount() throws HibernateException {
         return messageDAO.getInvalidInboundMessageCount();
     }
 
     @Override
+    @Cacheable("allInboundMessages")
     public int getAllInboundMessageCount() throws HibernateException {
         return messageDAO.getAllInboundMessageCount();
     }

@@ -26,7 +26,7 @@ public class MqProducer implements Producer {
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
-    private DocumentLoader documentLoader = new DocumentLoader();
+    DocumentLoader documentLoader = new DocumentLoader();
 
     public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
         this.mqSettings = mqSettings;
@@ -110,7 +110,7 @@ public class MqProducer implements Producer {
     }
 
     private ContainerMessage prepareMessage(String fileName, String metadata) {
-        return new ContainerMessage(metadata, fileName, new Endpoint("test", Endpoint.Type.PEPPOL));
+       return new ContainerMessage(metadata, fileName, new Endpoint("test", Endpoint.Type.PEPPOL));
     }
 
 }

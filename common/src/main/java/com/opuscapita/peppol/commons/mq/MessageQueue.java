@@ -16,7 +16,7 @@ public interface MessageQueue {
     /**
      * Connect to the queue and send a string message. Connects and disconnects for every message so is not efficient.
      */
-    void send(@NotNull MqProperties mqProperties, @Nullable String exchange, @NotNull String queueName, @NotNull ContainerMessage message)
+    void send(@Nullable String exchange, @NotNull String queueName, @NotNull ContainerMessage message)
             throws IOException, TimeoutException;
 
 }

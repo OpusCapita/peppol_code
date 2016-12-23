@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-        springBootVersion = '1.4.1.RELEASE'
+        springBootVersion = '1.4.2.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -38,8 +38,8 @@ dependencies {
 }
 
 dependencyManagement {
-	imports { 
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR4"
+	imports {
+		mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Brixton.SR7'
 	}
 }
 

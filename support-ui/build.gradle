@@ -23,13 +23,7 @@ dependencies {
     /*compile group: 'c3p0', name: 'c3p0', version: '0.9.1.2'*/
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.25'
     compile group: 'net.sf.ehcache', name: 'ehcache-core', version: '2.6.9'
-
-    compile(group: 'org.springframework', name: 'spring-core', version: '4.0.1.RELEASE') {
-        exclude(module: 'commons-logging')
-    }
-    compile(group: 'org.springframework', name: 'spring-context', version: '4.0.1.RELEASE') {
-        exclude(module: 'commons-logging')
-    }
+    compile (group: 'org.springframework', name: 'spring-context-support', version: '4.0.1.RELEASE')
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
     compile group: 'org.springframework.amqp', name: 'spring-rabbit', version: '1.2.1.RELEASE'
     compile group: 'com.rabbitmq', name: 'amqp-client', version: '3.0.4'
@@ -46,5 +40,6 @@ dependencies {
     compile group: 'org.springframework.security', name: 'spring-security-config', version: '3.2.0.RELEASE'
     compile group: 'org.springframework', name: 'spring-orm', version: '4.0.1.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '4.0.1.RELEASE'
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile fileTree(dir: 'src/main/webapp/WEB-INF/lib/', include: '*jar')
 }

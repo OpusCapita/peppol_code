@@ -147,8 +147,9 @@ public class Route implements Serializable {
         this.source = source;
     }
 
+    @SuppressWarnings("WeakerAccess")
     @NotNull
-    private List<String> getEndpoints() {
+    public List<String> getEndpoints() {
         return endpoints;
     }
 

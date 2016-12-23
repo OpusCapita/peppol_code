@@ -6,23 +6,16 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Sergejs.Roze
  */
+@SuppressWarnings("WeakerAccess")
 public class MqProperties {
     private final String host;
     private final int port;
     private final String userName;
     private final String password;
 
-    public MqProperties(@NotNull String host) {
-        this(host, null, null, null);
-    }
-
-    public MqProperties(@NotNull String host, @NotNull String port) {
-        this(host, port, null, null);
-    }
-
     public MqProperties(@NotNull String host, @Nullable String port, @Nullable String userName, @Nullable String password) {
         this.host = host;
-        this.port = Integer.parseInt(port);
+        this.port = Integer.parseInt(port == null ? "5672" : port);
         this.userName = userName;
         this.password = password;
     }

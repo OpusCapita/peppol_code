@@ -25,7 +25,7 @@ public class FileSubscriber extends Subscriber {
         File file = null;
         try {
             file = new File(sourceFile);
-            if (!file.isFile()) {
+            if (!file.exists()) {
                 logger.error(this.sourceFile + " doesn't exist!");
                 return null;
             }
