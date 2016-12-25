@@ -5,7 +5,6 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -23,7 +22,7 @@ public class RabbitMqStandalone implements MessageQueue {
     }
 
     @Override
-    public void send(@Nullable String exchange, @NotNull String queueName, @NotNull ContainerMessage message)
+    public void send(@NotNull String connectionString, @NotNull ContainerMessage message)
             throws IOException, TimeoutException {
         Connection connection = null;
         Channel channel = null;
@@ -31,9 +30,13 @@ public class RabbitMqStandalone implements MessageQueue {
             connection = getConnection(properties);
             channel = connection.createChannel();
 
-            channel.queueDeclare(queueName, true, false, false, null); // maybe not the best set of options
-            channel.basicPublish(exchange == null ? "" : exchange, queueName, null, message.convertToJsonByteArray());
+            ConnectionString cs = new ConnectionString(connectionString);
 
+            String queue = cs.getQueue();
+            String exchange = cs.getExchange();
+
+            channel.queueDeclare(queue, true, false, false, null); // maybe not the best set of options
+            channel.basicPublish(exchange == null ? "" : exchange, queue, null, message.convertToJsonByteArray());
         } finally {
             if (channel != null) {
                 channel.close();
