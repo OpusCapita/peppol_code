@@ -1,20 +1,18 @@
 package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.route.Route;
+import com.opuscapita.peppol.commons.mq.RabbitMq;
 import eu.peppol.outbound.transmission.TransmissionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author Sergejs.Roze
@@ -27,21 +25,21 @@ public class OutboundController {
     private final Svefaktura1Sender svefaktura1Sender;
     private final OutboundErrorHandler outboundErrorHandler;
     private final TestSender testSender;
-    private final RabbitTemplate rabbitTemplate;
+    private final RabbitMq rabbitMq;
     @Value("${peppol.outbound.sending.enabled:false}")
     private boolean sendingEnabled;
 
     @Autowired
-    public OutboundController(@NotNull OutboundErrorHandler outboundErrorHandler, @NotNull RabbitTemplate rabbitTemplate,
+    public OutboundController(@NotNull OutboundErrorHandler outboundErrorHandler, @NotNull RabbitMq rabbitMq,
                               @NotNull UblSender ublSender, @Nullable TestSender testSender, @NotNull Svefaktura1Sender svefaktura1Sender) {
         this.ublSender = ublSender;
         this.outboundErrorHandler = outboundErrorHandler;
         this.testSender = testSender;
         this.svefaktura1Sender = svefaktura1Sender;
-        this.rabbitTemplate = rabbitTemplate;
+        this.rabbitMq = rabbitMq;
     }
 
-    public void send(@NotNull ContainerMessage cm) {
+    public void send(@NotNull ContainerMessage cm) throws Exception {
         if (cm.getBaseDocument() == null) {
             throw new IllegalArgumentException("There is no document in message: " + cm);
         }
@@ -75,9 +73,9 @@ public class OutboundController {
 
             // try to retry if it is defined in route
             if (cm.getRoute() != null) {
-                Map<String, String> next = cm.getRoute().popFull();
-                if (StringUtils.isNotBlank(next.get(Route.NEXT))) {
-                    returnToMessageQueue(cm, next);
+                String next = cm.getRoute().pop();
+                if (StringUtils.isNotBlank(next)) {
+                    rabbitMq.send(next, cm);
                 } else {
                     outboundErrorHandler.handleError(cm, ioe);
                 }
@@ -90,19 +88,4 @@ public class OutboundController {
 
     }
 
-    private void returnToMessageQueue(ContainerMessage cm, Map<String, String> destination) {
-        logger.info("Resending message " + cm.getFileName() + " for retry");
-
-        String queue = destination.get(Route.NEXT);
-        String delay = destination.get(DELAY);
-
-        if (StringUtils.isNotBlank(delay)) {
-            rabbitTemplate.convertAndSend(queue, cm, message -> {
-                message.getMessageProperties().setDelay(Integer.parseInt(delay));
-                return message;
-            });
-        } else {
-            rabbitTemplate.convertAndSend(queue, cm);
-        }
-    }
 }

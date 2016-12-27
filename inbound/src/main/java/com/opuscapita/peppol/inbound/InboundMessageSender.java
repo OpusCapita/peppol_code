@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.inbound;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.mq.MqProperties;
 import com.opuscapita.peppol.commons.mq.RabbitMqStandalone;
@@ -27,8 +28,9 @@ public class InboundMessageSender {
 
     public void send(ContainerMessage cm) throws IOException, TimeoutException {
         MessageQueue mq = new RabbitMqStandalone(prepareMqProperties());
-        logger.debug("Sending message to MQ about file: " + cm.getFileName());
-        mq.send(properties.getProperty(INBOUND_MQ_EXCHANGE), properties.getProperty(INBOUND_MQ_QUEUE), cm);
+        logger.debug("Sending message to " + properties.getProperty(INBOUND_MQ_QUEUE) + " about file: " + cm.getFileName());
+        mq.send(properties.getProperty(INBOUND_MQ_QUEUE) + ConnectionString.QUEUE_SEPARATOR +
+                ConnectionString.EXCHANGE + ConnectionString.VALUE_SEPARATOR + properties.getProperty(INBOUND_MQ_EXCHANGE), cm);
     }
 
     private MqProperties prepareMqProperties() {
