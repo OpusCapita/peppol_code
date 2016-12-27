@@ -22,6 +22,7 @@ def validator_image
 // support module images
 def config_server_image
 def service_discovery_image
+def zuul_proxy_image
 
 // test application images
 def smoke_tests_image
@@ -61,7 +62,8 @@ node {
                     validator:assemble \
 
                     configuration-server:assemble \
-                    service-discovery:assemble 
+                    service-discovery:assemble \
+                    zuul-proxy:assemble
             '''
 
             // assemble smoke-tests from subdirectory since they are not part of the main project
@@ -107,7 +109,8 @@ node {
                     validator:check \
 
                     configuration-server:check \
-                    service-discovery:check 
+                    service-discovery:check \
+                    zuul-proxy:check
             '''
             
             // check smoke-tests from subdirectory since they are not part of the main project
@@ -138,6 +141,7 @@ node {
         // build docker images for the supporting modules
         config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", "src/configuration-server/")
         service_discovery_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/service-discovery:${tag}", "src/service-discovery/")
+        zuul_proxy_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/zuul-proxy:${tag}", "src/zuul-proxy/")
 
         // build docker images for the test modules
         smoke_tests_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/smoke-tests:${tag}", "src/smoke-tests/")
@@ -180,6 +184,8 @@ node {
             config_server_image.push("${tag}")
             service_discovery_image.push("latest")
             service_discovery_image.push("${tag}")
+            zuul_proxy_image.push("latest")
+            zuul_proxy_image.push("${tag}")
 
             // push test images to registry
             smoke_tests_image.push("latest")
