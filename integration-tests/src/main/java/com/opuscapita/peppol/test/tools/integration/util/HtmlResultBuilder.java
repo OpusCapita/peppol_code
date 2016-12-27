@@ -1,6 +1,9 @@
 package com.opuscapita.peppol.test.tools.integration.util;
 
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -42,14 +45,14 @@ public class HtmlResultBuilder implements ResultBuilder{
 	}
 
 	@Override
-	public void processResult(List<TestResult> checkResults) {
-        if(checkResults == null || checkResults.size() < 1)
+	public void processResult(List<TestResult> testResults) {
+        if(testResults == null || testResults.size() < 1)
             return;
 
-        List<CheckResult> goodChecks = checkResults.stream().filter(c -> c.isPassed()).collect(Collectors.toList());
-        List<CheckResult> badChecks =checkResults.stream().filter(c -> !c.isPassed()).collect(Collectors.toList());
+        List<TestResult> passedTests = testResults.stream().filter(c -> c.isPassed()).collect(Collectors.toList());
+        List<TestResult> failedTests = testResults.stream().filter(c -> !c.isPassed()).collect(Collectors.toList());
 
-        String htmlContent = buildHtmlTestsSummaryString(checkResults, goodChecks, badChecks);
+        String htmlContent = buildHtmlTestsSummaryString(testResults, passedTests, failedTests);
 
 		try(PrintWriter writer = new PrintWriter(testResultFileName)){
 			writer.println(htmlContent);
@@ -60,7 +63,7 @@ public class HtmlResultBuilder implements ResultBuilder{
 		}
 	}
 
-    private String buildHtmlTestsSummaryString(List<CheckResult> allChecks, List<CheckResult> goodChecks, List<CheckResult> badChecks) {
+    private String buildHtmlTestsSummaryString(List<TestResult> allTests, List<TestResult> passedTests, List<TestResult> failedTests) {
         Template template = null;
         try {
             template = configuration.getTemplate("summary.ftl");
@@ -72,16 +75,16 @@ public class HtmlResultBuilder implements ResultBuilder{
         Writer out = new OutputStreamWriter(outputStream);
 
         Map<String, Object> data = new HashMap<>();
-        data.put("result", badChecks.size() > 0 ? "FAILURE" : "SUCCESS");
-        data.put("all_tests", allChecks.size());
-        data.put("successful_tests", goodChecks.size());
-        data.put("failed_tests", badChecks.size());
-        data.put("percentage", Double.valueOf(((double) goodChecks.size()/ (double) allChecks.size()) * 100.0));
+        data.put("result", failedTests.size() > 0 ? "FAILURE" : "SUCCESS");
+        data.put("all_tests", allTests.size());
+        data.put("successful_tests", passedTests.size());
+        data.put("failed_tests", failedTests.size());
+        data.put("percentage", Double.valueOf(((double) passedTests.size()/ (double) allTests.size()) * 100.0));
         data.put("comment", "smoke test checks");
         data.put("item", new Object());
 
-        List<Object> failures = buildCheckSection(badChecks);
-        List<Object> oks = buildCheckSection(goodChecks);
+        List<Object> failures = buildCheckSection(failedTests);
+        List<Object> oks = buildCheckSection(passedTests);
 
         if(oks != null )
             data.put("oks",oks);
@@ -96,12 +99,12 @@ public class HtmlResultBuilder implements ResultBuilder{
         return outputStream.toString();
     }
 
-    private List<Object> buildCheckSection(List<CheckResult> checks){
-        if(checks == null || checks.size() < 1)
+    private List<Object> buildCheckSection(List<TestResult> testresults){
+        if(testresults == null || testresults.size() < 1)
             return null;
 
         List<Object> out = new ArrayList<>();
-        for(CheckResult check : checks ){
+        for(TestResult testResult : testresults){
             Map<String, Object> summaryPair = new HashMap<>();
 
             List<Map<String, Object>> assertList = new ArrayList<>();
@@ -109,7 +112,7 @@ public class HtmlResultBuilder implements ResultBuilder{
             Map<String, Object> testMap = new HashMap<>();
             Map<String, Object> summaryMap = new HashMap<>();
 
-            assertList.add(createAssertRow(check));
+            assertList.add(createAssertRow(testResult));
 
             testMap.put("name", "name");
             testMap.put("asserts", assertList);
@@ -118,19 +121,19 @@ public class HtmlResultBuilder implements ResultBuilder{
 
             summaryList.add(summaryMap);
 
-            summaryPair.put("name", check.getName());
+            summaryPair.put("name", testResult.getName());
             summaryPair.put("value",summaryList);
             out.add(summaryPair);
         }
         return out;
     }
 
-    private Map<String, Object> createAssertRow(CheckResult check) {
+    private Map<String, Object> createAssertRow(TestResult testResult) {
         Map<String, Object> assertMap = new HashMap<>();
-        assertMap.put("name", check.getName());
-        assertMap.put("comment",check.getDetails());
+        assertMap.put("name", testResult.getName());
+        assertMap.put("comment",testResult.getDetails());
         assertMap.put("expected_result", "Passed");
-        assertMap.put("output_value", check.isPassed() ? "Passed" : "Failed");
+        assertMap.put("output_value", testResult.isPassed() ? "Passed" : "Failed");
         return assertMap;
     }
 }

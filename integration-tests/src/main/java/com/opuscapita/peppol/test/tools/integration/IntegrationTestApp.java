@@ -28,6 +28,8 @@ import java.util.List;
 public class IntegrationTestApp {
     private final static Logger logger = LogManager.getLogger(IntegrationTestApp.class);
     static String configFile;
+    static String testResultFileName;
+    static String templateDir;
 
     @Autowired
     private Environment environment;
@@ -36,18 +38,21 @@ public class IntegrationTestApp {
         logger.info("IntegrationTestApp : Starting!");
         SpringApplication.run(IntegrationTestApp.class);
 
-        if (args.length < 1 || args[0] == null || args[0].isEmpty()) {
-            logger.error("Configuration file not specified, exiting!");
+        if (args.length < 3 || args[0] == null || args[0].isEmpty()) {
+            logger.error("Not all command line arguments specified!");
+            logger.error("Required arguments are: configFile, testResultFileName, templateDir");
             System.exit(1);
         }
         configFile = args[0];
+        testResultFileName = args[1];
+        templateDir = args[2];
 
         if (new File(configFile).isDirectory())
             configFile = configFile + "\\configuration.yaml";
 
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile).initConfig();
         List<TestResult> testResults = config.runTests();
-        new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
+        //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
         logger.info("IntegrationTestApp : Ended!");
     }
 

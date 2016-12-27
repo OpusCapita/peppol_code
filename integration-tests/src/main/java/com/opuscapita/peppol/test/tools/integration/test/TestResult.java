@@ -19,4 +19,16 @@ public class TestResult {
         this.passed = passed;
         this.details = details;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public boolean isPassed() {
+        return passed;
+    }
 }
