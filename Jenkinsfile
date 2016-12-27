@@ -7,7 +7,6 @@ def code_author
 def infra_author
 
 // module images
-def config_server_image
 def email_notificator_image
 def events_persistence_image
 def eventing_image
@@ -19,6 +18,10 @@ def outbound_image
 def preprocessing_image
 def support_ui_image
 def validator_image
+
+// support module images
+def config_server_image
+def service_discovery_image
 
 // test application images
 def smoke_tests_image
@@ -45,7 +48,6 @@ node {
             // assemble modules
             sh '''
                 bash gradlew clean \
-                    configuration-server:assemble \
                     email-notificator:assemble \
                     events-persistence:assemble \
                     eventing:assemble \
@@ -56,7 +58,10 @@ node {
                     outbound:assemble \
                     preprocessing:assemble \
                     support-ui:assemble \
-                    validator:assemble
+                    validator:assemble \
+
+                    configuration-server:assemble \
+                    service-discovery:assemble 
             '''
 
             // assemble smoke-tests from subdirectory since they are not part of the main project
@@ -89,7 +94,6 @@ node {
             // check modules
             sh '''
                 bash gradlew \
-                    configuration-server:check \
                     email-notificator:check \
                     events-persistence:check \
                     eventing:check \
@@ -100,7 +104,10 @@ node {
                     outbound:check \
                     preprocessing:check \
                     support-ui:check \
-                    validator:check
+                    validator:check \
+
+                    configuration-server:check \
+                    service-discovery:check 
             '''
             
             // check smoke-tests from subdirectory since they are not part of the main project
@@ -116,7 +123,6 @@ node {
 
     stage('Package') {
         // build docker images for the main modules
-        config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", "src/configuration-server/")
         email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", "src/email-notificator/")
         events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", "src/events-persistence/")
         eventing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/eventing:${tag}", "src/eventing/")
@@ -128,6 +134,10 @@ node {
         preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "src/preprocessing/")
         support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", "src/support-ui/")
         validator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/validator:${tag}", "src/validator/")
+
+        // build docker images for the supporting modules
+        config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", "src/configuration-server/")
+        service_discovery_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/service-discovery:${tag}", "src/service-discovery/")
 
         // build docker images for the test modules
         smoke_tests_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/smoke-tests:${tag}", "src/smoke-tests/")
@@ -143,8 +153,6 @@ node {
             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
 
             // push module images to registry
-            config_server_image.push("latest")
-            config_server_image.push("${tag}")
             email_notificator_image.push("latest")
             email_notificator_image.push("${tag}")
             events_persistence_image.push("latest")
@@ -167,6 +175,11 @@ node {
             support_ui_image.push("${tag}")
             validator_image.push("latest")
             validator_image.push("${tag}")
+
+            config_server_image.push("latest")
+            config_server_image.push("${tag}")
+            service_discovery_image.push("latest")
+            service_discovery_image.push("${tag}")
 
             // push test images to registry
             smoke_tests_image.push("latest")
