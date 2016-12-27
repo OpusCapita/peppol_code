@@ -1,16 +1,16 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
+import com.codeborne.selenide.WebDriverRunner;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import org.apache.log4j.LogManager;
 import org.openqa.selenium.By;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.close;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 /**
  * Created by gamanse1 on 2016.11.29..
@@ -31,6 +31,7 @@ public class WebUiProducer implements Producer {
     }
 
     @Override
+    @SuppressWarnings("Duplicates")
     public void run() {
         Properties results = new Properties();
         File directory = null;
@@ -45,6 +46,8 @@ public class WebUiProducer implements Producer {
             return;
         }
         try {
+            //HtmlUnitDriver doesn't need the browser which allows to run the code on server
+            WebDriverRunner.setWebDriver(new HtmlUnitDriver(true));
             //selenide here
             for (File file : directory.listFiles()) {
                 open(link);
