@@ -60,7 +60,6 @@ node {
                     preprocessing:assemble \
                     support-ui:assemble \
                     validator:assemble \
-
                     configuration-server:assemble \
                     service-discovery:assemble \
                     zuul-proxy:assemble
@@ -107,7 +106,6 @@ node {
                     preprocessing:check \
                     support-ui:check \
                     validator:check \
-
                     configuration-server:check \
                     service-discovery:check \
                     zuul-proxy:check
