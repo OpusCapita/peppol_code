@@ -4,12 +4,12 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.preprocessing.controller.PreprocessingController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.JsonMessageConverter;
@@ -56,7 +56,7 @@ public class PreprocessingApp {
     @Bean
     @NotNull
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull StatusReporter reporter,
-                                        @NotNull PreprocessingController controller, @NotNull RabbitTemplate rabbitTemplate) {
+                                        @NotNull PreprocessingController controller, @NotNull MessageQueue messageQueue) {
         return new AbstractQueueListener(errorHandler, reporter) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
@@ -64,9 +64,9 @@ public class PreprocessingApp {
                 cm = controller.process(cm);
                 cm.setStatus(componentName, "file read");
                 if (cm.getBaseDocument() instanceof InvalidDocument) {
-                    rabbitTemplate.convertAndSend(errorQueue, cm);
+                    messageQueue.convertAndSend(errorQueue, cm);
                 } else {
-                    rabbitTemplate.convertAndSend(queueOut, cm);
+                    messageQueue.convertAndSend(queueOut, cm);
                 }
                 logger.info("Successfully processed and delivered to " + queueOut + " queue");
             }

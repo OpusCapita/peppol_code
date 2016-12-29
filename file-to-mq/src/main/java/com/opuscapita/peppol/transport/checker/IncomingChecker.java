@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.storage.Storage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -14,14 +15,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -35,7 +34,7 @@ import java.util.Iterator;
 public class IncomingChecker {
     private static final Logger logger = LoggerFactory.getLogger(IncomingChecker.class);
 
-    private final RabbitTemplate rabbitTemplate;
+    private final MessageQueue messageQueue;
     private final Storage storage;
     private final StatusReporter statusReporter;
     private final ErrorHandler errorHandler;
@@ -54,9 +53,9 @@ public class IncomingChecker {
     private String queue;
 
     @Autowired
-    public IncomingChecker(@NotNull RabbitTemplate rabbitTemplate, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
+    public IncomingChecker(@NotNull MessageQueue messageQueue, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
                            @NotNull ErrorHandler errorHandler) {
-        this.rabbitTemplate = rabbitTemplate;
+        this.messageQueue = messageQueue;
         this.storage = storage;
         this.statusReporter = statusReporter;
         this.errorHandler = errorHandler;
@@ -80,7 +79,7 @@ public class IncomingChecker {
         }
     }
 
-    private void receive(File directory) throws IOException {
+    private void receive(File directory) throws Exception {
         logger.debug("Checking directory " + directory.getAbsolutePath());
 
         Date earlier = DateUtils.addSeconds(new Date(), -age);
@@ -104,14 +103,14 @@ public class IncomingChecker {
         }
     }
 
-    private void send(File file) throws IOException {
+    private void send(File file) throws Exception {
         String fileName = storage.moveToTemporary(file);
         logger.info("File moved to: " + fileName);
 
         ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, new Endpoint(componentName, Endpoint.Type.GATEWAY))
                 .setStatus(new ProcessingStatus(componentName, "received", fileName));
 
-        rabbitTemplate.convertAndSend(queue, cm);
+        messageQueue.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");
 
         if (statusReporter != null) {

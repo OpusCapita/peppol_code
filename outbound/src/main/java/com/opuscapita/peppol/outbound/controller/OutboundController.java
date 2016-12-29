@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.mq.RabbitMq;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import eu.peppol.outbound.transmission.TransmissionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -20,23 +20,24 @@ import java.io.IOException;
 @Component
 public class OutboundController {
     private final static Logger logger = LoggerFactory.getLogger(OutboundController.class);
-    private final static String DELAY = "x-delay";
+
     private final UblSender ublSender;
     private final Svefaktura1Sender svefaktura1Sender;
     private final OutboundErrorHandler outboundErrorHandler;
     private final TestSender testSender;
-    private final RabbitMq rabbitMq;
+    private final MessageQueue messageQueue;
+
     @Value("${peppol.outbound.sending.enabled:false}")
     private boolean sendingEnabled;
 
     @Autowired
-    public OutboundController(@NotNull OutboundErrorHandler outboundErrorHandler, @NotNull RabbitMq rabbitMq,
+    public OutboundController(@NotNull OutboundErrorHandler outboundErrorHandler, @NotNull MessageQueue messageQueue,
                               @NotNull UblSender ublSender, @Nullable TestSender testSender, @NotNull Svefaktura1Sender svefaktura1Sender) {
         this.ublSender = ublSender;
         this.outboundErrorHandler = outboundErrorHandler;
         this.testSender = testSender;
         this.svefaktura1Sender = svefaktura1Sender;
-        this.rabbitMq = rabbitMq;
+        this.messageQueue = messageQueue;
     }
 
     public void send(@NotNull ContainerMessage cm) throws Exception {
@@ -75,7 +76,7 @@ public class OutboundController {
             if (cm.getRoute() != null) {
                 String next = cm.getRoute().pop();
                 if (StringUtils.isNotBlank(next)) {
-                    rabbitMq.send(next, cm);
+                    messageQueue.convertAndSend(next, cm);
                 } else {
                     outboundErrorHandler.handleError(cm, ioe);
                 }

@@ -7,6 +7,7 @@ import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
@@ -16,7 +17,6 @@ import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +118,7 @@ public class PeppolValidatorApplication {
 
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
-                                        @NotNull ValidationController controller, @NotNull RabbitTemplate rabbitTemplate,
+                                        @NotNull ValidationController controller, @NotNull MessageQueue messageQueue,
                                         @NotNull StatusReporter reporter) {
         return new AbstractQueueListener(errorHandler, reporter) {
             @SuppressWarnings("ConstantConditions")
@@ -129,13 +129,13 @@ public class PeppolValidatorApplication {
                 cm.setValidationResult(validationResult);
 
                 if (!validationResult.isPassed()) {
-                    rabbitTemplate.convertAndSend(errorQueue, cm);
+                    messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
                     return;
                 }
 
                 String queueOut = cm.getRoute().pop();
-                rabbitTemplate.convertAndSend(queueOut, cm);
+                messageQueue.convertAndSend(queueOut, cm);
                 cm.setStatus(componentName, "validation passed");
                 logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
             }

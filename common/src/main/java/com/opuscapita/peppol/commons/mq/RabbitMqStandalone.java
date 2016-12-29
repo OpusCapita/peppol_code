@@ -22,7 +22,7 @@ public class RabbitMqStandalone implements MessageQueue {
     }
 
     @Override
-    public void send(@NotNull String connectionString, @NotNull ContainerMessage message)
+    public void convertAndSend(@NotNull String connectionString, @NotNull ContainerMessage message)
             throws IOException, TimeoutException {
         Connection connection = null;
         Channel channel = null;

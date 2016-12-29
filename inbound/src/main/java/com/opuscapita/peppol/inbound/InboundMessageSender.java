@@ -29,7 +29,7 @@ public class InboundMessageSender {
     public void send(ContainerMessage cm) throws IOException, TimeoutException {
         MessageQueue mq = new RabbitMqStandalone(prepareMqProperties());
         logger.debug("Sending message to " + properties.getProperty(INBOUND_MQ_QUEUE) + " about file: " + cm.getFileName());
-        mq.send(properties.getProperty(INBOUND_MQ_QUEUE) + ConnectionString.QUEUE_SEPARATOR +
+        mq.convertAndSend(properties.getProperty(INBOUND_MQ_QUEUE) + ConnectionString.QUEUE_SEPARATOR +
                 ConnectionString.EXCHANGE + ConnectionString.VALUE_SEPARATOR + properties.getProperty(INBOUND_MQ_EXCHANGE), cm);
     }
 

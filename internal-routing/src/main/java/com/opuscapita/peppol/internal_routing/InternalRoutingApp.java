@@ -3,12 +3,12 @@ package com.opuscapita.peppol.internal_routing;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.internal_routing.controller.RoutingController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +32,7 @@ public class InternalRoutingApp {
 
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
-                                        @NotNull RoutingController controller, @NotNull RabbitTemplate rabbitTemplate,
+                                        @NotNull RoutingController controller, @NotNull MessageQueue messageQueue,
                                         @NotNull StatusReporter reporter) {
         return new AbstractQueueListener(errorHandler, reporter) {
             @SuppressWarnings("ConstantConditions")
@@ -42,7 +42,7 @@ public class InternalRoutingApp {
                 logger.info("Route set to " + cm.getRoute());
 
                 String queueOut = cm.getRoute().pop();
-                rabbitTemplate.convertAndSend(queueOut, cm);
+                messageQueue.convertAndSend(queueOut, cm);
                 cm.setStatus(componentName, "route set");
                 logger.info("Route for " + cm.getFileName() + " defined, message sent to " + queueOut + " queue");
             }

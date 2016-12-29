@@ -22,7 +22,7 @@ public class RabbitMq implements MessageQueue {
     }
 
     @Override
-    public void send(@NotNull String connectionString, @NotNull ContainerMessage message)
+    public void convertAndSend(@NotNull String connectionString, @NotNull ContainerMessage message)
             throws IOException, TimeoutException {
         ConnectionString cs = new ConnectionString(connectionString);
 

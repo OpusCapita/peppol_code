@@ -25,6 +25,6 @@ public interface MessageQueue {
      * Without parameters simply represents the name of the queue to send to.
      *
      */
-    void send(@NotNull String connectionString, @NotNull ContainerMessage message) throws IOException, TimeoutException;
+    void convertAndSend(@NotNull String connectionString, @NotNull ContainerMessage message) throws IOException, TimeoutException;
 
 }
