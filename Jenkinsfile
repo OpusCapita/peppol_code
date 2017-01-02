@@ -130,7 +130,7 @@ def assemble(modules) {
 }
 
 def check(modules) {
-    sh 'bash gradlew assemble'
+    sh 'bash gradlew check'
 }
 
 def dockerBuild(modules, tag) {
