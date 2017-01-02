@@ -156,8 +156,8 @@ def dockerPush(modules, tags) {
     def docker_credentials = [[
         $class: 'UsernamePasswordMultiBinding',
         credentialsId: 'docker-login',
-        usernameVariable: 'DOCKER_USERNAME'
-        passwordVariable: 'DOCKER_PASSWORD',
+        usernameVariable: 'DOCKER_USERNAME',
+        passwordVariable: 'DOCKER_PASSWORD'
     ]]
 
     withCredentials(docker_credentials) {
