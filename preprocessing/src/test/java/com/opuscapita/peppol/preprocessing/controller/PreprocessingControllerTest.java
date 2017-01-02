@@ -71,10 +71,8 @@ public class PreprocessingControllerTest {
         Storage storage = mock(Storage.class);
         PreprocessingController controller = new PreprocessingController(dl, storage);
 
-        try {
-            controller.process(new ContainerMessage("metadata", "_no_such_file", ENDPOINT));
-            fail();
-        } catch (Exception ignore) {}
+        ContainerMessage cm = controller.process(new ContainerMessage("metadata", "_no_such_file", ENDPOINT));
+        assertTrue(cm.getBaseDocument() instanceof InvalidDocument);
     }
 
 }

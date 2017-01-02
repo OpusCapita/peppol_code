@@ -65,10 +65,11 @@ public class PreprocessingApp {
                 cm.setStatus(componentName, "file read");
                 if (cm.getBaseDocument() instanceof InvalidDocument) {
                     messageQueue.convertAndSend(errorQueue, cm);
+                    logger.info("Invalid message sent to " + errorQueue + " queue");
                 } else {
                     messageQueue.convertAndSend(queueOut, cm);
+                    logger.info("Successfully processed and delivered to " + queueOut + " queue");
                 }
-                logger.info("Successfully processed and delivered to " + queueOut + " queue");
             }
         };
     }
