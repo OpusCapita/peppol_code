@@ -6,30 +6,28 @@ def status = 0      // build status
 def code_author
 def infra_author
 
-// module images
-def email_notificator_image
-def events_persistence_image
-def eventing_image
-def file_to_mq_image
-def inbound_image
-def internal_routing_image
-def mq_to_file_image
-def outbound_image
-def preprocessing_image
-def support_ui_image
-def validator_image
+def modules = [
+    [name: 'email-notificator'],
+    [name: 'events-persistence'],
+    [name: 'eventing'],
+    [name: 'file-to-mq'],
+    [name: 'inbound'],
+    [name: 'internal-routing'],
+    [name: 'mq-to-file'],
+    [name: 'outbound'],
+    [name: 'preprocessing'],
+    [name: 'support-ui'],
+    [name: 'validator'],
 
-// support module images
-def config_server_image
-def service_discovery_image
-def zuul_proxy_image
+    [name: 'configuration-server'],
+    [name: 'service-discovery'],
+    [name: 'zuul-proxy'],
 
-// test application images
-def smoke_tests_image
-//def integration_tests_image
+    [name: 'smoke-tests']
+]
 
 // additional properties loaded from file
-def properties  
+def properties
 
 // define mailing list aliases
 recipients = [:]
@@ -46,43 +44,14 @@ node {
             git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
             code_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
 
-            // assemble modules
-            sh '''
-                bash gradlew clean \
-                    email-notificator:assemble \
-                    events-persistence:assemble \
-                    eventing:assemble \
-                    file-to-mq:assemble \
-                    inbound:assemble \
-                    internal-routing:assemble \
-                    mq-to-file:assemble \
-                    outbound:assemble \
-                    preprocessing:assemble \
-                    support-ui:assemble \
-                    validator:assemble \
-                    configuration-server:assemble \
-                    service-discovery:assemble \
-                    zuul-proxy:assemble
-            '''
-
-            // assemble smoke-tests from subdirectory since they are not part of the main project
-            dir('smoke-tests') {
-                sh '''
-                    bash gradlew assemble
-                '''
-            }
-
-           /* dir('integration-tests') {
-                sh '''
-                    bash gradlew assemble
-                '''
-            }*/
-
             // load additional properties
             properties = loadProperties('gradle.properties')
             releaseVersion = properties.version
             tag = "${releaseVersion}-${env.BUILD_NUMBER}"
-        } 
+
+            sh 'bash gradlew clean'
+            assemble(modules)
+        }
         dir('infra') {
             // get latest version of infrastructure
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
@@ -92,58 +61,14 @@ node {
 
     stage('Unit Test') {
         dir('src') {
-            // check modules
-            sh '''
-                bash gradlew \
-                    email-notificator:check \
-                    events-persistence:check \
-                    eventing:check \
-                    file-to-mq:check \
-                    inbound:check \
-                    internal-routing:check \
-                    mq-to-file:check \
-                    outbound:check \
-                    preprocessing:check \
-                    support-ui:check \
-                    validator:check \
-                    configuration-server:check \
-                    service-discovery:check \
-                    zuul-proxy:check
-            '''
-            
-            // check smoke-tests from subdirectory since they are not part of the main project
-            dir('smoke-tests') {
-                sh 'bash gradlew check'
-            }
-
-            /*dir('integration-tests') {
-                sh 'bash gradlew check'
-            }*/
+            check(modules)
         }
     }
 
     stage('Package') {
-        // build docker images for the main modules
-        email_notificator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/email-notificator:${tag}", "src/email-notificator/")
-        events_persistence_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/events-persistence:${tag}", "src/events-persistence/")
-        eventing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/eventing:${tag}", "src/eventing/")
-        file_to_mq_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/file-to-mq:${tag}", "src/file-to-mq/")
-        inbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/inbound:${tag}", "src/inbound/")
-        internal_routing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/internal-routing:${tag}", "src/internal-routing/")
-        mq_to_file_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/mq-to-file:${tag}", "src/mq-to-file/")
-        outbound_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/outbound:${tag}", "src/outbound/")
-        preprocessing_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/preprocessing:${tag}", "src/preprocessing/")
-        support_ui_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/support-ui:${tag}", "src/support-ui/")
-        validator_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/validator:${tag}", "src/validator/")
-
-        // build docker images for the supporting modules
-        config_server_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/configuration-server:${tag}", "src/configuration-server/")
-        service_discovery_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/service-discovery:${tag}", "src/service-discovery/")
-        zuul_proxy_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/zuul-proxy:${tag}", "src/zuul-proxy/")
-
-        // build docker images for the test modules
-        smoke_tests_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/smoke-tests:${tag}", "src/smoke-tests/")
-       // integration_tests_image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/integration-tests:${tag}", "src/integration-tests/")
+        dir('src') {
+            dockerBuild(modules)
+        }
     }
 
     stage('Release') {
@@ -151,46 +76,8 @@ node {
             // automatic versions trigger a new build repeatedly, disabled for now
             //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
         }
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
-            sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
-
-            // push module images to registry
-            email_notificator_image.push("latest")
-            email_notificator_image.push("${tag}")
-            events_persistence_image.push("latest")
-            events_persistence_image.push("${tag}")
-            eventing_image.push("latest")
-            eventing_image.push("${tag}")
-            file_to_mq_image.push("latest")
-            file_to_mq_image.push("${tag}")
-            inbound_image.push("latest")
-            inbound_image.push("${tag}")
-            internal_routing_image.push("latest")
-            internal_routing_image.push("${tag}")
-            mq_to_file_image.push("latest")
-            mq_to_file_image.push("${tag}")
-            outbound_image.push("latest")
-            outbound_image.push("${tag}")
-            preprocessing_image.push("latest")
-            preprocessing_image.push("${tag}")
-            support_ui_image.push("latest")
-            support_ui_image.push("${tag}")
-            validator_image.push("latest")
-            validator_image.push("${tag}")
-
-            config_server_image.push("latest")
-            config_server_image.push("${tag}")
-            service_discovery_image.push("latest")
-            service_discovery_image.push("${tag}")
-            zuul_proxy_image.push("latest")
-            zuul_proxy_image.push("${tag}")
-
-            // push test images to registry
-            smoke_tests_image.push("latest")
-            smoke_tests_image.push("${tag}")
-           /* integration_tests_image.push("latest")
-            integration_tests_image.push("${tag}")*/
-        }
+        def tags = ['latest', releaseVersion]
+        dockerPush(modules, tags)
     }
 
     milestone label: 'staging'
@@ -198,7 +85,7 @@ node {
         dir('infra/ap2/ansible') {
 			ansiblePlaybook(
                 'peppol-components.yml', 'stage.hosts', 'ansible-sudo',
-                handleFailedStageDeployment
+                this.&handleFailedStageDeployment
             )
         }
     }
@@ -208,7 +95,7 @@ node {
         dir('infra/ap2/ansible') {
 			ansiblePlaybook(
                 'smoke-tests.yml', 'stage.hosts', 'ansible-sudo',
-                handleFailedSmokeTests
+                this.&handleFailedSmokeTests
             )
             archiveArtifacts artifacts: 'test/smoke-tests-results.html'
         }
@@ -218,7 +105,7 @@ node {
         dir('infra/ap2/ansible') {
 			ansiblePlaybook(
                 'integration-tests.yml', 'stage.hosts', 'ansible-sudo',
-                handleFailedIntegrationTests
+                this.&handleFailedIntegrationTests
             )
             archiveArtifacts artifacts: 'test/integration-tests-results.html'
         }
@@ -226,8 +113,89 @@ node {
 }
 
 
+/**
+ * Stages
+ */
+
+def assemble(modules) {
+    for (i=0; i<modules.size(); i++) {
+        def module = modules[i]
+        dir (module.name) {
+            sh "bash ../gradlew assemble"
+        }
+    }
+}
+
+def check(modules) {
+    for (i=0; i<modules.size(); i++) {
+        def module = modules[i]
+        dir (module.name) {
+            sh "bash ../gradlew check"
+        }
+    }
+}
+
+def dockerBuild(modules, tag) {
+    for (i=0; i<modules.size(); i++) {
+        def module = modules[i]
+        dir (module.name) {
+            module.image = docker.build("d-l-tools.ocnet.local:443/peppol2.0/${module.name}:${tag}", ".")
+        }
+    }
+}
+
+def dockerPush(modules, tags) {
+    def docker_credentials = [[
+        $class: 'UsernamePasswordMultiBinding',
+        credentialsId: 'docker-login',
+        usernameVariable: 'DOCKER_USERNAME'
+        passwordVariable: 'DOCKER_PASSWORD',
+    ]]
+
+    withCredentials(docker_credentials) {
+        sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD d-l-tools.ocnet.local:443'
+    }
+
+    for (i=0; i<modules.size(); i++) {
+        def module = modules[i]
+        for (j=0; j<tags.size(); j++) {
+            def tag = tags[i]
+            module.image.push(tag)
+        }
+    }
+}
+
+/**
+ * Handlers
+ */
+
+def handleFailedStageDeployment() {
+    failBuild(
+        "${recipients.ops}, ${recipients.devops}, ${infra_author}, ${code_author}",
+        'Deployment to stage environment has failed. Check the log for details.'
+    )
+}
+
+def handleFailedSmokeTests() {
+    archiveArtifacts artifacts: 'test/smoke-tests-results.html'
+    failBuild(
+        "${recipients.testers}, ${infra_author}, ${code_author}",
+        'Smoke tests have failed. Check the log for details.'
+    )
+}
+
+def handleFailedIntegrationTests() {
+    archiveArtifacts artifacts: 'test/integration-tests-results.html'
+    failBuild(
+        "${recipients.testers}, ${infra_author}, ${code_author}",
+        'Integration tests have failed. Check the log for details.'
+    )
+}
+
+/**/
+
 // execute ansible playbook on hosts using the credentials provided
-def ansiblePlaybook(playbook, hosts, credentials, onError={}, onSuccess={}) {
+def ansiblePlaybook(playbook, hosts, credentials, Closure onError={}, Closure onSuccess={}) {
     def result = 0
     def ansible_credentials = [[
         $class: 'UsernamePasswordMultiBinding',
@@ -303,30 +271,9 @@ ${changes}
 """
 }
 
+
 def failBuild(String email_recipients, String message) {
     emailNotify(email_recipients, message)
     error message
 }
 
-def handleFailedStageDeployment() {
-    failBuild(
-        "${recipients.ops}, ${recipients.devops}, ${infra_author}, ${code_author}",
-        'Deployment to stage environment has failed. Check the log for details.'
-    )
-}
-
-def handleFailedSmokeTests() {
-    archiveArtifacts artifacts: 'test/smoke-tests-results.html'
-    failBuild(
-        "${recipients.testers}, ${infra_author}, ${code_author}",
-        'Smoke tests have failed. Check the log for details.'
-    )
-}
-
-def handleFailedIntegrationTests() {
-    archiveArtifacts artifacts: 'test/integration-tests-results.html'
-    failBuild(
-        "${recipients.testers}, ${infra_author}, ${code_author}",
-        'Integration tests have failed. Check the log for details.'
-    )
-}
