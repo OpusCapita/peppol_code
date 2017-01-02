@@ -75,7 +75,7 @@ node {
 
     stage('Package') {
         dir('src') {
-            dockerBuild(modules)
+            dockerBuild(modules, tag)
         }
     }
 
