@@ -126,21 +126,11 @@ node {
  */
 
 def assemble(modules) {
-    for (i=0; i<modules.size(); i++) {
-        def module = modules[i]
-        dir (module.name) {
-            sh "bash ../gradlew assemble"
-        }
-    }
+    sh 'bash gradlew assemble'
 }
 
 def check(modules) {
-    for (i=0; i<modules.size(); i++) {
-        def module = modules[i]
-        dir (module.name) {
-            sh "bash ../gradlew check"
-        }
-    }
+    sh 'bash gradlew assemble'
 }
 
 def dockerBuild(modules, tag) {
