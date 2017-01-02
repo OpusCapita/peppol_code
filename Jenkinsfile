@@ -196,37 +196,59 @@ node {
     milestone label: 'staging'
     stage('Deploy Stage') {
         dir('infra/ap2/ansible') {
-			ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo')
+			ansiblePlaybook(
+                'peppol-components.yml', 'stage.hosts', 'ansible-sudo',
+                handleFailedStageDeployment
+            )
         }
     }
 
     milestone label: 'testing'
     stage('Smoke Test') {
         dir('infra/ap2/ansible') {
-			ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
+			ansiblePlaybook(
+                'smoke-tests.yml', 'stage.hosts', 'ansible-sudo',
+                handleFailedSmokeTests
+            )
             archiveArtifacts artifacts: 'test/smoke-tests-results.html'
-        }
-        if (status != 0) {
-            failBuild("${recipients.testers}, ${infra_author}, ${code_author}", 'Smoke tests have failed. Check the log for details.')
         }
     }
 
     /* stage('Integration Test') {
         dir('infra/ap2/ansible') {
-			ansiblePlaybook('integration-tests.yml', 'stage.hosts', 'ansible-sudo')
+			ansiblePlaybook(
+                'integration-tests.yml', 'stage.hosts', 'ansible-sudo',
+                handleFailedIntegrationTests
+            )
             archiveArtifacts artifacts: 'test/integration-tests-results.html'
-        }
-        if (status != 0) {
-            failBuild("${recipients.testers}, ${infra_author}, ${code_author}", 'Integration tests have failed. Check the log for details.')
         }
     }*/
 }
 
+
 // execute ansible playbook on hosts using the credentials provided
-def ansiblePlaybook(playbook, hosts, credentials) {
-    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentials, passwordVariable: 'ANSIBLE_PASSWORD', usernameVariable: 'ANSIBLE_USERNAME']]) {
-        sh "ansible-playbook -i '${hosts}' --user='${ANSIBLE_USERNAME}' --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}' ${playbook}"
+def ansiblePlaybook(playbook, hosts, credentials, onError={}, onSuccess={}) {
+    def result = 0
+    def ansible_credentials = [[
+        $class: 'UsernamePasswordMultiBinding',
+        credentialsId: credentials,
+        passwordVariable: 'ANSIBLE_PASSWORD',
+        usernameVariable: 'ANSIBLE_USERNAME'
+    ]]
+
+    withCredentials(ansible_credentials) {
+        result = sh """
+            ansible-playbook -i '${hosts}' '${playbook}' \
+            --user='${ANSIBLE_USERNAME}' \
+            --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}'
+        """
     }
+
+    if (result != 0) {
+        onError()
+    }
+
+    onSuccess()
 }
 
 
@@ -284,4 +306,27 @@ ${changes}
 def failBuild(String email_recipients, String message) {
     emailNotify(email_recipients, message)
     error message
+}
+
+def handleFailedStageDeployment() {
+    failBuild(
+        "${recipients.ops}, ${recipients.devops}, ${infra_author}, ${code_author}",
+        'Deployment to stage environment has failed. Check the log for details.'
+    )
+}
+
+def handleFailedSmokeTests() {
+    archiveArtifacts artifacts: 'test/smoke-tests-results.html'
+    failBuild(
+        "${recipients.testers}, ${infra_author}, ${code_author}",
+        'Smoke tests have failed. Check the log for details.'
+    )
+}
+
+def handleFailedIntegrationTests() {
+    archiveArtifacts artifacts: 'test/integration-tests-results.html'
+    failBuild(
+        "${recipients.testers}, ${infra_author}, ${code_author}",
+        'Integration tests have failed. Check the log for details.'
+    )
 }
