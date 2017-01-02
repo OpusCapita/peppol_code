@@ -1,11 +1,9 @@
 #!groovy
-def releaseVersion
-def tag = "latest"
-def status = 0      // build status
 
-def code_author
-def infra_author
-
+/**
+ * List of modules. Each module is expected to be in subdirectory named as
+ * module for assemble, check and dockerBuild to work properly.
+ */
 def modules = [
     [name: 'email-notificator'],
     [name: 'events-persistence'],
@@ -26,16 +24,26 @@ def modules = [
     [name: 'smoke-tests']
 ]
 
-// additional properties loaded from file
-def properties
-
-// define mailing list aliases
+/**
+ * A map of recipient groups. Each group should have comma separated list of
+ * email addresses to receive notifications. See 'handlers' section for details
+ * on how the groups are used in certain notifications.
+ */
 recipients = [:]
 recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Gamans Sergejs <Sergejs.Gamans@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
 recipients.devops = "Didrihsons Edgars <Edgars.Didrihsons@opuscapita.com>"
 recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
 recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
 
+
+def releaseVersion
+def tag = "latest"
+def status = 0      // build status
+
+def code_author
+def infra_author
+
+def properties      // additional properties loaded from file
 
 node {
     stage('Build') {
