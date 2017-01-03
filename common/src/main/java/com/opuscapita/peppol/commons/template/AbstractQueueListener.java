@@ -73,8 +73,11 @@ public abstract class AbstractQueueListener {
     private void handleError(@NotNull String customerId, @NotNull Exception e, @Nullable ContainerMessage cm) {
         try {
             if (errorHandler != null) {
-                String message = cm == null ? "no content available" : new String(cm.convertToJsonByteArray());
-                errorHandler.reportToServiceNow(message, customerId, e);
+                if (cm == null) {
+                    errorHandler.reportToServiceNow("{}", customerId, e, e.getMessage());
+                } else {
+                    errorHandler.reportToServiceNow(cm, e, e.getMessage());
+                }
             }
             String fileName = (cm == null ? "n/a" : cm.getFileName());
 

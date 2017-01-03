@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
+import com.opuscapita.peppol.commons.container.ContainerMessage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,10 @@ public class ErrorHandler {
         this.environment = environment;
     }
 
+    public void reportToServiceNow(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription) {
+        reportToServiceNow(cm.convertToJson(), cm.getCustomerId(), e, shortDescription);
+    }
+
     public void reportToServiceNow(String json, String customerId, Exception e) {
         reportToServiceNow(json, customerId, e, e.getMessage());
     }
@@ -69,11 +74,11 @@ public class ErrorHandler {
     /**
      * Make the message "great", errm... human readable again :)
      *
-     * @param message
+     * @param message the message
      * @return indented contents of json as a plain text or just a message itself, in any case { and } and " and ' are removed.
      */
     private String makeMessageHumanReadable(String message) {
-        String detailedDescription = "";
+        String detailedDescription;
         try {
             JsonObject jsonMessage = new JsonParser().parse(message).getAsJsonObject();
             detailedDescription = new GsonBuilder().setPrettyPrinting().create().toJson(jsonMessage);

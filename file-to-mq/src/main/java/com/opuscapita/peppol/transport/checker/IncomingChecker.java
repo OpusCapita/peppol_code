@@ -62,6 +62,7 @@ public class IncomingChecker {
         logger.info("Transport started for directory " + directory);
     }
 
+    // check directory once per minute for new input files
     @Scheduled(fixedRate = 60_000) // 1 minute
     public void check() {
         File dir = new File(directory);
@@ -79,6 +80,7 @@ public class IncomingChecker {
         }
     }
 
+    // check subdirectories, file age and file mask
     private void receive(File directory) throws Exception {
         logger.debug("Checking directory " + directory.getAbsolutePath());
 
@@ -103,12 +105,14 @@ public class IncomingChecker {
         }
     }
 
+    // send file info to MQ if found
     private void send(File file) throws Exception {
         String fileName = storage.moveToTemporary(file);
         logger.info("File moved to: " + fileName);
 
-        ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, new Endpoint(componentName, Endpoint.Type.GATEWAY))
-                .setStatus(new ProcessingStatus(componentName, "received", fileName));
+        ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
+                fileName, new Endpoint(componentName, Endpoint.Type.GATEWAY))
+                    .setStatus(new ProcessingStatus(componentName, "received", fileName));
 
         messageQueue.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");

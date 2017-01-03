@@ -124,8 +124,12 @@ public class ContainerMessage implements Serializable {
         return source;
     }
 
+    public String convertToJson() {
+        return prepareGson(getFileName()).toJson(this);
+    }
+
     public byte[] convertToJsonByteArray() {
-        return prepareGson(getFileName()).toJson(this).getBytes();
+        return convertToJson().getBytes();
     }
 
     @Nullable
