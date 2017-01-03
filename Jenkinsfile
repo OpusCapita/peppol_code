@@ -40,8 +40,8 @@ def releaseVersion
 def tag = "latest"
 def status = 0      // build status
 
-code_author
-infra_author
+code_author = ""
+infra_author = ""
 
 def properties      // additional properties loaded from file
 
