@@ -1,5 +1,7 @@
 package com.opuscapita.peppol.proxy;
 
+import com.opuscapita.peppol.proxy.filters.pre.CustomFilter;
+import com.opuscapita.peppol.proxy.filters.pre.FilterProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -16,6 +18,11 @@ import com.opuscapita.peppol.proxy.filters.pre.PreserveHostHeader;
 public class ZuulProxyServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(ZuulProxyServerApplication.class, args);
+    }
+
+    @Bean
+    public CustomFilter customFilter(FilterProperties filterProperties) {
+        return new CustomFilter(filterProperties);
     }
 
 	@Bean
