@@ -79,6 +79,7 @@ node {
         }
     }
 
+    milestone label: 'publishing'
     stage('Release') {
         dir('src') {
             // automatic versions trigger a new build repeatedly, disabled for now
