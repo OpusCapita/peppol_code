@@ -203,7 +203,7 @@ def ansiblePlaybook(playbook, hosts, credentials, Closure onError={}, Closure on
     ]]
 
     withCredentials(ansible_credentials) {
-        result = sh """
+        result = sh returnStatus: true, script: """
             ansible-playbook -i '${hosts}' '${playbook}' \
             --user='${ANSIBLE_USERNAME}' \
             --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}'
