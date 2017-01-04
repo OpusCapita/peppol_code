@@ -30,7 +30,7 @@ Here is the sample config for Zuul proxy:
  environment or defaults to _**8989**_
  
  `zuul.routes` sections is used for actual routing, note the format:
- _**service name**:**route**_, where _**route**_ can point to either service discovery 
+ _**service name** : **route**_, where _**route**_ can point to either service discovery 
   endpoint (e.g. service which is registered via service discovery) or 
   to actual URL in case of external(not registered) service.
   So our example shows that for any request coming to _**/validator**_ and any 
@@ -52,8 +52,7 @@ Here is the sample config for Zuul proxy:
   
             allowFrom: 192.168
         
-        This will match any address starting with __192.168__
+        This will match any address starting with 192.168
   
   **NB!** Currently only single range is supported as a value for access settings, 
   addition of support for comma-separated list of ranges is planned in nearest future.
-  
