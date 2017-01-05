@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Gets data from inside the container message and sends it as a events-persistence event.
  *
@@ -38,7 +40,11 @@ public class EventPersistenceReporter {
     public void process(@NotNull ContainerMessage cm) {
         PeppolEvent event = convert(cm);
         String result = gson.toJson(event);
-        rabbitTemplate.convertAndSend(queueOut, result);
+        try {
+            rabbitTemplate.convertAndSend(queueOut, result.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         logger.info("Peppol event successfully sent to " + queueOut + " queue");
     }
