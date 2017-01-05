@@ -21,6 +21,7 @@ def modules = [
     [name: 'service-discovery'],
     [name: 'zuul-proxy'],
 
+    [name: 'integration-tests'],
     [name: 'smoke-tests']
 ]
 
