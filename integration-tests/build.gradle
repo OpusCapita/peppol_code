@@ -24,6 +24,10 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
+jar {
+    version = ''
+}
+
 
 dependencies {
     runtime 'com.h2database:h2'
