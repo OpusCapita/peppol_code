@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class IntegrationTestApp {
     static String configFile;
     static String testResultFileName;
     static String templateDir;
+    public static String tempDir;
 
     @Autowired
     private Environment environment;
@@ -38,21 +40,33 @@ public class IntegrationTestApp {
         logger.info("IntegrationTestApp : Starting!");
         SpringApplication.run(IntegrationTestApp.class);
 
-        if (args.length < 3 || args[0] == null || args[0].isEmpty()) {
+        if (args.length < 4 || args[0] == null || args[0].isEmpty()) {
             logger.error("Not all command line arguments specified!");
-            logger.error("Required arguments are: configFile, testResultFileName, templateDir");
+            logger.error("Required arguments are: configFile, testResultFileName, templateDir, tempDir");
             System.exit(1);
         }
         configFile = args[0];
         testResultFileName = args[1];
         templateDir = args[2];
+        tempDir = args[3];
 
+        File tempFolder = new File(tempDir);
+        if(!tempFolder.exists() || !tempFolder.isDirectory()) {
+            logger.error("unable to find temp directory: " + tempDir + " exiting!");
+            return;
+        }
         if (new File(configFile).isDirectory())
             configFile = configFile + "\\configuration.yaml";
 
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile).initConfig();
         List<TestResult> testResults = config.runTests();
         //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
+        //some cleaning
+        try {
+            FileUtils.cleanDirectory(new File(tempDir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         logger.info("IntegrationTestApp : Ended!");
     }
 
