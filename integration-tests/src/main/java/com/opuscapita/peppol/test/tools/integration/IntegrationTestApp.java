@@ -61,11 +61,13 @@ public class IntegrationTestApp {
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile).initConfig();
         List<TestResult> testResults = config.runTests();
         //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
-        //some cleaning
-        try {
-            FileUtils.cleanDirectory(new File(tempDir));
-        } catch (IOException e) {
-            e.printStackTrace();
+        //cleaning temp directory
+        if(tempDir.startsWith("C")) { //hack to clean windows directory, no need to clean docker directory however
+            try {
+                FileUtils.cleanDirectory(new File(tempDir));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         logger.info("IntegrationTestApp : Ended!");
     }
