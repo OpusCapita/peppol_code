@@ -13,7 +13,7 @@ tests:
    validation:
      producers:
        web ui producer:
-         source directory: /etc/recources/validation-xml-test
+         source directory: /etc/resources/validation-xml-test
          destination link: http://localhost:441/
          result directory: validation result folder
        mq producer:
