@@ -24,6 +24,6 @@ public class RestConsumer extends Consumer {
         String test = "{\"validationType\":\"UBL\",\"passed\":true,\"errors\":[]}";
         ValidationResult result = new Gson().fromJson(test,ValidationResult.class);
         String h = "l";
-        return new TestResult("",false, "");
+        return new TestResult("",false, "RestConsumer not implemented yet!");
     }
 }

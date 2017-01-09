@@ -24,7 +24,6 @@ public class WebUiConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
-
-        return null;
+        return new TestResult("", false, "WebUiConsumer not implemented yet");
     }
 }
