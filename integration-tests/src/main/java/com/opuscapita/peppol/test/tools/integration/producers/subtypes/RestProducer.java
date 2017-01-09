@@ -74,7 +74,7 @@ public class RestProducer implements Producer {
         logger.info("RestProducer: results count: " + results.size());
         if (results.isEmpty())
             return;
-        restResultDirectory += "\\restResult";
+        restResultDirectory += "/restResult";
         try (FileWriter writer = new FileWriter(restResultDirectory)){
             logger.info("RestProducer: saving result to " + restResultDirectory);
             for (String str : results) {
