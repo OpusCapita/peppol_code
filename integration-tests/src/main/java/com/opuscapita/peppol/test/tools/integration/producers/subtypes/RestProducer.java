@@ -26,7 +26,7 @@ public class RestProducer implements Producer {
     private final String sourceDirectory;
     private final String link;
     private final String method;
-    private final String restResultDirectory;
+    private String restResultDirectory;
     private List<String> results = new ArrayList<>();
 
     public RestProducer(Object sourceDirectory, Object link, Object method, String restResultDirectory) {
@@ -71,15 +71,15 @@ public class RestProducer implements Producer {
     }
 
     private void saveResult() {
+        logger.info("RestProducer: results count: " + results.size());
         if (results.isEmpty())
             return;
-        try {
-            FileWriter writer = null;
-            writer = new FileWriter(restResultDirectory+"\\restResult");
+        restResultDirectory += "\\restResult";
+        try (FileWriter writer = new FileWriter(restResultDirectory)){
+            logger.info("RestProducer: saving result to " + restResultDirectory);
             for (String str : results) {
                 writer.write(str+"\n");
             }
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
