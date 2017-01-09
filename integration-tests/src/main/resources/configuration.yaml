@@ -14,7 +14,7 @@ tests:
      producers:
        web ui producer:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination link: http://localhost:441/
+         destination link: http://localhost:441/validator/
          result directory: validation result folder
        mq producer:
          mq connection: mq1
@@ -22,7 +22,7 @@ tests:
          destination queue: validation-integration-test
        rest producer:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination link: http://localhost:441/validate
+         destination link: http://localhost:441/validator/validate
          result directory: validation result folder
          rest method: post
      subscribers:

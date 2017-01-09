@@ -14,7 +14,7 @@ tests:
      producers:
        web ui producer:
          source directory: /etc/resources/validation-xml-test
-         destination link: http://validator:8080/
+         destination link: http://validator:8080/validator/
          result directory: validation result folder
        mq producer:
          mq connection: mq1
@@ -22,7 +22,7 @@ tests:
          destination queue: validation-integration-test
        rest producer:
          source directory: /etc/resources/validation-xml-test
-         destination link: http://validator:8080/validate
+         destination link: http://validator:8080/validator/validate
          result directory: validation result folder
          rest method: post
      subscribers:
