@@ -4,6 +4,7 @@ LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 VOLUME "/etc"
 VOLUME "/etc/peppol2.0/integration-tests"
 VOLUME "/etc/resources"
+VOLUME "/etc/resources/validation-result"
 
 ENV INTEGRATION_TESTS_HOME "/opt/local/services/peppol2.0/integration-tests"
 ENV INTEGRATION_TESTS_CONFIG "/etc/peppol2.0/integration-tests"
