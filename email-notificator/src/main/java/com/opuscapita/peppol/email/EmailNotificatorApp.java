@@ -12,7 +12,6 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -33,7 +32,6 @@ public class EmailNotificatorApp {
 
     @SuppressWarnings("Duplicates")
     @Bean
-    @ConditionalOnProperty("spring.rabbitmq.host")
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
@@ -44,7 +42,6 @@ public class EmailNotificatorApp {
     }
 
     @Bean
-    @ConditionalOnProperty("spring.rabbitmq.host")
     MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
