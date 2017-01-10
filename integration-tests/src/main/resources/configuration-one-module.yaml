@@ -1,0 +1,52 @@
+configurations:
+    databases:
+        db1: jdbc:mysql://t-l-mysql01.ocnet.local:3306/oxalis?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
+    queues:
+        mq1:
+            host: localhost
+            port: 5672
+            username: guest
+            password: guest
+            virtual host: /
+    validation result folder: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result
+tests:
+   validation:
+       producers:
+         web ui producer:
+           source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
+           destination link: http://localhost:441/validator/
+           result directory: validation result folder
+         mq producer:
+           mq connection: mq1
+           source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
+           destination queue: validation-integration-test
+         rest producer:
+           source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
+           destination link: http://localhost:441/validator/validate
+           result directory: validation result folder
+           rest method: post
+       subscribers:
+          - mq subscriber:
+              mq connection: mq1
+              source queue: validation-integration-test
+              timeout: 500
+              consumers: 1
+          - snc subscriber:
+              consumers: 2
+              timeout: 500
+          - file subscriber:
+              source file:  C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result\restResult
+              consumers: 3
+          - file subscriber:
+              source file:  C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result\webUiResult
+              consumers: 2
+       consumers:
+          - queue msg count check:
+              id: 1
+              expected value: 500
+          - web ui check:
+              id: 2
+              expected value: 5
+          - rest check:
+              id: 3
+              expected value: 5

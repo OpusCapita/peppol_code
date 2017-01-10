@@ -3,16 +3,17 @@ package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by gamanse1 on 2016.11.14..
@@ -72,21 +73,25 @@ public class MqProducer implements Producer {
         }
 
         try {
-           /* ConnectionFactory factory = new ConnectionFactory();
+            ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(mqSettings.get("host"));
             factory.setPort((int) (Object) mqSettings.get("port"));
             factory.setUsername(mqSettings.get("username"));
             factory.setPassword(mqSettings.get("password"));
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
-            channel = connection.createChannel();*/
+            channel = connection.createChannel();
             logger.info("Created channel for MQ!");
-            //   channel.queueDeclare(destinationQueue, false, false, true, null);
+            channel.queueDeclare(destinationQueue, false, false, true, null);
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    ContainerMessage containerMessage = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
+                    ContainerMessage cm = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
                             .setBaseDocument(documentLoader.load(file));
-                    //channel.basicPublish("", destinationQueue, null, containerMessage.getBytes());
+                    Route route = new Route();
+                    List<String> endpoints = Arrays.asList("integration-validation-test");
+                    route.setEndpoints(endpoints);
+                    cm.setRoute(route);
+                    channel.basicPublish("", destinationQueue, null, cm.getBytes());
                     String t = ";";
                 }
             }
