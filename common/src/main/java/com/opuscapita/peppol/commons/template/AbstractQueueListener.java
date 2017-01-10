@@ -74,7 +74,7 @@ public abstract class AbstractQueueListener {
         try {
             if (errorHandler != null) {
                 if (cm == null) {
-                    errorHandler.reportToServiceNow("{}", customerId, e, e.getMessage());
+                    errorHandler.reportToServiceNow("", customerId, e, e.getMessage());
                 } else {
                     errorHandler.reportToServiceNow(cm, e, e.getMessage());
                 }
