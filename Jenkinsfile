@@ -159,7 +159,7 @@ def dockerPush(modules, tags) {
     for (i=0; i<modules.size(); i++) {
         def module = modules[i]
         for (j=0; j<tags.size(); j++) {
-            def tag = tags[i]
+            def tag = tags[j]
             module.image.push(tag)
         }
     }
