@@ -26,6 +26,7 @@ public class MqProducer implements Producer {
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
+    private final String QUEUE_NAME = "integration-validation-test";
     DocumentLoader documentLoader = new DocumentLoader();
 
     public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
@@ -88,11 +89,10 @@ public class MqProducer implements Producer {
                     ContainerMessage cm = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
                             .setBaseDocument(documentLoader.load(file));
                     Route route = new Route();
-                    List<String> endpoints = Arrays.asList("integration-validation-test");
+                    List<String> endpoints = Arrays.asList(QUEUE_NAME);
                     route.setEndpoints(endpoints);
                     cm.setRoute(route);
-                    channel.basicPublish("", destinationQueue, null, cm.getBytes());
-                    String t = ";";
+                    channel.basicPublish("", destinationQueue, null, cm.convertToJsonByteArray());
                 }
             }
         } catch (Exception ex2) {
