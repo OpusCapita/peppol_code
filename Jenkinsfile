@@ -47,7 +47,7 @@ infra_author = ""
 def properties      // additional properties loaded from file
 
 node {
-    stage('Build') {
+    stage('Checkout') {
         dir('src') {
             // get latest version of code
             git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
@@ -57,14 +57,18 @@ node {
             properties = loadProperties('gradle.properties')
             releaseVersion = properties.version
             tag = "${releaseVersion}-${env.BUILD_NUMBER}"
-
-            sh 'bash gradlew clean'
-            assemble(modules)
         }
         dir('infra') {
             // get latest version of infrastructure
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
             infra_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
+        }
+    }
+
+    stage('Build') {
+        dir('src') {
+            sh 'bash gradlew clean'
+            assemble(modules)
         }
     }
 
