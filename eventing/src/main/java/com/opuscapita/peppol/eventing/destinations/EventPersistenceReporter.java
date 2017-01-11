@@ -73,6 +73,7 @@ public class EventPersistenceReporter {
 
         PeppolEvent result = new PeppolEvent();
         result.setFileName(cm.getFileName());
+        result.setTransportType(transportType);
 
         if (cm.getBaseDocument() != null) {
             result.setInvoiceId(cm.getBaseDocument().getDocumentId());
@@ -85,7 +86,6 @@ public class EventPersistenceReporter {
             result.setSenderCountryCode(cm.getBaseDocument().getSenderCountryCode());
             result.setRecipientCountryCode(cm.getBaseDocument().getRecipientCountryCode());
             result.setTransactionId(cm.getTransactionId());
-            result.setTransportType(transportType);
 
             if (cm.getBaseDocument() instanceof InvalidDocument) {
                 InvalidDocument invalid = (InvalidDocument) cm.getBaseDocument();
