@@ -2,15 +2,12 @@ package com.opuscapita.peppol.test.tools.integration;
 
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
