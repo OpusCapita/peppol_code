@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Daniil on 19.07.2016.
@@ -63,7 +64,8 @@ public class ErrorHandler {
         createSncTicket(dumpFileName, json, customerId, e, shortDescription, correlationIdPrefix);
     }
 
-    private void createSncTicket(String dumpFileName, String json, String customerId, Exception jse, String shortDescription, String correlationIdPrefix) {
+    private void createSncTicket(
+            String dumpFileName, String json, String customerId, Exception jse, String shortDescription, String correlationIdPrefix) {
         String correlationId = correlationIdPrefix + generateFailedMessageCorrelationId(jse);
         try {
             serviceNowRest.insert(
@@ -98,8 +100,8 @@ public class ErrorHandler {
         return detailedDescription;
     }
 
-    private String generateFailedMessageCorrelationId(Exception jse) {
-        return jse.getClass().getName();
+    private String generateFailedMessageCorrelationId(@Nullable Exception jse) {
+        return jse == null ? UUID.randomUUID().toString() : jse.getClass().getName();
     }
 
     private String storeMessageToDisk(@NotNull String message) {
