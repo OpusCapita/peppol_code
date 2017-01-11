@@ -54,7 +54,7 @@ public class MqSubscriber extends Subscriber {
 
     Consumer getRabbitConsumer(Channel channel) {
         return new DefaultConsumer(channel) {
-            //TODO since this might take some time, need to run asynchronous
+            //TODO since this might take some time, need to run asynchronous ??
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] bytes)
                     throws IOException {
