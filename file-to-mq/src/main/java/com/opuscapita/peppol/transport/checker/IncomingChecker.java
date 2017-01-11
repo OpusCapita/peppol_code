@@ -61,7 +61,6 @@ public class IncomingChecker {
         this.storage = storage;
         this.statusReporter = statusReporter;
         this.errorHandler = errorHandler;
-        logger.info("Transport started for directory " + directory);
     }
 
     // check directory once per minute for new input files
