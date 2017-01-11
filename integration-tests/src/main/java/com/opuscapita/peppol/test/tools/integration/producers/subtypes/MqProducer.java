@@ -83,13 +83,14 @@ public class MqProducer implements Producer {
             connection = factory.newConnection();
             channel = connection.createChannel();
             logger.info("Created channel for MQ!");
-            channel.queueDeclare(destinationQueue, false, false, true, null);
+            channel.queueDeclare(destinationQueue, true, false, false, null); //validator queue
+            channel.queueDeclare(QUEUE_NAME, false, false, true, null);       //integration-tests queue
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
                     ContainerMessage cm = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
                             .setBaseDocument(documentLoader.load(file));
                     Route route = new Route();
-                    List<String> endpoints = Arrays.asList(QUEUE_NAME);
+                    List<String> endpoints = Arrays.asList(QUEUE_NAME); //new queue for integration tests
                     route.setEndpoints(endpoints);
                     cm.setRoute(route);
                     channel.basicPublish("", destinationQueue, null, cm.convertToJsonByteArray());
