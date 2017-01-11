@@ -45,21 +45,25 @@ public class MqSubscriber extends Subscriber {
             channel = connection.createChannel();
             channel.queueDeclare(QUEUE_NAME, false, false, true, null);
             //Rabbit consumer which simply gets messages from the queue
-            Consumer consumer = new DefaultConsumer(channel) {
-                @Override
-                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] bytes)
-                        throws IOException {
-                    ContainerMessage cm = gson.fromJson(new String(bytes), ContainerMessage.class);
-                    logger.info("MqSubscriber: message received!");
-                    //TODO add Integration-tests consumer here
-                }
-            };
-            channel.basicConsume(QUEUE_NAME, true, consumer);
+            channel.basicConsume(QUEUE_NAME, true, getRabbitConsumer(channel));
         } catch (Exception e) {
             e.printStackTrace();
         }
         logger.info("Created channel for MQ!");
 
         return testResults;
+    }
+
+    Consumer getRabbitConsumer(Channel channel) {
+        return new DefaultConsumer(channel) {
+            //TODO since this might take some time, need to run asynchronous
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] bytes)
+                    throws IOException {
+                ContainerMessage cm = gson.fromJson(new String(bytes), ContainerMessage.class);
+                logger.info("MqSubscriber: message received!");
+                //TODO add Integration-tests consumers here
+            }
+        };
     }
 }

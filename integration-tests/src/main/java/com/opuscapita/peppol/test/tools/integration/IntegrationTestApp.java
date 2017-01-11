@@ -84,13 +84,4 @@ public class IntegrationTestApp {
         };
     }
 
-    @Bean
-    public ErrorHandler errorHandler() {
-        return new ErrorHandler(serviceNowRest(), environment);
-    }
-
-    @Bean
-    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
-    }
 }
