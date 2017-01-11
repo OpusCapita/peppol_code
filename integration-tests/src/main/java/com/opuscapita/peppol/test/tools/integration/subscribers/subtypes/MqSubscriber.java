@@ -43,7 +43,7 @@ public class MqSubscriber extends Subscriber {
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
             channel = connection.createChannel();
-            channel.queueDeclare(QUEUE_NAME, false, false, true, null);
+            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             //Rabbit consumer which simply gets messages from the queue
             channel.basicConsume(QUEUE_NAME, true, getRabbitConsumer(channel));
         } catch (Exception e) {
