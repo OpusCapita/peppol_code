@@ -31,6 +31,14 @@ public class InboundMessageSender {
         logger.debug("Sending message to " + properties.getProperty(INBOUND_MQ_QUEUE) + " about file: " + cm.getFileName());
         mq.convertAndSend(properties.getProperty(INBOUND_MQ_QUEUE) + ConnectionString.QUEUE_SEPARATOR +
                 ConnectionString.EXCHANGE + ConnectionString.VALUE_SEPARATOR + properties.getProperty(INBOUND_MQ_EXCHANGE), cm);
+        logger.info("Message about file " + cm.getFileName() + " sent to " + properties.getProperty(INBOUND_MQ_QUEUE));
+
+        try {
+            mq.convertAndSend(properties.getProperty(EVENTING_QUEUE_NAME) + ConnectionString.QUEUE_SEPARATOR +
+                ConnectionString.EXCHANGE + ConnectionString.VALUE_SEPARATOR + properties.getProperty(INBOUND_MQ_EXCHANGE), cm);
+        } catch (Exception e) {
+            logger.error("Failed to report received file to " + properties.getProperty(EVENTING_QUEUE_NAME) + " queue");
+        }
     }
 
     private MqProperties prepareMqProperties() {
