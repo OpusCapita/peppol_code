@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,13 +26,31 @@ public class StorageImpl implements Storage {
     @Value("${peppol.storage.long}")
     private String longTerm;
 
+    private static String normalizeFilename(String s) {
+        s = StringUtils.isBlank(s) ? "unknown" : s;
+        return s.replaceAll("[^a-zA-Z0-9.-]", "_");
+    }
+
     @NotNull
     @Override
     public String storeTemporary(@NotNull InputStream stream, @NotNull String fileName) throws IOException {
+        return storeTemporary(stream, fileName, null);
+    }
+
+    @NotNull
+    @Override
+    public String storeTemporary(@NotNull InputStream stream, @NotNull String fileName, @Nullable String backupDir) throws IOException {
         File dir = createDailyDirectory();
         File result = new File(dir, fileName);
 
         IOUtils.copy(stream, new FileOutputStream(result));
+        if (!result.exists()) {
+            throw new IOException("Failed to copy file " + fileName + " to " + result);
+        }
+
+        if (StringUtils.isNotBlank(backupDir)) {
+            FileUtils.copyFileToDirectory(result, new File(backupDir));
+        }
 
         return result.getAbsolutePath();
     }
@@ -39,12 +58,22 @@ public class StorageImpl implements Storage {
     @NotNull
     @Override
     public String moveToTemporary(@NotNull File source) throws IOException {
+        return moveToTemporary(source, null);
+    }
+
+    @NotNull
+    @Override
+    public String moveToTemporary(@NotNull File source, @Nullable String backupDir) throws IOException {
         File dir = createDailyDirectory();
 
         File result = StorageUtils.prepareUnique(dir, source.getName());
         FileUtils.moveFile(source, result);
         if (!result.exists()) {
             throw new IOException("Failed to move file " + source + " to " + result);
+        }
+
+        if (StringUtils.isNotBlank(backupDir)) {
+            FileUtils.copyFileToDirectory(result, new File(backupDir));
         }
 
         return result.getAbsolutePath();
@@ -95,11 +124,6 @@ public class StorageImpl implements Storage {
     public Storage setShortTermDirectory(@NotNull String shortTerm) {
         this.shortTerm = shortTerm;
         return this;
-    }
-
-    private static String normalizeFilename(String s) {
-        s = StringUtils.isBlank(s) ? "unknown" : s;
-        return s.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
 

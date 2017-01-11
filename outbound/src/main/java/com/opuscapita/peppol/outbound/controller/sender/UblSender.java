@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.outbound.controller;
+package com.opuscapita.peppol.outbound.controller.sender;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
@@ -21,21 +21,25 @@ import java.io.InputStream;
  */
 @Component
 public class UblSender {
-    @Autowired
-    OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
-    private OxalisOutboundModule oxalisOutboundModule;
-    private TransmissionRequestBuilder requestBuilder;
+    final OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
 
+    OxalisOutboundModule oxalisOutboundModule;
+    TransmissionRequestBuilder requestBuilder;
+
+    @Autowired
+    public UblSender(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
+        this.oxalisOutboundModuleWrapper = oxalisOutboundModuleWrapper;
+    }
 
     @PostConstruct
     public void initialize() {
         oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
-        requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
+        requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(false);
     }
 
-
+    @SuppressWarnings("unused")
     @NotNull
-    TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
         BaseDocument document = cm.getBaseDocument();
         if (document == null) {
             throw new IllegalArgumentException("There is no document in message");

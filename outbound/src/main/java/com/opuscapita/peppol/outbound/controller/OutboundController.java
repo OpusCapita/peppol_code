@@ -2,6 +2,10 @@ package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
+import com.opuscapita.peppol.outbound.controller.sender.FakeSender;
+import com.opuscapita.peppol.outbound.controller.sender.Svefaktura1Sender;
+import com.opuscapita.peppol.outbound.controller.sender.TestSender;
+import com.opuscapita.peppol.outbound.controller.sender.UblSender;
 import eu.peppol.outbound.transmission.TransmissionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -24,20 +28,25 @@ public class OutboundController {
     private final UblSender ublSender;
     private final Svefaktura1Sender svefaktura1Sender;
     private final OutboundErrorHandler outboundErrorHandler;
-    private final TestSender testSender;
+    private final FakeSender fakeSender;
     private final MessageQueue messageQueue;
+    private final TestSender testSender;
 
     @Value("${peppol.outbound.sending.enabled:false}")
     private boolean sendingEnabled;
+    @Value("${peppol.outbound.test.recipient:''}")
+    private String testRecipient;
 
     @Autowired
     public OutboundController(@NotNull OutboundErrorHandler outboundErrorHandler, @NotNull MessageQueue messageQueue,
-                              @NotNull UblSender ublSender, @Nullable TestSender testSender, @NotNull Svefaktura1Sender svefaktura1Sender) {
+                              @NotNull UblSender ublSender, @Nullable FakeSender fakeSender, @NotNull Svefaktura1Sender svefaktura1Sender,
+                              @Nullable TestSender testSender) {
         this.ublSender = ublSender;
         this.outboundErrorHandler = outboundErrorHandler;
-        this.testSender = testSender;
+        this.fakeSender = fakeSender;
         this.svefaktura1Sender = svefaktura1Sender;
         this.messageQueue = messageQueue;
+        this.testSender = testSender;
     }
 
     public void send(@NotNull ContainerMessage cm) throws Exception {
@@ -50,18 +59,28 @@ public class OutboundController {
 
         try {
             if (!sendingEnabled) {
-                if (testSender != null) {
-                    transmissionResponse = testSender.send(cm);
+                if (StringUtils.isNotBlank(testRecipient)) {
+                    if (testSender != null) {
+                        transmissionResponse = testSender.send(cm);
+                    } else {
+                        logger.warn("Selected to send via test sender but it isn't initialized");
+                        return;
+                    }
                 } else {
-                    logger.warn("Selected to send via test sender but test sender is not initialized");
-                    return;
+                    if (fakeSender != null) {
+                        transmissionResponse = fakeSender.send(cm);
+                    } else {
+                        logger.warn("Selected to send via fake sender but it isn't initialized");
+                        return;
+                    }
                 }
             } else {
+                // real sending takes place here
                 switch (cm.getBaseDocument().getArchetype()) {
                     case INVALID:
                         throw new IllegalArgumentException("Unable to send invalid documents");
                     case SVEFAKTURA1:
-                        transmissionResponse = svefaktura1Sender.send(cm); // the same as UBL since Oxalis 4
+                        transmissionResponse = svefaktura1Sender.send(cm);
                         break;
                     default:
                         transmissionResponse = ublSender.send(cm);
