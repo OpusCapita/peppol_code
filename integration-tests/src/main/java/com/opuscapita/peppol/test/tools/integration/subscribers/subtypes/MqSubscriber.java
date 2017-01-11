@@ -31,7 +31,7 @@ public class MqSubscriber extends Subscriber {
 
     @Override
     public List<TestResult> run() {
-
+        logger.info("MqSubscriber: started!");
         Connection connection = null;
         Channel channel = null;
         try {
@@ -49,8 +49,6 @@ public class MqSubscriber extends Subscriber {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.info("Created channel for MQ!");
-
         return testResults;
     }
 

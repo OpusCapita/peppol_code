@@ -94,7 +94,7 @@ public class MqProducer implements Producer {
                     route.setEndpoints(endpoints);
                     cm.setRoute(route);
                     channel.basicPublish("", destinationQueue, null, cm.convertToJsonByteArray());
-                    logger.info("MqProducer: published tom MQ: "+cm.getFileName());
+                    logger.info("MqProducer: published to MQ: "+cm.getFileName());
                 }
             }
         } catch (Exception ex2) {
