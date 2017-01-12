@@ -2,7 +2,6 @@ package com.opuscapita.peppol.test.tools.integration;
 
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
@@ -61,11 +60,13 @@ public class IntegrationTestApp {
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile).initConfig();
         List<TestResult> testResults = config.runTests();
         //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
-        //some cleaning
-        try {
-            FileUtils.cleanDirectory(new File(tempDir));
-        } catch (IOException e) {
-            e.printStackTrace();
+        //cleaning temp directory
+        if(tempDir.startsWith("C")) { //hack to clean windows directory, no need to clean docker directory however
+            try {
+                FileUtils.cleanDirectory(new File(tempDir));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         logger.info("IntegrationTestApp : Ended!");
     }
@@ -80,8 +81,4 @@ public class IntegrationTestApp {
         };
     }
 
-    @Bean
-    public ErrorHandler errorHandler() {
-        return new ErrorHandler(serviceNowRest(), environment);
-    }
 }

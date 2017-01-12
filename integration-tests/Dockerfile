@@ -2,6 +2,7 @@ FROM d-l-tools.ocnet.local:443/openjdk:8-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 VOLUME "/etc"
+VOLUME "/etc/tmp"
 VOLUME "/etc/peppol2.0/integration-tests"
 VOLUME "/etc/resources"
 VOLUME "/etc/resources/validation-result"
@@ -17,4 +18,4 @@ RUN \
 WORKDIR "${INTEGRATION_TESTS_HOME}"
 ADD ["build/libs/integration-tests.jar", "integration-tests.jar"]
 
-CMD java -jar integration-tests.jar  /etc/resources/configuration-stage.yaml /etc/integration-test.result /etc/resources/html/summary.ftl /etc
+CMD java -jar integration-tests.jar  /etc/resources/configuration-stage.yaml /etc/integration-test.result /etc/resources/html/summary.ftl /etc/tmp/

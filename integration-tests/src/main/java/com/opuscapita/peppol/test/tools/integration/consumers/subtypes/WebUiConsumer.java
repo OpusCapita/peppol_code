@@ -13,9 +13,6 @@ public class WebUiConsumer extends Consumer {
         super(id);
         this.expectedResult = (int) expectedResult;
     }
-    //Properties properties = new Properties();
-    //properties.load(new FileInputStream(directory + "\\webUiResult"));
-
 
     @Override
     public boolean isDone() {
@@ -24,6 +21,8 @@ public class WebUiConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
+        //Properties properties = new Properties();
+        //properties.load(new FileInputStream(directory + "\\webUiResult"));
         return new TestResult("", false, "WebUiConsumer not implemented yet");
     }
 }

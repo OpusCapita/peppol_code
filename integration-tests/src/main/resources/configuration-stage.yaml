@@ -3,7 +3,7 @@ configurations:
         db1: jdbc:mysql://t-l-mysql01.ocnet.local:3306/oxalis?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
     queues:
         mq1:
-            host: localhost
+            host: rabbitmq
             port: 5672
             username: guest
             password: guest
@@ -19,7 +19,7 @@ tests:
        mq producer:
          mq connection: mq1
          source directory: /etc/resources/validation-xml-test
-         destination queue: validation-integration-test
+         destination queue: validator
        rest producer:
          source directory: /etc/resources/validation-xml-test
          destination link: http://validator:8080/validator/validate
@@ -28,7 +28,7 @@ tests:
      subscribers:
         - mq subscriber:
             mq connection: mq1
-            source queue: validation-integration-test
+            source queue: validator
             timeout: 500
             consumers: 1
         - snc subscriber:
@@ -43,7 +43,7 @@ tests:
      consumers:
         - queue msg count check:
             id: 1
-            expected value: 500
+            expected value: 5
         - web ui check:
             id: 2
             expected value: 5
@@ -123,26 +123,3 @@ tests:
             action: download
             link: http://support-ui:8080/rest/outbound/download/
             expected value: true
-   inbound:
-     producers:
-       file producer:
-         source directory: /etc/resources/inbound-test
-         destination directory: /etc/
-         commandline: docker exec -it inbound ./send-to-peppol.sh -f /tmp/*svefaktura_removed_sensetive_info.xml
-     subscribers:
-        - file subscriber:
-            timeout: 500
-            source file: C:\peppol-ap-testout\failed
-        - snc subscriber:
-            source directory: C:\test
-            timeout: 500
-     consumers:
-      - snc test:
-          id: 12
-          name: Invalid message error case- ticket is sent to SNC (snc stub)
-          expected value: d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
-      - file test:
-          id: 13
-          name: Look for inbound files in long term storage
-          dir: /var/lib/docker/volumes/peppol2.0/data/storage
-          expected value: valid_svefaktura_removed_sensetive_info.xml

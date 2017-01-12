@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,48 +16,54 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EventQueueListener {
+    private static final Logger logger = LoggerFactory.getLogger(EventQueueListener.class);
 
-
-    Logger logger = LoggerFactory.getLogger(EventQueueListener.class);
-
-    @Autowired
-    PersistenceController persistenceController;
-
-    @Autowired
-    ErrorHandler errorHandler;
+    private final PersistenceController persistenceController;
+    private final ErrorHandler errorHandler;
+    private final Gson gson;
+    // private final RetryTemplate retryTemplate;
 
     @Autowired
-    Gson gson;
+    public EventQueueListener(PersistenceController persistenceController, ErrorHandler errorHandler, Gson gson) {
+        this.persistenceController = persistenceController;
+        this.errorHandler = errorHandler;
+        this.gson = gson;
+        // this.retryTemplate = retryTemplate;
+    }
 
-
-    @Autowired
-    private RetryTemplate retryTemplate;
-
-    public synchronized void receiveMessage(byte[] data) {
-        String message = new String(data).replace("\"urn\"", "urn"); //Sort of hack
+    @SuppressWarnings("WeakerAccess")
+    public synchronized void receiveMessage(String data) {
+        String message = data.replace("\"urn\"", "urn"); //Sort of hack
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(message);
             customerId = peppolEvent.getTransportType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
-            /*retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
-                @Override
-                public Void doWithRetry(RetryContext context) throws ConnectException {
-                    logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");*/
-                    persistenceController.storePeppolEvent(peppolEvent);
-/*                    return null;
-                }
-            });*/
+//            retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
+//                @Override
+//                public Void doWithRetry(RetryContext context) throws ConnectException {
+//                    logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");
+            persistenceController.storePeppolEvent(peppolEvent);
+            logger.info("Message about file: " + peppolEvent.getFileName() + " stored");
+//                    return null;
+//                }
+//            });
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Failed to process message", e);
             handleError(message, customerId, e);
         }
+
+    }
+
+    @SuppressWarnings("unused")
+    public synchronized void receiveMessage(byte[] data) {
+        receiveMessage(new String(data));
     }
 
     private PeppolEvent deserializePeppolEvent(String message) {
         return gson.fromJson(message, PeppolEvent.class);
     }
 
-    public void handleError(String message, String customerId, Exception e) {
+    private void handleError(String message, String customerId, Exception e) {
         try {
             errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event", extractFileNameFromMessage(message));
         } catch (Exception weird) {

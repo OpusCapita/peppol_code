@@ -14,10 +14,7 @@ import java.util.Properties;
  * @author Sergejs.Roze
  */
 public class InboundProperties {
-    private final static Logger logger = LoggerFactory.getLogger(InboundProperties.class);
-
     public final static String INBOUND_OUTPUT_DIR = "peppol.storage.short";
-
     public final static String COMPONENT_NAME = "peppol.component.name";
     final static String INBOUND_MQ_EXCHANGE = "peppol.inbound.queue.exchange";
     final static String INBOUND_MQ_QUEUE = "peppol.inbound.queue.name";
@@ -25,7 +22,8 @@ public class InboundProperties {
     final static String INBOUND_MQ_PORT = "peppol.inbound.queue.port";
     final static String INBOUND_MQ_USERNAME = "peppol.inbound.queue.username";
     final static String INBOUND_MQ_PASSWORD = "peppol.inbound.queue.password";
-
+    final static String EVENTING_QUEUE_NAME = "peppol.eventing.queue.in.name";
+    private final static Logger logger = LoggerFactory.getLogger(InboundProperties.class);
     private final static String PROPERTIES_FILE = "application.properties";
 
     private final static Properties it = new Properties();

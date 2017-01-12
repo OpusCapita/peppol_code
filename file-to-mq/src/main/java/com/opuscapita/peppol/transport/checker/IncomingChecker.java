@@ -51,6 +51,8 @@ public class IncomingChecker {
     private String mask;
     @Value("${peppol.file-to-mq.queue.out.name:preprocessing}")
     private String queue;
+    @Value("${peppol.file-to-mq.backup.directory:''}")
+    private String backupDir;
 
     @Autowired
     public IncomingChecker(@NotNull MessageQueue messageQueue, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
@@ -59,7 +61,6 @@ public class IncomingChecker {
         this.storage = storage;
         this.statusReporter = statusReporter;
         this.errorHandler = errorHandler;
-        logger.info("Transport started for directory " + directory);
     }
 
     // check directory once per minute for new input files
@@ -107,7 +108,7 @@ public class IncomingChecker {
 
     // send file info to MQ if found
     private void send(File file) throws Exception {
-        String fileName = storage.moveToTemporary(file);
+        String fileName = storage.moveToTemporary(file, backupDir);
         logger.info("File moved to: " + fileName);
 
         ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),

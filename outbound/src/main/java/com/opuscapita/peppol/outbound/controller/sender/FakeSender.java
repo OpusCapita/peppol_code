@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.outbound.controller;
+package com.opuscapita.peppol.outbound.controller.sender;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import eu.peppol.BusDoxProtocol;
@@ -6,29 +6,35 @@ import eu.peppol.PeppolStandardBusinessHeader;
 import eu.peppol.identifier.TransmissionId;
 import eu.peppol.outbound.transmission.TransmissionResponse;
 import eu.peppol.security.CommonName;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.UUID;
 
 /**
- * Faked sender for testing without sending real data.
+ * Faked sender for testing without sending real data. Does nothing, just returns fake TransmissionResponse.
  *
  * @author Sergejs.Roze
  */
 @Component
-public class TestSender {
-    private static final Logger logger = LoggerFactory.getLogger(TestSender.class);
+@Lazy
+public class FakeSender implements PeppolSender {
+    private static final Logger logger = LoggerFactory.getLogger(FakeSender.class);
 
-    TransmissionResponse send(ContainerMessage cm) {
+    @SuppressWarnings("unused")
+    public TransmissionResponse send(@NotNull ContainerMessage cm) {
         logger.info("Returning fake transmission result, to enable real sending set 'peppol.outbound.sending.enabled' to true");
 
         return new TransmissionResponse() {
+            private final TransmissionId transmissionId = new TransmissionId(UUID.randomUUID());
+
             @Override
             public TransmissionId getTransmissionId() {
-                return new TransmissionId(UUID.randomUUID());
+                return transmissionId;
             }
 
             @Override

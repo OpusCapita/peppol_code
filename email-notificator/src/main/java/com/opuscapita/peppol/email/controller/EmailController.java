@@ -42,10 +42,7 @@ public class EmailController {
     }
 
     public void processMessage(@NotNull ContainerMessage cm) throws Exception {
-        if (!(cm.getBaseDocument() instanceof InvalidDocument)) {
-            logger.error("Expected invalid document while received " + cm.getBaseDocument().getClass().getName());
-            throw new IllegalStateException("Message is not in invalid state");
-        }
+        logger.info("Message received: " + cm.getFileName());
 
         String customerId = cm.getCustomerId();
         if (StringUtils.isBlank(customerId)) {
@@ -99,6 +96,7 @@ public class EmailController {
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_BODY, true)))) {
             printWriter.print(cm.getBaseDocument().toString());
         }
+        logger.info("Message about " + cm.getFileName() + " stored");
     }
 
     // in case we know the customer but she has no e-mail set

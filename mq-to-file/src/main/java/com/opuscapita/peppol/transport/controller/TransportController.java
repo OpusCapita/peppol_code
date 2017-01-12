@@ -3,6 +3,7 @@ package com.opuscapita.peppol.transport.controller;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.storage.StorageUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,8 @@ public class TransportController {
     private String directory;
     @Value("${peppol.mq-to-file.output.template:%FILENAME%}")
     private String template;
+    @Value("${peppol.mq-to-file.backup.directory:''}")
+    private String backupDir;
 
     public void storeMessage(@NotNull ContainerMessage cm) throws IOException {
         File input = new File(cm.getFileName());
@@ -45,6 +48,11 @@ public class TransportController {
 
         new File(output.getParent()).mkdirs();
         FileUtils.copyFile(input, result);
+
+        if (StringUtils.isNotBlank(backupDir)) {
+            FileUtils.copyFileToDirectory(result, new File(backupDir));
+            logger.info("Backup created as " + backupDir + File.separator + result.getName());
+        }
     }
 
     @SuppressWarnings("SameParameterValue")

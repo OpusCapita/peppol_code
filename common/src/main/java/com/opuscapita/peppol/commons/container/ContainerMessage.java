@@ -19,6 +19,8 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class ContainerMessage implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final Endpoint source;
     private final String sourceMetadata;
 
