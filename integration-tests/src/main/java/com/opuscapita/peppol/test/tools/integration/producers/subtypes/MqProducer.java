@@ -43,7 +43,7 @@ public class MqProducer implements Producer {
         this.dbPreprocessQuery = dbPreprocessQuery;
         mq = new RabbitMqStandalone(
                 new MqProperties(mqSettings.get("host"),
-                        mqSettings.get("port"),
+                        String.valueOf(mqSettings.get("port")),
                         mqSettings.get("username"),
                         mqSettings.get("password")
                 )
