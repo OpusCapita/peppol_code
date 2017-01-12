@@ -2,12 +2,22 @@ package com.opuscapita.peppol.test.tools.integration;
 
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
+import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -79,6 +89,37 @@ public class IntegrationTestApp {
                 System.out.println("Inserted incident: " + sncEntity);
             }
         };
+    }
+
+    @SuppressWarnings("Duplicates")
+    @Bean
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
+                                        @NotNull MessageQueue messageQueue,
+                                        @NotNull StatusReporter reporter) {
+        return new AbstractQueueListener(errorHandler, reporter) {
+            @SuppressWarnings("ConstantConditions")
+            @Override
+            /*message receiver and post processor*/
+            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
+                logger.info("Got message from MQ like really ???? :" + cm.getFileName());
+            }
+        };
+    }
+
+    @SuppressWarnings("Duplicates")
+    @Bean
+    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames("validation-integration-test");  //TODO how to remove this hardcode ? no idea
+        container.setPrefetchCount(10);
+        container.setMessageListener(listenerAdapter);
+        return container;
+    }
+
+    @Bean
+    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
+        return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
 }
