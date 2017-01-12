@@ -8,6 +8,8 @@ import com.opuscapita.peppol.commons.container.document.test.TestTypeTwo;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -16,6 +18,7 @@ import static org.junit.Assert.*;
  * @author Sergejs.Roze
  */
 public class DocumentLoaderTest {
+    private final DocumentLoader loader = new DocumentLoader();
 
     @Test
     public void testDocumentLoader() throws Exception {
@@ -30,44 +33,63 @@ public class DocumentLoaderTest {
 
     @Test
     public void testTypes() throws Exception {
-        DocumentLoader loader = new DocumentLoader();
-        BaseDocument document;
+        List<String> list;
 
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/valid/ehf.xml")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof UblDocument);
-        }
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/valid/ehf_2.0_bii4_no.xml")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof UblDocument);
-        }
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/valid/ehf_2.0_bii5_no.xml")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof UblDocument);
-        }
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/valid/valid.german.xml")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof UblDocument);
-        }
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/valid/valid_sbdh_2.1.xml")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof UblDocument);
-        }
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/valid/svefaktura1.xml")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof SveFaktura1Document);
-        }
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/invalid/not_xml.txt")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof InvalidDocument);
-        }
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/invalid/random.xml")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof InvalidDocument);
-        }
-        try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream("/valid/sv1_with_attachment.xml")) {
-            document = loader.load(inputStream, "test");
-            assertTrue(document instanceof SveFaktura1Document);
+        // test single document using this code
+        // list = Arrays.asList("/valid/simpler_invoicing_files/SI-inv-v1.1.3-Valid-version.xml.no.sbdh.sad.smiley");
+        // checkTypes(list, UblDocument.class);
+
+        list = Arrays.asList(
+                "/valid/ehf.xml",
+                "/valid/ehf_2.0_bii4_no.xml",
+                "/valid/ehf_2.0_bii5_no.xml",
+                "/valid/valid.german.xml",
+                "/valid/valid_sbdh_2.1.xml",
+                "/valid/austria_files/Valid1.xml",
+                "/valid/austria_files/Valid2.xml",
+                "/valid/austria_files/Valid3.xml",
+                "/valid/austria_files/Valid4.xml",
+                "/valid/austria_files/Valid5.xml",
+                "/valid/austria_files/Valid-AT-UBL_Austria_profile-bii04-invoice.xml",
+                "/valid/simpler_invoicing_files/Valid1.xml",
+                "/valid/simpler_invoicing_files/Valid2.xml",
+                "/valid/simpler_invoicing_files/Valid3.xml",
+                "/valid/simpler_invoicing_files/Valid4.xml",
+                "/valid/simpler_invoicing_files/Valid5.xml"
+        );
+        checkTypes(list, UblDocument.class);
+
+        list = Arrays.asList(
+                "/valid/svefaktura1.xml",
+                "/valid/sv1_with_attachment.xml"
+        );
+        checkTypes(list, SveFaktura1Document.class);
+
+        list = Arrays.asList(
+                "/invalid/not_xml.txt",
+                "/invalid/random.xml",
+                "/invalid/austria_files/invalids1.xml",
+                "/invalid/austria_files/invalids2.xml",
+                "/invalid/austria_files/invalids3.xml",
+                "/invalid/austria_files/invalids4.xml",
+                "/invalid/austria_files/invalids5.xml",
+                "/invalid/simpler_invoicing_files/SI-inv-v1.1.3-Valid-version.xml.no.sbdh.sad.smiley", // no due date in invoice
+                "/invalid/simpler_invoicing_files/invalids1.xml",
+                "/invalid/simpler_invoicing_files/invalids2.xml",
+                "/invalid/simpler_invoicing_files/invalids3.xml",
+                "/invalid/simpler_invoicing_files/invalids4.xml",
+                "/invalid/simpler_invoicing_files/invalids5.xml"
+        );
+        checkTypes(list, InvalidDocument.class);
+
+    }
+
+    private void checkTypes(List<String> list, Class<? extends BaseDocument> documentClass) throws Exception {
+        for (String fileName : list) {
+            try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream(fileName)) {
+                BaseDocument document = loader.load(inputStream, "test");
+                assertTrue("Failed for file " + fileName, document.getClass() == documentClass);
+            }
         }
     }
 
