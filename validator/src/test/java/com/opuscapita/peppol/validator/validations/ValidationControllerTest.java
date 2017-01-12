@@ -25,7 +25,7 @@ import static org.junit.Assert.fail;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)
 public class ValidationControllerTest {
-    String[] documentProfilesToBeTested = {"svefaktura1", /*"austria",*/ "difi", "simpler_invoicing"};
+    String[] documentProfilesToBeTested = {"svefaktura1", /*"austria",*/ "difi"/*, "simpler_invoicing"*/};
 
     @Autowired
     ValidationController validationController;
