@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Gets data from inside the container message and sends it as a events-persistence event.
  *
@@ -47,7 +49,11 @@ public class EventPersistenceReporter {
             return;
         }
         String result = gson.toJson(event);
-        rabbitTemplate.convertAndSend(queueOut, result);
+        try {
+            rabbitTemplate.convertAndSend(queueOut, result.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         logger.info("Peppol event about " + cm.getFileName() + " successfully sent to " + queueOut + " queue");
     }
@@ -73,6 +79,7 @@ public class EventPersistenceReporter {
 
         PeppolEvent result = new PeppolEvent();
         result.setFileName(cm.getFileName());
+        result.setTransportType(transportType);
 
         if (cm.getBaseDocument() != null) {
             result.setInvoiceId(cm.getBaseDocument().getDocumentId());
@@ -85,7 +92,6 @@ public class EventPersistenceReporter {
             result.setSenderCountryCode(cm.getBaseDocument().getSenderCountryCode());
             result.setRecipientCountryCode(cm.getBaseDocument().getRecipientCountryCode());
             result.setTransactionId(cm.getTransactionId());
-            result.setTransportType(transportType);
 
             if (cm.getBaseDocument() instanceof InvalidDocument) {
                 InvalidDocument invalid = (InvalidDocument) cm.getBaseDocument();

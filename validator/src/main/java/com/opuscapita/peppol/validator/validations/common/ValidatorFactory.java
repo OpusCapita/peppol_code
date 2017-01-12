@@ -39,10 +39,12 @@ public class ValidatorFactory {
     public BasicValidator getValidatorByArchetype(Archetype archetype) throws RuntimeException {
         return validatorCache.computeIfAbsent(archetype, (at) -> {
             BasicValidator result = null;
+            System.out.println("Creating validator for archetype: "+archetype);
             try {
                 switch (archetype) {
                     case UBL:
                         result = new DifiValidator(difiValidatorConfig);
+                        break;
                     case SVEFAKTURA1:
                         result = new SveFaktura1Validator(svefaktura1ValidatorConfig, svefaktura1XsdValidator);
                         break;

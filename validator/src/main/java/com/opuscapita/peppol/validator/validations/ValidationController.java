@@ -39,6 +39,16 @@ public class ValidationController {
 
     public ValidationResult validate(@NotNull ContainerMessage containerMessage) {
         Archetype archetype = containerMessage.getBaseDocument().getArchetype();
+        String customizationId = containerMessage.getBaseDocument().getCustomizationId();
+        if (archetype == Archetype.UBL && customizationId != null) {
+            //Detecting sub-types, like AT or SI
+            if (customizationId.contains("erechnung")) {
+                archetype = Archetype.AT;
+            } else if (customizationId.contains("simplerinvoicing")) {
+                archetype = Archetype.SI;
+            }
+
+        }
         BasicValidator validator = null;
         String validatorFetchingError = "";
         try {

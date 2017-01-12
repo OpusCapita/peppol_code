@@ -38,16 +38,17 @@ public class EventQueueListener {
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(message);
             customerId = peppolEvent.getTransportType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
-            /*retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
-                @Override
-                public Void doWithRetry(RetryContext context) throws ConnectException {
-                    logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");*/
+//            retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
+//                @Override
+//                public Void doWithRetry(RetryContext context) throws ConnectException {
+//                    logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");
             persistenceController.storePeppolEvent(peppolEvent);
-/*                    return null;
-                }
-            });*/
+            logger.info("Message about file: " + peppolEvent.getFileName() + " stored");
+//                    return null;
+//                }
+//            });
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Failed to process message", e);
             handleError(message, customerId, e);
         }
 
