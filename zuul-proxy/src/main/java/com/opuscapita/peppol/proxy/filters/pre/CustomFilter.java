@@ -51,7 +51,7 @@ public class CustomFilter extends ZuulFilter {
     protected boolean isNotAllowed(HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
         String requestedService = extractRequestedService(request);
-        System.out.println(requestedService);
+        System.out.println("Checking against address: "+remoteAddr+" and service: "+ requestedService);
         if (requestedService.isEmpty()) {
             requestedService = "/";
         }
