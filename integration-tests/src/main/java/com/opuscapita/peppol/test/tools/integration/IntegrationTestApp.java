@@ -10,6 +10,8 @@ import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -28,6 +30,7 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -109,12 +112,33 @@ public class IntegrationTestApp {
     @SuppressWarnings("Duplicates")
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+        createIntegrationTestQueue(); //need to prepare queue first
+
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames("validation-integration-test");  //TODO how to remove this hardcode ? no idea
+        container.setQueueNames("validation-integration-test");  //TODO how to remove this hardcode ? no idea yet
         container.setPrefetchCount(10);
         container.setMessageListener(listenerAdapter);
         return container;
+    }
+
+    private void createIntegrationTestQueue() {
+        com.rabbitmq.client.ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
+        factory.setHost("rabbitmq");
+        factory.setPort(5672);
+        factory.setUsername("guest");
+        factory.setPassword("guest");
+        factory.setConnectionTimeout(500);
+        Connection connection = null;
+        try {
+            connection = factory.newConnection();
+            Channel channel = connection.createChannel();
+            channel.queueDeclare("validation-integration-test", false, false, false, null);       //integration-tests queue
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     @Bean
