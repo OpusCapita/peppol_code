@@ -5,6 +5,8 @@ import com.netflix.zuul.context.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Created by bambr on 16.28.12.
@@ -48,7 +50,8 @@ public class CustomFilter extends ZuulFilter {
 
     protected boolean isNotAllowed(HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
-        String requestedService = request.getRequestURI().replaceAll("/", "");
+        String requestedService = extractRequestedService(request);
+        System.out.println(requestedService);
         if (requestedService.isEmpty()) {
             requestedService = "/";
         }
@@ -78,5 +81,16 @@ public class CustomFilter extends ZuulFilter {
         }
 
         return result;
+    }
+
+    private String extractRequestedService(HttpServletRequest request) {
+        String[] requestParts = request.getRequestURI().split("/");
+        if(requestParts.length > 1) {
+            Optional<String> first = Arrays.asList(requestParts).stream().filter(part -> !part.isEmpty()).findFirst();
+            if (first.isPresent()) {
+                return first.get();
+            }
+        }
+        return request.getRequestURI().replaceAll("/", "");
     }
 }

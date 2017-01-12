@@ -21,6 +21,9 @@ public class CustomFilterTest {
         HttpServletRequest requestMock = mock(HttpServletRequest.class);
         when(requestMock.getRemoteAddr()).thenReturn("192.168.1.100");
         when(requestMock.getRequestURI()).thenReturn("/validator/");
+        HttpServletRequest inboundRequestMock = mock(HttpServletRequest.class);
+        when(inboundRequestMock.getRemoteAddr()).thenReturn("10.10.10.10");
+        when(inboundRequestMock.getRequestURI()).thenReturn("/peppol-ap-inbound/status");
         FilterProperties globalAllowedEverything = new FilterProperties("*", null, null, null);
         CustomFilter testSubject = new CustomFilter(globalAllowedEverything);
         assertFalse(testSubject.isNotAllowed(requestMock));
@@ -59,6 +62,12 @@ public class CustomFilterTest {
         }});
         testSubject = new CustomFilter(serviceDeniedFromAnyAddress);
         assertTrue(testSubject.isNotAllowed(requestMock));
+
+        FilterProperties specificIpRangePerFilter = new FilterProperties("10.", "*", new HashMap<String, String>(){{
+            put("peppol-ap-inbound", "*");
+        }}, null);
+        testSubject = new CustomFilter(specificIpRangePerFilter);
+        assertFalse(testSubject.isNotAllowed(inboundRequestMock));
 
     }
 
