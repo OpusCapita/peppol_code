@@ -90,7 +90,7 @@ public class MqProducer implements Producer {
             channel = connection.createChannel();
             logger.info("Created channel for MQ!");
             //channel.queueDeclare(destinationQueue, true, false, false, null); //validator queue
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);       //integration-tests queue
+            //channel.queueDeclare(QUEUE_NAME, false, false, false, null);       //integration-tests queue
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
                     ContainerMessage cm = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
