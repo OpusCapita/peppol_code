@@ -28,11 +28,13 @@ public class UblDocument extends BaseDocument {
     public boolean fillFields() {
         Node root = getRootNode();
         if (root == null) {
+            logger.warn("Failed to find root node");
             return false;
         }
 
         this.type = recognizeType(root.getLocalName());
         if (type == UblDocumentType.UNDEFINED) {
+            logger.warn("Failed to recognize document subtype");
             return false;
         }
 

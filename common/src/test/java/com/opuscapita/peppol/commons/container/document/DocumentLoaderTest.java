@@ -36,7 +36,7 @@ public class DocumentLoaderTest {
         List<String> list;
 
         // test single document using this code
-        // list = Arrays.asList("/valid/simpler_invoicing_files/SI-inv-v1.1.3-Valid-version.xml.no.sbdh.sad.smiley");
+        // list = Arrays.asList("/invalid/simpler_invoicing_files/invalids5.xml");
         // checkTypes(list, UblDocument.class);
 
         list = Arrays.asList(
