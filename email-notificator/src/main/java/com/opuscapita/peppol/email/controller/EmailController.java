@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.model.Customer;
+import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.email.model.CustomerRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * Prepares files for e-mail sender from received messages.
@@ -81,31 +83,69 @@ public class EmailController {
 
     private void storeMessage(String emails, ContainerMessage cm) throws IOException {
         String fileName = getFileName(cm.getCustomerId());
-        if (cm.getBaseDocument() == null || !(cm.getBaseDocument() instanceof InvalidDocument)) {
-            String msg = "Document is not an instance of InvalidDocument but is " + cm.getBaseDocument().getClass().getName() + " instead";
+        if (cm.getBaseDocument() == null) {
+            String msg = "Document is null";
             logger.error(msg);
             throw new IllegalStateException(msg);
         }
-
-        InvalidDocument doc = (InvalidDocument) cm.getBaseDocument();
 
         // let's create 3 files per message: list of recipients, subjects in one line, bodies
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_TO)))) {
             printWriter.print(emails);
         }
 
-        String subject = StringUtils.isBlank(doc.getReason()) ? "Error in Peppol AP" : doc.getReason();
+        if (cm.getBaseDocument() instanceof InvalidDocument) {
+            storeInvalidDocument(cm, fileName);
+        } else {
+            storeBaseDocument(cm, fileName);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void storeInvalidDocument(ContainerMessage cm, String fileName) throws IOException {
+        InvalidDocument doc = (InvalidDocument) cm.getBaseDocument();
+
+        String subject = StringUtils.isBlank(doc.getReason()) ? "Failed to process document" : doc.getReason();
+        storeSubject(subject, fileName);
+
+        try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_BODY, true)))) {
+            printWriter.print(cm.getBaseDocument().toString());
+        }
+        logger.info("Message about failure with " + cm.getFileName() + " stored");
+    }
+
+    private void storeBaseDocument(ContainerMessage cm, String fileName) throws IOException {
+        if (cm.getValidationResult() == null) {
+            throw new IllegalArgumentException("Document received by email-notificator has no error description: " + cm.getFileName());
+        }
+
+        if (!cm.getValidationResult().isPassed()) {
+            List<ValidationError> errors = cm.getValidationResult().getErrors();
+            if (errors != null && errors.size() > 0) {
+                storeSubject("Validation errors in document", fileName);
+
+                for (ValidationError error : errors) {
+                    try (PrintWriter printWriter =
+                                 new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_BODY, true)))) {
+                        printWriter.println(error.toString());
+                    }
+                }
+
+                logger.info("Message about validation errors in " + cm.getFileName() + " stored");
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException("Document received by email-notificator has no validation errors: " + cm.getFileName());
+    }
+
+    private void storeSubject(String subject, String fileName) throws IOException {
         if (new File(fileName + EXT_SUBJECT).exists()) {
             subject = "\n" + subject;
         }
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_SUBJECT, true)))) {
             printWriter.print(subject);
         }
-
-        try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_BODY, true)))) {
-            printWriter.print(cm.getBaseDocument().toString());
-        }
-        logger.info("Message about " + cm.getFileName() + " stored");
     }
 
     // in case we know the customer but she has no e-mail set
