@@ -28,7 +28,7 @@ tests:
      subscribers:
         - mq subscriber:
             mq connection: mq1
-            source queue: validator
+            source queue: validation-integration-test
             timeout: 500
             consumers: 1
         - snc subscriber:
