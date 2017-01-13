@@ -46,13 +46,22 @@ public class EmailController {
 
         String customerId = cm.getCustomerId();
         if (StringUtils.isBlank(customerId)) {
-            processNoCustomer(cm);
+            String message = "Cannot determine customer ID from the file: " + cm.getFileName();
+            logger.warn(message);
+            if (errorHandler != null) {
+                errorHandler.reportToServiceNow(cm, null, message);
+            }
+            return;
         }
 
         Customer customer = customerRepository.findByIdentifier(customerId);
 
         if (customer == null) {
-            processNoCustomer(cm);
+            String message = "Customer not found in the database: " + customerId;
+            logger.warn(message);
+            if (errorHandler != null) {
+                errorHandler.reportToServiceNow(cm, null, message);
+            }
             return;
         }
 
@@ -105,15 +114,6 @@ public class EmailController {
         logger.warn(message);
         if (errorHandler != null) {
             errorHandler.reportToServiceNow(message, customer.getIdentifier(), null, "Customer e-mail address missing");
-        }
-    }
-
-    // in case we cannot identify customer
-    private void processNoCustomer(ContainerMessage cm) {
-        String message = "Cannot determine customer ID from the file: " + cm.getFileName();
-        logger.warn(message);
-        if (errorHandler != null) {
-            errorHandler.reportToServiceNow(message, "n/a", null, "Failed to find customer ID");
         }
     }
 
