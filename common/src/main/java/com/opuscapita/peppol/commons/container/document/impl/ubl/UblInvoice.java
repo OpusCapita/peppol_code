@@ -115,10 +115,7 @@ public class UblInvoice implements FieldsReader {
         }
 
         value = selectValueFrom(null, root, "PaymentMeans", "PaymentDueDate");
-        if (value == null) {
-            logger.warn("Failed to find invoice due date");
-            success = false;
-        } else {
+        if (value != null) {
             base.setDueDate(value);
         }
 
