@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -87,7 +86,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     }
 
     @Override
-    public void reprocessFile(Integer fileId, boolean outbound) throws IOException {
+    public void reprocessFile(Integer fileId, boolean outbound) throws Exception {
         FileInfo fileInfo = fileInfoDAO.getById(fileId);
         byte[] fileData = util.findMessage(fileInfo.getFilename());
         Message message = fileInfo.getMessage();

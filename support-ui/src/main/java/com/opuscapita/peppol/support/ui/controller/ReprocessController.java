@@ -28,9 +28,14 @@ public class ReprocessController {
     @PreAuthorize("isAuthenticated()")
     public
     @ResponseBody
-    void reprocessInboundMessages(@PathVariable Integer... fileIds) throws IOException {
+    void reprocessInboundMessages(@PathVariable Integer... fileIds) throws Exception {
         for (Integer fileId : fileIds) {
-            fileInfoService.reprocessFile(fileId, false);
+            try {
+                fileInfoService.reprocessFile(fileId, false);
+            }
+            catch (Exception e) {
+                logger.warn("Unable to find file: " + fileId);
+            }
         }
     }
 
@@ -40,7 +45,11 @@ public class ReprocessController {
     @ResponseBody
     void reprocessOutboundMessages(@PathVariable Integer... fileIds) throws IOException {
         for (Integer fileId : fileIds) {
-            fileInfoService.reprocessFile(fileId, true);
+            try {
+                fileInfoService.reprocessFile(fileId, true);
+            } catch (Exception e) {
+                logger.warn("Unable to find file: " + fileId);
+            }
         }
     }
 }
