@@ -62,6 +62,10 @@ public class EventPersistenceReporter {
     private PeppolEvent convert(@NotNull ContainerMessage cm) {
         logger.debug("Message received");
 
+        if (cm.getBaseDocument() == null) {
+            return null;
+        }
+
         ProcessingStatus ps = cm.getProcessingStatus();
         String typeDefinition = environment.getProperty("peppol.eventing.transport.type." + ps.getComponentName());
         if (typeDefinition == null) {
@@ -81,22 +85,20 @@ public class EventPersistenceReporter {
         result.setFileName(cm.getFileName());
         result.setTransportType(transportType);
 
-        if (cm.getBaseDocument() != null) {
-            result.setInvoiceId(cm.getBaseDocument().getDocumentId());
-            result.setInvoiceDate(cm.getBaseDocument().getIssueDate());
-            result.setDueDate(cm.getBaseDocument().getDueDate());
-            result.setRecipientId(cm.getBaseDocument().getRecipientId());
-            result.setSenderId(cm.getBaseDocument().getSenderId());
-            result.setRecipientName(cm.getBaseDocument().getRecipientName());
-            result.setSenderName(cm.getBaseDocument().getSenderName());
-            result.setSenderCountryCode(cm.getBaseDocument().getSenderCountryCode());
-            result.setRecipientCountryCode(cm.getBaseDocument().getRecipientCountryCode());
-            result.setTransactionId(cm.getTransactionId());
+        result.setInvoiceId(cm.getBaseDocument().getDocumentId());
+        result.setInvoiceDate(cm.getBaseDocument().getIssueDate());
+        result.setDueDate(cm.getBaseDocument().getDueDate());
+        result.setRecipientId(cm.getBaseDocument().getRecipientId());
+        result.setSenderId(cm.getBaseDocument().getSenderId());
+        result.setRecipientName(cm.getBaseDocument().getRecipientName());
+        result.setSenderName(cm.getBaseDocument().getSenderName());
+        result.setSenderCountryCode(cm.getBaseDocument().getSenderCountryCode());
+        result.setRecipientCountryCode(cm.getBaseDocument().getRecipientCountryCode());
+        result.setTransactionId(cm.getTransactionId());
 
-            if (cm.getBaseDocument() instanceof InvalidDocument) {
-                InvalidDocument invalid = (InvalidDocument) cm.getBaseDocument();
-                result.setErrorMessage(invalid.getReason());
-            }
+        if (cm.getBaseDocument() instanceof InvalidDocument) {
+            InvalidDocument invalid = (InvalidDocument) cm.getBaseDocument();
+            result.setErrorMessage(invalid.getReason());
         }
 
         logger.debug("Peppol event prepared");

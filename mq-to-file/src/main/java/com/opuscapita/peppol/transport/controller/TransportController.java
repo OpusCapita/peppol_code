@@ -26,7 +26,7 @@ public class TransportController {
     private String directory;
     @Value("${peppol.mq-to-file.output.template:%FILENAME%}")
     private String template;
-    @Value("${peppol.mq-to-file.backup.directory:''}")
+    @Value("${peppol.mq-to-file.backup.directory:}")
     private String backupDir;
 
     public void storeMessage(@NotNull ContainerMessage cm) throws IOException {
