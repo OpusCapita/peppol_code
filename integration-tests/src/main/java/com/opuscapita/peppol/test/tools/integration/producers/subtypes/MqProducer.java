@@ -6,24 +6,28 @@ import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
-import com.opuscapita.peppol.commons.mq.MqProperties;
-import com.opuscapita.peppol.commons.mq.RabbitMqStandalone;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.apache.log4j.LogManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by gamanse1 on 2016.11.14..
  */
 @SuppressWarnings("Duplicates")
+@Component
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
     private final String dbConnection;
@@ -33,6 +37,7 @@ public class MqProducer implements Producer {
     private String destinationQueue;
     private final String QUEUE_NAME = "integration-validation-test";
     DocumentLoader documentLoader = new DocumentLoader();
+    @Autowired
     MessageQueue mq;
 
     public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
@@ -41,13 +46,6 @@ public class MqProducer implements Producer {
         this.destinationQueue = destinationQueue;
         this.dbConnection = dbConnection;
         this.dbPreprocessQuery = dbPreprocessQuery;
-        mq = new RabbitMqStandalone(
-                new MqProperties(mqSettings.get("host"),
-                        String.valueOf(mqSettings.get("port")),
-                        mqSettings.get("username"),
-                        mqSettings.get("password")
-                )
-        );
     }
 
     /*

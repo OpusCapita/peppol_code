@@ -37,7 +37,7 @@ import java.util.concurrent.TimeoutException;
  * Created by gamanse1 on 2016.11.14..
  */
 @SpringBootApplication
-@ComponentScan(basePackages = "com.opuscapita.peppol.commons")
+@ComponentScan(basePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.test.tools.integration"})
 public class IntegrationTestApp {
     private final static Logger logger = LogManager.getLogger(IntegrationTestApp.class);
     static String configFile;
