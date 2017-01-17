@@ -15,7 +15,6 @@ import java.util.Map;
 /**
  * Created by gamanse1 on 2016.11.17..
  */
-@Component
 public class MqSubscriber extends Subscriber {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqSubscriber.class);
     private final String queue;
