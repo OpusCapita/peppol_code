@@ -59,6 +59,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             logger.debug("Message metadata: " + metadataString);
 
             ContainerMessage cm = prepareMessage(dataFile, metadataString, properties.getProperty(COMPONENT_NAME));
+            cm.setTransactionId(metadata.getTransmissionId().toString());
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {
             logger.error("Failed to report file " + dataFile + " to MQ: ", e);
