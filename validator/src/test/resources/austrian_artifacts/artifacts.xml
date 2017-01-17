@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<artifacts xmlns="http://difi.no/xsd/vefa/validator/1.0" timestamp="1484142356000">
+<artifacts xmlns="http://difi.no/xsd/vefa/validator/1.0" timestamp="1484611579000">
     <artifact filename="org.oasis-open.ubl.ver20-e5f8371423685f23ea02dc4e71e3382c.asice" timestamp="1480682536533"/>
     <artifact filename="org.oasis-open.ubl.ver21-d6122e53220eb8e2732ef0d0c7474b21.asice" timestamp="1480683063730"/>
     <artifact filename="peppolbis20-d5132d503d71a1f28e9d6f6bbd360c3d7fed839a.asice" timestamp="1479205182930"/>
-    <artifact filename="austria_artifact.asice" timestamp="1484142356000"/>
+    <artifact filename="austria_artifact.asice" timestamp="1484611579000"/>
 </artifacts>
