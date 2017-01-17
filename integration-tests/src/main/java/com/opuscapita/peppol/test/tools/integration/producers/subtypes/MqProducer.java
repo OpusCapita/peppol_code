@@ -30,8 +30,8 @@ import java.util.Properties;
 @Component
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
-    private final String dbConnection;
-    private final String dbPreprocessQuery;
+    private String dbConnection = null;
+    private String dbPreprocessQuery = null;
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
@@ -39,6 +39,8 @@ public class MqProducer implements Producer {
     DocumentLoader documentLoader = new DocumentLoader();
     @Autowired
     MessageQueue mq;
+
+    public MqProducer(){};
 
     public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
         this.mqSettings = mqSettings;

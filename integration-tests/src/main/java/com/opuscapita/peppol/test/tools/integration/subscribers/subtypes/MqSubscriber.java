@@ -7,7 +7,6 @@ import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
