@@ -62,6 +62,11 @@ node {
             // get latest version of infrastructure
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
             infra_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
+
+            // install additional roles
+            dir('ap2/ansible') {
+                sh 'make requirements'
+            }
         }
     }
 
