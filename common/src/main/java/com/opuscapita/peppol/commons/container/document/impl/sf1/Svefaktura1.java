@@ -53,9 +53,7 @@ public class Svefaktura1 implements FieldsReader {
         }
 
         value = selectValueFrom(null, root, "PaymentMeans", "DuePaymentDate");
-        if (value == null) {
-            success = false;
-        } else {
+        if (value != null) {
             base.setDueDate(value);
         }
 

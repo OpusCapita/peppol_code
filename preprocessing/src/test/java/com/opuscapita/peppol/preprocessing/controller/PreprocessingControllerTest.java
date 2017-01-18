@@ -38,7 +38,7 @@ public class PreprocessingControllerTest {
         Storage storage = mock(Storage.class);
         when(storage.moveToLongTerm("9908:980361330", "9908:923609016", "/valid.xml")).thenReturn("long_term");
 
-        PreprocessingController controller = new PreprocessingController(dl, storage);
+        PreprocessingController controller = new PreprocessingController(dl, storage, null);
         ContainerMessage cm = controller.process(new ContainerMessage("metadata", "/valid.xml", ENDPOINT));
 
         assertNotNull(cm);
@@ -55,7 +55,7 @@ public class PreprocessingControllerTest {
         Storage storage = mock(Storage.class);
         when(storage.moveToLongTerm("", "", "/not_xml.xml")).thenReturn("long_term");
 
-        PreprocessingController controller = new PreprocessingController(dl, storage);
+        PreprocessingController controller = new PreprocessingController(dl, storage, null);
         ContainerMessage cm = controller.process(new ContainerMessage("metadata", "/not_xml.xml", ENDPOINT));
 
         assertNotNull(cm);
@@ -69,7 +69,7 @@ public class PreprocessingControllerTest {
     @Test
     public void testNoFile() throws Exception {
         Storage storage = mock(Storage.class);
-        PreprocessingController controller = new PreprocessingController(dl, storage);
+        PreprocessingController controller = new PreprocessingController(dl, storage, null);
 
         ContainerMessage cm = controller.process(new ContainerMessage("metadata", "_no_such_file", ENDPOINT));
         assertTrue(cm.getBaseDocument() instanceof InvalidDocument);

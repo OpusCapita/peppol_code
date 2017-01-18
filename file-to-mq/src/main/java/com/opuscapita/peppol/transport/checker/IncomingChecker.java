@@ -51,7 +51,7 @@ public class IncomingChecker {
     private String mask;
     @Value("${peppol.file-to-mq.queue.out.name:preprocessing}")
     private String queue;
-    @Value("${peppol.file-to-mq.backup.directory:''}")
+    @Value("${peppol.file-to-mq.backup.directory:}")
     private String backupDir;
 
     @Autowired

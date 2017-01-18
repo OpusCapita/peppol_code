@@ -4,30 +4,43 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
+import com.opuscapita.peppol.commons.mq.ConnectionString;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.apache.log4j.LogManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by gamanse1 on 2016.11.14..
  */
 @SuppressWarnings("Duplicates")
+@Component
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
-    private final String dbConnection;
-    private final String dbPreprocessQuery;
+    private String dbConnection = null;
+    private String dbPreprocessQuery = null;
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
     private final String QUEUE_NAME = "integration-validation-test";
     DocumentLoader documentLoader = new DocumentLoader();
+    @Autowired
+    MessageQueue mq;
+
+    public MqProducer(){};
 
     public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
         this.mqSettings = mqSettings;
@@ -59,15 +72,8 @@ public class MqProducer implements Producer {
         }
 
         try {
-            if (dbPreprocessNeeded()) {
-                logger.info("Starting DB preprocess query execution!");
-                Properties props = new Properties();
-                props.put("useJDBCCompliantTimezoneShift", "true");
-                props.put("serverTimezone", "UTC");
-                java.sql.Connection conn = DriverManager.getConnection(dbConnection, props);
-                PreparedStatement statement = conn.prepareStatement(dbPreprocessQuery);
-                statement.executeUpdate();
-            }
+            if (dbPreprocessNeeded())
+                executeDbPreprocess();
         } catch (Exception ex1) {
             logger.info("Error executing DB preprocess query!", ex1);
             return;
@@ -83,8 +89,8 @@ public class MqProducer implements Producer {
             connection = factory.newConnection();
             channel = connection.createChannel();
             logger.info("Created channel for MQ!");
-            channel.queueDeclare(destinationQueue, true, false, false, null); //validator queue
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);       //integration-tests queue
+            //channel.queueDeclare(destinationQueue, true, false, false, null); //validator queue
+            //channel.queueDeclare(QUEUE_NAME, false, false, false, null);       //integration-tests queue
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
                     ContainerMessage cm = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
@@ -93,8 +99,9 @@ public class MqProducer implements Producer {
                     List<String> endpoints = Arrays.asList(QUEUE_NAME); //new queue for integration tests
                     route.setEndpoints(endpoints);
                     cm.setRoute(route);
-                    channel.basicPublish("", destinationQueue, null, cm.convertToJsonByteArray());
-                    logger.info("MqProducer: published to MQ: "+cm.getFileName());
+                    mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
+                    //channel.basicPublish("", destinationQueue, null, cm);
+                    logger.info("MqProducer: published to MQ: " + cm.getFileName());
                 }
             }
         } catch (Exception ex2) {
@@ -111,12 +118,21 @@ public class MqProducer implements Producer {
         }
     }
 
+    private void executeDbPreprocess() {
+        logger.info("Starting DB preprocess query execution!");
+        Properties props = new Properties();
+        props.put("useJDBCCompliantTimezoneShift", "true");
+        props.put("serverTimezone", "UTC");
+        try {
+            java.sql.Connection conn = DriverManager.getConnection(dbConnection, props);
+            PreparedStatement statement = conn.prepareStatement(dbPreprocessQuery);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private boolean dbPreprocessNeeded() {
         return (dbConnection != null && !dbConnection.isEmpty() && dbPreprocessQuery != null && !dbPreprocessQuery.isEmpty());
     }
-
-    private ContainerMessage prepareMessage(String fileName, String metadata) {
-       return new ContainerMessage(metadata, fileName, new Endpoint("test", Endpoint.Type.PEPPOL));
-    }
-
 }

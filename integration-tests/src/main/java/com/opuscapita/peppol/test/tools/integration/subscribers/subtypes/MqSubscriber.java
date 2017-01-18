@@ -4,18 +4,16 @@ import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import com.rabbitmq.client.*;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
-import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by gamanse1 on 2016.11.17..
  */
-@Component
 public class MqSubscriber extends Subscriber {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqSubscriber.class);
     private final String queue;
@@ -34,7 +32,7 @@ public class MqSubscriber extends Subscriber {
         logger.info("MqSubscriber: started!");
         Connection connection = null;
         Channel channel = null;
-        try {
+      /*  try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(mqSettings.get("host"));
             factory.setPort((int) (Object) mqSettings.get("port"));
@@ -45,23 +43,9 @@ public class MqSubscriber extends Subscriber {
             channel = connection.createChannel();
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             //Rabbit consumer which simply gets messages from the queue
-            channel.basicConsume(QUEUE_NAME, true, getRabbitConsumer(channel));
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         return testResults;
-    }
-
-    Consumer getRabbitConsumer(Channel channel) {
-        return new DefaultConsumer(channel) {
-            //TODO since this might take some time, need to run asynchronous ??
-            @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] bytes)
-                    throws IOException {
-                ContainerMessage cm = gson.fromJson(new String(bytes), ContainerMessage.class);
-                logger.info("MqSubscriber: message received!");
-                //TODO add Integration-tests consumers here
-            }
-        };
     }
 }
