@@ -320,4 +320,10 @@ public class MessageServiceImpl implements MessageService {
         messageDAO.resolveManually(messageId, comment);
     }
 
+    @Override
+    @Cacheable("allOutboundMessages")
+    public int getAllOutboundMessageCount() throws HibernateException{
+        return messageDAO.getAllOutboundMessageCount();
+    }
+
 }
