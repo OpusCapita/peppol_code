@@ -15,6 +15,7 @@ public class FileProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(FileProducer.class);
     private String sourceFolder;
     private String destinationFolder;
+    private File destination;
 
     public FileProducer(Object sourceFolder, Object destinationFolder) {
         this.sourceFolder = (String) sourceFolder;
@@ -26,20 +27,25 @@ public class FileProducer implements Producer {
     public void run() {
         try {
             File source = new File(this.sourceFolder);
-            File destination = new File(this.destinationFolder);
+            destination = new File(this.destinationFolder);
             if (!source.exists()) {
                 logger.warn("File producer: " + this.sourceFolder + " doesn't exist, exiting!");
                 return;
             }
-            if (!destination.exists()) {
+            if (destination.isDirectory() && !destination.exists()) {
                 logger.warn("File producer: " + this.destinationFolder + " doesn't exist, exiting!");
                 return;
             }
-            File[] files = source.listFiles();
-            for (File file : files) {
-                if (file.isFile()) {
-                    processFile(file);
+            if(source.isDirectory()) {
+                File[] files = source.listFiles();
+                for (File file : files) {
+                    if (file.isFile()) {
+                        processFile(file);
+                    }
                 }
+            }
+            else{
+                processFile(source);
             }
         } catch (Exception ex) {
             logger.error("Error running FileProducer!", ex);
@@ -47,10 +53,13 @@ public class FileProducer implements Producer {
     }
 
     private void processFile(File file) {
-        File destinationFile = new File(destinationFolder + "\\" + file.getName());
-        //if test file already exists
-        if (destinationFile.exists())
-            return;
+        File destinationFile;
+        //check if destination is already specified as file or just directory
+        if(destination.isDirectory())
+            destinationFile = new File(destinationFolder + "\\" + file.getName());
+        else
+            destinationFile = destination;
+
         try (FileOutputStream fos = new FileOutputStream(destinationFile)) {
             fos.write(Files.readAllBytes(file.toPath()));
         } catch (IOException ex) {

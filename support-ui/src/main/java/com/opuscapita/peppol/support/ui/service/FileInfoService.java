@@ -3,7 +3,6 @@ package com.opuscapita.peppol.support.ui.service;
 import com.opuscapita.peppol.support.ui.domain.FileInfo;
 import org.hibernate.HibernateException;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -17,7 +16,7 @@ public interface FileInfoService extends Service<FileInfo> {
 
     public FileInfo getByFileName(String filename) throws HibernateException;
 
-    public void reprocessFile(Integer fileId, boolean outbound) throws IOException;
+    public void reprocessFile(Integer fileId, boolean outbound) throws Exception;
 
     public List<FileInfo> getMessageFileInfos(int messageId) throws HibernateException;
 }

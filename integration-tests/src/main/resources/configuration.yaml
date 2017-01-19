@@ -14,15 +14,15 @@ tests:
      producers:
        web ui producer:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination link: http://localhost:441/
+         destination link: http://localhost:441/validator/
          result directory: validation result folder
        mq producer:
          mq connection: mq1
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination queue: validation-integration-test
+         destination queue: validator
        rest producer:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination link: http://localhost:441/validate
+         destination link: http://localhost:441/validator/validate
          result directory: validation result folder
          rest method: post
      subscribers:
@@ -109,19 +109,20 @@ tests:
    support-ui:
       producers:
         file producer:
-          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\support-ui-test
-          destination directory: C:\peppol-ap-testout\failed
-        db producer:
-           db connection: db1
-           source query:
+          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\support-ui-test\d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
+          destination directory: C:\support-ui\peppol-ap-test\out\sent\support-ui-test.xml
       subscribers:
           - file subscriber:
+              consumers: 11
               timeout: 500
-              source file: C:\peppol-ap-testout\failed
+              source file: C:\support-ui\peppol-ap-test\out\sent\support-ui-test.xml
       consumers:
-         - selenium check:
+         - file download test:
             id: 11
-            expected value: 500
+            name: support ui download test
+            action: download
+            link: http://localhost:8080/rest/outbound/download/
+            expected value: true
    inbound:
      producers:
        file producer:
@@ -139,7 +140,7 @@ tests:
       - snc test:
           id: 12
           name: Invalid message error case- ticket is sent to SNC (snc stub)
-          expected value: invalid_svefaktura.xml
+          expected value: d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
       - file test:
           id: 13
           name: Look for inbound files in long term storage

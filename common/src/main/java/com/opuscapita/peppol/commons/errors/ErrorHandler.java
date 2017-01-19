@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
+import com.opuscapita.peppol.commons.container.ContainerMessage;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,9 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Daniil on 19.07.2016.
@@ -38,6 +43,10 @@ public class ErrorHandler {
         this.environment = environment;
     }
 
+    public void reportToServiceNow(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription) {
+        reportToServiceNow(cm.convertToJson(), cm.getCustomerId(), e, shortDescription);
+    }
+
     public void reportToServiceNow(String json, String customerId, Exception e) {
         reportToServiceNow(json, customerId, e, e.getMessage());
     }
@@ -47,20 +56,27 @@ public class ErrorHandler {
     }
 
     public void reportToServiceNow(String json, String customerId, Exception e, String shortDescription, String correlationIdPrefix) {
-        String dumpFileName = storeMessageToDisk(json, e);
-        logger.warn("Dumped erroneous message to: " + dumpFileName);
+        String dumpFileName = null;
+        if (StringUtils.isNotBlank(json)) {
+            dumpFileName = storeMessageToDisk(json);
+            logger.info("Dumped erroneous message to: " + dumpFileName);
+        }
         createSncTicket(dumpFileName, json, customerId, e, shortDescription, correlationIdPrefix);
-        logger.warn("ServiceNow ticket created with reference to: " + dumpFileName);
     }
 
-    private void createSncTicket(String dumpFileName, String message, String customerId, Exception jse, String shortDescription, String correlationIdPrefix) {
-        StringWriter stackTraceWriter = new StringWriter();
-        jse.printStackTrace(new PrintWriter(stackTraceWriter));
+    private void createSncTicket(@Nullable String dumpFileName, @Nullable String json, @Nullable String customerId,
+                                 @Nullable Exception jse, @NotNull String shortDescription, @Nullable String correlationIdPrefix) {
         String correlationId = correlationIdPrefix + generateFailedMessageCorrelationId(jse);
-        String humanReadableMessage = makeMessageHumanReadable(message);
+        String stackTrace = jse == null ? "" : ExceptionUtils.getStackTrace(jse);
         try {
-            serviceNowRest.insert(new SncEntity(shortDescription, humanReadableMessage + "\n\r" + dumpFileName + "\n\r" + stackTraceWriter.toString(),
-                    correlationId, customerId, 0));
+            serviceNowRest.insert(
+                    new SncEntity(
+                            shortDescription,
+                            dumpFileName == null ? stackTrace : makeMessageHumanReadable(json) + "\n" + dumpFileName + "\n" + stackTrace,
+                            correlationId,
+                            customerId,
+                            0));
+            logger.info("ServiceNow ticket created with reference to: " + dumpFileName);
         } catch (IOException e) {
             logger.error("Unable to create SNC ticket", e);
         }
@@ -69,34 +85,31 @@ public class ErrorHandler {
     /**
      * Make the message "great", errm... human readable again :)
      *
-     * @param message
+     * @param json the message
      * @return indented contents of json as a plain text or just a message itself, in any case { and } and " and ' are removed.
      */
-    private String makeMessageHumanReadable(String message) {
-        String detailedDescription = "";
+    private String makeMessageHumanReadable(String json) {
+        String detailedDescription;
         try {
-            JsonObject jsonMessage = new JsonParser().parse(message).getAsJsonObject();
+            JsonObject jsonMessage = new JsonParser().parse(json).getAsJsonObject();
             detailedDescription = new GsonBuilder().setPrettyPrinting().create().toJson(jsonMessage);
         } catch (Exception e) {
-            detailedDescription = message;
+            detailedDescription = json;
         }
         detailedDescription = detailedDescription.replaceAll("\\{|\\}|\\\"|\\'", "");
         return detailedDescription;
     }
 
-    private String generateFailedMessageCorrelationId(Exception jse) {
-        return jse.getClass().getName();
+    private String generateFailedMessageCorrelationId(@Nullable Exception jse) {
+        return jse == null ? UUID.randomUUID().toString() : jse.getClass().getName();
     }
 
-    private String storeMessageToDisk(@NotNull String message, @Nullable Exception exp) {
+    private String storeMessageToDisk(@NotNull String message) {
         String messageDumpBaseFolderPath = getMessageDumpBaseFolderPath();
         String messageDumpFileName = generateMessageDumpFileName();
         File dumpFile = new File(messageDumpBaseFolderPath, messageDumpFileName);
         try (FileOutputStream fos = new FileOutputStream(dumpFile)) {
             fos.write((message + "\n\n").getBytes());
-            if (exp != null) {
-                fos.write(ExceptionUtils.getStackTrace(exp).getBytes());
-            }
         } catch (IOException e) {
             logger.error("Failed to store message to disk ( " + dumpFile.getAbsolutePath() + " )", e);
             logger.error("Failed message: " + message);

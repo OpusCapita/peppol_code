@@ -24,8 +24,8 @@ public class ConsumerFactory {
                 String consumerName = (String) properties.get("name");
                 //String query = (String) properties.get("query");
                 return new DbConsumer(id, consumerName, properties.get("expected value"));
-            case "selenium check":
-                return new SeleniumConsumer(id, properties.get("expected value"));
+            case "file download test":
+                return new FileDownloadConsumer(id, properties.get("name"), properties.get("action"), properties.get("link"), properties.get("expected value"));
             case "snc test":
             case "snc check":
                 String sncTestName = (String) properties.get("name");

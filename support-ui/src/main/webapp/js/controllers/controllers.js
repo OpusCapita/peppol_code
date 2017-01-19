@@ -196,8 +196,20 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
         $scope.showFileName = function (fileName, chars) {
             if (!Boolean(fileName))
                 return '';
-            return (fileName.length <= chars) ? fileName : fileName.substr(0, chars) + '...';
+            var normalizedName = getSimpleName(fileName);
+            return (normalizedName.length <= chars) ? normalizedName : normalizedName.substr(0, chars) + '...';
         };
+
+        var getSimpleName = function (fileName){
+            if (!Boolean(fileName))
+                return '';
+            return  fileName.split(/(\\|\/)/g).pop();
+        };
+
+        $scope.showSimpleName = function (fileName) {
+            return getSimpleName(fileName);
+        };
+
         $scope.showFullError = function (failed) {
             if (typeof failed.fullError == 'undefined') {
                 var Factory = failed.invalid ? InvalidFactory : FailedFactory;
@@ -219,7 +231,7 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             }
         };
         $scope.downloadFile = function (filename) {
-            $window.open('/rest/outbound/download/' + filename);
+            $window.open('/rest/outbound/download/' +filename);
         };
 
         $scope.isAllowedToReprocess = function () {

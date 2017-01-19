@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.eventing;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -50,6 +51,11 @@ public class EventingApp {
     @ConditionalOnProperty("spring.rabbitmq.host")
     MessageListenerAdapter listenerAdapter(AbstractQueueListener queueListener) {
         return new MessageListenerAdapter(queueListener, "receiveMessage");
+    }
+
+    @Bean
+    public Gson gson() {
+        return new Gson();
     }
 
     @Bean

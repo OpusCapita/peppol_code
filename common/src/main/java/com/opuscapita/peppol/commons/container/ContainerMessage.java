@@ -19,6 +19,8 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class ContainerMessage implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final Endpoint source;
     private final String sourceMetadata;
 
@@ -124,8 +126,12 @@ public class ContainerMessage implements Serializable {
         return source;
     }
 
+    public String convertToJson() {
+        return prepareGson(getFileName()).toJson(this);
+    }
+
     public byte[] convertToJsonByteArray() {
-        return prepareGson(getFileName()).toJson(this).getBytes();
+        return convertToJson().getBytes();
     }
 
     @Nullable

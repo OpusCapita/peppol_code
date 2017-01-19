@@ -51,6 +51,8 @@ public class IncomingChecker {
     private String mask;
     @Value("${peppol.file-to-mq.queue.out.name:preprocessing}")
     private String queue;
+    @Value("${peppol.file-to-mq.backup.directory:}")
+    private String backupDir;
 
     @Autowired
     public IncomingChecker(@NotNull MessageQueue messageQueue, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
@@ -59,9 +61,9 @@ public class IncomingChecker {
         this.storage = storage;
         this.statusReporter = statusReporter;
         this.errorHandler = errorHandler;
-        logger.info("Transport started for directory " + directory);
     }
 
+    // check directory once per minute for new input files
     @Scheduled(fixedRate = 60_000) // 1 minute
     public void check() {
         File dir = new File(directory);
@@ -79,6 +81,7 @@ public class IncomingChecker {
         }
     }
 
+    // check subdirectories, file age and file mask
     private void receive(File directory) throws Exception {
         logger.debug("Checking directory " + directory.getAbsolutePath());
 
@@ -103,12 +106,14 @@ public class IncomingChecker {
         }
     }
 
+    // send file info to MQ if found
     private void send(File file) throws Exception {
-        String fileName = storage.moveToTemporary(file);
+        String fileName = storage.moveToTemporary(file, backupDir);
         logger.info("File moved to: " + fileName);
 
-        ContainerMessage cm = new ContainerMessage("From " + file.getAbsolutePath(), fileName, new Endpoint(componentName, Endpoint.Type.GATEWAY))
-                .setStatus(new ProcessingStatus(componentName, "received", fileName));
+        ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
+                fileName, new Endpoint(componentName, Endpoint.Type.GATEWAY))
+                    .setStatus(new ProcessingStatus(componentName, "received", fileName));
 
         messageQueue.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");

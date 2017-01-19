@@ -31,6 +31,7 @@ public class DifiValidator implements BasicValidator {
     public DifiValidator(DifiValidatorConfig difiValidatorConfig) throws ValidatorException {
         this.difiValidatorConfig = difiValidatorConfig;
         validator = ValidatorBuilder.newValidator().setSource(new SimpleDirectorySource(Paths.get(difiValidatorConfig.getDifiValidationArtifactsPath()))).build();
+        validator.getPackages().forEach(pack -> System.out.println(pack.getUrl()+"-->"+pack.getValue()));
     }
 
     @Override
@@ -41,12 +42,17 @@ public class DifiValidator implements BasicValidator {
             Validation validation = validator.validate(new ByteArrayInputStream(data));
             result.setPassed(validation.getReport().getFlag() != FlagType.ERROR && validation.getReport().getFlag() != FlagType.FATAL);
             if (!result.isPassed()) {
-                validation.getReport().getSection().stream().filter(raw -> raw.getFlag() == FlagType.ERROR || raw.getFlag() == FlagType.FATAL).forEach(section -> {
-                    ValidationError error = new ValidationError();
-                    error.setTitle(section.getTitle());
-                    error.setDetails(extractErrorDetails(section));
-                    errors.add(error);
-                });
+                validation.getReport()
+                        .getSection()
+                        .stream()
+                        .filter(raw -> raw.getFlag() == FlagType.ERROR || raw.getFlag() == FlagType.FATAL)
+                        .forEach(section -> {
+                            ValidationError error = new ValidationError();
+                            error.setTitle(section.getTitle());
+                            error.setDetails(extractErrorDetails(section));
+                            errors.add(error);
+                        }
+                        );
             }
         } catch (NullPointerException e) {
             ValidationError error = new ValidationError();

@@ -7,13 +7,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -37,27 +35,78 @@ public class Util {
         directoryList = new ArrayList<>(Arrays.asList(downloadDirectoryList.split(";")));
     }
 
-    public byte[] findMessage(String fileName) throws FileNotFoundException {
-        try {
-            for (String directory : directoryList) {
-                File file = new File(directory + File.separator + fileName);
-                if (file.exists()) {
-                    try (InputStream is = new FileInputStream(file)) {
-                        return IOUtils.toByteArray(is);
-                    }
-                }
-                File fileGz = new File(directory + File.separator + fileName + ".gz");
-                if (fileGz.exists()) {
-                    try (GZIPInputStream is = new GZIPInputStream(new FileInputStream(fileGz))) {
-                        return IOUtils.toByteArray(is);
-                    }
-                }
+    public byte[] findMessage(String fileName) throws Exception{
+        return new FileFinder(directoryList).find(fileName);
+    }
 
+}
+
+class FileFinder {
+    private final List<String> directoryList;
+    private byte[] result = null;
+
+    public FileFinder(List<String> directoryList) throws Exception {
+        this.directoryList = directoryList;
+        if (directoryList == null || directoryList.isEmpty())
+            throw new Exception("Directory list null or empty!");
+    }
+
+    public byte[] find(String fileName) throws FileNotFoundException {
+        File f = new File(fileName);
+        //checking if file already has full path and can be found on this step
+        if(f.exists())
+            return convertFileToByteArray(f);
+        //clearing the path if any and leaving just simple name
+        fileName = f.getName();
+        for (String dir : directoryList){
+            find(fileName, new File(dir));
+            if(result != null)
+                return result;
+        }
+        if (result == null)
+            throw new FileNotFoundException("File: " + fileName + " not found!");
+        return result;
+    }
+
+    private byte[] convertFileToByteArray(File file) {
+        try {
+            try (InputStream is = new FileInputStream(file)) {
+                return IOUtils.toByteArray(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Recursion
+    private void find(String fileName, File directory) {
+        try {
+            File file = new File(directory + File.separator + fileName);
+            if (file.exists()) {
+                result = convertFileToByteArray(file);
+                return;
             }
 
-        } catch (Exception pass) {
+            File fileGz = new File(directory + File.separator + fileName + ".gz");
+            if (fileGz.exists()) {     //should not happen
+                try (GZIPInputStream is = new GZIPInputStream(new FileInputStream(fileGz))) {
+                    result = IOUtils.toByteArray(is);
+                    return;
+                }
+            }
 
+            List<String> subDirectories = Arrays.stream(directory.listFiles(File::isDirectory))
+                    .map(x -> x.getAbsolutePath()).collect(Collectors.toList());
+
+            if (subDirectories != null && !subDirectories.isEmpty())
+                for(String dir : subDirectories) {
+                    find(fileName, new File(dir));
+                    if(result != null)                      //stop the recursion
+                        return;
+                }
+
+        } catch (Exception ex) {
         }
-        throw new FileNotFoundException("File: " + fileName + " not found!");
     }
 }

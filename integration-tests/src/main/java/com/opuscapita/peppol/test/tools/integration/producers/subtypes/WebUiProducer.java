@@ -65,6 +65,6 @@ public class WebUiProducer implements Producer {
     }
 
     private void saveResult(Properties results) throws Exception {
-        results.store(new FileOutputStream(resultDirectory + "\\webUiResult"), null);
+        results.store(new FileOutputStream(resultDirectory + "/webUiResult"), null);
     }
 }

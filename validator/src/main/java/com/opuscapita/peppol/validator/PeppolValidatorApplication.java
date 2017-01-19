@@ -116,6 +116,7 @@ public class PeppolValidatorApplication {
         return factory;
     }
 
+    @SuppressWarnings("Duplicates")
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
                                         @NotNull ValidationController controller, @NotNull MessageQueue messageQueue,
