@@ -18,8 +18,8 @@
   vars:
     module_name: validator
   tags: validator
-- include: assert.yml
-  vars:
-    module_name: transport-to-a2a
-  tags: transport-to-a2a
+#- include: assert.yml
+#  vars:
+#    module_name: transport-to-a2a
+#  tags: transport-to-a2a
 ...

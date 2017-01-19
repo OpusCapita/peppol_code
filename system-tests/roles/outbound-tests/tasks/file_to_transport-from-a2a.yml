@@ -5,7 +5,7 @@
     src: "{{file}}"
     dest: /var/lib/docker/volumes/peppol2.0/data/transport/from-a2a
 - name: find fileName
-  shell: echo "{{file}}" | awk  -F"/" '{print $6}'
+  shell: echo "{{file}}" | awk  -F"/" '{print $4}'
   register: fileName
 - set_fact: fileName="{{fileName.stdout}}"
 - debug: var=fileName
