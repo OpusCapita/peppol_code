@@ -231,7 +231,7 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             }
         };
         $scope.downloadFile = function (filename) {
-            $window.open('/rest/outbound/download/' + filename);
+            $window.open('/rest/outbound/download/' +filename);
         };
 
         $scope.isAllowedToReprocess = function () {

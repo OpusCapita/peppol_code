@@ -150,7 +150,7 @@ public class OutboundMessageController {
         return errorMessage;
     }
 
-    @RequestMapping(value = "/download/{fileName:.*}", method = RequestMethod.GET)
+    @RequestMapping(value = "/download/**/{fileName:.*}", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public void downloadMessage(@PathVariable String fileName, HttpServletResponse response) {
         try {

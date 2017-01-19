@@ -54,7 +54,7 @@ public class RootConfiguration {
                 "invalidInboundMessages",
                 "allInboundMessages");
 
-        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder().maximumSize(1).expireAfterWrite(5, TimeUnit.MINUTES);
+        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder().maximumSize(1).expireAfterWrite(20, TimeUnit.SECONDS);
         cacheManager.setCacheBuilder(cacheBuilder);
         return  cacheManager;
     }

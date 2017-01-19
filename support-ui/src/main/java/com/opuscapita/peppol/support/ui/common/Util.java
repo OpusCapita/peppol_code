@@ -7,10 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +52,12 @@ class FileFinder {
     }
 
     public byte[] find(String fileName) throws FileNotFoundException {
+        File f = new File(fileName);
+        //checking if file already has full path and can be found on this step
+        if(f.exists())
+            return convertFileToByteArray(f);
+        //clearing the path if any and leaving just simple name
+        fileName = f.getName();
         for (String dir : directoryList){
             find(fileName, new File(dir));
             if(result != null)
@@ -65,19 +68,28 @@ class FileFinder {
         return result;
     }
 
+    private byte[] convertFileToByteArray(File file) {
+        try {
+            try (InputStream is = new FileInputStream(file)) {
+                return IOUtils.toByteArray(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     //Recursion
     private void find(String fileName, File directory) {
         try {
             File file = new File(directory + File.separator + fileName);
             if (file.exists()) {
-                try (InputStream is = new FileInputStream(file)) {
-                    result = IOUtils.toByteArray(is);
-                    return;
-                }
+                result = convertFileToByteArray(file);
+                return;
             }
 
             File fileGz = new File(directory + File.separator + fileName + ".gz");
-            if (fileGz.exists()) {
+            if (fileGz.exists()) {     //should not happen
                 try (GZIPInputStream is = new GZIPInputStream(new FileInputStream(fileGz))) {
                     result = IOUtils.toByteArray(is);
                     return;
