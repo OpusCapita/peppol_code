@@ -3,7 +3,6 @@ package com.opuscapita.peppol.validator.validations.common;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.XsdValidator;
-import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,17 +20,21 @@ public class SbdhValidator implements XsdValidator {
 
     @Override
     public List<ValidationError> performXsdValidation(ContainerMessage containerMessage) {
+        if (containerMessage.getBaseDocument() == null || containerMessage.getBaseDocument().getRootNode() == null) {
+            throw new IllegalArgumentException("No document present to validate");
+        }
+
         String contentRootNode = containerMessage.getBaseDocument().getRootNode().getNodeName();
         try {
             validateAgainstXsd(containerMessage, xsdPath);
         } catch (Exception e) {
             if (!(e.getMessage().contains("Cannot find the declaration of element '" + contentRootNode + "'") || (e.getMessage().contains("Invalid content was found starting with element '" + contentRootNode + "'")))) {
                 return new ArrayList<ValidationError>() {{
-                    add(ValidationErrorBuilder.aValidationError().withTitle("SBDH validation failure").withDetails(e.getMessage()).build());
+                    add(new ValidationError("SBDH validation failure").withText(e.getMessage()));
                 }};
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
 

@@ -4,7 +4,8 @@ import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
-import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -35,12 +36,10 @@ public class SveFaktura1Validator implements BasicValidator {
     private final static String SBDH_XSD_LOCATION = "validation/SBDH/StandardBusinessDocumentHeader.xsd";
     private static final String XSL_LOCATION = "/validation/svefaktura1/out2016-02-17.xsl";
 
+    private static final Logger logger = LoggerFactory.getLogger(SveFaktura1Validator.class);
 
-    Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
-
-
-    Svefaktura1XsdValidator svefaktura1XsdValidator;
-
+    private final Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
+    private final Svefaktura1XsdValidator svefaktura1XsdValidator;
 
     public SveFaktura1Validator(Svefaktura1ValidatorConfig svefaktura1ValidatorConfig, Svefaktura1XsdValidator svefaktura1XsdValidator) {
         this.svefaktura1ValidatorConfig = svefaktura1ValidatorConfig;
@@ -50,8 +49,6 @@ public class SveFaktura1Validator implements BasicValidator {
 
     @Override
     public ValidationResult validate(byte[] data) {
-        /*System.out.println("Validating: ");
-        System.out.println(new String(data));*/
         List<ValidationError> errors = new ArrayList<>();
         ValidationResult result = new ValidationResult(Archetype.SVEFAKTURA1);
         svefaktura1XsdValidator.performXsdValidation(data);
@@ -62,7 +59,7 @@ public class SveFaktura1Validator implements BasicValidator {
                 extractErrorsAndWarnings(finalDocument, errors);
 
             } catch (Exception e) {
-                errors.add(ValidationErrorBuilder.aValidationError().withTitle("Svefaktura1 Schematron validation failed with exception").withDetails(e.getMessage()).build());
+                errors.add(new ValidationError().withTitle("Svefaktura1 Schematron validation failed with exception").withText(e.getMessage()));
             }
 
         }
@@ -71,7 +68,8 @@ public class SveFaktura1Validator implements BasicValidator {
         return result;
     }
 
-    private Document performSchematronValidation(byte[] data) throws ConfigurationException, TransformerException, ParserConfigurationException, SAXException, IOException {
+    private Document performSchematronValidation(byte[] data) throws ConfigurationException, TransformerException, ParserConfigurationException,
+            SAXException, IOException {
         StreamSource styleSource = new StreamSource(new FileInputStream(new File(svefaktura1ValidatorConfig.getSchematronXslPath())));
         Transformer transformer = TransformerFactory.newInstance().newTransformer(styleSource);
         StringWriter resultWriter = new StringWriter();
@@ -89,12 +87,16 @@ public class SveFaktura1Validator implements BasicValidator {
 
             @Override
             public void error(SAXParseException exception) throws SAXException {
-                throw exception;
+                if (exception != null) {
+                    throw exception;
+                }
             }
 
             @Override
             public void fatalError(SAXParseException exception) throws SAXException {
-                throw exception;
+                if (exception != null) {
+                    throw exception;
+                }
             }
         });
         return documentBuilder.parse(new ByteArrayInputStream(resultData));
@@ -110,33 +112,26 @@ public class SveFaktura1Validator implements BasicValidator {
         for (int i = 0; i < failedAsserts.getLength(); i++) {
             Node failedAssert = failedAsserts.item(i);
             NamedNodeMap attributes = failedAssert.getAttributes();
-            boolean isError = false;
-            ValidationError error = new ValidationError();
-            error.setTitle("SveFaktura1 Schematron validation error");
-            StringBuilder detailsStringBuilder = new StringBuilder();
+            boolean hasErrors = false;
+            ValidationError error = new ValidationError().withTitle("Svefaktura1 schematron validation error");
+
             for (int j = 0; j < attributes.getLength(); j++) {
                 Node attribute = attributes.item(j);
                 if (attribute.getNodeName().equals("flag") && (attribute.getNodeValue().equals("fatal") || attribute.getNodeValue().equals("error"))) {
-                    isError = true;
-                    detailsStringBuilder.append(extractAssertMessage(failedAssert));
-                    detailsStringBuilder.append("\n\rSeverity:\n\r");
-                    detailsStringBuilder.append(attribute.getNodeValue());
-                    detailsStringBuilder.append("\n\r");
+                    hasErrors = true;
+                    error.withTest(extractAssertMessage(failedAssert));
+                    error.withFlag(attribute.getNodeValue());
                 }
-                if (isError) {
+                if (hasErrors) {
                     if (attribute.getNodeName().equals("location")) {
-                        detailsStringBuilder.append("\n\rLocation:\n\r");
-                        detailsStringBuilder.append(attribute.getNodeValue());
-                    } else {
-                        detailsStringBuilder.append(attribute.getNodeName()).append(": ").append(attribute.getNodeValue()).append("\n\r");
+                        error.withLocation(attribute.getNodeValue());
                     }
                 }
                 if (attribute.getNodeName().equals("flag") && attribute.getNodeValue().equals("warning")) {
-                    System.out.println("WARNING: " + extractAssertMessage(failedAssert));
+                    logger.info("Validation warning: " + extractAssertMessage(failedAssert));
                 }
             }
-            if (isError) {
-                error.setDetails(detailsStringBuilder.toString());
+            if (hasErrors) {
                 errors.add(error);
             }
         }
@@ -146,6 +141,7 @@ public class SveFaktura1Validator implements BasicValidator {
         return failedAssert.getChildNodes().item(1).getFirstChild().getNodeValue();
     }
 
+    @SuppressWarnings("unused")
     private void debugLogDomDocument(Document document) throws UnsupportedEncodingException, TransformerException {
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
