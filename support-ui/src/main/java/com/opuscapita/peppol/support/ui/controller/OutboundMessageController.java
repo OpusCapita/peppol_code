@@ -52,7 +52,8 @@ public class OutboundMessageController {
     public
     @ResponseBody
     String getAllMessageCount() {
-        return "{\"length\": " + String.valueOf(messageService.getAllMessageCount()) + "}";
+        // return "{\"length\": " + String.valueOf(messageService.getAllMessageCount()) + "}"; this was a bug, like srsly ????
+        return "{\"length\": " + String.valueOf(messageService.getAllOutboundMessageCount()) + "}";
     }
 
     @RequestMapping(value = "/failed", method = RequestMethod.GET)

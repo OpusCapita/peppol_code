@@ -49,12 +49,15 @@ public class RootConfiguration {
                 "invalidMessages",
                 "failedMessages",
                 "sentMessages",
+                "allOutboundMessages",
                 "reprocessedMessages",
                 "processingMessages",
                 "invalidInboundMessages",
                 "allInboundMessages");
 
-        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder().maximumSize(1).expireAfterWrite(20, TimeUnit.SECONDS);
+        CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
+                .maximumSize(1)
+                .expireAfterWrite(20, TimeUnit.SECONDS);
         cacheManager.setCacheBuilder(cacheBuilder);
         return  cacheManager;
     }

@@ -66,4 +66,5 @@ public interface MessageDAO extends DAO<Message> {
 
     public int getInvalidInboundMessageCount() throws HibernateException;
 
+    public int getAllOutboundMessageCount() throws HibernateException;
 }

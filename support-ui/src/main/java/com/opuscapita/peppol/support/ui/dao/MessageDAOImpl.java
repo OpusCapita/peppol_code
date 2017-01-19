@@ -343,6 +343,11 @@ public class MessageDAOImpl implements MessageDAO {
     }
 
     @Override
+    public int getAllOutboundMessageCount() throws HibernateException {
+        return getMessageCount(null, Direction.OUT);
+    }
+
+    @Override
     public int getAllInboundMessageCount() throws HibernateException {
         return getMessageCount(null, Direction.IN);
     }

@@ -86,4 +86,5 @@ public interface MessageService extends Service<Message> {
 
     public void resolveManually(Integer messageId, String comment);
 
+    public int  getAllOutboundMessageCount() throws HibernateException;
 }
