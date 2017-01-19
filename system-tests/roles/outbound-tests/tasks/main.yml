@@ -1,10 +1,3 @@
 ---
-- include: initiate.yml
-  vars: 
-    file: "{{item}}"
-  with_items:
-    - /tmp/git/test-materials/suite/ehf_2.0_bii4_no.xml
-   # - /tmp/git/test-materials/suite/ehf_2.0_bii5_no.xml
-   # - /tmp/git/test-materials/suite/sv1_with_attachment.xml
-   # - /tmp/git/test-materials/svefaktura_1.0/invalid/1.svefaktura_invalid.TEST.xml
+- include: file_list.yml
 ...
