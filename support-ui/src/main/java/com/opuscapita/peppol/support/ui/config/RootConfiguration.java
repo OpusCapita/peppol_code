@@ -57,7 +57,7 @@ public class RootConfiguration {
 
         CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
                 .maximumSize(1)
-                .expireAfterWrite(20, TimeUnit.SECONDS);
+                .expireAfterWrite(5, TimeUnit.MINUTES);
         cacheManager.setCacheBuilder(cacheBuilder);
         return  cacheManager;
     }
