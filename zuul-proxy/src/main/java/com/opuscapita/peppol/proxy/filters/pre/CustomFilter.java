@@ -2,6 +2,7 @@ package com.opuscapita.peppol.proxy.filters.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import com.opuscapita.peppol.proxy.filters.pre.util.RequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class CustomFilter extends ZuulFilter {
 
     protected boolean isNotAllowed(HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
-        String requestedService = extractRequestedService(request);
+        String requestedService = RequestUtils.extractRequestedService(request);
         System.out.println("Checking against address: "+remoteAddr+" and service: "+ requestedService);
         if (requestedService.isEmpty()) {
             requestedService = "/";
@@ -83,14 +84,4 @@ public class CustomFilter extends ZuulFilter {
         return result;
     }
 
-    private String extractRequestedService(HttpServletRequest request) {
-        String[] requestParts = request.getRequestURI().split("/");
-        if(requestParts.length > 1) {
-            Optional<String> first = Arrays.asList(requestParts).stream().filter(part -> !part.isEmpty()).findFirst();
-            if (first.isPresent()) {
-                return first.get();
-            }
-        }
-        return request.getRequestURI().replaceAll("/", "");
-    }
 }

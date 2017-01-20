@@ -7,8 +7,6 @@ import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.net.URI;
-import java.util.List;
 
 /**
  * Created by Daniil on 03.05.2016.
@@ -36,36 +32,25 @@ public class IndexController {
     @Autowired
     DocumentLoader documentLoader;
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
 
     public IndexController() {
         System.out.println("IndexController created.");
     }
 
-    public URI serviceUrl() {
-        List<ServiceInstance> list = discoveryClient.getInstances("validator");
-        if (list != null && list.size() > 0) {
-            list.get(0).getMetadata().entrySet().forEach(entry -> System.out.println(entry.getKey()+"::"+entry.getValue()));
-            return list.get(0).getUri();
-        }
-        return null;
-    }
 
     @GetMapping("/")
     public ModelAndView index(HttpServletRequest request) {
         ModelAndView result = new ModelAndView("index");
-        System.out.println(serviceUrl());
-        result.addObject("root", servletContext.getContextPath());
+        result.addObject("root", "/" + request.getHeader("Service") + "/");
         return result;
     }
 
     @PostMapping("/")
-    public ModelAndView validate(@RequestParam(name = "datafile") MultipartFile dataFile) {
-        System.out.println("Got: " + dataFile.getOriginalFilename() + " as " + dataFile.getName());
+    public ModelAndView validate(@RequestParam(name = "datafile") MultipartFile dataFile, HttpServletRequest request) {
+        System.out.println("Got: " + dataFile.getOriginalFilename() + " as " + dataFile.getName() + " [" + dataFile.getSize() + "]");
 
         ModelAndView result = new ModelAndView("result");
-        result.addObject("root", servletContext.getContextPath());
+        result.addObject("root", "/" + request.getHeader("Service") + "/");
         try {
             ContainerMessage containerMessage = loadContainerMessageFromMultipartFile(dataFile);
             ValidationResult validationResult = validationController.validate(containerMessage);
