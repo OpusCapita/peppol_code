@@ -2,6 +2,7 @@ package com.opuscapita.peppol.validator.validations;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
+import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.TestConfig;
@@ -14,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.Arrays;
 
 import static org.junit.Assert.fail;
@@ -22,16 +22,17 @@ import static org.junit.Assert.fail;
 /**
  * Created by bambr on 16.7.10.
  */
+@SuppressWarnings("SpringJavaAutowiredMembersInspection")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)
 public class ValidationControllerTest {
-    String[] documentProfilesToBeTested = {"svefaktura1", /*"austria",*/ "difi"/*, "simpler_invoicing"*/};
+    private String[] documentProfilesToBeTested = {"svefaktura1", /*"austria",*/ "difi"/*, "simpler_invoicing"*/};
 
     @Autowired
-    ValidationController validationController;
+    private ValidationController validationController;
 
     @Autowired
-    DocumentLoader documentLoader;
+    private DocumentLoader documentLoader;
 
     @Before
     public void setUp() throws Exception {
@@ -53,20 +54,19 @@ public class ValidationControllerTest {
     @SuppressWarnings("ConstantConditions")
     private void testDocumentProfileValidation(final String documentProfile) {
         File resourceDir = new File(this.getClass().getResource("/test_data/" + documentProfile + "_files").getFile());
-        String[] dataFiles = resourceDir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith("xml");
-            }
-        });
+        String[] dataFiles = resourceDir.list((dir, name) -> name.toLowerCase().endsWith("xml"));
 
         Arrays.stream(dataFiles).map(fileName -> {
-            System.out.println(fileName);
+            System.out.println(resourceDir + File.separator + fileName);
             return new File(resourceDir, fileName);
         }).filter(fileToCheck -> fileToCheck.isFile() && fileToCheck.exists()).forEach(file -> {
             try {
-                ContainerMessage containerMessage = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
+                ContainerMessage containerMessage = new ContainerMessage("test", file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
                         .setBaseDocument(documentLoader.load(file));
+                if (containerMessage.getBaseDocument() instanceof InvalidDocument) {
+                    return;
+                }
+
                 ValidationResult result = validationController.validate(containerMessage);
                 System.out.println("result: " + result.isPassed() + " on " + file.getName());
                 result.getErrors().forEach(System.out::println);
@@ -74,9 +74,10 @@ public class ValidationControllerTest {
                         || (!result.isPassed() && file.getName().contains("Valid")
                         && !file.getName().contains("invalid"))) {
                     System.out.println("Validation type: " + result.getValidationType());
-                    fail("Failed on expected validation result: " + result.isPassed() + " on " + file.getName()+ " ["+documentProfile+"]");
+                    fail("Failed on expected validation result: " + result.isPassed() + " on " + file.getName()+ " [" + documentProfile + "]");
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 fail("Failed with exception: " + e.getMessage());
             }
         });

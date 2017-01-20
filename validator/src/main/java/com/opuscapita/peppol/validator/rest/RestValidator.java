@@ -4,8 +4,8 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
-import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
 import com.opuscapita.peppol.validator.validations.ValidationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +48,7 @@ public class RestValidator {
             logger.error("Validation failed with error: " + e.getMessage());
             e.printStackTrace();
             validationResult = new ValidationResult(Archetype.INVALID);
-            validationResult.addError(ValidationErrorBuilder.aValidationError().withTitle("I/O failure when validating via ReST")
-                    .withDetails(e.getMessage()).build());
+            validationResult.addError(new ValidationError("I/O failure when validating via ReST").withText(e.getMessage()));
         }
 
 

@@ -3,7 +3,7 @@ package com.opuscapita.peppol.validator.validations.svefaktura1;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.XsdValidator;
-import com.opuscapita.peppol.commons.validation.util.ValidationErrorBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +16,12 @@ import java.util.List;
  */
 @Component
 public class Svefaktura1XsdValidator implements XsdValidator {
+    private final Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
+
     @Autowired
-    Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
+    public Svefaktura1XsdValidator(@NotNull Svefaktura1ValidatorConfig svefaktura1ValidatorConfig) {
+        this.svefaktura1ValidatorConfig = svefaktura1ValidatorConfig;
+    }
 
     @Override
     public List<ValidationError> performXsdValidation(ContainerMessage containerMessage) {
@@ -25,22 +29,22 @@ public class Svefaktura1XsdValidator implements XsdValidator {
             validateAgainstXsd(containerMessage, svefaktura1ValidatorConfig.getSvefaktura1XsdPath());
         } catch (Exception e) {
             return new ArrayList<ValidationError>() {{
-                add(ValidationErrorBuilder.aValidationError().withTitle("XSD validation failure").withDetails(e.getMessage()).build());
+                add(new ValidationError("XSD validation failure").withTest("XSD validation").withText(e.getMessage()));
             }};
 
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
-    public List<ValidationError> performXsdValidation(byte[] data) {
+    List<ValidationError> performXsdValidation(byte[] data) {
         try {
             validateAgainstXsd(data, svefaktura1ValidatorConfig.getSvefaktura1XsdPath());
         } catch (Exception e) {
             return new ArrayList<ValidationError>() {{
-                add(ValidationErrorBuilder.aValidationError().withTitle("XSD validation failure").withDetails(e.getMessage()).build());
+                add(new ValidationError("XSD validation failure").withTest("XSD validation").withText(e.getMessage()));
             }};
 
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }
