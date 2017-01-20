@@ -30,17 +30,13 @@ import static com.opuscapita.peppol.email.controller.EmailController.*;
 @Component
 public class DirectoryChecker {
     private final static Logger logger = LoggerFactory.getLogger(DirectoryChecker.class);
-
+    private final EmailSender emailSender;
     @Value("${peppol.email-notificator.directory}")
     private String directory;
-
     @Value("${peppol.email-notificator.sent.directory:}")
     private String sent;
-
     @Value("${peppol.email-notificator.wait.seconds:120}")
     private int seconds;
-
-    private final EmailSender emailSender;
 
     @Autowired
     public DirectoryChecker(EmailSender emailSender) {
@@ -67,19 +63,20 @@ public class DirectoryChecker {
                 logger.info("E-mail " + baseName + " successfully sent");
 
                 if (StringUtils.isNotBlank(sent)) {
+                    File destination = new File(sent);
                     try {
-                        File destination = new File(sent);
                         FileUtils.moveFileToDirectory(new File(baseName + EXT_TO), destination, true);
                         FileUtils.moveFileToDirectory(new File(baseName + EXT_SUBJECT), destination, false);
                         FileUtils.moveFileToDirectory(new File(baseName + EXT_BODY), destination, false);
                     } catch (Exception e) {
-                        logger.error("Failed to create backup of sent e-mails: ", e);
+                        logger.error("Failed to create backup of sent e-mails in " + destination, e);
+                        throw new IOException("Failed to create backup of sent e-mails in " + destination, e);
                     }
+                } else {
+                    delete(baseName + EXT_TO);
+                    delete(baseName + EXT_SUBJECT);
+                    delete(baseName + EXT_BODY);
                 }
-
-                delete(baseName + EXT_TO);
-                delete(baseName + EXT_SUBJECT);
-                delete(baseName + EXT_BODY);
             }
         }
     }
