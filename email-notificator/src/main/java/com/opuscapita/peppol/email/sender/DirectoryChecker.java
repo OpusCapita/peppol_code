@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -39,7 +42,7 @@ public class DirectoryChecker {
     private int seconds;
 
     @Autowired
-    public DirectoryChecker(EmailSender emailSender) {
+    public DirectoryChecker(@NotNull EmailSender emailSender) {
         this.emailSender = emailSender;
     }
 
@@ -65,9 +68,10 @@ public class DirectoryChecker {
                 if (StringUtils.isNotBlank(sent)) {
                     File destination = new File(sent);
                     try {
-                        FileUtils.moveFileToDirectory(new File(baseName + EXT_TO), destination, true);
-                        FileUtils.moveFileToDirectory(new File(baseName + EXT_SUBJECT), destination, false);
-                        FileUtils.moveFileToDirectory(new File(baseName + EXT_BODY), destination, false);
+                        moveOrAppend(new File(baseName + EXT_TO), destination);
+                        moveOrAppend(new File(baseName + EXT_SUBJECT), destination);
+                        moveOrAppend(new File(baseName + EXT_BODY), destination);
+                        logger.info("Files for " + baseName + " moved to backup directory " + destination);
                     } catch (Exception e) {
                         logger.error("Failed to create backup of sent e-mails in " + destination, e);
                         throw new IOException("Failed to create backup of sent e-mails in " + destination, e);
@@ -81,11 +85,21 @@ public class DirectoryChecker {
         }
     }
 
-    private void delete(String fileName) throws IOException {
+    private void delete(@NotNull String fileName) throws IOException {
         boolean deleted = new File(fileName).delete();
         if (!deleted) {
             logger.error("Failed to delete file: " + fileName);
             throw new IOException("Failed to delete file: " + fileName);
+        }
+    }
+
+    void moveOrAppend(@NotNull File source, @NotNull File directory) throws IOException {
+        File result = new File(directory, source.getName());
+        if (result.exists()) {
+            Files.write(result.toPath(), "\n\n".getBytes(), StandardOpenOption.APPEND);
+            Files.write(result.toPath(), Files.readAllLines(source.toPath()), StandardOpenOption.APPEND);
+        } else {
+            FileUtils.moveFileToDirectory(source, directory, true);
         }
     }
 
