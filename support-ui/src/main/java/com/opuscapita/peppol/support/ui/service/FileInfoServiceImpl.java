@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -94,7 +95,8 @@ public class FileInfoServiceImpl implements FileInfoService {
         messageService.update(message);
         addReprocessInfo(fileInfo);
         fileInfoDAO.update(fileInfo);
-        final Path filePath = Paths.get(outbound ? reprocessOutboundDir : reprocessInboundDir, fileInfo.getFilename());
+        File f = new File(fileInfo.getFilename());
+        final Path filePath = Paths.get(outbound ? reprocessOutboundDir : reprocessInboundDir, f.getName());
         Files.write(filePath, fileData);
     }
 
