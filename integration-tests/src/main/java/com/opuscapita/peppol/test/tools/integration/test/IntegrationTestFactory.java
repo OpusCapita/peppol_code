@@ -31,6 +31,7 @@ public class IntegrationTestFactory {
             logger.error(moduleName + "config is empty !");
             return null;
         }
+        //TODO refactor
         Map<String,?> producersConfiguration = (Map<String, ?>) moduleSettings.get("producers");
         List<Map<String,?>> subscribersConfiguration = (List<Map<String, ?>>) moduleSettings.get("subscribers");
         List<Map<String,?>> consumersConfiguration = (List<Map<String, ?>>) moduleSettings.get("consumers");

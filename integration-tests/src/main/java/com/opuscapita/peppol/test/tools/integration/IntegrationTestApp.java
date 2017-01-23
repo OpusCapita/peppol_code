@@ -2,24 +2,22 @@ package com.opuscapita.peppol.test.tools.integration;
 
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
-import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.status.StatusReporter;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
-import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
+import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestProperties;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageListener;
+import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
+import org.springframework.amqp.rabbit.listener.AbstractRabbitListenerEndpoint;
+import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,7 +36,7 @@ import java.util.concurrent.TimeoutException;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.test.tools.integration"})
-public class IntegrationTestApp {
+public class IntegrationTestApp implements RabbitListenerConfigurer {
     private final static Logger logger = LogManager.getLogger(IntegrationTestApp.class);
     static String configFile;
     static String testResultFileName;
@@ -47,6 +45,12 @@ public class IntegrationTestApp {
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private MessageQueue mq;
+
+    @Autowired
+    private IntegrationTestProperties props;
 
     public static void main(String[] args) {
         logger.info("IntegrationTestApp : Starting!");
@@ -94,7 +98,7 @@ public class IntegrationTestApp {
         };
     }
 
-    @SuppressWarnings("Duplicates")
+    /*@SuppressWarnings("Duplicates")
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
                                         @NotNull MessageQueue messageQueue,
@@ -102,14 +106,14 @@ public class IntegrationTestApp {
         return new AbstractQueueListener(errorHandler, reporter) {
             @SuppressWarnings("ConstantConditions")
             @Override
-            /*message receiver and post processor*/
+            *//*message receiver and post processor*//*
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Got message from MQ like really ???? :" + cm.getFileName());
             }
         };
-    }
+    }*/
 
-    @SuppressWarnings("Duplicates")
+   /* @SuppressWarnings("Duplicates")
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         createIntegrationTestQueue(); //need to prepare queue first
@@ -120,8 +124,9 @@ public class IntegrationTestApp {
         container.setPrefetchCount(10);
         container.setMessageListener(listenerAdapter);
         return container;
-    }
+    }*/
 
+   //todo change this to properties
     private void createIntegrationTestQueue() {
         com.rabbitmq.client.ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
         factory.setHost("rabbitmq");
@@ -141,9 +146,36 @@ public class IntegrationTestApp {
         }
     }
 
-    @Bean
-    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
+    //Rabbit here
+    @Override
+    public void configureRabbitListeners(RabbitListenerEndpointRegistrar registrar) {
+        createIntegrationTestQueue();
+        AbstractRabbitListenerEndpoint listenerEndpoint = new AbstractRabbitListenerEndpoint() {
+            @Override
+            protected MessageListener createMessageListener(MessageListenerContainer container) {
+                return new MessageListener() {
+                    @Override
+                    public void onMessage(Message message) {
+                        //TODO add routing for different consumer queues
+                        System.out.println(message.getMessageProperties().getConsumerQueue());
+                        System.out.println(new String(message.getBody()));
+                    }
+                };
+            }
+        };
+        listenerEndpoint.setQueueNames("validation-integration-test"); //Get them form configuration properties
+        listenerEndpoint.setId("endpoint1"); //You can keep it this way
+        registrar.registerEndpoint(listenerEndpoint);
     }
 
+    /*@Bean
+    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
+        //method
+        return new MessageListenerAdapter(receiver, "processMessage");
+    }*/
+
+    //TODO pass this through all factories
+    public static MessageQueue getMq() {
+        return null;
+    }
 }
