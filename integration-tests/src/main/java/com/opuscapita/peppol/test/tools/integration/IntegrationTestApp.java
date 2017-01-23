@@ -165,8 +165,8 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                     @Override
                     public void onMessage(Message message) {
                         //TODO add routing for different consumer queues
-                        System.out.println(message.getMessageProperties().getConsumerQueue());
-                        System.out.println(new String(message.getBody()));
+                        logger.info(message.getMessageProperties().getConsumerQueue());
+                        logger.info(new String(message.getBody()));
                     }
                 };
             }

@@ -70,7 +70,7 @@ public class MqProducer implements Producer {
             if (dbPreprocessNeeded())
                 executeDbPreprocess();
         } catch (Exception ex1) {
-            logger.info("Error executing DB preprocess query!", ex1);
+            logger.info("Error executing DB preprocess `!", ex1);
             return;
         }
 
