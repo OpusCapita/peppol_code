@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.test.tools.integration.util;
 
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.IntegrationTest;
 import com.opuscapita.peppol.test.tools.integration.test.IntegrationTestFactory;
@@ -19,11 +20,13 @@ import java.util.Map;
 public class IntegrationTestConfigReader {
 
     private final static Logger logger = LogManager.getLogger(IntegrationTestConfigReader.class);
+    private final MessageQueue mq;
     private String configFile;
     private Map<String, Object> genericConfiguration = new HashMap<>();
 
-    public IntegrationTestConfigReader(String configFile) {
+    public IntegrationTestConfigReader(String configFile, MessageQueue staticMq) {
         this.configFile = configFile;
+        this.mq = staticMq;
     }
 
     public IntegrationTestConfig initConfig() {
@@ -56,6 +59,7 @@ public class IntegrationTestConfigReader {
         Map<String, String> queues = (Map<String, String>) configuration.get("queues");
         genericConfiguration.putAll(databases);
         genericConfiguration.putAll(queues);
+        genericConfiguration.put("mq",mq);
         genericConfiguration.put("validation result folder", configuration.get("validation result folder"));
     }
 }

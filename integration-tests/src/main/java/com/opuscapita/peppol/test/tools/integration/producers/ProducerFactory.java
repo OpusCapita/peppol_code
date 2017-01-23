@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.test.tools.integration.producers;
 
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.subtypes.*;
 
 import java.util.Map;
@@ -20,10 +21,11 @@ public class ProducerFactory {
             case "mq producer":
                 String mqKey = properties.get("mq connection");
                 dbKey = properties.get("db connection");
+                MessageQueue mq = (MessageQueue) genericConfiguration.get("mq");
                 dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
                 String dbPreprocessQuery = (dbKey == null) ? null : properties.get("DB preprocess querry");
                 return new MqProducer((Map<String, String>) genericConfiguration.get(mqKey), properties.get("source directory"),
-                        properties.get("destination queue"), dbConnection, dbPreprocessQuery);
+                        properties.get("destination queue"), dbConnection, dbPreprocessQuery, mq);
             case "rest producer":
                 String restResultDirectory = (String) genericConfiguration.get("validation result folder");
                 return new RestProducer(properties.get("source directory"), properties.get("destination link"),properties.get("rest method"), restResultDirectory);

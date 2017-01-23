@@ -6,7 +6,6 @@ import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
-import com.opuscapita.peppol.test.tools.integration.IntegrationTestApp;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -37,13 +36,13 @@ public class MqProducer implements Producer {
     DocumentLoader documentLoader = new DocumentLoader();
     MessageQueue mq;
 
-    public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery) {
+    public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
         this.mqSettings = mqSettings;
         this.sourceDirectory = sourceDirectory;
         this.destinationQueue = destinationQueue;
         this.dbConnection = dbConnection;
         this.dbPreprocessQuery = dbPreprocessQuery;
-        mq = IntegrationTestApp.getMq();
+        this.mq = mq;
     }
 
     /*
@@ -95,6 +94,7 @@ public class MqProducer implements Producer {
                     List<String> endpoints = Arrays.asList(QUEUE_NAME); //new queue for integration tests
                     route.setEndpoints(endpoints);
                     cm.setRoute(route);
+                    logger.info("MqProducer: Sending message via MessageQueue to " + QUEUE_NAME);
                     mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
                     //channel.basicPublish("", destinationQueue, null, cm);
                     logger.info("MqProducer: published to MQ: " + cm.getFileName());

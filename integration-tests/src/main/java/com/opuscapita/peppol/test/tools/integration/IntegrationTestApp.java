@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -49,8 +50,15 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
     @Autowired
     private MessageQueue mq;
 
+    private static MessageQueue staticMq;
+
     @Autowired
     private IntegrationTestProperties props;
+
+    @PostConstruct
+    public void init() {
+        staticMq = mq;
+    }
 
     public static void main(String[] args) {
         logger.info("IntegrationTestApp : Starting!");
@@ -74,7 +82,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         if (new File(configFile).isDirectory())
             configFile = configFile + "\\configuration.yaml";
 
-        IntegrationTestConfig config = new IntegrationTestConfigReader(configFile).initConfig();
+        IntegrationTestConfig config = new IntegrationTestConfigReader(configFile, staticMq).initConfig();
         List<TestResult> testResults = config.runTests();
         //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
         //cleaning temp directory
@@ -146,7 +154,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         }
     }
 
-    //Rabbit here
+    //Rabbit here, configuration comes from application.properties
     @Override
     public void configureRabbitListeners(RabbitListenerEndpointRegistrar registrar) {
         createIntegrationTestQueue();
