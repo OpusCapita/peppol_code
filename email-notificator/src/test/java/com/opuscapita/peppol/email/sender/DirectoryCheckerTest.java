@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.email.sender;
 
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 public class DirectoryCheckerTest {
     private static File directory;
     private EmailSender emailSender = mock(EmailSender.class);
+    private ErrorHandler errorHandler = mock(ErrorHandler.class);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -35,7 +37,7 @@ public class DirectoryCheckerTest {
         new FileOutputStream(source).write("ABC".getBytes());
         source.deleteOnExit();
 
-        new DirectoryChecker(emailSender).moveOrAppend(source, directory);
+        new DirectoryChecker(emailSender, errorHandler).moveOrAppend(source, directory);
 
         File result = new File(directory, original);
         assertTrue(result.exists());
@@ -57,7 +59,7 @@ public class DirectoryCheckerTest {
         new FileOutputStream(result).write("123\n456".getBytes());
         assertTrue(result.exists());
 
-        new DirectoryChecker(emailSender).moveOrAppend(source, directory);
+        new DirectoryChecker(emailSender, errorHandler).moveOrAppend(source, directory);
 
         assertTrue(result.exists());
         List<String> lines = Files.readAllLines(result.toPath());
