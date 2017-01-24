@@ -4,7 +4,6 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.model.Customer;
-import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.email.model.CustomerRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +16,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Prepares files for e-mail sender from received messages.
@@ -31,16 +31,20 @@ public class EmailController {
     public static final String EXT_SUBJECT = ".subj";
     public static final String EXT_BODY = ".body";
     private final static Logger logger = LoggerFactory.getLogger(EmailController.class);
+
     private final CustomerRepository customerRepository;
     private final ErrorHandler errorHandler;
+    private final BodyFormatter bodyFormatter;
 
     @Value("${peppol.email-notificator.directory}")
     private String directory;
 
     @Autowired
-    public EmailController(@NotNull CustomerRepository customerRepository, @Nullable ErrorHandler errorHandler) {
+    public EmailController(@NotNull CustomerRepository customerRepository, @Nullable ErrorHandler errorHandler,
+                           @NotNull BodyFormatter bodyFormatter) {
         this.customerRepository = customerRepository;
         this.errorHandler = errorHandler;
+        this.bodyFormatter = bodyFormatter;
     }
 
     public void processMessage(@NotNull ContainerMessage cm) throws Exception {
@@ -94,49 +98,33 @@ public class EmailController {
             printWriter.print(emails);
         }
 
-        if (cm.getBaseDocument() instanceof InvalidDocument) {
-            storeInvalidDocument(cm, fileName);
-        } else {
-            storeBaseDocument(cm, fileName);
-        }
+        storeDocument(cm, fileName);
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void storeInvalidDocument(ContainerMessage cm, String fileName) throws IOException {
-        InvalidDocument doc = (InvalidDocument) cm.getBaseDocument();
-
-        String subject = StringUtils.isBlank(doc.getReason()) ? "Failed to process document" : doc.getReason();
-        storeSubject(subject, fileName);
-
-        try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_BODY, true)))) {
-            printWriter.print(cm.getBaseDocument().toString());
-        }
-        logger.info("Message about failure with " + cm.getFileName() + " stored");
-    }
-
-    private void storeBaseDocument(ContainerMessage cm, String fileName) throws IOException {
-        if (cm.getValidationResult() == null) {
-            throw new IllegalArgumentException("Document received by email-notificator has no error description: " + cm.getFileName());
-        }
-
-        if (!cm.getValidationResult().isPassed()) {
-            List<ValidationError> errors = cm.getValidationResult().getErrors();
-            if (errors != null && errors.size() > 0) {
-                storeSubject("Validation errors in document", fileName);
-
-                for (ValidationError error : errors) {
-                    try (PrintWriter printWriter =
-                                 new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_BODY, true)))) {
-                        printWriter.println(error.toString());
-                    }
-                }
-
-                logger.info("Message about validation errors in " + cm.getFileName() + " stored");
-                return;
+    private void storeDocument(ContainerMessage cm, String fileName) throws IOException {
+        if (cm.getBaseDocument() instanceof InvalidDocument) {
+            InvalidDocument doc = (InvalidDocument) cm.getBaseDocument();
+            String subject = StringUtils.isBlank(doc.getReason()) ? "Failed to process document" : doc.getReason();
+            storeSubject(subject, fileName);
+        } else {
+            if (cm.getValidationResult() == null) {
+                throw new IllegalArgumentException("Document received by email-notificator has no error description: " + cm.getFileName());
             }
+            storeSubject("Validation errors in document", fileName);
         }
 
-        throw new IllegalArgumentException("Document received by email-notificator has no validation errors: " + cm.getFileName());
+        File body = new File(fileName + EXT_BODY);
+
+        if (!body.exists()) {
+            Files.write(body.toPath(), ("This is an automatically redirected electronic invoice rejection message:\n\n" +
+                    "The following PEPPOL invoice(s) have been rejected by the operator (see Subject).\n\n" +
+                    "Please correct invoice(s) and resend.\n\n" +
+                    "If you have any questions concerning the rejection, please reply directly to this e-mail.").getBytes(),
+                    StandardOpenOption.CREATE);
+        }
+        Files.write(new File(fileName + EXT_BODY).toPath(), bodyFormatter.format(cm).getBytes(), StandardOpenOption.APPEND);
+        logger.info("Message about file " + cm.getFileName() + " stored");
     }
 
     private void storeSubject(String subject, String fileName) throws IOException {
