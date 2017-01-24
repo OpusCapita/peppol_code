@@ -18,7 +18,6 @@ public class MqSubscriber extends Subscriber {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqSubscriber.class);
     private final String queue;
     private Map<String, String> mqSettings;
-    private final String QUEUE_NAME = "integration-validation-test";
     private final Gson gson = ContainerMessage.prepareGson();
 
     public MqSubscriber(Object timeout, Map<String, String> mqSettings, Object queue) {
@@ -31,6 +30,7 @@ public class MqSubscriber extends Subscriber {
     public List<TestResult> run() {
         logger.info("MqSubscriber: started!");
         Connection connection = null;
+        //TODO get messages from MessageListener ?????
         Channel channel = null;
       /*  try {
             ConnectionFactory factory = new ConnectionFactory();
