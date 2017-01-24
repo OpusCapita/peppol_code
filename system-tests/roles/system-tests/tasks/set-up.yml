@@ -1,6 +1,0 @@
----
-- name: git clone and pull test-materials from nocontrol repo
-  git:
-    repo: http://nocontrol.itella.net/gitbucket/git/Peppol/test-materials.git
-    dest: roles/system-tests/files
-...
