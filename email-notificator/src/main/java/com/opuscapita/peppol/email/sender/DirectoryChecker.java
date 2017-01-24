@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.email.sender;
 
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
@@ -34,6 +35,7 @@ import static com.opuscapita.peppol.email.controller.EmailController.*;
 public class DirectoryChecker {
     private final static Logger logger = LoggerFactory.getLogger(DirectoryChecker.class);
     private final EmailSender emailSender;
+    private final ErrorHandler errorHandler;
     @Value("${peppol.email-notificator.directory}")
     private String directory;
     @Value("${peppol.email-notificator.sent.directory:}")
@@ -42,27 +44,52 @@ public class DirectoryChecker {
     private int seconds;
 
     @Autowired
-    public DirectoryChecker(@NotNull EmailSender emailSender) {
+    public DirectoryChecker(@NotNull EmailSender emailSender, @NotNull ErrorHandler errorHandler) {
         this.emailSender = emailSender;
+        this.errorHandler = errorHandler;
     }
 
     @Scheduled(fixedRate = 120_000) // 2 minutes
-    public void checkDirectory() throws IOException {
+    public void checkDirectory() {
         Date earlier = DateUtils.addSeconds(new Date(), seconds);
         AgeFileFilter ageFileFilter = new AgeFileFilter(earlier);
 
-        Iterator<File> files = FileUtils.iterateFiles(new File(directory), ageFileFilter, null);
+        Iterator<File> files;
+        try {
+            files = FileUtils.iterateFiles(new File(directory), ageFileFilter, null);
+        } catch (Exception e) {
+            logger.error("Failed to check e-mail directory", e);
+            errorHandler.reportToServiceNow("", "n/a", e, "Failed to check e-mail directory");
+            return;
+        }
+
         while (files.hasNext()) {
             File next = files.next();
             if (next.getName().endsWith(EXT_TO)) {
                 String baseName = FilenameUtils.removeExtension(next.getAbsolutePath());
+                String customerId = FilenameUtils.getBaseName(baseName);
                 logger.info("Sending an e-mail generated from: " + baseName);
 
-                String to = FileUtils.readFileToString(next, Charset.defaultCharset());
-                List<String> subjects = FileUtils.readLines(new File(baseName + EXT_SUBJECT), Charset.defaultCharset());
-                List<String> body = FileUtils.readLines(new File(baseName + EXT_BODY), Charset.defaultCharset());
-                String subject = normalizeSubjects(subjects);
-                emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
+                String to, subject;
+                List<String> body;
+                try {
+                    to = FileUtils.readFileToString(next, Charset.defaultCharset());
+                    List<String> subjects = FileUtils.readLines(new File(baseName + EXT_SUBJECT), Charset.defaultCharset());
+                    body = FileUtils.readLines(new File(baseName + EXT_BODY), Charset.defaultCharset());
+                    subject = normalizeSubjects(subjects);
+                } catch (Exception e) {
+                    logger.error("Failed to prepare e-mail message", e);
+                    errorHandler.reportToServiceNow("", "n/a", e, "Failed to prepare e-mail message");
+                    return;
+                }
+
+                try {
+                    emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
+                } catch (Exception e) {
+                    logger.error("Failed to send an e-mail to " + to, e);
+                    errorHandler.reportToServiceNow("", customerId, e, "Failed to send an e-mail to " + to);
+                    return;
+                }
                 logger.info("E-mail " + baseName + " successfully sent");
 
                 if (StringUtils.isNotBlank(sent)) {
@@ -74,12 +101,17 @@ public class DirectoryChecker {
                         logger.info("Files for " + baseName + " moved to backup directory " + destination);
                     } catch (Exception e) {
                         logger.error("Failed to create backup of sent e-mails in " + destination, e);
-                        throw new IOException("Failed to create backup of sent e-mails in " + destination, e);
+                        errorHandler.reportToServiceNow("", customerId, e, "Failed to create backup of sent e-mails in " + destination);
                     }
                 } else {
-                    delete(baseName + EXT_TO);
-                    delete(baseName + EXT_SUBJECT);
-                    delete(baseName + EXT_BODY);
+                    try {
+                        delete(baseName + EXT_TO);
+                        delete(baseName + EXT_SUBJECT);
+                        delete(baseName + EXT_BODY);
+                    } catch (Exception e) {
+                        logger.error("Failed to delete e-mail files about " + baseName);
+                        errorHandler.reportToServiceNow("", customerId, e, "Failed to delete e-mail files about " + baseName);
+                    }
                 }
             }
         }
