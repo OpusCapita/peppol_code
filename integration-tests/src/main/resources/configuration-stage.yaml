@@ -12,10 +12,6 @@ configurations:
 tests:
    validation:
      producers:
-       web ui producer:
-         source directory: /etc/resources/validation-xml-test
-         destination link: http://validator:8080/validator/
-         result directory: validation result folder
        mq producer:
          mq connection: mq1
          source directory: /etc/resources/validation-xml-test
