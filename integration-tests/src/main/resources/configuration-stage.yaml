@@ -21,11 +21,6 @@ tests:
          source directory: /etc/resources/validation-xml-test
          destination queue: validation
          endpoint: integration-validation-test
-       rest producer:
-         source directory: /etc/resources/validation-xml-test
-         destination link: http://validator:8080/validator/validate
-         result directory: validation result folder
-         rest method: post
      subscribers:
         - mq subscriber:
             mq connection: mq1
