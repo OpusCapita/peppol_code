@@ -1,0 +1,25 @@
+---
+#- include: set-up.yml
+
+- include: file_to_inbound.yml
+  tags: 
+    - inbound
+    - file_to_inbound
+    - preprocessing
+- include: assert.yml
+  vars: 
+    module_name: preprocessing
+  tags: preprocessing
+- include: assert.yml
+  vars:
+    module_name: internal-routing
+  tags: internal-routing
+- include: assert.yml
+  vars:
+    module_name: validator
+  tags: validator
+#- include: assert.yml
+#  vars:
+#    module_name: transport-to-a2a
+#  tags: transport-to-a2a
+...
