@@ -165,6 +165,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                     @Override
                     public void onMessage(Message message) {
                         //TODO add routing for different consumer queues
+                        logger.info("got message from the MQ!");
                         logger.info(message.getMessageProperties().getConsumerQueue());
                         logger.info(new String(message.getBody()));
                     }
@@ -181,9 +182,4 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         //method
         return new MessageListenerAdapter(receiver, "processMessage");
     }*/
-
-    //TODO pass this through all factories
-    public static MessageQueue getMq() {
-        return null;
-    }
 }
