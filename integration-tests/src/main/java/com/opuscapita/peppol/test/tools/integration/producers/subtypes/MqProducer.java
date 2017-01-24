@@ -27,19 +27,20 @@ import java.util.Properties;
 @SuppressWarnings("Duplicates")
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
+    private final String endpoint;
     private String dbConnection = null;
     private String dbPreprocessQuery = null;
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
-    private final String QUEUE_NAME = "integration-validation-test";
     DocumentLoader documentLoader = new DocumentLoader();
     MessageQueue mq;
 
-    public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
+    public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String endpoint, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
         this.mqSettings = mqSettings;
         this.sourceDirectory = sourceDirectory;
         this.destinationQueue = destinationQueue;
+        this.endpoint = endpoint;
         this.dbConnection = dbConnection;
         this.dbPreprocessQuery = dbPreprocessQuery;
         this.mq = mq;
@@ -91,10 +92,10 @@ public class MqProducer implements Producer {
                     ContainerMessage cm = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
                             .setBaseDocument(documentLoader.load(file));
                     Route route = new Route();
-                    List<String> endpoints = Arrays.asList(QUEUE_NAME); //new queue for integration tests
+                    List<String> endpoints = Arrays.asList(endpoint); //new queue for integration tests
                     route.setEndpoints(endpoints);
                     cm.setRoute(route);
-                    logger.info("MqProducer: Sending message via MessageQueue to " + QUEUE_NAME);
+                    logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue + " -> " + endpoint);
                     mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
                     //channel.basicPublish("", destinationQueue, null, cm);
                     logger.info("MqProducer: published to MQ: " + cm.getFileName());

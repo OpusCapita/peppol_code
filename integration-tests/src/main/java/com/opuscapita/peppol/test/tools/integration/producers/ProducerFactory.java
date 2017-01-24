@@ -25,7 +25,7 @@ public class ProducerFactory {
                 dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
                 String dbPreprocessQuery = (dbKey == null) ? null : properties.get("DB preprocess querry");
                 return new MqProducer((Map<String, String>) genericConfiguration.get(mqKey), properties.get("source directory"),
-                        properties.get("destination queue"), dbConnection, dbPreprocessQuery, mq);
+                        properties.get("destination queue"), properties.get("endpoint"), dbConnection, dbPreprocessQuery, mq);
             case "rest producer":
                 String restResultDirectory = (String) genericConfiguration.get("validation result folder");
                 return new RestProducer(properties.get("source directory"), properties.get("destination link"),properties.get("rest method"), restResultDirectory);
