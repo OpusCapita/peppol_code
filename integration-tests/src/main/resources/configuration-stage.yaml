@@ -15,7 +15,7 @@ tests:
        mq producer:
          mq connection: mq1
          source directory: /etc/resources/validation-xml-test
-         destination queue: validation
+         destination queue: validator
          endpoint: validation-integration-test
      subscribers:
         - mq subscriber:

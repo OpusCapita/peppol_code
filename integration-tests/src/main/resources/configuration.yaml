@@ -19,7 +19,7 @@ tests:
        mq producer:
          mq connection: mq1
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination queue: validation
+         destination queue: validator
          endpoint: validation-integration-test
        rest producer:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
