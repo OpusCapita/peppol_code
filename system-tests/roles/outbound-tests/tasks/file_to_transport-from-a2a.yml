@@ -4,8 +4,10 @@
   copy:
     src: "{{file}}"
     dest: /var/lib/docker/volumes/peppol2.0/data/transport/from-a2a
+- pause:
+    minutes: 3
 - name: find fileName
-  shell: echo "{{file}}" | awk  -F"/" '{print $4}'
+  shell: echo "{{file}}" | grep .xml |xargs -L 1 basename
   register: fileName
 - set_fact: fileName="{{fileName.stdout}}"
 - debug: var=fileName

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<artifacts xmlns="http://difi.no/xsd/vefa/validator/1.0" timestamp="1482154765264">
+<artifacts xmlns="http://difi.no/xsd/vefa/validator/1.0" timestamp="1484600842176">
     <artifact name="eu.peppol.postaward.ver20" filename="eu.peppol.postaward.ver20-d5132d503d71a1f28e9d6f6bbd360c3d7fed839a.asice" timestamp="1480683273240"/>
     <artifact name="eu.peppol.sbdh" filename="eu.peppol.sbdh-d863d41fb01465db624f3b287e930c52c2c934b4.asice" timestamp="1475429113821"/>
-    <artifact name="no.difi.ehf.postaward" filename="no.difi.ehf.postaward-2d6291521099f804fa4bf4b08123b8464990515b.asice" timestamp="1482154765264"/>
+    <artifact name="no.difi.ehf.postaward" filename="no.difi.ehf.postaward-9f48296bd22539ea1802c4a87fa4819ccc2529ca.asice" timestamp="1484600842176"/>
     <artifact name="no.difi.ehf.stylesheet" filename="no.difi.ehf.stylesheet-9c9a4c4944c4857fa0f45af76bc3aa59c95f551a.asice" timestamp="1480683673260"/>
     <artifact name="org.oasis-open.ubl.ver20" filename="org.oasis-open.ubl.ver20-e5f8371423685f23ea02dc4e71e3382c.asice" timestamp="1480682536533"/>
     <artifact name="org.oasis-open.ubl.ver21" filename="org.oasis-open.ubl.ver21-d6122e53220eb8e2732ef0d0c7474b21.asice" timestamp="1480683063730"/>
