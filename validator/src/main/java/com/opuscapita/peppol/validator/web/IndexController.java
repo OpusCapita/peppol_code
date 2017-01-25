@@ -1,11 +1,13 @@
 package com.opuscapita.peppol.validator.web;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.DocumentContentUtils;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
 /**
@@ -31,6 +34,9 @@ public class IndexController {
 
     @Autowired
     DocumentLoader documentLoader;
+
+    @Autowired
+    RabbitTemplate template;
 
 
     public IndexController() {
@@ -53,8 +59,15 @@ public class IndexController {
         result.addObject("root", "/" + request.getHeader("Service") + "/");
         try {
             ContainerMessage containerMessage = loadContainerMessageFromMultipartFile(dataFile);
+            /*try {
+                System.out.println(new String(DocumentContentUtils.getDocumentBytes(containerMessage.getBaseDocument().getDocument())));
+            } catch (TransformerException e) {
+                e.printStackTrace();
+            }*/
             ValidationResult validationResult = validationController.validate(containerMessage);
             System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
+            System.out.println(containerMessage.getBaseDocument().getProfileId());
+            System.out.println(containerMessage.getBaseDocument().getCustomizationId());
             validationResult.getErrors().forEach(error -> System.out.println(error.toString()));
             result.addObject("status", validationResult.isPassed());
             result.addObject("errors", validationResult.getErrors());
