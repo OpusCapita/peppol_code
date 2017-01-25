@@ -47,8 +47,12 @@ public class IndexController {
     @GetMapping("/")
     public ModelAndView index(HttpServletRequest request) {
         ModelAndView result = new ModelAndView("index");
-        result.addObject("root", "/" + request.getHeader("Service") + "/");
+        result.addObject("root", getServiceName(request));
         return result;
+    }
+
+    private String getServiceName(HttpServletRequest request) {
+        return request.getHeader("Service") == null ? "/" : "/" + request.getHeader("Service") + "/";
     }
 
     @PostMapping("/")
@@ -56,7 +60,7 @@ public class IndexController {
         System.out.println("Got: " + dataFile.getOriginalFilename() + " as " + dataFile.getName() + " [" + dataFile.getSize() + "]");
 
         ModelAndView result = new ModelAndView("result");
-        result.addObject("root", "/" + request.getHeader("Service") + "/");
+        result.addObject("root", getServiceName(request));
         try {
             ContainerMessage containerMessage = loadContainerMessageFromMultipartFile(dataFile);
             /*try {
