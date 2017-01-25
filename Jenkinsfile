@@ -19,8 +19,10 @@ def modules = [
 
     [name: 'configuration-server'],
     [name: 'service-discovery'],
-    [name: 'zuul-proxy'],
+    [name: 'zuul-proxy']
+]
 
+def test_modules = [
     [name: 'integration-tests'],
     [name: 'smoke-tests']
 ]
@@ -72,20 +74,21 @@ node {
 
     stage('Build') {
         dir('src') {
-            sh 'bash gradlew clean'
-            assemble(modules)
+            sh 'bash gradlew clean build'
+            assemble(test_modules)
         }
     }
 
     stage('Unit Test') {
         dir('src') {
-            check(modules)
+            sh 'bash gradlew check'
+            check(test_modules)
         }
     }
 
     stage('Package') {
         dir('src') {
-            dockerBuild(modules, tag)
+            dockerBuild(modules + test_modules, tag)
         }
     }
 
@@ -96,13 +99,13 @@ node {
             //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
         }
         def tags = ['latest', releaseVersion]
-        dockerPush(modules, tags)
+        dockerPush(modules + test_modules, tags)
     }
 
     milestone label: 'staging'
     stage('Deploy Stage') {
         dir('infra/ap2/ansible') {
-			ansiblePlaybook(
+            ansiblePlaybook(
                 'peppol-components.yml', 'stage.hosts', 'ansible-sudo',
                 this.&handleFailedStageDeployment
             )
@@ -112,7 +115,7 @@ node {
     milestone label: 'testing'
     stage('Smoke Test') {
         dir('infra/ap2/ansible') {
-			ansiblePlaybook(
+            ansiblePlaybook(
                 'smoke-tests.yml', 'stage.hosts', 'ansible-sudo',
                 this.&handleFailedSmokeTests
             )
@@ -122,7 +125,7 @@ node {
 
     /* stage('Integration Test') {
         dir('infra/ap2/ansible') {
-			ansiblePlaybook(
+            ansiblePlaybook(
                 'integration-tests.yml', 'stage.hosts', 'ansible-sudo',
                 this.&handleFailedIntegrationTests
             )
@@ -137,11 +140,21 @@ node {
  */
 
 def assemble(modules) {
-    sh 'bash gradlew assemble'
+    for (i=0; i<modules.size(); i++) {
+        def module = modules[i]
+        dir (module.name) {
+            sh "bash ../gradlew assemble"
+        }
+    }
 }
 
 def check(modules) {
-    sh 'bash gradlew check'
+    for (i=0; i<modules.size(); i++) {
+        def module = modules[i]
+        dir (module.name) {
+            sh "bash ../gradlew check"
+        }
+    }
 }
 
 def dockerBuild(modules, tag) {
