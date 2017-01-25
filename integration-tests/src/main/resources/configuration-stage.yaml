@@ -12,11 +12,11 @@ configurations:
 tests:
    validation:
      producers:
-       mq producer:
-         mq connection: mq1
+       rest producer:
          source directory: /etc/resources/validation-xml-test
-         destination queue: validator
-         endpoint: validation-integration-test
+         destination link: http://validator:8080/validator/validate
+         result directory: validation result folder
+         rest method: post
      subscribers:
         - mq subscriber:
             mq connection: mq1
