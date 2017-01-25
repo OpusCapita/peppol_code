@@ -9,7 +9,6 @@ import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
@@ -76,7 +75,7 @@ public class MqProducer implements Producer {
         }
 
         try {
-            ConnectionFactory factory = new ConnectionFactory();
+           /* ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(mqSettings.get("host"));
             factory.setPort((int) (Object) mqSettings.get("port"));
             factory.setUsername(mqSettings.get("username"));
@@ -84,7 +83,7 @@ public class MqProducer implements Producer {
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
             channel = connection.createChannel();
-            logger.info("Created channel for MQ!");
+            logger.info("Created channel for MQ!");*/
             //channel.queueDeclare(destinationQueue, true, false, false, null); //validator queue
             //channel.queueDeclare(QUEUE_NAME, false, false, false, null);       //integration-tests queue
             for (File file : directory.listFiles()) {
