@@ -31,6 +31,7 @@ public class IntegrationTestConfigReader {
 
     public IntegrationTestConfig initConfig() {
         Yaml yaml = new Yaml();
+        logger.info("IntegrationTestConfigReader: config loaded: " + configFile);
         IntegrationTestConfig testConfig = new IntegrationTestConfig();
         try{
             Map<String, ArrayList> yamlParser  = (Map<String, ArrayList>) yaml
