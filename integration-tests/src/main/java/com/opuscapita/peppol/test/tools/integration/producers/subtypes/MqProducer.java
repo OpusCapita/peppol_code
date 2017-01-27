@@ -121,6 +121,7 @@ public class MqProducer implements Producer {
         props.put("serverTimezone", "UTC");
         try {
             java.sql.Connection conn = DriverManager.getConnection(dbConnection, props);
+            logger.info("MqProducer: db connection established!");
             PreparedStatement statement = conn.prepareStatement(dbPreprocessQuery);
             statement.executeUpdate();
         } catch (SQLException e) {
