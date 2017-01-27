@@ -124,7 +124,7 @@ public class MqProducer implements Producer {
             PreparedStatement statement = conn.prepareStatement(dbPreprocessQuery);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("MqProducer: unable to run DB preprocess query: " + e);
         }
     }
 

@@ -18,4 +18,4 @@ RUN \
 WORKDIR "${INTEGRATION_TESTS_HOME}"
 ADD ["build/libs/integration-tests.jar", "integration-tests.jar"]
 
-CMD java -jar integration-tests.jar  /etc/resources/configuration-stage.yaml /etc/integration-test.result /etc/resources/html/summary.ftl /etc/tmp/
+CMD java -jar integration-tests.jar  /etc/resources/configuration-one-module.yaml /etc/integration-test.result /etc/resources/html/summary.ftl /etc/tmp/
