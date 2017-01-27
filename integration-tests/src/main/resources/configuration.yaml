@@ -55,7 +55,7 @@ tests:
      producers:
        mq producer:
          mq connection: mq1
-         destination queue: events-persistence
+         destination queue: eventing
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test
          db connection: db1
          endpoint: events-persistence-integration-test

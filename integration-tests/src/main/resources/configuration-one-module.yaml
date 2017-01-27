@@ -14,11 +14,11 @@ tests:
         producers:
           mq producer:
             mq connection: mq1
-            destination queue: events-persistence
+            destination queue: eventing
             source directory: /etc/resources/events-persistence-test
             db connection: db1
             endpoint: events-persistence-integration-test
-            DB preprocess querry: delete from messages where invoice_number='60445647'; delete from access_points where ap_id='123456' and ap_name='TEST'
+            DB preprocess querry: delete from messages where invoice_number='12988664'; delete from access_points where ap_id='123456' and ap_name='TEST'
         subscribers:
           - mq subscriber:
              mq connection: mq1
@@ -34,7 +34,7 @@ tests:
               timeout: 500
           - db subscriber:
               db connection: db1
-              query: select count(*) from messages where invoice_number="60445647"
+              query: select count(*) from messages where invoice_number="12988664"
               consumers: 4
           - db subscriber:
               db connection: db1
