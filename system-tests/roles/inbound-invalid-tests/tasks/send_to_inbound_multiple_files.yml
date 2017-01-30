@@ -1,7 +1,11 @@
 ---
-- include: file_to_transport-from-a2a.yml
+#- include: set-up.yml
 
-- include: transport_assert.yml
+- include: file_to_inbound.yml
+  tags: 
+    - inbound
+    - file_to_inbound
+    - preprocessing
 - include: assert.yml
   vars: 
     module_name: preprocessing
@@ -10,12 +14,11 @@
   vars:
     module_name: internal-routing
   tags: internal-routing
+- pause:
+    seconds: 10
+- include: validator_assert.yml
 - include: assert.yml
   vars:
-    module_name: validator
-  tags: validator
-- include: assert.yml
-  vars:
-    module_name: outbound
-  tags: outbound
+    module_name: email-notificator
+
 ...

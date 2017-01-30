@@ -1,0 +1,15 @@
+---
+#File_list.yml#
+
+- include: send_to_inbound_multiple_files.yml
+  vars:
+    file: "{{item}}"
+  with_fileglob:
+    - /tmp/validation_test_suite/invalid/*
+    - /tmp/svefaktura_1.0/SBDH_wrapped_examples/Invalid/*
+    - /tmp/EHF_2.0.7/Invalid/*
+    - /tmp/svefaktura_1.0/invalid/*
+    - /tmp/Austrian_documents/invalid/*
+    - /tmp/Netherlands_documents/SBDH_wrapped/invalid/*
+...
+

@@ -2,6 +2,9 @@
 - name: Copy file to inbound
   shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
   register: inbound_output
+- set_fact: file="{{file}}"
+- debug: var=file
+
 - pause:
     seconds: 10
 - name: find transmissionId

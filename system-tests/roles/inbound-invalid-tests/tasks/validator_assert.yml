@@ -1,0 +1,14 @@
+---
+#(not completed yet) validator_assert.yml should search for "Validation failed" and transmissionid in validator logs, fail if not found.
+
+- name: Show validator log
+  shell: docker logs validator
+  register: log
+
+- name: Validation should fail for "{{ transmissionId }}" but pass this test
+  assert:
+    that:
+      - "transmissionId in log.stdout"
+    msg: "transmissionId should be found in validator logs for file '{{ file }}'"
+...
+
