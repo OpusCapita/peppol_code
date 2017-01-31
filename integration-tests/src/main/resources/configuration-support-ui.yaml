@@ -13,8 +13,8 @@ tests:
    support-ui:
          producers:
            file producer:
-             source directory: etc/resources/support-ui-test/d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
-             destination directory: peppol/data/storage/support-ui-test.xml
+             source directory: /etc/resources/support-ui-test/d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
+             destination directory: /peppol/data/storage/support-ui-test.xml
          subscribers:
             - file subscriber:
                consumers: 11
