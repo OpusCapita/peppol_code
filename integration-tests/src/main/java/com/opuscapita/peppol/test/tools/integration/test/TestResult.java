@@ -31,4 +31,9 @@ public class TestResult {
     public boolean isPassed() {
         return passed;
     }
+
+    @Override
+    public String toString() {
+        return "Test: " + name + " " + passed + " Details: " + details;
+    }
 }
