@@ -7,6 +7,7 @@ import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfi
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestProperties;
+import com.opuscapita.peppol.test.tools.integration.util.LoggingResultBuilder;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.commons.io.FileUtils;
@@ -84,6 +85,8 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
 
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile, staticMq).initConfig();
         List<TestResult> testResults = config.runTests();
+        new LoggingResultBuilder().processResult(testResults); //otputs the result to console
+
         //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
         //cleaning temp directory
         if(tempDir.startsWith("C")) { //hack to clean windows directory, no need to clean docker directory however
