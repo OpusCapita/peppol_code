@@ -20,6 +20,7 @@ public class FileSubscriber extends Subscriber {
         this.sourceFile = (String) sourceFile;
     }
 
+    //peppol/data/storage/ for the support ui on stage
     @Override
     public List<TestResult> run() {
         File file = null;
