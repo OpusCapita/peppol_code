@@ -53,13 +53,14 @@ public class PreprocessingController {
 
             String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
             logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
+            cm.setBaseDocument(document).setFileName(longTerm);
 
             // this piece reports file with the previous stage name, either gateway or inbound
             if (statusReporter != null) {
                 statusReporter.report(cm);
             }
 
-            return cm.setBaseDocument(document).setFileName(longTerm);
+            return cm;
         } catch (Exception e) {
             logger.warn("Failed to process file: " + e.getMessage());
             return cm.setBaseDocument(new InvalidDocument("Failed to process input file", e));
