@@ -15,6 +15,8 @@ public class LoggingResultBuilder implements ResultBuilder {
 
     @Override
     public void processResult(List<TestResult> checkResults) {
+        if(checkResults == null  || checkResults.isEmpty())
+            logger.info("LoggingResultBuilder: empty test results! ");
         for (TestResult result : checkResults) {
             if (!result.isPassed())
                 logger.warn(result.toString());

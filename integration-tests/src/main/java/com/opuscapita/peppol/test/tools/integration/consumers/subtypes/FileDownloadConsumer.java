@@ -41,6 +41,7 @@ public class FileDownloadConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
+        logger.info("FileDownloadConsumer: starting!");
         TestResult testResult = null;
         CloseableHttpClient httpclient = HttpClients.custom().build();
         File consumableFile = new File((String)consumable);
