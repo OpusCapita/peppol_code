@@ -38,8 +38,10 @@ public class DirectoryChecker {
     private final ErrorHandler errorHandler;
     @Value("${peppol.email-notificator.directory}")
     private String directory;
-    @Value("${peppol.email-notificator.sent.directory:}")
+    @Value("${peppol.email-notificator.sent.directory}")
     private String sent;
+    @Value("${peppol.email-notificator.failed.directory}")
+    private String failed;
     @Value("${peppol.email-notificator.wait.seconds:120}")
     private int seconds;
 
@@ -85,34 +87,41 @@ public class DirectoryChecker {
 
                 try {
                     emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
+                    logger.info("E-mail " + baseName + " successfully sent");
                 } catch (Exception e) {
                     logger.error("Failed to send an e-mail to " + to, e);
                     errorHandler.reportToServiceNow("", customerId, e, "Failed to send an e-mail to " + to);
+
+                    backupOrDelete(baseName, failed, customerId);
                     return;
                 }
-                logger.info("E-mail " + baseName + " successfully sent");
 
-                if (StringUtils.isNotBlank(sent)) {
-                    File destination = new File(sent);
-                    try {
-                        moveOrAppend(new File(baseName + EXT_TO), destination);
-                        moveOrAppend(new File(baseName + EXT_SUBJECT), destination);
-                        moveOrAppend(new File(baseName + EXT_BODY), destination);
-                        logger.info("Files for " + baseName + " moved to backup directory " + destination);
-                    } catch (Exception e) {
-                        logger.error("Failed to create backup of sent e-mails in " + destination, e);
-                        errorHandler.reportToServiceNow("", customerId, e, "Failed to create backup of sent e-mails in " + destination);
-                    }
-                } else {
-                    try {
-                        delete(baseName + EXT_TO);
-                        delete(baseName + EXT_SUBJECT);
-                        delete(baseName + EXT_BODY);
-                    } catch (Exception e) {
-                        logger.error("Failed to delete e-mail files about " + baseName);
-                        errorHandler.reportToServiceNow("", customerId, e, "Failed to delete e-mail files about " + baseName);
-                    }
-                }
+                backupOrDelete(baseName, sent, customerId);
+            }
+        }
+    }
+
+    private void backupOrDelete(@NotNull String baseName, @NotNull String directory, @NotNull String customerId) {
+        if (StringUtils.isBlank(directory)) {
+            try {
+                delete(baseName + EXT_TO);
+                delete(baseName + EXT_SUBJECT);
+                delete(baseName + EXT_BODY);
+                logger.info("Deleted processed files related to " + baseName);
+            } catch (Exception e) {
+                logger.error("Failed to delete e-mail files about " + baseName);
+                errorHandler.reportToServiceNow("", customerId, e, "Failed to delete e-mail files about " + baseName);
+            }
+        } else {
+            try {
+                File destination = new File(directory);
+                moveOrAppend(new File(baseName + EXT_TO), destination);
+                moveOrAppend(new File(baseName + EXT_SUBJECT), destination);
+                moveOrAppend(new File(baseName + EXT_BODY), destination);
+                logger.info("Files for " + baseName + " moved to directory " + destination);
+            } catch (Exception e) {
+                logger.error("Failed to move e-mails to " + directory, e);
+                errorHandler.reportToServiceNow("", customerId, e, "Failed to move e-mails to " + directory);
             }
         }
     }
