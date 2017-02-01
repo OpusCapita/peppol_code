@@ -67,3 +67,21 @@ tests:
              name: correlationID start with invoice file name for SNC tickets- positive test
              id: 10
              expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8
+tests:
+   support-ui:
+         producers:
+           file producer:
+             source directory: /etc/resources/support-ui-test/d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
+             destination directory: /peppol/data/storage/support-ui-test.xml
+         subscribers:
+            - file subscriber:
+               consumers: 11
+               timeout: 500
+               source file: /peppol/data/storage/support-ui-test.xml
+         consumers:
+            - file download test:
+               id: 11
+               name: support ui download test
+               action: download
+               link: http://support-ui:8080/rest/outbound/download/
+               expected value: true
