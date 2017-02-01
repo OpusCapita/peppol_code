@@ -12,7 +12,7 @@ ENV JAVA_OPTS "\
     -Dhttps.proxyHost=10.202.9.33 \
     -Dhttps.proxyPort=8080 \
     -Dhttp.nonProxyHosts=\"*.local|10.164.1.146\" \
-    -Dums.server.url=https://82.199.250.23/itella-ums-server/services/BasicUms "
+    -Dums.server.url=https://82.199.250.23/itella-ums-server/services/BasicUms"
 
 WORKDIR "${CATALINA_HOME}"
 ADD ["build/libs/support-ui.war", "webapps/ROOT.war"]
