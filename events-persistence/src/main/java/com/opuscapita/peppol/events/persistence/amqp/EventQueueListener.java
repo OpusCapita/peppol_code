@@ -34,6 +34,7 @@ public class EventQueueListener {
     @SuppressWarnings("WeakerAccess")
     public synchronized void receiveMessage(String data) {
         String message = data.replace("\"urn\"", "urn"); //Sort of hack
+        message = message.replaceAll("\\\\u003d", "=");  //Workaround for escaped = sign.
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(message);
