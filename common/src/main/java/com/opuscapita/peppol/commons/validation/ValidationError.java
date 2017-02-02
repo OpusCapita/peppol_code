@@ -85,7 +85,7 @@ public class ValidationError implements Serializable {
         result += (flag == null) ? "" : " [" + flag + "] ";
         result += (location == null) ? "" : " at " + location;
         result += (identifier == null) ? "" : " (" + identifier.trim() + ")";
-        result += (text == null) ? "" : "\n" + text.trim();
+        result += (text == null) ? "" : "; " + text.trim();
         return result;
     }
 

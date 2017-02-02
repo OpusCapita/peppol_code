@@ -34,9 +34,15 @@ public class BodyFormatter {
 
     private String formatValidationErrors(ContainerMessage cm) {
         String result = "";
-        if (cm.getValidationResult() != null && cm.getValidationResult().getErrors() != null) {
-            for (ValidationError error : cm.getValidationResult().getErrors()) {
-                result += "\n" + error.toString();
+        if (cm.getValidationResult() != null && cm.getValidationResult().getErrors() != null && cm.getValidationResult().getErrors().size() > 0) {
+            if (cm.getValidationResult().getErrors().size() == 1) {
+                result += "\n- ERROR               : ";
+                result += cm.getValidationResult().getErrors().get(0).toString();
+            } else {
+                result += "\n- ERRORS              : ";
+                for (ValidationError error : cm.getValidationResult().getErrors()) {
+                    result += "\n\t" + error.toString();
+                }
             }
         } else {
             result += "\n- ERROR               : Unspecified validation error";
