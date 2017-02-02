@@ -7,3 +7,8 @@ eureka:
     fetchRegistry: false
     server:
       waitTimeInMsWhenSyncEmpty: 0
+
+eureka:
+  server:
+    renewalPercentThreshold: 0.49
+    enableSelfPreservation: false

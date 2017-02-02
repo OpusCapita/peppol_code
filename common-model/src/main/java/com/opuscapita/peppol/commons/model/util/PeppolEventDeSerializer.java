@@ -21,6 +21,6 @@ public class PeppolEventDeSerializer implements JsonDeserializer<PeppolEvent> {
         if (!rawObject.has("senderName")) {
             rawObject.addProperty("senderName", "n/a");
         }
-        return new Gson().fromJson(rawObject, PeppolEvent.class);
+        return new GsonBuilder().disableHtmlEscaping().create().fromJson(rawObject, PeppolEvent.class);
     }
 }

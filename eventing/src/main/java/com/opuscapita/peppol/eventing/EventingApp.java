@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.eventing;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -55,7 +56,7 @@ public class EventingApp {
 
     @Bean
     public Gson gson() {
-        return new Gson();
+        return new GsonBuilder().disableHtmlEscaping().create();
     }
 
     @Bean
