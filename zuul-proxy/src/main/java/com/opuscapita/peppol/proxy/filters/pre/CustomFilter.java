@@ -4,15 +4,21 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.opuscapita.peppol.proxy.filters.pre.util.RequestUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
+
 /**
  * Created by bambr on 16.28.12.
  */
 public class CustomFilter extends ZuulFilter {
+    private final static Logger logger = LoggerFactory.getLogger(CustomFilter.class);
+    private static final String HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
     private final FilterProperties filterProperties;
 
     public CustomFilter(FilterProperties filterProperties) {
@@ -50,8 +56,22 @@ public class CustomFilter extends ZuulFilter {
     }
 
     protected boolean isNotAllowed(HttpServletRequest request) {
-        String remoteAddr = request.getRemoteAddr();
         String requestedService = RequestUtils.extractRequestedService(request);
+        String remoteAddr = request.getRemoteAddr();
+        logger.debug("remoteAddr: " + remoteAddr);
+
+        String forwardedFor = "";
+        // when working behind a proxy we get the original ip in X-Forwarded-For
+        // while remoteAddr is the ip of the proxy itself
+        if (request.getHeaders(HEADER_X_FORWARDED_FOR) != null && request.getHeaders(HEADER_X_FORWARDED_FOR).hasMoreElements()) {
+            forwardedFor = request.getHeaders(HEADER_X_FORWARDED_FOR).nextElement();
+        }
+        logger.debug("forwardedFor: " + forwardedFor);
+
+        if (!forwardedFor.isEmpty()) {
+           remoteAddr = forwardedFor;
+        }
+
         System.out.println("Checking against address: "+remoteAddr+" and service: "+ requestedService);
         if (requestedService.isEmpty()) {
             requestedService = "/";
