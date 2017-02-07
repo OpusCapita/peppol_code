@@ -7,6 +7,8 @@ import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
+import com.opuscapita.peppol.commons.mq.MqProperties;
+import com.opuscapita.peppol.commons.mq.RabbitMqStandalone;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -74,7 +76,12 @@ public class MqProducer implements Producer {
             logger.info("Error executing DB preprocess `!", ex1);
             return;
         }
-
+        mq = new RabbitMqStandalone(new MqProperties(
+               "validator",
+                "8083",
+                "guest",
+                "guest")
+        );
         try {
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
