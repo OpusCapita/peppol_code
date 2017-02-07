@@ -26,6 +26,7 @@ node {
         dir('infra') {
             // get latest version of infrastructure
             git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
+            sh 'make requirements'
         }
 
     }
