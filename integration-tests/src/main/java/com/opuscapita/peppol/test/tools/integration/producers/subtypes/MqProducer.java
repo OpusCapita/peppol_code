@@ -77,7 +77,7 @@ public class MqProducer implements Producer {
             return;
         }
         mq = new RabbitMqStandalone(new MqProperties(
-               "validator",
+               "rabbitmq",
                 "5672",
                 "guest",
                 "guest")
