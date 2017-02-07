@@ -76,7 +76,11 @@ public class TestSender extends UblSender {
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 
-            return transmitter.transmit(transmissionRequest);
+            logger.info("Sending message " + cm.getFileName() + " to " + testRecipient);
+            TransmissionResponse result = transmitter.transmit(transmissionRequest);
+            logger.info("Delivered message " + cm.getFileName() + " to URL " + result.getURL() + " with transmission ID: " +
+                    result.getTransmissionId());
+            return result;
         }
     }
 
