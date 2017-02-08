@@ -1,15 +1,8 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
@@ -51,7 +44,7 @@ public class RestProducer implements Producer {
         }
         for (File file : directory.listFiles()) {
             try {
-                MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+             /*   MultipartEntityBuilder builder = MultipartEntityBuilder.create();
                 HttpPost post = new HttpPost(link);
                 HttpClient client = new DefaultHttpClient();
                 builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -62,7 +55,7 @@ public class RestProducer implements Producer {
 
                 post.setEntity(entity);
                 HttpResponse response = client.execute(post);
-                handleResponse(response);
+                handleResponse(response);*/
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

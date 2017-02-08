@@ -14,7 +14,6 @@ import org.apache.log4j.LogManager;
 
 import java.io.*;
 
-import static com.codeborne.selenide.Selenide.close;
 
 /**
  * Created by gamanse1 on 2016.11.17..
@@ -71,7 +70,7 @@ public class FileDownloadConsumer extends Consumer {
             br.close();
         } catch (Throwable th) {
             logger.error("Error running web ui producer: ", th);
-            close();
+          //  close();
             testResult = new TestResult(name, false, "Failed to execute FileDownloadConsumer: " + th);
         }
         finally {
