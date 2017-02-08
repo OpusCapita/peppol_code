@@ -170,7 +170,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                         //TODO add routing for different consumer queues
                         logger.info("got message from the MQ!");
                         logger.info(message.getMessageProperties().getConsumerQueue());
-                        logger.info(new String(message.getBody()));
+                        //logger.info(new String(message.getBody()));
                     }
                 };
             }
