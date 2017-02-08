@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,9 @@ import java.io.IOException;
  */
 @RestController("/rest")
 public class RestValidator {
+    private final static Logger logger = LoggerFactory.getLogger(RestValidator.class);
     private final ValidationController validationController;
     private final DocumentLoader documentLoader;
-
-    private final static Logger logger = LoggerFactory.getLogger(RestValidator.class);
 
     @Autowired
     public RestValidator(ValidationController validationController, DocumentLoader documentLoader) {
@@ -49,6 +49,9 @@ public class RestValidator {
             e.printStackTrace();
             validationResult = new ValidationResult(Archetype.INVALID);
             validationResult.addError(new ValidationError("I/O failure when validating via ReST").withText(e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            validationResult = new ValidationResult(Archetype.INVALID);
+            validationResult.addError(new ValidationError("Validation technical failure").withText(StringEscapeUtils.escapeHtml(e.getCause().getMessage())));
         }
 
 
