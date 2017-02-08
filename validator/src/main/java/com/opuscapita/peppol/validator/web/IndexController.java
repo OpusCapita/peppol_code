@@ -3,8 +3,10 @@ package com.opuscapita.peppol.validator.web;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Daniil on 03.05.2016.
@@ -76,8 +79,13 @@ public class IndexController {
             validationResult.getErrors().forEach(error -> System.out.println(error.toString()));
             result.addObject("status", validationResult.isPassed());
             result.addObject("errors", validationResult.getErrors());
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
+            ValidationError exceptionalError = new ValidationError().withFlag("FATAL").withTitle(e.getMessage()).withText(StringEscapeUtils.escapeHtml(e.getCause().getMessage()));
+            result.addObject("status", false);
+            result.addObject("errors", new ArrayList<ValidationError>() {{
+                add(exceptionalError);
+            }});
         }
         return result;
     }

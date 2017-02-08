@@ -94,7 +94,8 @@ public class ValidationController {
     @SuppressWarnings("ConstantConditions")
     private Document getRootDocument(@NotNull ContainerMessage containerMessage) throws ParserConfigurationException {
         if (containerMessage.getBaseDocument() instanceof InvalidDocument) {
-            throw new IllegalArgumentException("Unable to validate invalid documents");
+            InvalidDocument invalidDocument = (InvalidDocument) containerMessage.getBaseDocument();
+            throw new IllegalArgumentException("Unable to validate invalid documents", invalidDocument.getException());
         }
         if (containerMessage.getBaseDocument().getRootNode() == null) {
             throw new IllegalArgumentException("No root node in the document");
