@@ -74,12 +74,7 @@ public class MqProducer implements Producer {
             logger.info("Error executing DB preprocess `!", ex1);
             return;
         }
-       /* mq = new RabbitMqStandalone(new MqProperties(
-               "rabbitmq",
-                "5672",
-                "guest",
-                "guest")
-        );*/
+
         try {
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
