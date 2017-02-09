@@ -1,8 +1,6 @@
 package com.opuscapita.peppol.commons.container.document;
 
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
-import com.opuscapita.peppol.commons.container.document.impl.SveFaktura1Document;
-import com.opuscapita.peppol.commons.container.document.impl.UblDocument;
+import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import com.opuscapita.peppol.commons.container.document.test.TestTypeOne;
 import com.opuscapita.peppol.commons.container.document.test.TestTypeTwo;
 import org.junit.Test;
@@ -40,11 +38,7 @@ public class DocumentLoaderTest {
         // checkTypes(list, UblDocument.class);
 
         list = Arrays.asList(
-                "/valid/ehf.xml",
-                "/valid/ehf_2.0_bii4_no.xml",
-                "/valid/ehf_2.0_bii5_no.xml",
                 "/valid/valid.german.xml",
-                "/valid/valid_sbdh_2.1.xml",
                 "/valid/austria_files/Valid1.xml",
                 "/valid/austria_files/Valid2.xml",
                 "/valid/austria_files/Valid3.xml",
@@ -68,27 +62,35 @@ public class DocumentLoaderTest {
                 "/invalid/simpler_invoicing_files/invalids4.xml",
                 "/invalid/simpler_invoicing_files/invalids5.xml"
         );
-        checkTypes(list, UblDocument.class);
+        checkTypes(list, Archetype.PEPPOL_BIS);
+
+        list = Arrays.asList(
+                "/valid/ehf.xml",
+                "/valid/valid_sbdh_2.1.xml",
+                "/valid/ehf_2.0_bii4_no.xml",
+                "/valid/ehf_2.0_bii5_no.xml"
+        );
+        checkTypes(list, Archetype.EHF);
 
         list = Arrays.asList(
                 "/valid/svefaktura1.xml",
                 "/valid/sv1_with_attachment.xml"
         );
-        checkTypes(list, SveFaktura1Document.class);
+        checkTypes(list, Archetype.SVEFAKTURA1);
 
         list = Arrays.asList(
                 "/invalid/not_xml.txt",
                 "/invalid/random.xml"
         );
-        checkTypes(list, InvalidDocument.class);
+        checkTypes(list, Archetype.INVALID);
 
     }
 
-    private void checkTypes(List<String> list, Class<? extends BaseDocument> documentClass) throws Exception {
+    private void checkTypes(List<String> list, Archetype archetype) throws Exception {
         for (String fileName : list) {
             try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream(fileName)) {
                 BaseDocument document = loader.load(inputStream, "test");
-                assertTrue("Failed for file " + fileName, document.getClass() == documentClass);
+                assertEquals("Failed for file: " + fileName, archetype, document.getArchetype());
             }
         }
     }

@@ -17,11 +17,10 @@ import org.w3c.dom.Node;
  */
 @PeppolDocument("UBL document")
 public class UblDocument extends BaseDocument {
+    protected static final String SBDH_ID = "urn:oasis:names:specification:ubl:schema:xsd:(Invoice|CreditNote)-2";
+    protected static final String PROFILE_ID_MASK = "urn:www\\.cenbii\\.eu:profile:bii(04|05|xx):ver[1-2]\\.0";
+    protected static final String EHF_CUSTOMIZATION = "extended:urn:www.difi.no:ehf";
     private static final Logger logger = LoggerFactory.getLogger(UblDocument.class);
-
-    private static final String SBDH_ID = "urn:oasis:names:specification:ubl:schema:xsd:(Invoice|CreditNote)-2";
-    private static final String PROFILE_ID_MASK = "urn:www\\.cenbii\\.eu:profile:bii(04|05|xx):ver[1-2]\\.0";
-
     private UblDocumentType type;
 
     @Override
@@ -63,6 +62,14 @@ public class UblDocument extends BaseDocument {
             }
         }
 
+        String customizationId = DocumentUtils.readCustomizationId(document);
+        if (customizationId == null) {
+            return false;
+        }
+        if (customizationId.contains(EHF_CUSTOMIZATION)) {
+            return false;
+        }
+
         Node root = DocumentUtils.getRootNode(document);
         if (root == null) {
             return false;
@@ -77,7 +84,7 @@ public class UblDocument extends BaseDocument {
     @NotNull
     @Override
     public Archetype getArchetype() {
-        return Archetype.UBL;
+        return Archetype.PEPPOL_BIS;
     }
 
     @NotNull
@@ -86,7 +93,7 @@ public class UblDocument extends BaseDocument {
         return type.getTag();
     }
 
-    private UblDocumentType recognizeType(String rootName) {
+    protected UblDocumentType recognizeType(@NotNull String rootName) {
         for (int i = 0; i < UblDocumentType.values().length; i++) {
             UblDocumentType current = UblDocumentType.values()[i];
             String currentName = current.getTag();

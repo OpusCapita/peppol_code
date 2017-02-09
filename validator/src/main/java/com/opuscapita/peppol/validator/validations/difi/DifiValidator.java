@@ -6,18 +6,14 @@ import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import no.difi.vefa.validator.DifiValidatorBuilder;
 import no.difi.vefa.validator.Validator;
-import no.difi.vefa.validator.ValidatorBuilder;
-import no.difi.vefa.validator.api.Properties;
 import no.difi.vefa.validator.api.Validation;
 import no.difi.vefa.validator.api.ValidatorException;
-import no.difi.vefa.validator.properties.SimpleProperties;
 import no.difi.vefa.validator.source.SimpleDirectorySource;
 import no.difi.xsd.vefa.validator._1.AssertionType;
 import no.difi.xsd.vefa.validator._1.FlagType;
 import no.difi.xsd.vefa.validator._1.Report;
 import no.difi.xsd.vefa.validator._1.SectionType;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.util.ClassUtils;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
@@ -44,7 +40,7 @@ public class DifiValidator implements BasicValidator {
 
     @Override
     public ValidationResult validate(byte[] data) {
-        ValidationResult result = new ValidationResult(Archetype.UBL);
+        ValidationResult result = new ValidationResult(Archetype.PEPPOL_BIS);
         List<ValidationError> errors;
         Validation validation = validator.validate(new ByteArrayInputStream(data));
         result.setPassed(validation.getReport().getFlag() != FlagType.ERROR && validation.getReport().getFlag() != FlagType.FATAL);
