@@ -140,16 +140,18 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
    //todo change this to properties
     private void createIntegrationTestQueue() {
         com.rabbitmq.client.ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
-        factory.setHost("rabbitmq");
-        factory.setPort(5672);
-        factory.setUsername("guest");
-        factory.setPassword("guest");
+        factory.setHost(props.getRabbitmq().getHost());
+        factory.setPort(props.getRabbitmq().getPort());
+        factory.setUsername(props.getRabbitmq().getUsername());
+        factory.setPassword(props.getRabbitmq().getPassword());
         factory.setConnectionTimeout(500);
         Connection connection = null;
         try {
             connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            channel.queueDeclare("validation-integration-test", false, false, false, null);       //integration-tests queue
+            for (String queue: props.getQueues()) {
+                channel.queueDeclare(queue, false, false, false, null);       //integration-tests queue
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TimeoutException e) {
@@ -167,22 +169,16 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                 return new MessageListener() {
                     @Override
                     public void onMessage(Message message) {
-                        //TODO add routing for different consumer queues
-                        logger.info("got message from the MQ!");
-                        logger.info(message.getMessageProperties().getConsumerQueue());
-                        //logger.info(new String(message.getBody()));
+                        //TODO add routing for different consumer queues as per module
+                        //#1 validation
+                        //#2
+                        logger.info("got message from the MQ!, consuming queue is: " + message.getMessageProperties().getConsumerQueue());
                     }
                 };
             }
         };
-        listenerEndpoint.setQueueNames("validation-integration-test"); //Get them form configuration properties
+        listenerEndpoint.setQueueNames(props.getQueues().toArray(new String[0])); //Get them form configuration properties
         listenerEndpoint.setId("endpoint1"); //You can keep it this way
         registrar.registerEndpoint(listenerEndpoint);
     }
-
-    /*@Bean
-    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
-        //method
-        return new MessageListenerAdapter(receiver, "processMessage");
-    }*/
 }
