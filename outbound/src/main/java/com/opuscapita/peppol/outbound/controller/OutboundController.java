@@ -59,7 +59,15 @@ public class OutboundController {
 
         try {
             if (!sendingEnabled) {
+                if (fakeSender != null) {
+                    transmissionResponse = fakeSender.send(cm);
+                } else {
+                    logger.warn("Selected to send via fake sender but it isn't initialized");
+                    return;
+                }
+            } else {
                 if (StringUtils.isNotBlank(testRecipient)) {
+                    // real send via test sender
                     if (testSender != null) {
                         transmissionResponse = testSender.send(cm);
                     } else {
@@ -67,23 +75,16 @@ public class OutboundController {
                         return;
                     }
                 } else {
-                    if (fakeSender != null) {
-                        transmissionResponse = fakeSender.send(cm);
-                    } else {
-                        logger.warn("Selected to send via fake sender but it isn't initialized");
-                        return;
+                    // production sending takes place here
+                    switch (cm.getBaseDocument().getArchetype()) {
+                        case INVALID:
+                            throw new IllegalArgumentException("Unable to send invalid documents");
+                        case SVEFAKTURA1:
+                            transmissionResponse = svefaktura1Sender.send(cm);
+                            break;
+                        default:
+                            transmissionResponse = ublSender.send(cm);
                     }
-                }
-            } else {
-                // real sending takes place here
-                switch (cm.getBaseDocument().getArchetype()) {
-                    case INVALID:
-                        throw new IllegalArgumentException("Unable to send invalid documents");
-                    case SVEFAKTURA1:
-                        transmissionResponse = svefaktura1Sender.send(cm);
-                        break;
-                    default:
-                        transmissionResponse = ublSender.send(cm);
                 }
             }
             logger.info("Message " + cm.getFileName() + " sent with transmission ID = " + transmissionResponse.getTransmissionId());
