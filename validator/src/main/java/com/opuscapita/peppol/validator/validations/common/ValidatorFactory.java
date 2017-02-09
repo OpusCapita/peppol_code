@@ -15,15 +15,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ValidatorFactory {
-    private Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
-
-    private DifiValidatorConfig difiValidatorConfig;
-
-    private Svefaktura1XsdValidator svefaktura1XsdValidator;
-
-
     DifiValidator difiValidator;
     SveFaktura1Validator sveFaktura1Validator;
+    private Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
+    private DifiValidatorConfig difiValidatorConfig;
+    private Svefaktura1XsdValidator svefaktura1XsdValidator;
 
     public ValidatorFactory() {
     }
@@ -43,7 +39,8 @@ public class ValidatorFactory {
             switch (archetype) {
                 case AT:
                 case SI:
-                case UBL:
+                case PEPPOL_BIS:
+                case EHF:
                     if (difiValidator == null) {
                         difiValidator = new DifiValidator(difiValidatorConfig);
                     }

@@ -4,5 +4,5 @@ package com.opuscapita.peppol.commons.container.document.impl;
  * @author Sergejs.Roze
  */
 public enum Archetype {
-    INVALID, UBL, SVEFAKTURA1, SI, AT
+    INVALID, PEPPOL_BIS, EHF, SVEFAKTURA1, SI, AT
 }
