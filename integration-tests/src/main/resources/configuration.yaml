@@ -50,7 +50,7 @@ tests:
             expected value: 5
         - rest check:
             id: 3
-            expected value: 5
+            name: validation rest check
    events-persistence:
      producers:
        mq producer:

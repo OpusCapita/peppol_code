@@ -46,7 +46,7 @@ tests:
             expected value: 5
         - rest check:
             id: 3
-            expected value: 5
+            name: validation rest check
    support-ui:
       producers:
         file producer:

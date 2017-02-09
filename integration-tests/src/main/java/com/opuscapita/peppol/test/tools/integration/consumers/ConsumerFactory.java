@@ -42,7 +42,7 @@ public class ConsumerFactory {
                 return new WebUiConsumer(id, properties.get("expected value"));
             case "rest test":
             case "rest check":
-                return new RestConsumer(id);
+                return new RestConsumer(id, (String)properties.get("name"));
             default:
                 throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + name);
         }

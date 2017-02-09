@@ -5,7 +5,6 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
 
 import java.util.List;
@@ -29,23 +28,9 @@ public class MqSubscriber extends Subscriber {
     @Override
     public List<TestResult> run() {
         logger.info("MqSubscriber: started!");
-        Connection connection = null;
+        logger.info("Not implemented yet");
         //TODO get messages from MessageListener ?????
         Channel channel = null;
-      /*  try {
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(mqSettings.get("host"));
-            factory.setPort((int) (Object) mqSettings.get("port"));
-            factory.setUsername(mqSettings.get("username"));
-            factory.setPassword(mqSettings.get("password"));
-            factory.setConnectionTimeout(500);
-            connection = factory.newConnection();
-            channel = connection.createChannel();
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            //Rabbit consumer which simply gets messages from the queue
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         return testResults;
     }
 }
