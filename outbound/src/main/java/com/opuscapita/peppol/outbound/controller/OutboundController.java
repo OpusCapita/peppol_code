@@ -95,6 +95,7 @@ public class OutboundController {
             if (cm.getRoute() != null) {
                 String next = cm.getRoute().pop();
                 if (StringUtils.isNotBlank(next)) {
+                    logger.info("Message " + cm.getFileName() + " queued for retry");
                     messageQueue.convertAndSend(next, cm);
                 } else {
                     outboundErrorHandler.handleError(cm, ioe);
@@ -103,6 +104,7 @@ public class OutboundController {
                 outboundErrorHandler.handleError(cm, ioe);
             }
         } catch (Exception e) {
+            logger.warn("Sending of the message " + cm.getFileName() + " failed with error: " + e.getMessage());
             outboundErrorHandler.handleError(cm, e);
         }
 
