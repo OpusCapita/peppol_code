@@ -7,5 +7,5 @@
   assert:
     that:
       - "fileName in log.stdout"
-    msg: "fileName should be found in '{{module_name}}'"
+    msg: "fileName should be found in '{{module_name}}' for file '{{ file }}'"
 ...

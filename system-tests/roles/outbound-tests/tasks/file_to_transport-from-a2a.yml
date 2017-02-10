@@ -4,8 +4,10 @@
   copy:
     src: "{{file}}"
     dest: /var/lib/docker/volumes/peppol2.0/data/transport/from-a2a
-- pause:
-    minutes: 3
+
+- set_fact: file="{{file}}"
+- debug: var=file
+
 - name: find fileName
   shell: echo "{{file}}" | grep .xml |xargs -L 1 basename
   register: fileName
