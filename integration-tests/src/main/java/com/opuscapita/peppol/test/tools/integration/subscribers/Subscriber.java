@@ -16,7 +16,8 @@ public abstract class Subscriber {
     protected int timeout;
 
     public Subscriber(Object timeout) {
-        this.timeout = (int)timeout;
+        if(timeout != null)
+            this.timeout = (int)timeout;
     }
 
     public List<Consumer> getConsumers() {
