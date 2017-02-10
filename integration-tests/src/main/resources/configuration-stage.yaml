@@ -21,7 +21,7 @@ tests:
             DB preprocess querry: delete from messages where invoice_number='60445647'; delete from access_points where ap_id='123456' and ap_name='TEST'
         subscribers:
           - mq subscriber:
-             source-queue: events-persistence-integration-test
+             source queue: events-persistence-integration-test
              timeout: 1500
           - snc subscriber:
              source directory: C:/var/lib/peppol2.0/events-persistence/error

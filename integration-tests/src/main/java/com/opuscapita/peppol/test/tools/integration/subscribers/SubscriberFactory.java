@@ -28,7 +28,7 @@ public class SubscriberFactory {
         List<Consumer> consumers = new ArrayList<>();
         switch (name){
             case "mq subscriber":
-                subscriber = new MqSubscriber(properties.get("timeout"), properties.get("source-queue"));
+                subscriber = new MqSubscriber(properties.get("timeout"), properties.get("source queue"));
                 IntegrationTestApp.registerMqListener((MqListener) subscriber);
                 break;
             case "snc subscriber":
