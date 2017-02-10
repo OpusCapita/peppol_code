@@ -148,12 +148,14 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                     @Override
                     public void onMessage(Message message) {
                         String consumerQueue = message.getMessageProperties().getConsumerQueue();
+                        logger.info("got message from the MQ!, consuming queue is: " + consumerQueue);
                         //TODO add routing for different consumer queues as per module
                         for(MqListener listener : mqListeners){
-                            if(consumerQueue.equals(listener.getConsumerQueue()))
+                            if(consumerQueue.equals(listener.getConsumerQueue())){
+                                logger.info("Found listener for the mq message: " + listener.getClass());
                                 listener.onMessage(message);
+                            }
                         }
-                        logger.info("got message from the MQ!, consuming queue is: " + consumerQueue);
                     }
                 };
             }
