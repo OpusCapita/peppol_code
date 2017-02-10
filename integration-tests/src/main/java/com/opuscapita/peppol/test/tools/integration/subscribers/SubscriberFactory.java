@@ -1,10 +1,12 @@
 package com.opuscapita.peppol.test.tools.integration.subscribers;
 
+import com.opuscapita.peppol.test.tools.integration.IntegrationTestApp;
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.DbSubscriber;
 import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.FileSubscriber;
 import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.MqSubscriber;
 import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.SncSubscriber;
+import com.opuscapita.peppol.test.tools.integration.util.MqListener;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -26,8 +28,8 @@ public class SubscriberFactory {
         List<Consumer> consumers = new ArrayList<>();
         switch (name){
             case "mq subscriber":
-                String mqKey = (String) properties.get("mq connection");
-                subscriber = new MqSubscriber(properties.get("timeout"), (Map<String, String>) genericConfiguration.get(mqKey), properties.get("source-queue"));
+                subscriber = new MqSubscriber(properties.get("timeout"), properties.get("source-queue"));
+                IntegrationTestApp.registerMqListener((MqListener) subscriber);
                 break;
             case "snc subscriber":
                 subscriber = new SncSubscriber(properties.get("timeout"), properties.get("source directory"));

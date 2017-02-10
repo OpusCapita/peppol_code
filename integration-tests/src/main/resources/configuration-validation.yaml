@@ -24,9 +24,8 @@ tests:
          rest method: post
      subscribers:
         - mq subscriber:
-            mq connection: mq1
             source queue: validation-integration-test
-            timeout: 500
+            timeout: 1500
             consumers: 1
         - snc subscriber:
             consumers: 2

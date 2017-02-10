@@ -1,36 +1,59 @@
 package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 
-import com.google.gson.Gson;
-import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import com.rabbitmq.client.Channel;
+import com.opuscapita.peppol.test.tools.integration.util.MqListener;
 import org.apache.log4j.LogManager;
+import org.springframework.amqp.core.Message;
 
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by gamanse1 on 2016.11.17..
  */
-public class MqSubscriber extends Subscriber {
+public class MqSubscriber extends Subscriber implements MqListener {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqSubscriber.class);
     private final String queue;
-    private Map<String, String> mqSettings;
-    private final Gson gson = ContainerMessage.prepareGson();
+    private List<Message> messages = new CopyOnWriteArrayList<>();
 
-    public MqSubscriber(Object timeout, Map<String, String> mqSettings, Object queue) {
+    public MqSubscriber(Object timeout, Object queue) {
         super(timeout);
-        this.mqSettings = mqSettings;
         this.queue = (String) queue;
     }
 
     @Override
     public List<TestResult> run() {
         logger.info("MqSubscriber: started!");
-        logger.info("Not implemented yet");
-        //TODO get messages from MessageListener ?????
-        Channel channel = null;
+        //waiting for a second for messages to appear ?
+        if(messages.isEmpty()){
+            try {
+                logger.info("MqSubscriber: message list empty, waiting for messages .....");
+                Thread.sleep(timeout);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        logger.info("MqSubscriber: messages found: " + messages.size());
+        for (Consumer consumer : consumers) {
+            if(consumer!= null) {
+                TestResult testResult = consumer.consume(messages);
+                testResults.add(testResult);
+            }
+        }
         return testResults;
+    }
+    /*
+    * Messages got from AbstractRabbitListenerEndpoint
+    * */
+    @Override
+    public void onMessage(Message message) {
+        messages.add(message);
+    }
+
+    @Override
+    public String getConsumerQueue() {
+        return queue;
     }
 }

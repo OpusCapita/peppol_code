@@ -12,10 +12,11 @@ import java.util.List;
 public abstract class Subscriber {
     protected List<Consumer> consumers = new ArrayList<>();
     protected List<TestResult> testResults = new ArrayList<>();
-    private Object timeout;
+    /* in millis*/
+    protected int timeout;
 
     public Subscriber(Object timeout) {
-        this.timeout = timeout;
+        this.timeout = (int)timeout;
     }
 
     public List<Consumer> getConsumers() {

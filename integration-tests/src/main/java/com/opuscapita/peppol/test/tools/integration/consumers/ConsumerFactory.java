@@ -16,7 +16,7 @@ public class ConsumerFactory {
         String id = String.valueOf(properties.get("id"));
         switch (name){
             case "queue msg count check":
-                return new QueueConsumer(id, (List<String>)properties.get("subscribers"),properties.get("expected value"));
+                return new MqConsumer(id, (String) properties.get("name"), (List<String>)properties.get("subscribers"),properties.get("expected value"));
             case "db check":
             case "db test":
                 //String connectionKey = (String) properties.get("connection string");

@@ -8,6 +8,7 @@ import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestProperties;
 import com.opuscapita.peppol.test.tools.integration.util.LoggingResultBuilder;
+import com.opuscapita.peppol.test.tools.integration.util.MqListener;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.commons.io.FileUtils;
@@ -29,6 +30,7 @@ import org.springframework.core.env.Environment;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -44,6 +46,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
     static String testResultFileName;
     static String templateDir;
     public static String tempDir;
+    private static List<MqListener> mqListeners = new ArrayList<>();
 
     @Autowired
     private Environment environment;
@@ -97,6 +100,10 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
             }
         }
         logger.info("IntegrationTestApp : Ended!");
+    }
+
+    public static void registerMqListener(MqListener listener){
+        mqListeners.add(listener);
     }
 
     @Bean
@@ -169,10 +176,13 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                 return new MessageListener() {
                     @Override
                     public void onMessage(Message message) {
+                        String consumerQueue = message.getMessageProperties().getConsumerQueue();
                         //TODO add routing for different consumer queues as per module
-                        //#1 validation
-                        //#2
-                        logger.info("got message from the MQ!, consuming queue is: " + message.getMessageProperties().getConsumerQueue());
+                        for(MqListener listener : mqListeners){
+                            if(consumerQueue.equals(listener.getConsumerQueue()))
+                                listener.onMessage(message);
+                        }
+                        logger.info("got message from the MQ!, consuming queue is: " + consumerQueue);
                     }
                 };
             }
