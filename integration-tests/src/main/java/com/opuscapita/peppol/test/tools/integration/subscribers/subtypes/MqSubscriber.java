@@ -50,6 +50,7 @@ public class MqSubscriber extends Subscriber implements MqListener {
     @Override
     public void onMessage(Message message) {
         messages.add(message);
+        logger.info("MqSubscriber.onMessage : message received!, Total messages: " + messages.size());
     }
 
     @Override

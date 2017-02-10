@@ -88,7 +88,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
 
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile, staticMq).initConfig();
         List<TestResult> testResults = config.runTests();
-        new LoggingResultBuilder().processResult(testResults); //otputs the result to console
+        new LoggingResultBuilder().processResult(testResults); //outputs the result to console
 
         //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
         //cleaning temp directory
@@ -116,35 +116,6 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         };
     }
 
-    /*@SuppressWarnings("Duplicates")
-    @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
-                                        @NotNull MessageQueue messageQueue,
-                                        @NotNull StatusReporter reporter) {
-        return new AbstractQueueListener(errorHandler, reporter) {
-            @SuppressWarnings("ConstantConditions")
-            @Override
-            *//*message receiver and post processor*//*
-            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
-                logger.info("Got message from MQ like really ???? :" + cm.getFileName());
-            }
-        };
-    }*/
-
-   /* @SuppressWarnings("Duplicates")
-    @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
-        createIntegrationTestQueue(); //need to prepare queue first
-
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames("validation-integration-test");  //TODO how to remove this hardcode ? no idea yet
-        container.setPrefetchCount(10);
-        container.setMessageListener(listenerAdapter);
-        return container;
-    }*/
-
-   //todo change this to properties
     private void createIntegrationTestQueue() {
         com.rabbitmq.client.ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
         factory.setHost(props.getRabbitmq().getHost());
