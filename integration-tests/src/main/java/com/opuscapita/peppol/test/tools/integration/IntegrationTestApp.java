@@ -124,16 +124,30 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         factory.setPassword(props.getRabbitmq().getPassword());
         factory.setConnectionTimeout(500);
         Connection connection = null;
+        Channel channel = null;
         try {
             connection = factory.newConnection();
-            Channel channel = connection.createChannel();
+            channel = connection.createChannel();
             for (String queue: props.getQueues()) {
-                channel.queueDeclare(queue, false, false, false, null);       //integration-tests queue
+                channel.queueDeclare(queue, false, false, true, null);       //integration-tests queue
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TimeoutException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                if (channel != null) {
+                    channel.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -149,8 +163,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                     public void onMessage(Message message) {
                         String consumerQueue = message.getMessageProperties().getConsumerQueue();
                         logger.info("got message from the MQ!, consuming queue is: " + consumerQueue);
-                        //TODO add routing for different consumer queues as per module
-                        logger.info("listeners count: " + mqListeners.size());
+                        //routing messages to specific listeners
                         for(MqListener listener : mqListeners){
                             logger.info("listener subscribed for: " + listener.getConsumerQueue());
                             if(consumerQueue.equals(listener.getConsumerQueue())){
