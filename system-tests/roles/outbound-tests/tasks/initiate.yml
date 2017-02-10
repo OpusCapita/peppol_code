@@ -1,21 +1,25 @@
 ---
 - include: file_to_transport-from-a2a.yml
 
-- include: transport_assert.yml
-- include: assert.yml
-  vars: 
-    module_name: preprocessing
-  tags: preprocessing
-- include: assert.yml
-  vars:
-    module_name: internal-routing
-  tags: internal-routing
-- include: assert.yml
-  vars:
-    module_name: validator
-  tags: validator
-- include: assert.yml
-  vars:
-    module_name: outbound
-  tags: outbound
+#waiting for trsnsport to pick up files ~2min
+#- pause:
+#    minutes: 3
+
+#- include: transport_assert.yml
+#- include: assert.yml
+#  vars: 
+#    module_name: preprocessing
+#  tags: preprocessing
+#- include: assert.yml
+#  vars:
+#    module_name: internal-routing
+#  tags: internal-routing
+#- include: assert.yml
+#  vars:
+#    module_name: validator
+#  tags: validator
+#- include: assert.yml
+#  vars:
+#    module_name: outbound
+#  tags: outbound
 ...
