@@ -88,20 +88,17 @@ public class DirectoryChecker {
                 try {
                     emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
                     logger.info("E-mail " + baseName + " successfully sent");
+                    backupOrDelete(baseName, sent, customerId);
                 } catch (Exception e) {
                     logger.error("Failed to send an e-mail to " + to, e);
                     errorHandler.reportToServiceNow("", customerId, e, "Failed to send an e-mail to " + to);
-
                     backupOrDelete(baseName, failed, customerId);
-                    return;
                 }
-
-                backupOrDelete(baseName, sent, customerId);
             }
         }
     }
 
-    private void backupOrDelete(@NotNull String baseName, @NotNull String directory, @NotNull String customerId) {
+    void backupOrDelete(@NotNull String baseName, @NotNull String directory, @NotNull String customerId) {
         if (StringUtils.isBlank(directory)) {
             try {
                 delete(baseName + EXT_TO);
@@ -139,6 +136,7 @@ public class DirectoryChecker {
         if (result.exists()) {
             Files.write(result.toPath(), "\n\n".getBytes(), StandardOpenOption.APPEND);
             Files.write(result.toPath(), Files.readAllLines(source.toPath()), StandardOpenOption.APPEND);
+            delete(source.getAbsolutePath());
         } else {
             FileUtils.moveFileToDirectory(source, directory, true);
         }
@@ -146,6 +144,10 @@ public class DirectoryChecker {
 
     private String normalizeSubjects(List<String> subjects) {
         return subjects.stream().distinct().collect(Collectors.joining("; "));
+    }
+
+    void setDirectory(@NotNull String directory) {
+        this.directory = directory;
     }
 
 }

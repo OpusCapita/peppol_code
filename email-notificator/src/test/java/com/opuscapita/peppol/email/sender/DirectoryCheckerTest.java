@@ -2,6 +2,7 @@ package com.opuscapita.peppol.email.sender;
 
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -10,9 +11,9 @@ import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.util.List;
 
+import static com.opuscapita.peppol.email.controller.EmailController.EXT_TO;
 import static org.easymock.EasyMock.mock;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Sergejs.Roze
@@ -70,6 +71,22 @@ public class DirectoryCheckerTest {
         assertEquals("ABC", lines.get(3));
         assertEquals("DEF", lines.get(4));
         result.delete();
+    }
+
+    @Test
+    public void testBackupOrDelete() throws Exception {
+        File source = File.createTempFile("unittest-", ".delete" + EXT_TO);
+        new FileOutputStream(source).write("ABC\nDEF".getBytes());
+
+        DirectoryChecker dc = new DirectoryChecker(emailSender, errorHandler);
+        dc.setDirectory(directory.getAbsolutePath());
+
+        dc.backupOrDelete(
+                FileUtils.getTempDirectory().getAbsolutePath() + File.separator + FilenameUtils.getBaseName(source.getAbsolutePath()),
+                directory.getAbsolutePath(),
+                "test");
+        assertFalse(source.exists());
+        assertTrue(new File(directory, source.getName()).exists());
     }
 
 }
