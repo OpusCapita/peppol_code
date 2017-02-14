@@ -24,6 +24,7 @@ public class EmailSender {
 
     private final JavaMailSender mailSender;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public EmailSender(@NotNull JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -31,12 +32,15 @@ public class EmailSender {
 
     void sendMessage(@NotNull String to, @NotNull String subject, @NotNull String body) {
         String[] recipients;
+        String delivered;
         if (StringUtils.isNotBlank(testRecipient)) {
             logger.warn("The list of recipients is: '" + to + "' but the test recipient is set to '" + testRecipient +
                     "' and will be used instead. Remove peppol.email-notificator.test.recipient parameter in order to use real list");
             recipients = getRecipients(testRecipient);
+            delivered = testRecipient;
         } else {
             recipients = getRecipients(to);
+            delivered = to;
         }
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -46,6 +50,7 @@ public class EmailSender {
         message.setText(body);
 
         mailSender.send(message);
+        logger.info("Error report successfully sent to " + delivered);
     }
 
     @NotNull
