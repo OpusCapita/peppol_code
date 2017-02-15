@@ -5,9 +5,9 @@
   vars:
     file: "{{item}}"
   with_fileglob:
-    - /tmp/validation_test_suite/valid/*
-    - /tmp/svefaktura_1.0/SBDH_wrapped_examples/Valid/*
-    - /tmp/EHF_2.0.7/Valid/*
+    - ~/system-tests/files/validation_test_suite/valid/*
+    - ~/system-tests/files/svefaktura_1.0/SBDH_wrapped_examples/Valid/*
+    - ~/system-tests/files/EHF_2.0.7/Valid/*
    # - /tmp/suite/ehf_2.0_bii4_no.xml
    # - /tmp/git/test-materials/suite/ehf_2.0_bii5_no.xml
    # - /tmp/git/test-materials/suite/sv1_with_attachment.xml
