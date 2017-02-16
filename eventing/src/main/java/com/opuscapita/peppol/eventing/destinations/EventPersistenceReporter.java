@@ -63,12 +63,14 @@ public class EventPersistenceReporter {
         logger.debug("Message received");
 
         if (cm.getBaseDocument() == null) {
+            logger.info("No document in received message, ignoring message");
             return null;
         }
 
         ProcessingStatus ps = cm.getProcessingStatus();
         String typeDefinition = environment.getProperty("peppol.eventing.transport.type." + ps.getComponentName());
         if (typeDefinition == null) {
+            logger.info("Transport type for " + ps.getComponentName() + " not configured, message ignored");
             return null;
         }
 
