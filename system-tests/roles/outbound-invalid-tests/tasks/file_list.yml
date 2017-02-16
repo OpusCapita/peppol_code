@@ -1,9 +1,9 @@
 ---
-#File_list.yml#
+#file_list.yml#
 #This is where all the test materials are taken from #
 
-- include: send_to_inbound_multiple_files.yml
-  vars:
+- include: file_to_transport-from-a2a.yml
+  vars: 
     file: "{{item}}"
   with_fileglob:
     - "{{test_data_path}}/validation_test_suite/invalid/*"
@@ -13,4 +13,3 @@
     - "{{test_data_path}}/Austrian_documents/invalid/*"
     - "{{test_data_path}}/Netherlands_documents/SBDH_wrapped/invalid/*"
 ...
-

@@ -3,7 +3,7 @@ configurations:
         db1: jdbc:mysql://mysql.docker.local:3306/peppol?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
     queues:
         mq1:
-            host: localhost
+            host: rabbitmq
             port: 5672
             username: guest
             password: guest
@@ -30,21 +30,13 @@ tests:
               timeout: 1500
           - db subscriber:
               db connection: db1
+              timeout: 1500
               query: select count(*) from messages where invoice_number="92426725"
               consumers: 4
-          - db subscriber:
-              db connection: db1
-              query: select count(*) from access_points where ap_id="123456" and ap_name="TEST"
-              consumers: 5
         consumers:
           - DB test:
              id: 4
              name: Message "status" can be seen in DB- positive test
-             connection string: db1
-             expected value: 1
-          - DB test:
-             id: 5
-             name: New access point -> new entry in DB- positive
              connection string: db1
              expected value: 1
           - SNC test:

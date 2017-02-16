@@ -1,7 +1,7 @@
 ---
 - hosts: peppol
   roles:
-    - inbound-tests
+    - outbound-invalid-tests
   vars:
     test_data_path: ~/system-tests/files
 ...
