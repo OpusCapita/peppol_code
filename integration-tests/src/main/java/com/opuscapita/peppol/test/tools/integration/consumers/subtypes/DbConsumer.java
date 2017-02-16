@@ -8,12 +8,12 @@ import com.opuscapita.peppol.test.tools.integration.test.TestResult;
  */
 public class DbConsumer extends Consumer {
     private final String name;
-    private Object expectedValue;
+    private String expectedValue;
 
     public DbConsumer(String id, String consumerName, Object expectedValue) {
         super(id);
         this.name = consumerName;
-        this.expectedValue = expectedValue;
+        this.expectedValue = String.valueOf(expectedValue);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class DbConsumer extends Consumer {
     @Override
     public TestResult consume(Object consumable) {
         TestResult testResult;
-        boolean passed = consumable.equals(expectedValue);
+        boolean passed = expectedValue.equals(consumable);
         String details = (passed) ? "successfully fetched data from DB!" :
                 "Got value " + consumable + " but expected: " + expectedValue;
         return new TestResult(name,passed,details);
