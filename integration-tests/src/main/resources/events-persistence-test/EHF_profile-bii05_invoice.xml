@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+<StandardBusinessDocument xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
     <StandardBusinessDocumentHeader>
         <HeaderVersion>1.0</HeaderVersion>
         <Sender>
@@ -18,9 +18,7 @@
         <BusinessScope>
             <Scope>
                 <Type>DOCUMENTID</Type>
-                <InstanceIdentifier>
-                    urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1
-                </InstanceIdentifier>
+                <InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1</InstanceIdentifier>
             </Scope>
             <Scope>
                 <Type>PROCESSID</Type>
@@ -28,38 +26,25 @@
             </Scope>
         </BusinessScope>
     </StandardBusinessDocumentHeader>
-    <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-             xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd ">
+    <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:draft:UnqualifiedDataTypes:2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd ">
         <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
-        <cbc:CustomizationID>
-            urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0
-        </cbc:CustomizationID>
+        <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</cbc:CustomizationID>
         <cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
         <cbc:ID>92426725</cbc:ID>
         <cbc:IssueDate>2016-06-30</cbc:IssueDate>
         <cbc:InvoiceTypeCode listAgencyID="6" listID="UNCL1001">380</cbc:InvoiceTypeCode>
         <cbc:DocumentCurrencyCode listAgencyID="6" listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
-        <cac:AdditionalDocumentReference
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>38001</cbc:ID>
         </cac:AdditionalDocumentReference>
-        <cac:AdditionalDocumentReference
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>Trine Svendsen</cbc:ID>
         </cac:AdditionalDocumentReference>
-        <cac:AdditionalDocumentReference
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>ff3bb2dc-3ff4-11e6-9605-97ed9690fe22.pdf</cbc:ID>
             <cbc:DocumentType>Commercial Invoice</cbc:DocumentType>
             <cac:Attachment>
-                <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf">
-                    JVBERi0xLjQKJeTjz9IKMSAwIG9iagpbL1BERi9JbWFnZUIvSW1hZ2VDL0ltYWdlSS9UZXh0
+                <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf">JVBERi0xLjQKJeTjz9IKMSAwIG9iagpbL1BERi9JbWFnZUIvSW1hZ2VDL0ltYWdlSS9UZXh0
                     XQplbmRvYmoKMyAwIG9iago8PC9UeXBlL1hPYmplY3QKL1N1YnR5cGUvRm9ybQovRm9ybVR5
                     cGUgMQovTWF0cml4WzEgMCAwIDEgMCAwXQovQkJveFswIDAgNTk1LjI3NiA4NDEuODldCi9S
                     ZXNvdXJjZXM8PC9Qcm9jU2V0IDQgMCBSL0ZvbnQ8PC9GIDUgMCBSPj4vWE9iamVjdDw8L08g
@@ -1698,8 +1683,7 @@
                 </cac:PartyTaxScheme>
                 <cac:PartyLegalEntity>
                     <cbc:RegistrationName>Norsk Gjenvinning AS -</cbc:RegistrationName>
-                    <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">937270062
-                    </cbc:CompanyID>
+                    <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">937270062</cbc:CompanyID>
                 </cac:PartyLegalEntity>
                 <cac:Contact>
                     <cbc:ID>N/A</cbc:ID>
@@ -1733,8 +1717,7 @@
                 </cac:PartyTaxScheme>
                 <cac:PartyLegalEntity>
                     <cbc:RegistrationName>Dialog Eiendomsmegling AS -</cbc:RegistrationName>
-                    <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">937789416
-                    </cbc:CompanyID>
+                    <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">937789416</cbc:CompanyID>
                 </cac:PartyLegalEntity>
                 <cac:Contact>
                     <cbc:ID>Trine Svendsen</cbc:ID>
@@ -1757,8 +1740,7 @@
                 </cac:Address>
             </cac:DeliveryLocation>
         </cac:Delivery>
-        <cac:PaymentMeans xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                          xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:PaymentMeans xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
             <cbc:PaymentDueDate>2016-07-15</cbc:PaymentDueDate>
             <cbc:PaymentChannelCode>BBAN</cbc:PaymentChannelCode>
@@ -1772,8 +1754,7 @@
                 </cac:FinancialInstitutionBranch>
             </cac:PayeeFinancialAccount>
         </cac:PaymentMeans>
-        <cac:PaymentMeans xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                          xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:PaymentMeans xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
             <cbc:PaymentDueDate>2016-07-15</cbc:PaymentDueDate>
             <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
@@ -1789,8 +1770,7 @@
         </cac:PaymentMeans>
         <cac:TaxTotal>
             <cbc:TaxAmount currencyID="NOK">105.38</cbc:TaxAmount>
-            <cac:TaxSubtotal xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cac:TaxSubtotal xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                 <cbc:TaxableAmount currencyID="NOK">421.50</cbc:TaxableAmount>
                 <cbc:TaxAmount currencyID="NOK">105.38</cbc:TaxAmount>
                 <cac:TaxCategory>
@@ -1808,8 +1788,7 @@
             <cbc:TaxInclusiveAmount currencyID="NOK">526.88</cbc:TaxInclusiveAmount>
             <cbc:PayableAmount currencyID="NOK">526.88</cbc:PayableAmount>
         </cac:LegalMonetaryTotal>
-        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>1</cbc:ID>
             <cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:InvoicedQuantity>
             <cbc:LineExtensionAmount currencyID="NOK">0</cbc:LineExtensionAmount>
@@ -1830,8 +1809,7 @@
                 <cbc:PriceAmount currencyID="NOK">0.00</cbc:PriceAmount>
             </cac:Price>
         </cac:InvoiceLine>
-        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>2</cbc:ID>
             <cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">15</cbc:InvoicedQuantity>
             <cbc:LineExtensionAmount currencyID="NOK">97.50</cbc:LineExtensionAmount>
@@ -1853,8 +1831,7 @@
                 <cbc:BaseQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:BaseQuantity>
             </cac:Price>
         </cac:InvoiceLine>
-        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>3</cbc:ID>
             <cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:InvoicedQuantity>
             <cbc:LineExtensionAmount currencyID="NOK">0</cbc:LineExtensionAmount>
@@ -1875,8 +1852,7 @@
                 <cbc:PriceAmount currencyID="NOK">0.00</cbc:PriceAmount>
             </cac:Price>
         </cac:InvoiceLine>
-        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>4</cbc:ID>
             <cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">16</cbc:InvoicedQuantity>
             <cbc:LineExtensionAmount currencyID="NOK">104.00</cbc:LineExtensionAmount>
@@ -1898,8 +1874,7 @@
                 <cbc:BaseQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:BaseQuantity>
             </cac:Price>
         </cac:InvoiceLine>
-        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>5</cbc:ID>
             <cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:InvoicedQuantity>
             <cbc:LineExtensionAmount currencyID="NOK">0</cbc:LineExtensionAmount>
@@ -1920,8 +1895,7 @@
                 <cbc:PriceAmount currencyID="NOK">0.00</cbc:PriceAmount>
             </cac:Price>
         </cac:InvoiceLine>
-        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>6</cbc:ID>
             <cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">14</cbc:InvoicedQuantity>
             <cbc:LineExtensionAmount currencyID="NOK">91.00</cbc:LineExtensionAmount>
@@ -1943,8 +1917,7 @@
                 <cbc:BaseQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:BaseQuantity>
             </cac:Price>
         </cac:InvoiceLine>
-        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID>7</cbc:ID>
             <cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:InvoicedQuantity>
             <cbc:LineExtensionAmount currencyID="NOK">129.00</cbc:LineExtensionAmount>

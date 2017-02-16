@@ -27,7 +27,7 @@ public class TransportControllerTest {
         ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", Endpoint.Type.PEPPOL));
 
         BaseDocument doc = mock(BaseDocument.class);
-        when(doc.getArchetype()).thenReturn(Archetype.UBL);
+        when(doc.getArchetype()).thenReturn(Archetype.PEPPOL_BIS);
         when(doc.getDocumentType()).thenReturn(UblDocumentType.ORDER.getTag());
         cm.setBaseDocument(doc);
 
@@ -44,7 +44,7 @@ public class TransportControllerTest {
         controller.storeMessage(cm);
 
         assertEquals("/tmp/test.xml", inputFile);
-        assertEquals("/result/UBL/Order/test.xml", outputFile);
+        assertEquals("/result/PEPPOL_BIS/Order/test.xml", outputFile);
     }
 
 }

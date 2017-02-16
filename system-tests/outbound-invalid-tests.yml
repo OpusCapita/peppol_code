@@ -1,0 +1,5 @@
+---
+- hosts: peppol
+  roles:
+    - outbound-invalid-tests
+...

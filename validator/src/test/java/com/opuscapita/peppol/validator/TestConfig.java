@@ -44,16 +44,6 @@ public class TestConfig {
         return new DifiValidatorConfig(getAbsolutePathToResource("difi_artifacts/"));
     }
 
-    @Bean
-    public DifiValidatorConfig simplerInvoicingValidatorConfig() throws URISyntaxException {
-        return new DifiValidatorConfig(getAbsolutePathToResource("simpler_invoicing_artifacts/"));
-    }
-
-    @Bean
-    public DifiValidatorConfig austrianValidatorConfig() throws URISyntaxException {
-        return new DifiValidatorConfig(getAbsolutePathToResource("austrian_artifacts/"));
-    }
-
 
     @Bean
     public Gson gson() {

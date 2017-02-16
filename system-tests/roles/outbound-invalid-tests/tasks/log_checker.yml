@@ -1,9 +1,7 @@
 ---
-- include: file_to_transport-from-a2a.yml
-
 - include: transport_assert.yml
 - include: assert.yml
-  vars: 
+  vars:
     module_name: preprocessing
   tags: preprocessing
 - include: assert.yml
@@ -16,6 +14,6 @@
   tags: validator
 - include: assert.yml
   vars:
-    module_name: outbound
+    module_name: email-notificator
   tags: outbound
 ...

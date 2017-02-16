@@ -20,9 +20,9 @@ import java.io.IOException;
  * @author Sergejs.Roze
  */
 public class DocumentUtils {
+    public static final String OBJECT_ENVELOPE = "ObjectEnvelope";
     private static final String SBD = "StandardBusinessDocument";
     private static final String SBDH = "StandardBusinessDocumentHeader";
-    public static final String OBJECT_ENVELOPE = "ObjectEnvelope";
 
     /**
      * Returns root node of the document or null if document has no root node.
@@ -161,6 +161,24 @@ public class DocumentUtils {
             Node profileId = DocumentUtils.searchForXPath(root, "ProfileID");
             if (profileId != null) {
                 return profileId.getTextContent();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Reads customization ID from the document.
+     *
+     * @param document the document
+     * @return the customization id or null if cannot be found
+     */
+    @Nullable
+    public static String readCustomizationId(@NotNull Document document) {
+        Node root = DocumentUtils.getRootNode(document);
+        if (root != null) {
+            Node customizationId = DocumentUtils.searchForXPath(root, "CustomizationID");
+            if (customizationId != null) {
+                return customizationId.getTextContent();
             }
         }
         return null;

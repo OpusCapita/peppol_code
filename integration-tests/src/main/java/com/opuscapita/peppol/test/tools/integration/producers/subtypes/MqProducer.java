@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.Route;
+import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
@@ -75,21 +76,11 @@ public class MqProducer implements Producer {
         }
 
         try {
-           /* ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(mqSettings.get("host"));
-            factory.setPort((int) (Object) mqSettings.get("port"));
-            factory.setUsername(mqSettings.get("username"));
-            factory.setPassword(mqSettings.get("password"));
-            factory.setConnectionTimeout(500);
-            connection = factory.newConnection();
-            channel = connection.createChannel();
-            logger.info("Created channel for MQ!");*/
-            //channel.queueDeclare(destinationQueue, true, false, false, null); //validator queue
-            //channel.queueDeclare(QUEUE_NAME, false, false, false, null);       //integration-tests queue
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    ContainerMessage cm = new ContainerMessage(file.getName(), file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
+                    ContainerMessage cm = new ContainerMessage("integration-test", file.getName(), new Endpoint("integration-test", Endpoint.Type.PEPPOL))
                             .setBaseDocument(documentLoader.load(file));
+                    cm.setStatus(new ProcessingStatus("integration-test","testing?", file.getName()));
                     Route route = new Route();
                     List<String> endpoints = Arrays.asList(endpoint); //new queue for integration tests
                     route.setEndpoints(endpoints);

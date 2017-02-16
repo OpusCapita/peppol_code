@@ -21,17 +21,16 @@ tests:
             DB preprocess querry: delete from messages where invoice_number='60445647'; delete from access_points where ap_id='123456' and ap_name='TEST'
         subscribers:
           - mq subscriber:
-             mq connection: mq1
-             source-queue: events-persistence-integration-test
-             timeout: 500
+             source queue: events-persistence-integration-test
+             timeout: 1500
           - snc subscriber:
              source directory: C:/var/lib/peppol2.0/events-persistence/error
              consumers: 7 8
-             timeout: 500
+             timeout: 1500
           - snc subscriber:
               source directory: C:/var/lib/peppol2.0/events-persistence/invalid
               consumers: 9 10
-              timeout: 500
+              timeout: 1500
           - db subscriber:
               db connection: db1
               query: select count(*) from messages where invoice_number="60445647"

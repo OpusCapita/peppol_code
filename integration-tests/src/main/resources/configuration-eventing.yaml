@@ -15,7 +15,7 @@ tests:
           mq producer:
             mq connection: mq1
             destination queue: eventing
-            source directory: /etc/resources/events-persistence-test
+            source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test
             db connection: db1
             endpoint: events-persistence-integration-test
             DB preprocess querry: delete from messages where invoice_number='92426725'; delete from access_points where ap_id='123456' and ap_name='TEST'

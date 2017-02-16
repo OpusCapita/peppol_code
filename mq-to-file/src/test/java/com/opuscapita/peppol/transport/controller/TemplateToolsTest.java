@@ -35,7 +35,7 @@ public class TemplateToolsTest {
         assertEquals("%9908:980361330",
                 TemplateTools.templateToPath(t(TemplateTools.T_PERCENT) + t(TemplateTools.T_CUSTOMER_ID), cm));
 
-        assertEquals("UBL/Invoice",
+        assertEquals("EHF/Invoice",
                 TemplateTools.templateToPath(t(TemplateTools.T_ARCHETYPE) + "/" + t(TemplateTools.T_DOCUMENT_TYPE), cm));
     }
 

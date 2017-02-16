@@ -8,6 +8,7 @@ import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestConfigReader;
 import com.opuscapita.peppol.test.tools.integration.util.IntegrationTestProperties;
 import com.opuscapita.peppol.test.tools.integration.util.LoggingResultBuilder;
+import com.opuscapita.peppol.test.tools.integration.util.MqListener;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.commons.io.FileUtils;
@@ -29,6 +30,7 @@ import org.springframework.core.env.Environment;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -44,6 +46,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
     static String testResultFileName;
     static String templateDir;
     public static String tempDir;
+    private static List<MqListener> mqListeners = new ArrayList<>();
 
     @Autowired
     private Environment environment;
@@ -85,7 +88,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
 
         IntegrationTestConfig config = new IntegrationTestConfigReader(configFile, staticMq).initConfig();
         List<TestResult> testResults = config.runTests();
-        new LoggingResultBuilder().processResult(testResults); //otputs the result to console
+        new LoggingResultBuilder().processResult(testResults); //outputs the result to console
 
         //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
         //cleaning temp directory
@@ -99,6 +102,10 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         logger.info("IntegrationTestApp : Ended!");
     }
 
+    public static void registerMqListener(MqListener listener){
+        mqListeners.add(listener);
+    }
+
     @Bean
     public ServiceNow serviceNowRest() {
         return new ServiceNow() {
@@ -109,51 +116,38 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         };
     }
 
-    /*@SuppressWarnings("Duplicates")
-    @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
-                                        @NotNull MessageQueue messageQueue,
-                                        @NotNull StatusReporter reporter) {
-        return new AbstractQueueListener(errorHandler, reporter) {
-            @SuppressWarnings("ConstantConditions")
-            @Override
-            *//*message receiver and post processor*//*
-            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
-                logger.info("Got message from MQ like really ???? :" + cm.getFileName());
-            }
-        };
-    }*/
-
-   /* @SuppressWarnings("Duplicates")
-    @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
-        createIntegrationTestQueue(); //need to prepare queue first
-
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames("validation-integration-test");  //TODO how to remove this hardcode ? no idea yet
-        container.setPrefetchCount(10);
-        container.setMessageListener(listenerAdapter);
-        return container;
-    }*/
-
-   //todo change this to properties
     private void createIntegrationTestQueue() {
         com.rabbitmq.client.ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
-        factory.setHost("rabbitmq");
-        factory.setPort(5672);
-        factory.setUsername("guest");
-        factory.setPassword("guest");
+        factory.setHost(props.getRabbitmq().getHost());
+        factory.setPort(props.getRabbitmq().getPort());
+        factory.setUsername(props.getRabbitmq().getUsername());
+        factory.setPassword(props.getRabbitmq().getPassword());
         factory.setConnectionTimeout(500);
         Connection connection = null;
+        Channel channel = null;
         try {
             connection = factory.newConnection();
-            Channel channel = connection.createChannel();
-            channel.queueDeclare("validation-integration-test", false, false, false, null);       //integration-tests queue
+            channel = connection.createChannel();
+            for (String queue: props.getQueues()) {
+                channel.queueDeclare(queue, false, false, true, null);       //integration-tests queue
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TimeoutException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                if (channel != null) {
+                    channel.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -167,22 +161,22 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                 return new MessageListener() {
                     @Override
                     public void onMessage(Message message) {
-                        //TODO add routing for different consumer queues
-                        logger.info("got message from the MQ!");
-                        logger.info(message.getMessageProperties().getConsumerQueue());
-                        logger.info(new String(message.getBody()));
+                        String consumerQueue = message.getMessageProperties().getConsumerQueue();
+                        logger.info("got message from the MQ!, consuming queue is: " + consumerQueue);
+                        //routing messages to specific listeners
+                        for(MqListener listener : mqListeners){
+                            logger.info("listener subscribed for: " + listener.getConsumerQueue());
+                            if(consumerQueue.equals(listener.getConsumerQueue())){
+                                logger.info("Found listener for the mq message: " + listener.getClass());
+                                listener.onMessage(message);
+                            }
+                        }
                     }
                 };
             }
         };
-        listenerEndpoint.setQueueNames("validation-integration-test"); //Get them form configuration properties
+        listenerEndpoint.setQueueNames(props.getQueues().toArray(new String[0])); //Get them form configuration properties
         listenerEndpoint.setId("endpoint1"); //You can keep it this way
         registrar.registerEndpoint(listenerEndpoint);
     }
-
-    /*@Bean
-    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
-        //method
-        return new MessageListenerAdapter(receiver, "processMessage");
-    }*/
 }
