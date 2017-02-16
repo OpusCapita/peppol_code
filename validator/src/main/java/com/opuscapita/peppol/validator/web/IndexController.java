@@ -64,14 +64,9 @@ public class IndexController {
 
         ModelAndView result = new ModelAndView("result");
         result.addObject("root", getServiceName(request));
-        System.out.println(getServiceName(request));
+        ContainerMessage containerMessage = null;
         try {
-            ContainerMessage containerMessage = loadContainerMessageFromMultipartFile(dataFile);
-            /*try {
-                System.out.println(new String(DocumentContentUtils.getDocumentBytes(containerMessage.getBaseDocument().getDocument())));
-            } catch (TransformerException e) {
-                e.printStackTrace();
-            }*/
+            containerMessage = loadContainerMessageFromMultipartFile(dataFile);
             ValidationResult validationResult = validationController.validate(containerMessage);
             System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
             System.out.println(containerMessage.getBaseDocument().getProfileId());
@@ -81,7 +76,7 @@ public class IndexController {
             result.addObject("errors", validationResult.getErrors());
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
-            ValidationError exceptionalError = new ValidationError().withFlag("FATAL").withTitle(e.getMessage()).withText(StringEscapeUtils.escapeHtml(e.getCause().getMessage()));
+            ValidationError exceptionalError = new ValidationError().withFlag("FATAL").withTitle(e.getMessage()).withText(StringEscapeUtils.escapeHtml(e.getCause() == null ? e.getMessage() : e.getCause().getMessage()));
             result.addObject("status", false);
             result.addObject("errors", new ArrayList<ValidationError>() {{
                 add(exceptionalError);
