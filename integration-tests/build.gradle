@@ -40,6 +40,6 @@ dependencies {
     compile 'org.yaml:snakeyaml:1.17'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.2'
-    //compile 'com.codeborne:selenide:4.0'
+    compile 'com.codeborne:selenide:4.0'
     compile 'org.freemarker:freemarker:2.3.21'
 }
