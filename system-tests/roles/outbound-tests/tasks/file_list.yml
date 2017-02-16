@@ -3,7 +3,7 @@
   vars: 
     file: "{{item}}"
   with_fileglob:
-    - /tmp/validation_test_suite/valid/*
-    - /tmp/svefaktura_1.0/SBDH_wrapped_examples/Valid/*
-    - /tmp/EHF_2.0.7/Valid/*
+    - ~/system-tests/files/validation_test_suite/valid/*
+    - ~/system-tests/files/svefaktura_1.0/SBDH_wrapped_examples/Valid/*
+    - ~/system-tests/files/EHF_2.0.7/Valid/*
 ...

@@ -3,11 +3,11 @@
   vars: 
     file: "{{item}}"
   with_fileglob:
-    - /tmp/validation_test_suite/invalid/*
-    - /tmp/svefaktura_1.0/SBDH_wrapped_examples/Invalid/*
-    - /tmp/EHF_2.0.7/Invalid/*
-    - /tmp/svefaktura_1.0/invalid/*
-    - /tmp/Austrian_documents/invalid/*
-    - /tmp/Netherlands_documents/SBDH_wrapped/invalid/*
+    - ~/system-tests/files/validation_test_suite/invalid/*
+    - ~/system-tests/files/svefaktura_1.0/SBDH_wrapped_examples/Invalid/*
+    - ~/system-tests/files/EHF_2.0.7/Invalid/*
+    - ~/system-tests/files/svefaktura_1.0/invalid/*
+    - ~/system-tests/files/Austrian_documents/invalid/*
+    - ~/system-tests/files/Netherlands_documents/SBDH_wrapped/invalid/*
 
 ...
