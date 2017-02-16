@@ -1,15 +1,16 @@
 ---
 #File_list.yml#
+#This is where all the test materials are taken from #
 
 - include: send_to_inbound_multiple_files.yml
   vars:
     file: "{{item}}"
   with_fileglob:
-    - ~/system-tests/files/validation_test_suite/invalid/*
-    - ~/system-tests/files/svefaktura_1.0/SBDH_wrapped_examples/Invalid/*
-    - ~/system-tests/files/EHF_2.0.7/Invalid/*
-    - ~/system-tests/files/svefaktura_1.0/invalid/*
-    - ~/system-tests/files/Austrian_documents/invalid/*
-    - ~/system-tests/files/Netherlands_documents/SBDH_wrapped/invalid/*
+    - "{{test_data_path}}/validation_test_suite/invalid/*"
+    - "{{test_data_path}}/svefaktura_1.0/SBDH_wrapped_examples/Invalid/*"
+    - "{{test_data_path}}/EHF_2.0.7/Invalid/*"
+    - "{{test_data_path}}/svefaktura_1.0/invalid/*"
+    - "{{test_data_path}}/Austrian_documents/invalid/*"
+    - "{{test_data_path}}/Netherlands_documents/SBDH_wrapped/invalid/*"
 ...
 
