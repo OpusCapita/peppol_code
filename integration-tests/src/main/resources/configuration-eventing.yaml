@@ -31,6 +31,7 @@ tests:
           - db subscriber:
               db connection: db1
               query: select count(*) from messages where invoice_number="92426725"
+              timeout: 1500
               consumers: 4
           - db subscriber:
               db connection: db1
@@ -40,11 +41,6 @@ tests:
           - DB test:
              id: 4
              name: Message "status" can be seen in DB- positive test
-             connection string: db1
-             expected value: 1
-          - DB test:
-             id: 5
-             name: New access point -> new entry in DB- positive
              connection string: db1
              expected value: 1
           - SNC test:

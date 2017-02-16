@@ -30,8 +30,9 @@ public class DbSubscriber extends Subscriber {
     @Override
     public List<TestResult> run() {
         try {
+            logger.info("DbSubscriber: started!");
             String executionResult = getQuerryResult();
-            if (executionResult == "0") {
+            if (executionResult.equals("0")) {
                 logger.info("DbSubscriber: got no result, retrying in " + timeout);
                 Thread.sleep(timeout);
                 executionResult = getQuerryResult(); //second attempt
