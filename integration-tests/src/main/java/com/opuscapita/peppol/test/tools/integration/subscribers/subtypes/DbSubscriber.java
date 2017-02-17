@@ -3,6 +3,7 @@ package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
+import org.apache.log4j.LogManager;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.util.Properties;
  * Created by gamanse1 on 2016.11.17..
  */
 public class DbSubscriber extends Subscriber {
+    private final static org.apache.log4j.Logger logger = LogManager.getLogger(DbSubscriber.class);
     private final String dbConnection;
     private final String query;
 
@@ -27,23 +29,41 @@ public class DbSubscriber extends Subscriber {
 
     @Override
     public List<TestResult> run() {
+        try {
+            logger.info("DbSubscriber: started!");
+            String executionResult = getQuerryResult();
+            if (executionResult.equals("0")) {
+                logger.info("DbSubscriber: got no result, retrying in " + timeout);
+                Thread.sleep(timeout);
+                executionResult = getQuerryResult(); //second attempt
+            }
+            for (Consumer consumer : consumers) {
+                TestResult testResult = consumer.consume(executionResult);
+                testResults.add(testResult);
+            }
+        } catch (
+                InterruptedException e) {
+            e.printStackTrace();
+        }
+        return testResults;
+    }
+
+    private String getQuerryResult() {
         ResultSet resultSet = null;
         try {
             Properties props = new Properties();
             props.put("useJDBCCompliantTimezoneShift", "true");
             props.put("serverTimezone", "UTC");
             java.sql.Connection conn = null;
+
             conn = DriverManager.getConnection(dbConnection, props);
             PreparedStatement statement = conn.prepareStatement(query);
             resultSet = statement.executeQuery();
             resultSet.next();
-            for (Consumer consumer : consumers) {
-                TestResult testResult = consumer.consume(resultSet.getString(1));
-                testResults.add(testResult);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return resultSet.getString(1);
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            return  e1.toString();
         }
-        return testResults;
     }
 }
