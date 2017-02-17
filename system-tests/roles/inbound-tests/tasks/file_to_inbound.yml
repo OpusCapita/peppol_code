@@ -2,8 +2,8 @@
 - name: Copy file to inbound
   shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
   register: inbound_output
-- pause:
-    seconds: 10
+#- pause:
+#    seconds: 10
 - name: find transmissionId
   shell: echo "{{inbound_output.stdout_lines[-5:]}}" |grep -oh 'transmissionId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
   register: transmissionId
