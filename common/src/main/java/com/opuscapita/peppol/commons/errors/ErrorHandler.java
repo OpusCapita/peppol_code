@@ -127,6 +127,7 @@ public class ErrorHandler {
         return dateFormat.format(new Date()) + uniqueSuffix + ".json";
     }
 
+    @SuppressWarnings("unused")
     public void reportFailureToAmqp(String message, Exception e, RabbitTemplate rabbitTemplate, String outgoingQueueName) {
         JsonObject errorDoc = new JsonObject();
         errorDoc.addProperty("error", e.getMessage());

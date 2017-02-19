@@ -3,7 +3,6 @@ package com.opuscapita.peppol.events.persistence;
 import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
-import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
 import com.opuscapita.peppol.events.persistence.controller.PersistenceController;
@@ -19,14 +18,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.StreamUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
 import java.util.Arrays;
-import java.util.stream.StreamSupport;
 
 import static org.junit.Assert.fail;
 
@@ -36,10 +32,6 @@ import static org.junit.Assert.fail;
 @ComponentScan(excludeFilters = @ComponentScan.Filter(value = EventQueueListener.class, type = FilterType.ASSIGNABLE_TYPE))
 @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
 public class EventsPersistenceApplicationTests {
-    @Autowired
-    PersistenceController persistenceController;
-
-    Logger logger = Logger.getLogger(EventsPersistenceApplicationTests.class);
     String[] negativeFixtures = {
             "",
             "{}",
@@ -50,6 +42,9 @@ public class EventsPersistenceApplicationTests {
             "{\"transportType\":\"IN_OUT\",\"fileName\":\"7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml\",\"fileSize\":38497,\"invoiceId\":\"356042\",\"senderId\":\"9908:919095105\",\"senderName\":\"LAKS-- VILDTCENTRALEN AS\",\"senderCountryCode\":\"NO\",\"recipientId\":\"9908:994356550\",\"recipientName\":\"NIWA\",\"recipientCountryCode\":\"NO\",\"invoiceDate\":\"2016-05-31\",\"dueDate\":\"2016-06-21\",\"transactionId\":\"7ecd16db-bfc1-4374-9be7-3ec00a56e9f8\",\"documentType\":\"Invoice\",\"commonName\":\"O\\u003dEVRY Norge AS,CN\\u003dAPP_1000000148,C\\u003dNO\",\"sendingProtocol\":\"AS2\"}",
             "{\"transportType\":\"IN_OUT\",\"fileName\":\"203bb266-363a-4781-8d33-8be9bb4a5334.xml\",\"fileSize\":14876,\"invoiceId\":\"356041\",\"senderId\":\"9908:919095105\",\"senderName\":\"LAKS--VILDTCENTRALEN AS\",\"senderCountryCode\":\"NO\",\"recipientId\":\"9908:994356550\",\"recipientName\":\"MATS MARTIN CC VEST\",\"recipientCountryCode\":\"NO\",\"invoiceDate\":\"2016-05-31\",\"dueDate\":\"2016-06-21\",\"transactionId\":\"203bb266-363a-4781-8d33-8be9bb4a5334\",\"documentType\":\"Invoice\",\"commonName\":\"O\\u003dEVRY Norge AS,CN\\u003dAPP_1000000148,C\\u003dNO\",\"sendingProtocol\":\"AS2\"}"
     };
+    @Autowired
+    private PersistenceController persistenceController;
+    private Logger logger = Logger.getLogger(EventsPersistenceApplicationTests.class);
 
     @Bean
     @ConditionalOnMissingBean(ServiceNowConfiguration.class)
@@ -60,12 +55,7 @@ public class EventsPersistenceApplicationTests {
     @Bean
     @ConditionalOnMissingBean(ServiceNow.class)
     ServiceNow serviceNowRest() {
-        return new ServiceNow() {
-            @Override
-            public void insert(SncEntity sncEntity) throws IOException {
-                logger.info("Inserted " + sncEntity.toString());
-            }
-        };
+        return sncEntity -> logger.info("Inserted " + sncEntity.toString());
     }
 
     @Test

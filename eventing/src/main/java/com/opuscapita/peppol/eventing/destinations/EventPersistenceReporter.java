@@ -3,7 +3,7 @@ package com.opuscapita.peppol.eventing.destinations;
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
-import com.opuscapita.peppol.commons.container.route.TransportType;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
 import org.jetbrains.annotations.NotNull;
@@ -74,9 +74,9 @@ public class EventPersistenceReporter {
             return null;
         }
 
-        TransportType transportType;
+        ProcessType processType;
         try {
-            transportType = TransportType.valueOf(typeDefinition);
+            processType = ProcessType.valueOf(typeDefinition);
         } catch (IllegalArgumentException e) {
             logger.error("Unknown transport type for peppol.eventing.transport.type." + ps.getComponentName() + " = " + typeDefinition +
                     ". Message ignored");
@@ -85,7 +85,7 @@ public class EventPersistenceReporter {
 
         PeppolEvent result = new PeppolEvent();
         result.setFileName(cm.getFileName());
-        result.setTransportType(transportType);
+        result.setProcessType(processType);
 
         result.setInvoiceId(cm.getBaseDocument().getDocumentId());
         result.setInvoiceDate(cm.getBaseDocument().getIssueDate());
@@ -101,6 +101,10 @@ public class EventPersistenceReporter {
         if (cm.getBaseDocument() instanceof InvalidDocument) {
             InvalidDocument invalid = (InvalidDocument) cm.getBaseDocument();
             result.setErrorMessage(invalid.getReason());
+        }
+        if (cm.getValidationResult() != null && cm.getValidationResult().getErrors() != null &&
+                cm.getValidationResult().getErrors().size() > 0) {
+            result.setErrorMessage(cm.getValidationResult().getErrorsString());
         }
 
         logger.debug("Peppol event prepared");

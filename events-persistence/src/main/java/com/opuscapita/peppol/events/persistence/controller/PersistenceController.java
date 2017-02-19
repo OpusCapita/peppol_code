@@ -1,9 +1,11 @@
 package com.opuscapita.peppol.events.persistence.controller;
 
 
-import com.opuscapita.peppol.commons.container.route.TransportType;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.model.*;
 import com.opuscapita.peppol.events.persistence.model.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +27,22 @@ import java.util.TreeSet;
  */
 @Component
 public class PersistenceController {
-    Logger logger = LoggerFactory.getLogger(PersistenceController.class);
+    private final Logger logger = LoggerFactory.getLogger(PersistenceController.class);
 
-
-    AccessPointRepository accessPointRepository;
-
-    MessageRepository messageRepository;
-
-    CustomerRepository customerRepository;
-
-    FileInfoRepository fileInfoRepository;
-
-    FailedFileInfoRepository failedFileInfoRepository;
-
-    SentFileInfoRepository sentFileInfoRepository;
-
-    ReprocessFileInfoRepository reprocessFileInfoRepository;
+    private final AccessPointRepository accessPointRepository;
+    private final MessageRepository messageRepository;
+    private final CustomerRepository customerRepository;
+    private final FileInfoRepository fileInfoRepository;
+    private final FailedFileInfoRepository failedFileInfoRepository;
+    private final SentFileInfoRepository sentFileInfoRepository;
+    private final ReprocessFileInfoRepository reprocessFileInfoRepository;
 
     @Value("${peppol.events-persistence.error.dir}")
     private String errorDirPath;
     @Value("${peppol.events-persistence.invalid.dir}")
     private String invalidDirPath;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public PersistenceController(
             AccessPointRepository accessPointRepository,
@@ -70,8 +66,16 @@ public class PersistenceController {
     @Transactional
     @Retryable(include = ConnectException.class, maxAttempts = 5, backoff = @Backoff(10000L))
     public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
-        logger.info("About to store peppol event " + peppolEvent);
-        refactorIfInbound(peppolEvent);
+        logger.info("About to process peppol event " + peppolEvent);
+        if (peppolEvent.getProcessType() == ProcessType.IN_INBOUND ||
+                peppolEvent.getProcessType() == ProcessType.OUT_FILE_TO_MQ ||
+                peppolEvent.getProcessType() == ProcessType.REST) {
+            // some events cannot be processed
+            logger.info("Event is of unsupported type, skipping");
+            return;
+        }
+
+        swapSenderAndReceiverForInbound(peppolEvent);
         getAccessPoint(peppolEvent);
 
         Message message = getOrCreateMessage(peppolEvent);
@@ -80,7 +84,6 @@ public class PersistenceController {
         fileInfoRepository.save(fileInfo);
         Message persistedMessage = messageRepository.save(message);
         logger.info("Message persisted with id: " + persistedMessage.getId());
-
     }
 
     private FileInfo getFileInfo(Message message, PeppolEvent peppolEvent) {
@@ -103,23 +106,30 @@ public class PersistenceController {
     private FileInfo setFileInfoStatus(FileInfo fileInfo, PeppolEvent peppolEvent, Message message) {
         boolean validationError = true;
         message.setStatus(MessageStatus.processing);
-        switch (peppolEvent.getTransportType()) {
+        switch (peppolEvent.getProcessType()) {
             case OUT_REPROCESS:
+            case IN_REPROCESS:
                 addReprocessInfo(fileInfo);
                 break;
             case IN_IN:
             case OUT_IN:
-                validationError = true;
+            case IN_VALIDATION:
+            case OUT_VALIDATION:
+            case IN_PREPROCESS:
+            case OUT_PREPROCESS:
+            case IN_TEST:
+            case OUT_TEST:
+            case TEST:
                 break;
             case IN_OUT:
+            case IN_MQ_TO_FILE:
                 validationError = true;
-//                if (peppolEvent.getErrorMessage() == null || peppolEvent.getErrorMessage().isEmpty()) {
                 addSentInfo(fileInfo, peppolEvent);
                 message.setStatus(MessageStatus.sent);
-//                }
                 break;
             case OUT_PEPPOL:
             case OUT_PEPPOL_FINAL:
+            case OUT_OUTBOUND:
                 if (peppolEvent.getErrorMessage() == null || peppolEvent.getErrorMessage().isEmpty()) {
                     addSentInfo(fileInfo, peppolEvent);
                     message.setStatus(MessageStatus.sent);
@@ -127,17 +137,19 @@ public class PersistenceController {
                 validationError = false;
                 break;
             default:
-                logger.error("Unable to process transport type: " + peppolEvent.getTransportType());
+                logger.warn("Unable to process transport type: " + peppolEvent.getProcessType());
                 break;
         }
+
         if (peppolEvent.getErrorMessage() != null && !peppolEvent.getErrorMessage().isEmpty()) {
             addErrorFileInfo(fileInfo, peppolEvent, validationError);
-            if (peppolEvent.getTransportType() == TransportType.OUT_PEPPOL) {
+            if (peppolEvent.getProcessType() == ProcessType.OUT_PEPPOL || peppolEvent.getProcessType() == ProcessType.OUT_OUTBOUND) {
                 message.setStatus(MessageStatus.reprocessed);
             } else {
                 message.setStatus(validationError ? MessageStatus.invalid : MessageStatus.failed);
             }
         }
+
         return fileInfo;
     }
 
@@ -146,7 +158,7 @@ public class PersistenceController {
         reprocessFileInfo.setReprocessedFile(fileInfo);
         reprocessFileInfo = reprocessFileInfoRepository.save(reprocessFileInfo);
         if (fileInfo.getReprocessInfo() == null) {
-            fileInfo.setReprocessInfo(new TreeSet<ReprocessFileInfo>());
+            fileInfo.setReprocessInfo(new TreeSet<>());
         }
         fileInfo.getReprocessInfo().add(reprocessFileInfo);
         fileInfoRepository.save(fileInfo);
@@ -164,7 +176,7 @@ public class PersistenceController {
         failedFileInfo.setErrorMessage(errorMessage);
         failedFileInfo = failedFileInfoRepository.save(failedFileInfo);
         if (fileInfo.getFailedInfo() == null) {
-            fileInfo.setFailedInfo(new TreeSet<FailedFileInfo>());
+            fileInfo.setFailedInfo(new TreeSet<>());
         }
         fileInfo.getFailedInfo().add(failedFileInfo);
     }
@@ -177,10 +189,10 @@ public class PersistenceController {
         }
     }
 
-    protected void addSentInfo(FileInfo fileInfo, PeppolEvent peppolEvent) {
+    private void addSentInfo(FileInfo fileInfo, PeppolEvent peppolEvent) {
         SentFileInfo sentFileInfo = new SentFileInfo();
         sentFileInfo.setSentFile(fileInfo);
-        String prefix = peppolEvent.getTransportType().name().split("_")[0];
+        String prefix = peppolEvent.getProcessType().name().split("_")[0];
         sentFileInfo.setTransmissionId(prefix + peppolEvent.getTransactionId());
         sentFileInfo.setApProtocol(peppolEvent.getSendingProtocol());
         if (peppolEvent.getCommonName() != null) {
@@ -190,13 +202,14 @@ public class PersistenceController {
         }
         sentFileInfo = sentFileInfoRepository.save(sentFileInfo);
         if (fileInfo.getSentInfo() == null) {
-            fileInfo.setSentInfo(new TreeSet<SentFileInfo>());
+            fileInfo.setSentInfo(new TreeSet<>());
         }
 
         fileInfo.getSentInfo().add(sentFileInfo);
     }
 
-    private Message getOrCreateMessage(PeppolEvent peppolEvent) {
+    @NotNull
+    private Message getOrCreateMessage(@NotNull PeppolEvent peppolEvent) {
         Message message = fetchMessageByPeppolEvent(peppolEvent);
         if (message == null) {
             logger.info("Creating new message for file: " + peppolEvent.getFileName());
@@ -208,7 +221,7 @@ public class PersistenceController {
             message.setDocumentType(peppolEvent.getDocumentType());
             message.setStatus(MessageStatus.processing);
 
-            if (peppolEvent.getTransportType() == TransportType.IN_IN || peppolEvent.getTransportType() == TransportType.IN_OUT) {
+            if (peppolEvent.getProcessType().isInbound()) {
                 message.setDirection(Direction.IN);
             } else {
                 message.setDirection(Direction.OUT);
@@ -222,7 +235,7 @@ public class PersistenceController {
                 logger.warn("Failed to parse Invoice Date: " + peppolEvent.getInvoiceDate());
             }
 
-            // Not all messages have Due Date
+            // not all messages have due date
             try {
                 java.util.Date dueDate = sdf1.parse(peppolEvent.getDueDate());
                 message.setDueDate(new Date(dueDate.getTime()));
@@ -234,22 +247,22 @@ public class PersistenceController {
         return message;
     }
 
-    public Message fetchMessageByPeppolEvent(PeppolEvent peppolEvent) {
+    @Nullable
+    private Message fetchMessageByPeppolEvent(@NotNull PeppolEvent peppolEvent) {
         try {
             Customer customer = getOrCreateCustomer(peppolEvent);
-            Message message = messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId());
-            return message;
+            return messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId());
         } catch (Exception e) {
             logger.error("Failed to get customer using document: " + e.getMessage());
         }
         return null;
     }
 
-    private Customer getOrCreateCustomer(PeppolEvent peppolEvent) {
+    @NotNull
+    private Customer getOrCreateCustomer(@NotNull PeppolEvent peppolEvent) {
         Customer customer = customerRepository.findByIdentifier(peppolEvent.getSenderId());
         if (customer == null) {
             customer = new Customer();
-
             customer.setName(peppolEvent.getSenderName());
             customer.setIdentifier(peppolEvent.getSenderId());
             customer = customerRepository.save(customer);
@@ -257,8 +270,12 @@ public class PersistenceController {
         return customer;
     }
 
-    protected void refactorIfInbound(PeppolEvent peppolEvent) {
-        if (TransportType.isInbound(peppolEvent.getTransportType())) {
+    @SuppressWarnings("deprecation")
+    private void swapSenderAndReceiverForInbound(PeppolEvent peppolEvent) {
+        if (peppolEvent.getProcessType() == null) {
+            peppolEvent.setProcessType(ProcessType.UNKNOWN);
+        }
+        if (peppolEvent.getProcessType().isInbound()) {
             String customerId = peppolEvent.getRecipientId();
             String customerName = peppolEvent.getRecipientName();
             String customerCountryCode = peppolEvent.getRecipientCountryCode();
@@ -272,7 +289,7 @@ public class PersistenceController {
 
     }
 
-    protected AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
+    private AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
         AccessPoint accessPoint = null;
         if (peppolEvent.getCommonName() != null) {
             final String apId = getApId(peppolEvent.getCommonName());
@@ -287,7 +304,7 @@ public class PersistenceController {
         return accessPoint;
     }
 
-    protected String getApId(String commonName) {
+    private String getApId(String commonName) {
         String[] parts = commonName.split(",");
         if (parts.length > 1) {
             String[] idParts = parts[1].split("=");
@@ -298,7 +315,7 @@ public class PersistenceController {
         return commonName;
     }
 
-    protected String getApName(String commonName) {
+    private String getApName(String commonName) {
         String[] parts = commonName.split(",");
         if (parts.length > 0) {
             String[] nameParts = parts[0].split("=");
