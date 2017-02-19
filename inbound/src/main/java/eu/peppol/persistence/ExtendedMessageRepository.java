@@ -2,6 +2,7 @@ package eu.peppol.persistence;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.storage.StorageImpl;
 import com.opuscapita.peppol.inbound.InboundErrorHandler;
 import com.opuscapita.peppol.inbound.InboundMessageSender;
@@ -68,7 +69,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
     }
 
     private ContainerMessage prepareMessage(String fileName, String metadata, String componentName) {
-        return new ContainerMessage(metadata, fileName, new Endpoint(componentName, Endpoint.Type.PEPPOL));
+        return new ContainerMessage(metadata, fileName, new Endpoint(componentName, ProcessType.IN_INBOUND));
     }
 
 }

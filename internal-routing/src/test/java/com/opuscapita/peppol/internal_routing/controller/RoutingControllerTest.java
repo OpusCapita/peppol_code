@@ -3,6 +3,7 @@ package com.opuscapita.peppol.internal_routing.controller;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.UblDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.route.Route;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class RoutingControllerTest {
 
         ContainerMessage cm;
 
-        cm = new ContainerMessage("test", "test", new Endpoint("test2", Endpoint.Type.PEPPOL)).setBaseDocument(new UblDocument());
+        cm = new ContainerMessage("test", "test", new Endpoint("test2", ProcessType.TEST)).setBaseDocument(new UblDocument());
         assertNull(cm.getRoute());
         cm = rc.loadRoute(cm);
         assertNotNull(cm.getRoute());
@@ -47,7 +48,7 @@ public class RoutingControllerTest {
         assertEquals("r2a", cm.getRoute().pop());
         assertEquals("r2b", cm.getRoute().pop());
 
-        cm = new ContainerMessage("test", "test", new Endpoint("test1", Endpoint.Type.PEPPOL)).setBaseDocument(new UblDocument());
+        cm = new ContainerMessage("test", "test", new Endpoint("test1", ProcessType.TEST)).setBaseDocument(new UblDocument());
         assertNull(cm.getRoute());
         cm = rc.loadRoute(cm);
         assertNotNull(cm.getRoute());
@@ -74,8 +75,8 @@ public class RoutingControllerTest {
 
         RoutingController rc = new RoutingController(conf);
 
-        ContainerMessage cm1 = new ContainerMessage("test1", "test1", new Endpoint("test", Endpoint.Type.TEST));
-        ContainerMessage cm2 = new ContainerMessage("test2", "test2", new Endpoint("test", Endpoint.Type.TEST));
+        ContainerMessage cm1 = new ContainerMessage("test1", "test1", new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm2 = new ContainerMessage("test2", "test2", new Endpoint("test", ProcessType.TEST));
 
         cm1 = rc.loadRoute(cm1);
         assertEquals("A", cm1.getRoute().pop());

@@ -2,6 +2,7 @@ package com.opuscapita.peppol.transport.checker;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -112,7 +113,7 @@ public class IncomingChecker {
     private void send(File file) throws Exception {
         String fileName = storage.moveToTemporary(file, backupDir);
         logger.info("File moved to: " + fileName);
-        Endpoint source = new Endpoint(componentName, reprocess ? Endpoint.Type.REPROCESS : Endpoint.Type.GATEWAY);
+        Endpoint source = new Endpoint(componentName, reprocess ? ProcessType.OUT_REPROCESS : ProcessType.OUT_FILE_TO_MQ);
 
         ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
                 fileName, source).setStatus(new ProcessingStatus(componentName, "received", fileName));

@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -17,7 +18,7 @@ public class TemplateToolsTest {
 
     @Test
     public void templateToPath() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", Endpoint.Type.TEST));
+        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", ProcessType.TEST));
         try (InputStream is = TemplateToolsTest.class.getResourceAsStream("/valid/ehf.xml")) {
             BaseDocument bd = new DocumentLoader().load(is, "/tmp/test.xml");
             cm.setBaseDocument(bd);

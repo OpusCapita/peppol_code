@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.container;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.route.Route;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class ContainerMessageTest {
             }
         }
 
-        ContainerMessage cm = new ContainerMessage("metadata", tmp.getAbsolutePath(), new Endpoint("test", Endpoint.Type.PEPPOL));
+        ContainerMessage cm = new ContainerMessage("metadata", tmp.getAbsolutePath(), new Endpoint("test", ProcessType.TEST));
 
         try (InputStream is = ContainerMessageTest.class.getResourceAsStream("/valid/valid.german.xml")) {
             DocumentLoader dl = new DocumentLoader();
