@@ -3,7 +3,7 @@ package com.opuscapita.peppol.eventing.destinations;
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
+import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -30,13 +29,12 @@ public class EventPersistenceReporter {
     private final static Logger logger = LoggerFactory.getLogger(EventPersistenceReporter.class);
     private final RabbitTemplate rabbitTemplate;
     private final Gson gson;
-    private final Environment environment;
+
     @Value("${peppol.eventing.queue.out.name}")
     private String queueOut;
 
     @Autowired
-    public EventPersistenceReporter(@NotNull Environment environment, @NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
-        this.environment = environment;
+    public EventPersistenceReporter(@NotNull RabbitTemplate rabbitTemplate, @NotNull Gson gson) {
         this.rabbitTemplate = rabbitTemplate;
         this.gson = gson;
     }
@@ -45,7 +43,6 @@ public class EventPersistenceReporter {
         PeppolEvent event = convert(cm);
 
         if (event == null) {
-            logger.debug("Ignoring source " + cm.getProcessingStatus().getComponentName());
             return;
         }
         String result = gson.toJson(event);
@@ -68,24 +65,11 @@ public class EventPersistenceReporter {
         }
 
         ProcessingStatus ps = cm.getProcessingStatus();
-        String typeDefinition = environment.getProperty("peppol.eventing.transport.type." + ps.getComponentName());
-        if (typeDefinition == null) {
-            logger.info("Transport type for " + ps.getComponentName() + " not configured, message ignored");
-            return null;
-        }
-
-        ProcessType processType;
-        try {
-            processType = ProcessType.valueOf(typeDefinition);
-        } catch (IllegalArgumentException e) {
-            logger.error("Unknown transport type for peppol.eventing.transport.type." + ps.getComponentName() + " = " + typeDefinition +
-                    ". Message ignored");
-            return null;
-        }
+        Endpoint endpoint = ps.getEndpoint();
 
         PeppolEvent result = new PeppolEvent();
         result.setFileName(cm.getFileName());
-        result.setProcessType(processType);
+        result.setProcessType(endpoint.getType());
 
         result.setInvoiceId(cm.getBaseDocument().getDocumentId());
         result.setInvoiceDate(cm.getBaseDocument().getIssueDate());

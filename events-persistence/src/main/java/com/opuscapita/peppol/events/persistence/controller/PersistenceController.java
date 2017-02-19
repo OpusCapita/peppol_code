@@ -117,6 +117,8 @@ public class PersistenceController {
             case OUT_VALIDATION:
             case IN_PREPROCESS:
             case OUT_PREPROCESS:
+            case IN_ROUTING:
+            case OUT_ROUTING:
             case IN_TEST:
             case OUT_TEST:
             case TEST:

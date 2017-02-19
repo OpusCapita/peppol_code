@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.outbound;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -41,7 +43,7 @@ public class OutboundApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 controller.send(cm);
                 logger.debug("Message " + cm.getFileName() + "delivered with transaction id = " + cm.getTransactionId());
-                cm.setStatus(componentName, "delivered");
+                cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "delivered");
             }
         };
     }

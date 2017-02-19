@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.transport;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -51,7 +53,7 @@ public class MessageQueueToFileApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Storing incoming message: " + cm.getFileName());
                 controller.storeMessage(cm);
-                cm.setStatus(componentName, "delivered");
+                cm.setStatus(new Endpoint(componentName, ProcessType.IN_MQ_TO_FILE), "delivered");
             }
         };
     }

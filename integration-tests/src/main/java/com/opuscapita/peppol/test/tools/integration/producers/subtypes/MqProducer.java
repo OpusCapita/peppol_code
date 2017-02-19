@@ -81,7 +81,7 @@ public class MqProducer implements Producer {
                 if (file.isFile()) {
                     ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(), new Endpoint("integration-tests", ProcessType.TEST))
                             .setBaseDocument(documentLoader.load(file));
-                    cm.setStatus(new ProcessingStatus("outbound","testing?", file.getName()));
+                    cm.setStatus(new ProcessingStatus(new Endpoint("outbound", ProcessType.TEST),"testing?", file.getName()));
                     Route route = new Route();
                     List<String> endpoints = Arrays.asList(endpoint); //new queue for integration tests
                     route.setEndpoints(endpoints);

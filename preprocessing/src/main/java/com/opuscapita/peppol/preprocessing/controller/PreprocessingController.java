@@ -55,11 +55,6 @@ public class PreprocessingController {
             logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
             cm.setBaseDocument(document).setFileName(longTerm);
 
-            // this piece reports file with the previous stage name, either gateway or inbound
-            if (statusReporter != null) {
-                statusReporter.report(cm);
-            }
-
             return cm;
         } catch (Exception e) {
             logger.warn("Failed to process file: " + e.getMessage());

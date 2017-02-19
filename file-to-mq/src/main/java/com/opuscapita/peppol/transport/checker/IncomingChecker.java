@@ -116,7 +116,7 @@ public class IncomingChecker {
         Endpoint source = new Endpoint(componentName, reprocess ? ProcessType.OUT_REPROCESS : ProcessType.OUT_FILE_TO_MQ);
 
         ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
-                fileName, source).setStatus(new ProcessingStatus(componentName, "received", fileName));
+                fileName, source).setStatus(new ProcessingStatus(source, "received", fileName));
 
         messageQueue.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");

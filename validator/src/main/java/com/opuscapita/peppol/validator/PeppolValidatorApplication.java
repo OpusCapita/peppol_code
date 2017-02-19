@@ -5,6 +5,8 @@ import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
@@ -137,7 +139,11 @@ public class PeppolValidatorApplication {
 
                 String queueOut = cm.getRoute().pop();
                 messageQueue.convertAndSend(queueOut, cm);
-                cm.setStatus(componentName, "validation passed");
+                if (cm.isInbound()) {
+                    cm.setStatus(new Endpoint(componentName, ProcessType.IN_VALIDATION), "validation passed");
+                } else {
+                    cm.setStatus(new Endpoint(componentName, ProcessType.OUT_VALIDATION), "validation passed");
+                }
                 logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
             }
         };
