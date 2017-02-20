@@ -97,6 +97,7 @@ public class FileInfoServiceImpl implements FileInfoService {
         fileInfoDAO.update(fileInfo);
         File f = new File(fileInfo.getFilename());
         final Path filePath = Paths.get(outbound ? reprocessOutboundDir : reprocessInboundDir, f.getName());
+        logger.info("Reprocessing, file moved to:  " + filePath);
         Files.write(filePath, fileData);
     }
 
