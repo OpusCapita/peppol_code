@@ -2,6 +2,8 @@ package com.opuscapita.peppol.preprocessing;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
+import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
@@ -62,7 +64,11 @@ public class PreprocessingApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Message received, file id: " + cm.getFileName());
                 cm = controller.process(cm);
-                cm.setStatus(componentName, "file read");
+                if (cm.isInbound()) {
+                    cm.setStatus(new Endpoint(componentName, ProcessType.IN_PREPROCESS), "read");
+                } else {
+                    cm.setStatus(new Endpoint(componentName, ProcessType.OUT_REPROCESS), "read");
+                }
                 if (cm.getBaseDocument() instanceof InvalidDocument) {
                     messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Invalid message sent to " + errorQueue + " queue");

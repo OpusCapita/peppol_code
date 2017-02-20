@@ -38,7 +38,7 @@ public class EventQueueListener {
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(message);
-            customerId = peppolEvent.getTransportType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
+            customerId = peppolEvent.getProcessType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
 //            retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
 //                @Override
 //                public Void doWithRetry(RetryContext context) throws ConnectException {

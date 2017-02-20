@@ -3,6 +3,7 @@ package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
@@ -28,13 +29,13 @@ import java.util.Properties;
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
     private final String endpoint;
+    DocumentLoader documentLoader = new DocumentLoader();
+    MessageQueue mq;
     private String dbConnection = null;
     private String dbPreprocessQuery = null;
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
-    DocumentLoader documentLoader = new DocumentLoader();
-    MessageQueue mq;
 
     public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String endpoint, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
         this.mqSettings = mqSettings;
@@ -78,9 +79,9 @@ public class MqProducer implements Producer {
         try {
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(), new Endpoint("integration-tests", Endpoint.Type.PEPPOL))
+                    ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(), new Endpoint("integration-tests", ProcessType.TEST))
                             .setBaseDocument(documentLoader.load(file));
-                    cm.setStatus(new ProcessingStatus("outbound","testing?", file.getName()));
+                    cm.setStatus(new ProcessingStatus(new Endpoint("outbound", ProcessType.TEST),"testing?", file.getName()));
                     Route route = new Route();
                     List<String> endpoints = Arrays.asList(endpoint); //new queue for integration tests
                     route.setEndpoints(endpoints);

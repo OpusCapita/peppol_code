@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.commons.model;
 
-import com.opuscapita.peppol.commons.container.route.TransportType;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +10,7 @@ import com.opuscapita.peppol.commons.container.route.TransportType;
  */
 public class PeppolEvent {
 
-    private TransportType transportType;
+    private ProcessType processType;
 
     // File specific parameters
     private String fileName;
@@ -36,12 +36,12 @@ public class PeppolEvent {
     private String sendingProtocol;
 
 
-    public TransportType getTransportType() {
-        return transportType;
+    public ProcessType getProcessType() {
+        return processType;
     }
 
-    public void setTransportType(TransportType transportType) {
-        this.transportType = transportType;
+    public void setProcessType(ProcessType processType) {
+        this.processType = processType;
     }
 
     public String getFileName() {
@@ -185,7 +185,7 @@ public class PeppolEvent {
     @Override
     public String toString() {
         return "PeppolEvent{" +
-                "transportType=" + transportType +
+                "transportType=" + processType +
                 ", fileName='" + fileName + '\'' +
                 ", fileSize=" + fileSize +
                 ", errorFilePath='" + errorFilePath + '\'' +

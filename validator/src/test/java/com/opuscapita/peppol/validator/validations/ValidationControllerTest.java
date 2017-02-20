@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.TestConfig;
 import org.junit.After;
@@ -61,7 +62,7 @@ public class ValidationControllerTest {
             return new File(resourceDir, fileName);
         }).filter(fileToCheck -> fileToCheck.isFile() && fileToCheck.exists()).forEach(file -> {
             try {
-                ContainerMessage containerMessage = new ContainerMessage("test", file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
+                ContainerMessage containerMessage = new ContainerMessage("test", file.getName(), new Endpoint("test", ProcessType.TEST))
                         .setBaseDocument(documentLoader.load(file));
                 if (containerMessage.getBaseDocument() instanceof InvalidDocument) {
                     return;

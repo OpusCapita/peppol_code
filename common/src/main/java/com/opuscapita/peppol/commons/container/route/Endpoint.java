@@ -11,18 +11,9 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class Endpoint implements Serializable {
-    public enum Type {
-        PEPPOL,
-        GATEWAY,
-        REST,
-        REPROCESS,
-        RETRY,
-        TEST,
-        QUEUE
-    }
 
     private final String name;
-    private final Type type;
+    private final ProcessType type;
 
     /**
      * Creates new endpoint information.
@@ -30,7 +21,7 @@ public class Endpoint implements Serializable {
      * @param name the name of the service
      * @param type the logical type of the service
      */
-    public Endpoint(@NotNull String name, @NotNull Type type) {
+    public Endpoint(@NotNull String name, @NotNull ProcessType type) {
         this.name = name;
         this.type = type;
     }
@@ -39,12 +30,12 @@ public class Endpoint implements Serializable {
         return name;
     }
 
-    public Type getType() {
+    public ProcessType getType() {
         return type;
     }
 
     public boolean isInbound() {
-        return type == Type.PEPPOL;
+        return type.isInbound();
     }
 
     @Override

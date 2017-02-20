@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
@@ -40,7 +41,7 @@ public class RestValidator {
         ValidationResult validationResult;
         ContainerMessage containerMessage;
         try {
-            containerMessage = new ContainerMessage("REST /validate", file.getName(), new Endpoint("validator_rest", Endpoint.Type.REST))
+            containerMessage = new ContainerMessage("REST /validate", file.getName(), new Endpoint("validator_rest", ProcessType.REST))
                     .setBaseDocument(documentLoader.load(file.getInputStream(), file.getName()));
             validationResult = validationController.validate(containerMessage);
             logger.info("Validation performed normally with result: " + validationResult.isPassed());

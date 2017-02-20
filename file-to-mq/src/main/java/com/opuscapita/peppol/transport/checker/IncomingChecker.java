@@ -2,6 +2,7 @@ package com.opuscapita.peppol.transport.checker;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -53,6 +54,8 @@ public class IncomingChecker {
     private String queue;
     @Value("${peppol.file-to-mq.backup.directory:}")
     private String backupDir;
+    @Value("${peppol.file-to-mq.reprocess:false}")
+    private boolean reprocess;
 
     @Autowired
     public IncomingChecker(@NotNull MessageQueue messageQueue, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
@@ -110,10 +113,10 @@ public class IncomingChecker {
     private void send(File file) throws Exception {
         String fileName = storage.moveToTemporary(file, backupDir);
         logger.info("File moved to: " + fileName);
+        Endpoint source = new Endpoint(componentName, reprocess ? ProcessType.OUT_REPROCESS : ProcessType.OUT_FILE_TO_MQ);
 
         ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
-                fileName, new Endpoint(componentName, Endpoint.Type.GATEWAY))
-                    .setStatus(new ProcessingStatus(componentName, "received", fileName));
+                fileName, source).setStatus(new ProcessingStatus(source, "received", fileName));
 
         messageQueue.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");

@@ -3,6 +3,7 @@ package com.opuscapita.peppol.validator.web;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
@@ -64,14 +65,9 @@ public class IndexController {
 
         ModelAndView result = new ModelAndView("result");
         result.addObject("root", getServiceName(request));
-        System.out.println(getServiceName(request));
+        ContainerMessage containerMessage = null;
         try {
-            ContainerMessage containerMessage = loadContainerMessageFromMultipartFile(dataFile);
-            /*try {
-                System.out.println(new String(DocumentContentUtils.getDocumentBytes(containerMessage.getBaseDocument().getDocument())));
-            } catch (TransformerException e) {
-                e.printStackTrace();
-            }*/
+            containerMessage = loadContainerMessageFromMultipartFile(dataFile);
             ValidationResult validationResult = validationController.validate(containerMessage);
             System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
             System.out.println(containerMessage.getBaseDocument().getProfileId());
@@ -81,7 +77,7 @@ public class IndexController {
             result.addObject("errors", validationResult.getErrors());
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
-            ValidationError exceptionalError = new ValidationError().withFlag("FATAL").withTitle(e.getMessage()).withText(StringEscapeUtils.escapeHtml(e.getCause().getMessage()));
+            ValidationError exceptionalError = new ValidationError().withFlag("FATAL").withTitle(e.getMessage()).withText(StringEscapeUtils.escapeHtml(e.getCause() == null ? e.getMessage() : e.getCause().getMessage()));
             result.addObject("status", false);
             result.addObject("errors", new ArrayList<ValidationError>() {{
                 add(exceptionalError);
@@ -93,7 +89,7 @@ public class IndexController {
     @NotNull
     private ContainerMessage loadContainerMessageFromMultipartFile(MultipartFile dataFile) throws IOException {
         return new ContainerMessage(
-                dataFile.getName(), dataFile.getName(), new Endpoint("validator_rest", Endpoint.Type.REST))
+                dataFile.getName(), dataFile.getName(), new Endpoint("validator_rest", ProcessType.REST))
                 .setBaseDocument(documentLoader.load(dataFile.getInputStream(), dataFile.getName()));
     }
 }

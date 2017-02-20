@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.status;
 
+import com.opuscapita.peppol.commons.container.route.Endpoint;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -8,24 +9,24 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class ProcessingStatus implements Serializable {
-    private String componentName;
-    private String result;
     private final String correlationId;
+    private Endpoint endpoint;
+    private String result;
 
-    public ProcessingStatus(@NotNull String componentName, @NotNull String result, @NotNull String correlationId) {
-        this.componentName = componentName;
+    public ProcessingStatus(@NotNull Endpoint endpoint, @NotNull String result, @NotNull String correlationId) {
+        this.endpoint = endpoint;
         this.result = result;
         this.correlationId = correlationId;
     }
 
     @NotNull
-    public String getComponentName() {
-        return componentName;
+    public Endpoint getEndpoint() {
+        return endpoint;
     }
 
     @NotNull
-    public ProcessingStatus setComponentName(@NotNull String componentName) {
-        this.componentName = componentName;
+    public ProcessingStatus withEndpoint(@NotNull Endpoint endpoint) {
+        this.endpoint = endpoint;
         return this;
     }
 

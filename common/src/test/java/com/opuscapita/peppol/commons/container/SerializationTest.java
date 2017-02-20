@@ -2,6 +2,7 @@ package com.opuscapita.peppol.commons.container;
 
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.route.Route;
 import org.junit.Test;
 
@@ -20,9 +21,11 @@ public class SerializationTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testSerialization() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "filename1", new Endpoint("test", Endpoint.Type.GATEWAY));
+        Endpoint endpoint = new Endpoint("test", ProcessType.TEST);
+
+        ContainerMessage cm = new ContainerMessage("metadata", "filename1", new Endpoint("test", ProcessType.OUT_FILE_TO_MQ));
         cm.setTransactionId("666");
-        cm.setStatus("component", "result");
+        cm.setStatus(endpoint, "result");
 
         Route route = new Route();
         route.setEndpoints(Arrays.asList("a", "b", "c"));
@@ -41,11 +44,11 @@ public class SerializationTest {
 
         ContainerMessage result = (ContainerMessage) new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray())).readObject();
 
-        assertEquals("component", result.getProcessingStatus().getComponentName());
+        assertEquals("test", result.getProcessingStatus().getEndpoint().getName());
         assertEquals("result", result.getProcessingStatus().getResult());
         assertEquals("metadata", result.getSourceMetadata());
         assertEquals("filename1", result.getFileName());
-        assertEquals(new Endpoint("test", Endpoint.Type.GATEWAY), result.getSource());
+        assertEquals(new Endpoint("test", ProcessType.OUT_FILE_TO_MQ), result.getSource());
         assertEquals("a", result.getRoute().pop());
         assertEquals("description", result.getRoute().getDescription());
         assertEquals("mask", result.getRoute().getMask());

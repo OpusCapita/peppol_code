@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.storage.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.when;
  * @author Sergejs.Roze
  */
 public class PreprocessingControllerTest {
-    private final static Endpoint ENDPOINT = new Endpoint("test", Endpoint.Type.PEPPOL);
+    private final static Endpoint ENDPOINT = new Endpoint("test", ProcessType.TEST);
 
     // faked document loader that loads file by name from resources not directly from disk
     private DocumentLoader dl = new DocumentLoader() {
@@ -46,7 +47,7 @@ public class PreprocessingControllerTest {
         assertNull(cm.getRoute());
         assertEquals("metadata", cm.getSourceMetadata());
         assertEquals(ENDPOINT, cm.getSource());
-        assertEquals("9908:923609016", cm.getCustomerId());
+        assertEquals("9908:980361330", cm.getCustomerId());
         assertEquals("long_term", cm.getFileName());
     }
 

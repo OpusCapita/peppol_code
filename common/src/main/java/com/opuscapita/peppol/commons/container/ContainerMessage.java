@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
 import com.opuscapita.peppol.commons.container.document.GsonDocumentAdapter;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.route.Route;
 import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
@@ -148,7 +149,7 @@ public class ContainerMessage implements Serializable {
     @NotNull
     public ProcessingStatus getProcessingStatus() {
         if (status == null) {
-            return new ProcessingStatus("", "", fileName);
+            return new ProcessingStatus(new Endpoint("", ProcessType.UNKNOWN), "", fileName);
         }
         return status;
     }
@@ -160,8 +161,8 @@ public class ContainerMessage implements Serializable {
     }
 
     @NotNull
-    public ContainerMessage setStatus(@NotNull String componentName, @NotNull String result) {
-        this.status = this.getProcessingStatus().setComponentName(componentName).setResult(result);
+    public ContainerMessage setStatus(@NotNull Endpoint endpoint, @NotNull String result) {
+        this.status = this.getProcessingStatus().withEndpoint(endpoint).setResult(result);
         return this;
     }
 

@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.internal_routing;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.status.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
@@ -43,7 +45,11 @@ public class InternalRoutingApp {
 
                 String queueOut = cm.getRoute().pop();
                 messageQueue.convertAndSend(queueOut, cm);
-                cm.setStatus(componentName, "route set");
+                if (cm.isInbound()) {
+                    cm.setStatus(new Endpoint(componentName, ProcessType.IN_ROUTING), "route set");
+                } else {
+                    cm.setStatus(new Endpoint(componentName, ProcessType.OUT_ROUTING), "route set");
+                }
                 logger.info("Route for " + cm.getFileName() + " defined, message sent to " + queueOut + " queue");
             }
         };
