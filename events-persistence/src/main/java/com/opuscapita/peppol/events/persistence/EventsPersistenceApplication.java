@@ -9,7 +9,6 @@ import com.opuscapita.peppol.events.persistence.amqp.EventQueueListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +18,6 @@ import org.springframework.boot.diagnostics.FailureAnalyzer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.backoff.FixedBackOffPolicy;
@@ -40,9 +38,6 @@ import java.util.HashMap;
 public class EventsPersistenceApplication {
     @Value("${peppol.events-persistence.queue.in.name}")
     private String queueName;
-
-    @Autowired
-    private Environment environment;
 
     public static void main(String[] args) {
         SpringApplication.run(EventsPersistenceApplication.class, args);
