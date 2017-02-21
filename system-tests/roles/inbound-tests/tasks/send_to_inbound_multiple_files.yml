@@ -1,24 +1,18 @@
 ---
-#- include: set-up.yml
+#sending file to inbound, then doing asserts for each module
 
 - include: file_to_inbound.yml
-  tags: 
-    - inbound
-    - file_to_inbound
-    - preprocessing
+- pause:
+    seconds: 10
+
 - include: assert.yml
   vars: 
     module_name: preprocessing
-  tags: preprocessing
 - include: assert.yml
   vars:
     module_name: internal-routing
-  tags: internal-routing
-#- pause:
-#    seconds: 10
 - include: assert.yml
   vars:
     module_name: validator
-  tags: validator
 - include: transport_assert.yml
 ...
