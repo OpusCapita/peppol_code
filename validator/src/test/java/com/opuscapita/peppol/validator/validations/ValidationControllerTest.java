@@ -7,6 +7,8 @@ import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.TestConfig;
+import com.opuscapita.peppol.validator.validations.common.TestCommon;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import static org.junit.Assert.fail;
 
@@ -26,7 +30,7 @@ import static org.junit.Assert.fail;
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)
-public class ValidationControllerTest {
+public class ValidationControllerTest extends TestCommon {
     private String[] documentProfilesToBeTested = {"svefaktura1", /*"austria",*/ "difi"/*, "simpler_invoicing"*/};
 
     @Autowired
@@ -54,19 +58,10 @@ public class ValidationControllerTest {
 
     @SuppressWarnings("ConstantConditions")
     private void testDocumentProfileValidation(final String documentProfile) {
-        File resourceDir = new File(this.getClass().getResource("/test_data/" + documentProfile + "_files").getFile());
-        String[] dataFiles = resourceDir.list((dir, name) -> name.toLowerCase().endsWith("xml"));
-
-        Arrays.stream(dataFiles).map(fileName -> {
-            System.out.println(resourceDir + File.separator + fileName);
-            return new File(resourceDir, fileName);
-        }).filter(fileToCheck -> fileToCheck.isFile() && fileToCheck.exists()).forEach(file -> {
+        Consumer<? super File> consumer = (File file) -> {
             try {
-                ContainerMessage containerMessage = new ContainerMessage("test", file.getName(), new Endpoint("test", ProcessType.TEST))
-                        .setBaseDocument(documentLoader.load(file));
-                if (containerMessage.getBaseDocument() instanceof InvalidDocument) {
-                    return;
-                }
+                ContainerMessage containerMessage = createContainerMessageFromFile(documentLoader, file);
+                if (containerMessage == null) return;
 
                 ValidationResult result = validationController.validate(containerMessage);
                 System.out.println("result: " + result.isPassed() + " on " + file.getName());
@@ -81,7 +76,8 @@ public class ValidationControllerTest {
                 e.printStackTrace();
                 fail("Failed with exception: " + e.getMessage());
             }
-        });
+        };
+        runTestsOnDocumentProfile(documentProfile, consumer);
     }
 
 }

@@ -8,6 +8,7 @@ import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.common.SbdhValidator;
+import com.opuscapita.peppol.validator.validations.common.SenderReceiverConsistencyValidator;
 import com.opuscapita.peppol.validator.validations.common.ValidatorFactory;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -34,11 +35,13 @@ public class ValidationController {
 
     private final SbdhValidator sbdhValidator;
     private final ValidatorFactory validatorFactory;
+    private final SenderReceiverConsistencyValidator senderReceiverConsistencyValidator;
 
     @Autowired
-    public ValidationController(@NotNull SbdhValidator sbdhValidator, @NotNull ValidatorFactory validatorFactory) {
+    public ValidationController(@NotNull SbdhValidator sbdhValidator, @NotNull ValidatorFactory validatorFactory, SenderReceiverConsistencyValidator senderReceiverConsistencyValidator) {
         this.sbdhValidator = sbdhValidator;
         this.validatorFactory = validatorFactory;
+        this.senderReceiverConsistencyValidator = senderReceiverConsistencyValidator;
     }
 
     public ValidationResult validate(@NotNull ContainerMessage containerMessage) {
@@ -72,7 +75,15 @@ public class ValidationController {
         }
 
         ValidationResult result = new ValidationResult(containerMessage.getBaseDocument().getArchetype());
-        result.setPassed(false);
+        result.setPassed(true);
+
+        if(!archetype.equals(Archetype.SVEFAKTURA1) && !archetype.equals(Archetype.INVALID)) {
+            ValidationResult senderReceiverConsistencyCheckResult = senderReceiverConsistencyValidator.senderAndReceiverAreSame(containerMessage);
+            if(!senderReceiverConsistencyCheckResult.isPassed()) {
+                result.setPassed(false);
+                senderReceiverConsistencyCheckResult.getErrors().forEach(result::addError);
+            }
+        }
 
         byte[] data;
         try {
@@ -83,7 +94,7 @@ public class ValidationController {
 
         List<ValidationError> sbdhValidationErrors = sbdhValidator.performXsdValidation(containerMessage);
         ValidationResult validatorResult = validator.validate(data);
-        result.setPassed(validatorResult.isPassed() && sbdhValidationErrors.size() == 0);
+        result.setPassed(result.isPassed() && validatorResult.isPassed() && sbdhValidationErrors.size() == 0);
         if (!result.isPassed()) {
             sbdhValidationErrors.forEach(result::addError);
             validatorResult.getErrors().forEach(result::addError);

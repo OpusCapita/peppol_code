@@ -25,3 +25,13 @@ hystrix:
           strategy: THREAD
           thread:
             timeoutInMilliseconds: 10000
+
+spring:
+  http:
+    multipart:
+      max-file-size: 101Mb # Max file size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
+      max-request-size: 1024Mb # Max request size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
+
+multipart:
+      max-file-size: 101Mb # Max file size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
+      max-request-size: 1024Mb # Max request size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.

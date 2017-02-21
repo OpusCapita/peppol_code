@@ -33,6 +33,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-amqp'
     compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
+    compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')

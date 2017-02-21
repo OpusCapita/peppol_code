@@ -36,6 +36,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
+	compile "org.springframework.cloud:spring-cloud-starter-sleuth"
 	compile 'org.springframework.retry:spring-retry:1.1.4.RELEASE'
 	compile('org.springframework.retry:spring-retry')
 	compile 'com.google.code.gson:gson:2.7'
