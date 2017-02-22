@@ -100,6 +100,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
             }
         }
         logger.info("IntegrationTestApp : Ended!");
+        System.exit(0);
     }
 
     public static void registerMqListener(MqListener listener){
@@ -163,7 +164,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
                     public void onMessage(Message message) {
                         String consumerQueue = message.getMessageProperties().getConsumerQueue();
                         logger.info("got message from the MQ!, consuming queue is: " + consumerQueue);
-                        //routing messages to specific listenerskk
+                        //routing messages to specific listeners
                         for(MqListener listener : mqListeners){
                             logger.info("listener subscribed for: " + listener.getConsumerQueue());
                             if(consumerQueue.equals(listener.getConsumerQueue())){
