@@ -37,6 +37,7 @@ public class ZuulProxyServerApplication {
     public TomcatEmbeddedServletContainerFactory containerFactory() {
         TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
         factory.addConnectorCustomizers((TomcatConnectorCustomizer) connector -> ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(-1));
+        factory.addConnectorCustomizers((TomcatConnectorCustomizer) connector -> connector.setMaxPostSize(-1));
         return factory;
     }
 }
