@@ -11,6 +11,6 @@
     - "{{test_data_path}}/EHF_2.0.7/Invalid/*"
     - "{{test_data_path}}/svefaktura_1.0/invalid/*"
     - "{{test_data_path}}/Austrian_documents/invalid/*"
-    - "{{test_data_path}}/Netherlands_documents/SBDH_wrapped/invalid/*"
+    - "{{test_data_path}}/Netherlands_documents/invalid/*"
 ...
 
