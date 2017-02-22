@@ -184,11 +184,16 @@ public class PersistenceController {
     }
 
     private String findErrorFilePath(String fileName, boolean invalid) {
+        String result;
         if (invalid) {
-            return invalidDirPath + File.separator + fileName.substring(0, fileName.length() - 3) + "txt";
+            result = invalidDirPath + File.separator + fileName.substring(0, fileName.length() - 3) + "txt";
         } else {
-            return errorDirPath + File.separator + fileName.substring(0, fileName.length() - 3) + "txt";
+            result = errorDirPath + File.separator + fileName.substring(0, fileName.length() - 3) + "txt";
         }
+        if (result.length() > 128) {
+            return ""; // TODO this is a hack for the new version, there is no TXT file in it
+        }
+        return result;
     }
 
     private void addSentInfo(FileInfo fileInfo, PeppolEvent peppolEvent) {
