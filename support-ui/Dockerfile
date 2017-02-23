@@ -1,10 +1,18 @@
-FROM d-l-tools.ocnet.local:443/tomcat:8
+FROM d-l-tools.ocnet.local:443/tomcat:8-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV PEPPOL_CONFIG_PATH /etc/peppol2.0/support-ui
-RUN mkdir -p "${PEPPOL_CONFIG_PATH}"
+VOLUME ${PEPPOL_CONFIG_PATH}
 
-VOLUME /etc/peppol2.0/support-ui
+USER root
+RUN set -x \
+    && mkdir -p "${PEPPOL_CONFIG_PATH}" \
+    && chown -R peppol "${CATALINA_HOME}" "${PEPPOL_CONFIG_PATH}"
+
+USER peppol
+
+WORKDIR "${CATALINA_HOME}"
+ADD ["build/libs/support-ui.war", "webapps/ROOT.war"]
 
 ENV JAVA_OPTS "\
     -Dhttp.proxyHost=10.202.9.33 \
@@ -13,9 +21,6 @@ ENV JAVA_OPTS "\
     -Dhttps.proxyPort=8080 \
     -Dhttp.nonProxyHosts=\"*.local|10.164.1.146\" \
     -Dums.server.url=https://ums.itella.com//itella-ums-server/services/BasicUms"
-
-WORKDIR "${CATALINA_HOME}"
-ADD ["build/libs/support-ui.war", "webapps/ROOT.war"]
 
 CMD ["bin/catalina.sh", "run"]
 
