@@ -18,7 +18,7 @@ tests:
             source directory: /etc/resources/events-persistence-test
             db connection: db1
             endpoint: events-persistence-integration-test
-            DB preprocess querry: delete from messages where invoice_number='92426725'; delete from access_points where ap_id='123456' and ap_name='TEST'
+            DB preprocess querry: delete from messages where invoice_number='92426725'
         subscribers:
           - snc subscriber:
              source directory: C:/var/lib/peppol2.0/events-persistence/error
@@ -36,7 +36,7 @@ tests:
         consumers:
           - DB test:
              id: 4
-             name: Message "status" can be seen in DB- positive test
+             name: Message persisted into DB positive test
              connection string: db1
              expected value: 1
           - SNC test:

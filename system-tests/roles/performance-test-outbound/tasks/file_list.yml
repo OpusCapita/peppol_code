@@ -1,0 +1,9 @@
+---
+- include: file_to_transport-from-a2a.yml
+  vars: 
+    file: "{{item}}"
+  with_fileglob:
+    - "{{test_data_path}}/performance-tests-materials/performance-test-10/*"
+#    - "{{test_data_path}}/performance-tests-materials/performance-test-100/*"
+#    - "{{test_data_path}}/performance-tests-materials/performance-test-1k/*"
+...

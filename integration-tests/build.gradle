@@ -31,6 +31,9 @@ jar {
 
 dependencies {
     runtime 'com.h2database:h2'
+    compile ('com.codeborne:selenide:4.3') {
+        exclude module: 'xercesImpl'
+    }
     runtime ('mysql:mysql-connector-java:5.1.25')
     compile ('org.springframework.boot:spring-boot-starter-actuator')
     compile ('org.springframework.boot:spring-boot-starter-amqp')
@@ -40,6 +43,5 @@ dependencies {
     compile 'org.yaml:snakeyaml:1.17'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.2'
-    //compile 'com.codeborne:selenide:4.0'
     compile 'org.freemarker:freemarker:2.3.21'
 }
