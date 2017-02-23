@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
+import com.opuscapita.peppol.commons.container.route.ProcessType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class TestCommon {
 
     @Nullable
     public ContainerMessage createContainerMessageFromFile(DocumentLoader documentLoader, File file) throws IOException {
-        ContainerMessage containerMessage = new ContainerMessage("test", file.getName(), new Endpoint("test", Endpoint.Type.PEPPOL))
+        ContainerMessage containerMessage = new ContainerMessage("test", file.getName(), new Endpoint("test", ProcessType.TEST))
                 .setBaseDocument(documentLoader.load(file));
         if (containerMessage.getBaseDocument() instanceof InvalidDocument) {
             return null;

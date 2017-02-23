@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.container.document.impl.ubl;
 
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.document.SbdhDocumentConsistencyChecker;
 import com.opuscapita.peppol.commons.container.document.impl.FieldsReader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,20 +18,18 @@ public class UblDespatchAdvice implements FieldsReader {
     public boolean fillFields(@Nullable Node sbdh, @NotNull Node root, @NotNull BaseDocument base) {
         boolean success = true;
 
-        String value = selectValueFrom(null, sbdh, "Sender", "Identifier");
-        value = selectValueFrom(value, root, "DespatchSupplierParty", "Party", "PartyIdentification", "ID");
-        if (value == null) {
+        String sbdhValue = selectValueFrom(null, sbdh, "Sender", "Identifier");
+        String value = selectValueFrom(null, root, "DespatchSupplierParty", "Party", "PartyIdentification", "ID");
+        boolean result = SbdhDocumentConsistencyChecker.doTheCheck(value, sbdhValue, "sender id", base, (String checkedValue, BaseDocument baseDocument) -> baseDocument.setSenderId(checkedValue));
+        if (!result) {
             success = false;
-        } else {
-            base.setSenderId(value);
         }
 
-        value = selectValueFrom(null, sbdh, "Receiver", "Identifier");
-        value = selectValueFrom(value, root, "DeliveryCustomerParty", "Party", "PartyIdentification", "ID");
-        if (value == null) {
+        sbdhValue = selectValueFrom(null, sbdh, "Receiver", "Identifier");
+        value = selectValueFrom(null, root, "DeliveryCustomerParty", "Party", "PartyIdentification", "ID");
+        result = SbdhDocumentConsistencyChecker.doTheCheck(value, sbdhValue, "receiver id", base, (String checkedValue, BaseDocument baseDocument) -> baseDocument.setRecipientId(checkedValue));
+        if (!result) {
             success = false;
-        } else {
-            base.setRecipientId(value);
         }
 
         value = selectValueFrom(null, root, "DespatchSupplierParty", "Party", "PartyName", "Name");

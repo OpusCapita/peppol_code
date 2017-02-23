@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.container.document.impl.ubl;
 
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.document.SbdhDocumentConsistencyChecker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Node;
@@ -16,22 +17,20 @@ public class UblCreditNode extends UblInvoice {
     public boolean fillFields(@Nullable Node sbdh, @NotNull Node root, @NotNull BaseDocument base) {
         boolean success = true;
 
-        String value = selectValueFrom(null, sbdh, "Sender", "Identifier");
-        value = selectValueFrom(value, root, "AccountingSupplierParty", "Party", "EndpointID");
+        String sbdhValue = selectValueFrom(null, sbdh, "Sender", "Identifier");
+        String value = selectValueFrom(null, root, "AccountingSupplierParty", "Party", "EndpointID");
         value = selectValueFrom(value, root, "AccountingSupplierParty", "Party", "PartyLegalEntity", "CompanyID");
-        if (value == null) {
+        boolean result = SbdhDocumentConsistencyChecker.doTheCheck(value, sbdhValue, "sender id", base, (String checkedValue, BaseDocument baseDocument) -> baseDocument.setSenderId(checkedValue));
+        if (!result) {
             success = false;
-        } else {
-            base.setSenderId(value);
         }
 
-        value = selectValueFrom(null, sbdh, "Receiver", "Identifier");
-        value = selectValueFrom(value, root, "AccountingCustomerParty", "Party", "EndpointID");
+        sbdhValue = selectValueFrom(null, sbdh, "Receiver", "Identifier");
+        value = selectValueFrom(null, root, "AccountingCustomerParty", "Party", "EndpointID");
         value = selectValueFrom(value, root, "AccountingCustomerParty", "Party", "PartyLegalEntity");
-        if (value == null) {
+        result = SbdhDocumentConsistencyChecker.doTheCheck(value, sbdhValue, "receiver id", base, (String checkedValue, BaseDocument baseDocument) -> baseDocument.setRecipientId(checkedValue));
+        if (!result) {
             success = false;
-        } else {
-            base.setRecipientId(value);
         }
 
         value = selectValueFrom(null, root, "AccountingSupplierParty", "Party", "PartyName", "Name");

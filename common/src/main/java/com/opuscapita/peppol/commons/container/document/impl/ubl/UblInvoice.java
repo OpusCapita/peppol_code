@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.container.document.impl.ubl;
 
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.document.SbdhDocumentConsistencyChecker;
 import com.opuscapita.peppol.commons.container.document.impl.FieldsReader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,24 +63,50 @@ public class UblInvoice implements FieldsReader {
     public boolean fillFields(@Nullable Node sbdh, @NotNull Node root, @NotNull BaseDocument base) {
         boolean success = true;
 
-        String value = selectValueFrom(null, sbdh, "Sender", "Identifier");
-        value = selectValueFrom(value, root, "AccountingSupplierParty", "Party", "EndpointID");
+        String sbdhValue = selectValueFrom(null, sbdh, "Sender", "Identifier");
+        String value = selectValueFrom(null, root, "AccountingSupplierParty", "Party", "EndpointID");
         value = selectValueFrom(value, root, "AccountingSupplierParty", "Party", "PartyLegalEntity", "CompanyID");
-        if (value == null) {
+        /*if (value == null && sbdhValue == null) {
             logger.warn("Failed to find sender ID field");
             success = false;
+        } else if(sbdh!= null && sbdhValue != null) {
+            ParticipantId sbdhSender = new ParticipantId(sbdhValue);
+            ParticipantId documentSender = new ParticipantId(value);
+            if(!sbdhSender.equals(documentSender)) {
+                logger.warn("SBDH and document have different value for sender: " + sbdhValue + " <> " + value);
+                success = false;
+            }  else {
+                base.setSenderId(sbdhValue != null? sbdhValue :value);
+            }
         } else {
             base.setSenderId(value);
+        }*/
+        boolean result = SbdhDocumentConsistencyChecker.doTheCheck(value, sbdhValue, "sender id", base, (String checkedValue, BaseDocument baseDocument) -> baseDocument.setSenderId(checkedValue));
+        if (!result) {
+            success = false;
         }
 
-        value = selectValueFrom(null, sbdh, "Receiver", "Identifier");
-        value = selectValueFrom(value, root, "AccountingCustomerParty", "Party", "EndpointID");
+        sbdhValue = selectValueFrom(null, sbdh, "Receiver", "Identifier");
+        value = selectValueFrom(null, root, "AccountingCustomerParty", "Party", "EndpointID");
         value = selectValueFrom(value, root, "AccountingCustomerParty", "Party", "PartyLegalEntity");
-        if (value == null) {
+        /*if (value == null && sbdhValue == null) {
             logger.warn("Failed to find recipient ID field");
             success = false;
+        } else if(sbdh!= null && sbdhValue != null) {
+            ParticipantId sbdhReceiver = new ParticipantId(sbdhValue);
+            ParticipantId documentReceiver = new ParticipantId(value);
+            if(!sbdhReceiver.equals(documentReceiver)) {
+                logger.warn("SBDH and document have different value for receiver: " + sbdhValue + " <> " + value);
+                success = false;
+            } else {
+                base.setRecipientId(sbdhValue != null? sbdhValue :value);
+            }
         } else {
             base.setRecipientId(value);
+        }*/
+        result = SbdhDocumentConsistencyChecker.doTheCheck(value, sbdhValue, "receiver id", base, (String checkedValue, BaseDocument baseDocument) -> baseDocument.setRecipientId(checkedValue));
+        if (!result) {
+            success = false;
         }
 
         value = selectValueFrom(null, root, "AccountingSupplierParty", "Party", "PartyName", "Name");

@@ -1,9 +1,12 @@
 package com.opuscapita.peppol.commons.container.document.impl.ubl;
 
 import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.document.SbdhDocumentConsistencyChecker;
 import com.opuscapita.peppol.commons.container.document.impl.FieldsReader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import static com.opuscapita.peppol.commons.container.document.DocumentUtils.selectValueFrom;
@@ -12,27 +15,25 @@ import static com.opuscapita.peppol.commons.container.document.DocumentUtils.sel
  * @author Sergejs.Roze
  */
 public class UblOrder implements FieldsReader {
-
+    private static final Logger logger = LoggerFactory.getLogger(UblOrder.class);
     @Override
     public boolean fillFields(@Nullable Node sbdh, @NotNull Node root, @NotNull BaseDocument base) {
         boolean success = true;
 
-        String value = selectValueFrom(null, sbdh, "Sender", "Identifier");
-        value = selectValueFrom(value, root, "BuyerCustomerParty", "Party", "EndpointID");
+        String sbdhValue = selectValueFrom(null, sbdh, "Sender", "Identifier");
+        String value = selectValueFrom(null, root, "BuyerCustomerParty", "Party", "EndpointID");
         value = selectValueFrom(value, root, "BuyerCustomerParty", "Party", "PartyIdentification", "ID");
-        if (value == null) {
+        boolean result = SbdhDocumentConsistencyChecker.doTheCheck(value, sbdhValue, "sender id", base, (String checkedValue, BaseDocument baseDocument) -> baseDocument.setSenderId(checkedValue));
+        if (!result) {
             success = false;
-        } else {
-            base.setSenderId(value);
         }
 
-        value = selectValueFrom(null, sbdh, "Receiver", "Identifier");
-        value = selectValueFrom(value, root, "SellerSupplierParty", "Party", "PartyIdentification", "ID");
+        sbdhValue = selectValueFrom(null, sbdh, "Receiver", "Identifier");
+        value = selectValueFrom(null, root, "SellerSupplierParty", "Party", "PartyIdentification", "ID");
         value = selectValueFrom(value, root, "SellerSupplierParty", "Party", "EndpointID");
-        if (value == null) {
+        result = SbdhDocumentConsistencyChecker.doTheCheck(value, sbdhValue, "receiver id", base, (String checkedValue, BaseDocument baseDocument) -> baseDocument.setRecipientId(checkedValue));
+        if (!result) {
             success = false;
-        } else {
-            base.setRecipientId(value);
         }
 
         value = selectValueFrom(null, root, "BuyerCustomerParty", "Party", "PartyName", "Name");
