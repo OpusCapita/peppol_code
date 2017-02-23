@@ -13,5 +13,5 @@ RUN \
 WORKDIR "${VALIDATOR_HOME}"
 ADD ["build/libs/validator.jar", "validator.jar"]
 
-CMD java $JAVA_OPTS --jar validator.jar
+CMD java $JAVA_OPTS -jar validator.jar
 EXPOSE 8080
