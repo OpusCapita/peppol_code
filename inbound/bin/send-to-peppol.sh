@@ -10,7 +10,7 @@
 TRACE=""
 
 # The default is to send the sample document to our own access point running on our own machine.
-URL="http://peppol-test.itella.net/peppol-ap-inbound/as2"
+URL="http://localhost:8080/peppol-ap-inbound/as2"
 
 # The URL and the METHOD must correspond
 METHOD="as2"
