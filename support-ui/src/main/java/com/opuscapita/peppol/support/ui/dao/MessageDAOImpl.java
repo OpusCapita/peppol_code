@@ -181,7 +181,8 @@ public class MessageDAOImpl implements MessageDAO {
             setErrorCriteriaParameters(criteria, MessageStatus.failed);
         }
         ProjectionList projectionList = createMessageProjection();
-        projectionList.add(Projections.property("failed.errorMessage"), "errorMessage");
+        //ERROR - Expression #17 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'peppol.failed
+        projectionList.add(Projections.max("failed.errorMessage"), "errorMessage");
         criteria.setProjection(projectionList);
         if (tableParameters.getSearch() != null) {
             criteria.createAlias("file.sentInfo", "sent", JoinType.LEFT_OUTER_JOIN);
