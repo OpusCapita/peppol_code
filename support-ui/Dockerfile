@@ -7,7 +7,7 @@ VOLUME ${PEPPOL_CONFIG_PATH}
 USER root
 RUN set -x \
     && mkdir -p "${PEPPOL_CONFIG_PATH}" \
-    && chown -R peppol "${CATALINA_HOME}" "${PEPPOL_CONFIG_PATH}"
+    && chown -R peppol:elmaci "${PEPPOL_CONFIG_PATH}"
 
 USER peppol
 
