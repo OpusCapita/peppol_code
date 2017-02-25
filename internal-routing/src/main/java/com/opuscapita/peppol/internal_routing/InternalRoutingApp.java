@@ -41,15 +41,22 @@ public class InternalRoutingApp {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 cm = controller.loadRoute(cm);
+
+                Endpoint endpoint = cm.isInbound() ?
+                        new Endpoint(componentName, ProcessType.IN_ROUTING) : new Endpoint(componentName, ProcessType.OUT_ROUTING);
+
+                if (cm.getRoute() == null) {
+                    String error = "Cannot define route for " + cm.getFileName() + " originated by " + cm.getSource();
+                    cm.setStatus(endpoint, error);
+                    errorHandler.reportToServiceNow(cm, null, error);
+                    reporter.reportError(cm, null);
+                    return;
+                }
                 logger.info("Route set to " + cm.getRoute());
 
                 String queueOut = cm.getRoute().pop();
                 messageQueue.convertAndSend(queueOut, cm);
-                if (cm.isInbound()) {
-                    cm.setStatus(new Endpoint(componentName, ProcessType.IN_ROUTING), "route set");
-                } else {
-                    cm.setStatus(new Endpoint(componentName, ProcessType.OUT_ROUTING), "route set");
-                }
+                cm.setStatus(endpoint, "route set");
                 logger.info("Route for " + cm.getFileName() + " defined, message sent to " + queueOut + " queue");
             }
         };

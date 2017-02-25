@@ -5,6 +5,8 @@ import com.opuscapita.peppol.commons.container.document.impl.UblDocument;
 import com.opuscapita.peppol.commons.container.route.Endpoint;
 import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.container.route.Route;
+import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -12,11 +14,15 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
  */
 public class RoutingControllerTest {
+    private ErrorHandler errorHandler = mock(ErrorHandler.class);
+    private StatusReporter statusReporter = mock(StatusReporter.class);
+
     @Test
     public void loadRoute() throws Exception {
         Route r1 = new Route();
@@ -36,7 +42,7 @@ public class RoutingControllerTest {
             }
         };
 
-        RoutingController rc = new RoutingController(conf);
+        RoutingController rc = new RoutingController(conf, errorHandler, statusReporter);
 
         ContainerMessage cm;
 
@@ -73,7 +79,7 @@ public class RoutingControllerTest {
             }
         };
 
-        RoutingController rc = new RoutingController(conf);
+        RoutingController rc = new RoutingController(conf, errorHandler, statusReporter);
 
         ContainerMessage cm1 = new ContainerMessage("test1", "test1", new Endpoint("test", ProcessType.TEST));
         ContainerMessage cm2 = new ContainerMessage("test2", "test2", new Endpoint("test", ProcessType.TEST));

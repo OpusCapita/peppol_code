@@ -54,4 +54,9 @@ public class Endpoint implements Serializable {
         result = 31 * result + type.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return name + " (type:" + type + ")";
+    }
 }
