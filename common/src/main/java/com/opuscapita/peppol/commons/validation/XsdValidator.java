@@ -13,6 +13,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by bambr on 16.3.10.
@@ -20,7 +22,7 @@ import java.util.List;
 public interface XsdValidator {
     List<ValidationError> performXsdValidation(ContainerMessage containerMessage);
 
-    default void validateAgainstXsd(ContainerMessage containerMessage, String xsdPath) throws SAXException, TransformerException, IOException {
+    default void validateAgainstXsd(ContainerMessage containerMessage, String xsdPath) throws SAXException, TransformerException, IOException, InterruptedException, ExecutionException, TimeoutException {
         byte[] data = DocumentContentUtils.getDocumentBytes(containerMessage.getBaseDocument().getDocument());
         validateAgainstXsd(data, xsdPath);
     }

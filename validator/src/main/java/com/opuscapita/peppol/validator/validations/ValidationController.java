@@ -22,6 +22,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by bambr on 16.5.8.
@@ -73,11 +75,11 @@ public class ValidationController {
 
         ValidationResult result = new ValidationResult(containerMessage.getBaseDocument().getArchetype());
         result.setPassed(false);
-        
+
         byte[] data;
         try {
             data = DocumentContentUtils.getDocumentBytes(getRootDocument(containerMessage));
-        } catch (ParserConfigurationException | TransformerException e) {
+        } catch (ParserConfigurationException | TransformerException | InterruptedException | ExecutionException | TimeoutException e) {
             throw new IllegalArgumentException("Validation failed during XML transformation", e);
         }
 

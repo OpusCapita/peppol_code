@@ -3,36 +3,32 @@ package com.opuscapita.peppol.commons.container.document;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by bambr on 16.3.10.
  */
 public class DocumentContentUtils {
-    public static byte[] getDocumentBytes(Document document) throws TransformerException {
+    private static final long INTERVAL = 1000l;
+    private static final long ALLOWED_DURATION = 30000l;
+
+
+    public static byte[] getDocumentBytes(Document document) throws TransformerException, InterruptedException, ExecutionException, TimeoutException {
         DOMSource source = new DOMSource(document);
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        StreamResult result = new StreamResult(bos);
-        transformer.transform(source, result);
-        return bos.toByteArray();
+
+        CompletableFuture<byte[]> thingie = CompletableFuture.supplyAsync(() -> new ThreadedTransformer().getDocumentBytes(false, source));
+        return thingie.get(ALLOWED_DURATION, TimeUnit.MILLISECONDS);
     }
 
-    public static byte[] nodeToByteArray(Node node) throws TransformerException {
+    public static byte[] nodeToByteArray(Node node) throws TransformerException, InterruptedException, ExecutionException, TimeoutException {
         DOMSource domSource = new DOMSource(node);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        StreamResult result = new StreamResult(bos);
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        transformer.transform(domSource, result);
-        return bos.toByteArray();
+        CompletableFuture<byte[]> thingie = CompletableFuture.supplyAsync(() -> new ThreadedTransformer().getDocumentBytes(true, domSource));
+        return thingie.get(ALLOWED_DURATION, TimeUnit.MILLISECONDS);
     }
+
 }
