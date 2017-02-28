@@ -1,4 +1,13 @@
 ---
 - include: set-up.yml
-- include: file_list.yml
+- name: Stop transport
+  shell: docker stop transport-from-a2a
+- include: file_list_10.yml
+  tags: ten
+- include: file_list_100.yml
+  tags: hundred
+- include: file_list_1000.yml
+  tags: thousand
+- name: Start transport
+  shell: docker start transport-from-a2a
 ...
