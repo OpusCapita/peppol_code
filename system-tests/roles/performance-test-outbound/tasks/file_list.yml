@@ -3,7 +3,7 @@
   vars: 
     file: "{{item}}"
   with_fileglob:
-    - "{{test_data_path}}/performance-tests-materials/performance-test-10/*"
+#    - "{{test_data_path}}/performance-tests-materials/performance-test-10/*"
 #    - "{{test_data_path}}/performance-tests-materials/performance-test-100/*"
-#    - "{{test_data_path}}/performance-tests-materials/performance-test-1k/*"
+    - "{{test_data_path}}/performance-tests-materials/performance-test-1k/*"
 ...

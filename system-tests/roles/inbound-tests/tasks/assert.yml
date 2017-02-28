@@ -1,5 +1,5 @@
 ---
-- name: Show log
+- name: Show log, search for transmissionidi
   shell: docker logs {{module_name}}
   register: log
 
@@ -7,5 +7,5 @@
   assert:
     that:
       - "transmissionId in log.stdout"
-    msg: "tranmissionId should be found in '{{module_name}}'"
+    msg: "tranmissionId should be found in '{{module_name}}' for file '{{ file }}'"
 ...

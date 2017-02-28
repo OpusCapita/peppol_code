@@ -3,7 +3,7 @@
 
 - include: file_to_inbound.yml
 - pause:
-    seconds: 10
+    seconds: 20
 
 - include: assert.yml
   vars: 

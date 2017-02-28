@@ -3,5 +3,5 @@
   roles:
     - inbound-tests
   vars:
-    test_data_path: /tmp
+    test_data_path: /test-materials
 ...
