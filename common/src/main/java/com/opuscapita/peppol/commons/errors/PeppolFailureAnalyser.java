@@ -10,8 +10,8 @@ public class PeppolFailureAnalyser extends AbstractFailureAnalyzer {
 
     @Override
     protected FailureAnalysis analyze(Throwable rootFailure, Throwable cause) {
-        if(cause.getMessage().contains("Could not resolve placeholder")) {
-            return new FailureAnalysis(cause.getMessage(), "Please, ask Edagrs to add it to configuration (and give him some chocolate cookies).", cause);
+        if (cause.getMessage().contains("Could not resolve placeholder")) {
+            return new FailureAnalysis(cause.getMessage(), "Please, ask Edgars to add it to configuration (and give him some chocolate cookies).", cause);
         }
         return null;
     }
