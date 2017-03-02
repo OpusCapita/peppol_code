@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bambr on 16.28.12.
@@ -13,50 +13,60 @@ import java.util.Map;
 @Component
 @RefreshScope
 public class FilterProperties {
-    private String allowFrom;
-    private String denyFrom;
-    private Map<String, String> servicesAllowFrom;
-    private Map<String, String> servicesDenyFrom;
+    private List<String> allowFrom;
+    private List<String> denyFrom;
+    private volatile Map<String, List<String>> servicesAllowFrom;
+    private volatile Map<String, List<String>> servicesDenyFrom;
 
     public FilterProperties() {
     }
 
     public FilterProperties(String allowFrom, String denyFrom, Map<String, String> servicesAllowFrom, Map<String, String> servicesDenyFrom) {
-        this.allowFrom = allowFrom;
-        this.denyFrom = denyFrom;
-        this.servicesAllowFrom = servicesAllowFrom;
-        this.servicesDenyFrom = servicesDenyFrom;
+        setAllowFrom(allowFrom);
+        setDenyFrom(denyFrom);
+        setServicesAllowFrom(servicesAllowFrom);
+        setServicesDenyFrom(servicesDenyFrom);
     }
 
-    public String getAllowFrom() {
+    public List<String> getAllowFrom() {
         return allowFrom;
     }
 
     public void setAllowFrom(String allowFrom) {
-        this.allowFrom = allowFrom;
+        this.allowFrom = allowFrom == null ? Collections.emptyList() : Arrays.asList(allowFrom.split(","));
     }
 
-    public String getDenyFrom() {
+    public List<String> getDenyFrom() {
         return denyFrom;
     }
 
     public void setDenyFrom(String denyFrom) {
-        this.denyFrom = denyFrom;
+        this.denyFrom = denyFrom == null ? Collections.emptyList() : Arrays.asList(denyFrom.split(","));
     }
 
-    public Map<String, String> getServicesAllowFrom() {
+    public Map<String, List<String>> getServicesAllowFrom() {
         return servicesAllowFrom;
     }
 
     public void setServicesAllowFrom(Map<String, String> servicesAllowFrom) {
-        this.servicesAllowFrom = servicesAllowFrom;
+        if (servicesAllowFrom != null) {
+            this.servicesAllowFrom = new HashMap<>(servicesAllowFrom.size());
+            servicesAllowFrom.entrySet().forEach(entry -> this.servicesAllowFrom.put(entry.getKey(), Arrays.asList(entry.getValue().split(","))));
+        } else {
+            this.servicesAllowFrom = null;
+        }
     }
 
-    public Map<String, String> getServicesDenyFrom() {
+    public Map<String, List<String>> getServicesDenyFrom() {
         return servicesDenyFrom;
     }
 
     public void setServicesDenyFrom(Map<String, String> servicesDenyFrom) {
-        this.servicesDenyFrom = servicesDenyFrom;
+        if (servicesDenyFrom != null) {
+            this.servicesDenyFrom = new HashMap<>(servicesDenyFrom.size());
+            servicesDenyFrom.entrySet().forEach(entry -> this.servicesDenyFrom.put(entry.getKey(), Arrays.asList(entry.getValue().split(","))));
+        } else {
+            this.servicesDenyFrom = null;
+        }
     }
 }

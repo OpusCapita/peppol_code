@@ -41,18 +41,21 @@ Here is the sample config for Zuul proxy:
   Actually, when combining global setting such as 
   __**allowFrom**__ and __**denyFrom**__ then per-service settings allow to 
   override the global settings.
+  Order of processing:
+  1. Deny global settings
+  2. Allow global settings
+  3. Deny service level settings
+  4. Allow service level settings
+  
+  **The later settings have more priority.**
   
   Supported values for settings are:
   1. `'*'` - all
-  2. `xxx.xxx.xxx.xxx` - IP address, yet you can give a range in a simplified
-  form, like `xxx.xxx.xxx` or even `xxx.xxx`. Any string which would be sort of
-  mask, yet without denoting the group, just host under check will be 
-  checked if it starts with given value.
+  2. `xxx.xxx.xxx.xxx/xx` - CIDR notation
   Example:
   
-            allowFrom: 192.168
+            allowFrom: 192.168.0.0/12
         
         This will match any address starting with 192.168
   
-  **NB!** Currently only single range is supported as a value for access settings, 
-  addition of support for comma-separated list of ranges is planned in nearest future.
+  Multiple ranges are now supported for every setting, they must be comma separated.
