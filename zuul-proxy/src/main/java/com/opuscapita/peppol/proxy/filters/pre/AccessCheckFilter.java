@@ -14,13 +14,13 @@ import java.io.IOException;
 /**
  * Created by bambr on 16.28.12.
  */
-public class CustomFilter extends ZuulFilter {
-    private final static Logger logger = LoggerFactory.getLogger(CustomFilter.class);
+public class AccessCheckFilter extends ZuulFilter {
+    private final static Logger logger = LoggerFactory.getLogger(AccessCheckFilter.class);
     private static final String HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
-    private final FilterProperties filterProperties;
+    private final AccessFilterProperties accessFilterProperties;
 
-    public CustomFilter(FilterProperties filterProperties) {
-        this.filterProperties = filterProperties;
+    public AccessCheckFilter(AccessFilterProperties accessFilterProperties) {
+        this.accessFilterProperties = accessFilterProperties;
     }
 
     @Override
@@ -79,41 +79,41 @@ public class CustomFilter extends ZuulFilter {
         boolean result = true;
 
         //Deny global settings
-        if (filterProperties.getDenyFrom() != null && filterProperties.getDenyFrom().contains("*")) {
+        if (accessFilterProperties.getDenyFrom() != null && accessFilterProperties.getDenyFrom().contains("*")) {
             result = true;
         } else {
-            if (filterProperties.getDenyFrom() != null) {
-                result = filterProperties.getDenyFrom().stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
+            if (accessFilterProperties.getDenyFrom() != null) {
+                result = accessFilterProperties.getDenyFrom().stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
             }
         }
 
         //Allow global settings
-        if (filterProperties.getAllowFrom() != null && filterProperties.getAllowFrom().contains("*")) {
+        if (accessFilterProperties.getAllowFrom() != null && accessFilterProperties.getAllowFrom().contains("*")) {
             result = false;
         } else {
-            if (filterProperties.getAllowFrom() != null) {
-                result = !filterProperties.getAllowFrom().stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
+            if (accessFilterProperties.getAllowFrom() != null) {
+                result = !accessFilterProperties.getAllowFrom().stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
             }
         }
 
         //Deny service level settings
-        if (filterProperties.getServicesDenyFrom() != null) {
-            if (filterProperties.getServicesDenyFrom().containsKey(requestedService)) {
-                if (filterProperties.getServicesDenyFrom().get(requestedService).contains("*")) {
+        if (accessFilterProperties.getServicesDenyFrom() != null) {
+            if (accessFilterProperties.getServicesDenyFrom().containsKey(requestedService)) {
+                if (accessFilterProperties.getServicesDenyFrom().get(requestedService).contains("*")) {
                     result = true;
                 } else {
-                    result = filterProperties.getServicesDenyFrom().get(requestedService).stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
+                    result = accessFilterProperties.getServicesDenyFrom().get(requestedService).stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
                 }
             }
         }
 
         //Allow  service level settings
-        if (filterProperties.getServicesAllowFrom() != null) {
-            if (filterProperties.getServicesAllowFrom().containsKey(requestedService)) {
-                if (filterProperties.getServicesAllowFrom().get(requestedService).contains("*")) {
+        if (accessFilterProperties.getServicesAllowFrom() != null) {
+            if (accessFilterProperties.getServicesAllowFrom().containsKey(requestedService)) {
+                if (accessFilterProperties.getServicesAllowFrom().get(requestedService).contains("*")) {
                     result = false;
                 } else {
-                    result = !filterProperties.getServicesAllowFrom().get(requestedService).stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
+                    result = !accessFilterProperties.getServicesAllowFrom().get(requestedService).stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
                 }
             }
         }

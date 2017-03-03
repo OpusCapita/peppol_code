@@ -59,3 +59,12 @@ Here is the sample config for Zuul proxy:
         This will match any address starting with 192.168
   
   Multiple ranges are now supported for every setting, they must be comma separated.
+  
+  `peppol.zuul.headers` is a section for configuring headers to preserve for requests.
+  
+  It has only one directive: `peppol.zuul.headers.headersToPreserve` which takes comma separated list of values.
+   Example: 
+   
+        headersToPreserve: Host, Content-Type
+
+  Note: "Service" header is reserved for internal use. Passing it in configuration can lead to unpredictable results. 

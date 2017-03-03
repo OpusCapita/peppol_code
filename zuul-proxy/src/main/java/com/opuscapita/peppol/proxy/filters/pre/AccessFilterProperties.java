@@ -12,16 +12,16 @@ import java.util.*;
 @ConfigurationProperties(prefix = "peppol.zuul.proxy")
 @Component
 @RefreshScope
-public class FilterProperties {
+public class AccessFilterProperties {
     private List<String> allowFrom;
     private List<String> denyFrom;
     private volatile Map<String, List<String>> servicesAllowFrom;
     private volatile Map<String, List<String>> servicesDenyFrom;
 
-    public FilterProperties() {
+    public AccessFilterProperties() {
     }
 
-    public FilterProperties(String allowFrom, String denyFrom, Map<String, String> servicesAllowFrom, Map<String, String> servicesDenyFrom) {
+    public AccessFilterProperties(String allowFrom, String denyFrom, Map<String, String> servicesAllowFrom, Map<String, String> servicesDenyFrom) {
         setAllowFrom(allowFrom);
         setDenyFrom(denyFrom);
         setServicesAllowFrom(servicesAllowFrom);

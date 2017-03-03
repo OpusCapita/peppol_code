@@ -1,8 +1,9 @@
 package com.opuscapita.peppol.proxy;
 
-import com.opuscapita.peppol.proxy.filters.pre.CustomFilter;
-import com.opuscapita.peppol.proxy.filters.pre.FilterProperties;
-import com.opuscapita.peppol.proxy.filters.pre.PreserveHostHeader;
+import com.opuscapita.peppol.proxy.filters.pre.AccessCheckFilter;
+import com.opuscapita.peppol.proxy.filters.pre.AccessFilterProperties;
+import com.opuscapita.peppol.proxy.filters.pre.PreserveHeaderFilterProperties;
+import com.opuscapita.peppol.proxy.filters.pre.PreserveHeadersFilter;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,13 +25,13 @@ public class ZuulProxyServerApplication {
     }
 
     @Bean
-    public CustomFilter customFilter(FilterProperties filterProperties) {
-        return new CustomFilter(filterProperties);
+    public AccessCheckFilter customFilter(AccessFilterProperties accessFilterProperties) {
+        return new AccessCheckFilter(accessFilterProperties);
     }
 
 	@Bean
-	public PreserveHostHeader preserveHostHeader() {
-	  return new PreserveHostHeader();
+	public PreserveHeadersFilter preserveHostHeader(PreserveHeaderFilterProperties preserveHeaderFilterProperties) {
+	  return new PreserveHeadersFilter(preserveHeaderFilterProperties);
 	}
 
     @Bean

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by bambr on 16.28.12.
  */
-public class CustomFilterTest {
+public class AccessCheckFilterTest {
     @Test
     public void isNotAllowed() throws Exception {
         HttpServletRequest requestMock = mock(HttpServletRequest.class);
@@ -22,58 +22,58 @@ public class CustomFilterTest {
         HttpServletRequest inboundRequestMock = mock(HttpServletRequest.class);
         when(inboundRequestMock.getRemoteAddr()).thenReturn("10.10.10.10");
         when(inboundRequestMock.getRequestURI()).thenReturn("/peppol-ap-inbound/status");
-        FilterProperties globalAllowedEverything = new FilterProperties("*", null, null, null);
-        CustomFilter testSubject = new CustomFilter(globalAllowedEverything);
+        AccessFilterProperties globalAllowedEverything = new AccessFilterProperties("*", null, null, null);
+        AccessCheckFilter testSubject = new AccessCheckFilter(globalAllowedEverything);
         assertFalse(testSubject.isNotAllowed(requestMock));
         System.out.println("1");
-        FilterProperties globalDeniedEverything = new FilterProperties(null, "*", null, null);
-        testSubject = new CustomFilter(globalDeniedEverything);
+        AccessFilterProperties globalDeniedEverything = new AccessFilterProperties(null, "*", null, null);
+        testSubject = new AccessCheckFilter(globalDeniedEverything);
         assertTrue(testSubject.isNotAllowed(requestMock));
         System.out.println("2");
-        FilterProperties subnetAllowed = new FilterProperties("192.168.1.0/8", null, null, null);
-        testSubject = new CustomFilter(subnetAllowed);
+        AccessFilterProperties subnetAllowed = new AccessFilterProperties("192.168.1.0/8", null, null, null);
+        testSubject = new AccessCheckFilter(subnetAllowed);
         assertFalse(testSubject.isNotAllowed(requestMock));
         System.out.println("3");
-        FilterProperties subnetAllowedAllDenied = new FilterProperties("192.168.1.0/8", null, null, null);
-        testSubject = new CustomFilter(subnetAllowedAllDenied);
+        AccessFilterProperties subnetAllowedAllDenied = new AccessFilterProperties("192.168.1.0/8", null, null, null);
+        testSubject = new AccessCheckFilter(subnetAllowedAllDenied);
         assertFalse(testSubject.isNotAllowed(requestMock));
         System.out.println("4");
-        FilterProperties subnetAllowedAllDeniedNegative = new FilterProperties("192.168.0.0/12", null, null, null);
-        testSubject = new CustomFilter(subnetAllowedAllDeniedNegative);
+        AccessFilterProperties subnetAllowedAllDeniedNegative = new AccessFilterProperties("192.168.0.0/12", null, null, null);
+        testSubject = new AccessCheckFilter(subnetAllowedAllDeniedNegative);
         assertFalse(testSubject.isNotAllowed(requestMock));
         System.out.println("5");
-        FilterProperties subnetDeniedAllAllowed = new FilterProperties("*", "192.168.1.0/8", null, null);
-        testSubject = new CustomFilter(subnetDeniedAllAllowed);
+        AccessFilterProperties subnetDeniedAllAllowed = new AccessFilterProperties("*", "192.168.1.0/8", null, null);
+        testSubject = new AccessCheckFilter(subnetDeniedAllAllowed);
         assertFalse(testSubject.isNotAllowed(requestMock));
         System.out.println("6");
-        FilterProperties serviceAllowed = new FilterProperties(null, null, new HashMap<String, String>() {{
+        AccessFilterProperties serviceAllowed = new AccessFilterProperties(null, null, new HashMap<String, String>() {{
             put("validator", "192.168.1.100/1");
         }}, null);
-        testSubject = new CustomFilter(serviceAllowed);
+        testSubject = new AccessCheckFilter(serviceAllowed);
         assertFalse(testSubject.isNotAllowed(requestMock));
         System.out.println("7");
-        FilterProperties serviceAllowedWildcard = new FilterProperties(null, null, new HashMap<String, String>() {{
+        AccessFilterProperties serviceAllowedWildcard = new AccessFilterProperties(null, null, new HashMap<String, String>() {{
             put("validator", "*");
         }}, null);
-        testSubject = new CustomFilter(serviceAllowedWildcard);
+        testSubject = new AccessCheckFilter(serviceAllowedWildcard);
         assertFalse(testSubject.isNotAllowed(requestMock));
         System.out.println("8");
-        FilterProperties serviceDenied = new FilterProperties(null, null, null, new HashMap<String, String>(){{
+        AccessFilterProperties serviceDenied = new AccessFilterProperties(null, null, null, new HashMap<String, String>(){{
             put("validator", "192.168.1.0/8");
         }});
-        testSubject = new CustomFilter(serviceDenied);
+        testSubject = new AccessCheckFilter(serviceDenied);
         assertTrue(testSubject.isNotAllowed(requestMock));
         System.out.println("9");
-        FilterProperties serviceDeniedFromAnyAddress = new FilterProperties(null, null, null, new HashMap<String, String>(){{
+        AccessFilterProperties serviceDeniedFromAnyAddress = new AccessFilterProperties(null, null, null, new HashMap<String, String>(){{
             put("validator", "*");
         }});
-        testSubject = new CustomFilter(serviceDeniedFromAnyAddress);
+        testSubject = new AccessCheckFilter(serviceDeniedFromAnyAddress);
         assertTrue(testSubject.isNotAllowed(requestMock));
         System.out.println("10");
-        FilterProperties specificIpRangePerFilter = new FilterProperties("10.0.0.0/24", "*", new HashMap<String, String>() {{
+        AccessFilterProperties specificIpRangePerFilter = new AccessFilterProperties("10.0.0.0/24", "*", new HashMap<String, String>() {{
             put("peppol-ap-inbound", "*");
         }}, null);
-        testSubject = new CustomFilter(specificIpRangePerFilter);
+        testSubject = new AccessCheckFilter(specificIpRangePerFilter);
         assertFalse(testSubject.isNotAllowed(inboundRequestMock));
         System.out.println("11");
     }
