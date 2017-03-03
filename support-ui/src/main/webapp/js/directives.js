@@ -18,10 +18,12 @@ function setActions(file, status) {
 function setStatus($scope, status) {
     if (status === "sent") {
         $scope.label = 'label-success';
-        if ($scope.direction == 'OUT')
+        if ($scope.direction == 'OUT') {
             $scope.status = 'delivered';
-        else
+        }
+        else {
             $scope.status = 'received';
+        }
     } else if (status === "resolved") {
         $scope.label = 'label-success';
         $scope.status = 'resolved';
@@ -74,6 +76,9 @@ angular.module('peppolApp').directive('fileStatus', function () {
             if (typeof $scope.file.sent != 'undefined') {
                 status = "sent";
                 ts = Date.parse($scope.file.sent[0].ts);
+                setStatus($scope, status);
+                $scope.file.status = status;
+                return;
             }
             if (typeof $scope.file.failed != 'undefined' && (status !== "sent" || $scope.direction === "IN")) {
                 if ($scope.file.failed[0].invalid == true) {
@@ -82,6 +87,9 @@ angular.module('peppolApp').directive('fileStatus', function () {
                     status = "failed";
                 }
                 ts = Date.parse($scope.file.failed[0].ts);
+                setStatus($scope, status);
+                $scope.file.status = status;
+                return;
             }
             if (typeof $scope.file.reprocessed != 'undefined') {
                 if (typeof ts != 'undefined') {
