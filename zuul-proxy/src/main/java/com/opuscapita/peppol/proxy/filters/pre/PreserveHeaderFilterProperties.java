@@ -16,6 +16,9 @@ import java.util.List;
 public class PreserveHeaderFilterProperties {
     List<String> headersToPreserve;
 
+    public PreserveHeaderFilterProperties() {
+    }
+
     public PreserveHeaderFilterProperties(String headersToPreserve) {
         setHeadersToPreserve(headersToPreserve);
     }
