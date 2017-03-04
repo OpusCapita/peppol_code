@@ -15,17 +15,29 @@ import java.util.*;
 public class AccessFilterProperties {
     private List<String> allowFrom;
     private List<String> denyFrom;
+    private List<String> servicesToBypass = new ArrayList<String>() {{add("peppol-ap-inbound");}};
     private volatile Map<String, List<String>> servicesAllowFrom;
     private volatile Map<String, List<String>> servicesDenyFrom;
 
     public AccessFilterProperties() {
     }
 
-    public AccessFilterProperties(String allowFrom, String denyFrom, Map<String, String> servicesAllowFrom, Map<String, String> servicesDenyFrom) {
+    public AccessFilterProperties(String allowFrom, String denyFrom, String servicesToBypass, Map<String, String> servicesAllowFrom, Map<String, String> servicesDenyFrom) {
         setAllowFrom(allowFrom);
         setDenyFrom(denyFrom);
+        setServicesToBypass(servicesToBypass);
         setServicesAllowFrom(servicesAllowFrom);
         setServicesDenyFrom(servicesDenyFrom);
+    }
+
+    public List<String> getServicesToBypass() {
+        return servicesToBypass;
+    }
+
+    public void setServicesToBypass(String servicesToBypass) {
+        if(servicesToBypass != null) {
+            this.servicesToBypass = Arrays.asList(servicesToBypass.split(","));
+        }
     }
 
     public List<String> getAllowFrom() {
