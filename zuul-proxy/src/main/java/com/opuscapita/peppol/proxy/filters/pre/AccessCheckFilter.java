@@ -37,8 +37,10 @@ public class AccessCheckFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest request = requestContext.getRequest();
-
-        return !accessFilterProperties.getServicesToBypass().contains(RequestUtils.extractRequestedService(request));
+        String requestedService = RequestUtils.extractRequestedService(request);
+        boolean result = !accessFilterProperties.getServicesToBypass().contains(requestedService);
+        System.out.println("Bypassing for service ["+requestedService+"]: "+result);
+        return result;
     }
 
     @Override
