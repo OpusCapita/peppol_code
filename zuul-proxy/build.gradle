@@ -48,7 +48,7 @@ compileJava.dependsOn(processResources)
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Dalston.BUILD-SNAPSHOT'
+        mavenBom 'org.springframework.cloud:spring-cloud-netflix:1.3.0.M1'
     }
 }
 
