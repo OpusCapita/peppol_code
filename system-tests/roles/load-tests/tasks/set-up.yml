@@ -1,5 +1,6 @@
 ---
 - name: git clone and pull test-materials from nocontrol repo
+  become: yes
   git:
     repo: http://nocontrol.itella.net/gitbucket/git/Peppol/test-materials.git
     dest: "{{test_data_path}}"
