@@ -3,5 +3,5 @@
   roles:
     - outbound-invalid-tests
   vars:
-    test_data_path: ~/system-tests/files
+    test_data_path: /test-files
 ...
