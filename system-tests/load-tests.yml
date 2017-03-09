@@ -1,0 +1,7 @@
+---
+- hosts: peppol
+  roles:
+    - load-tests
+  vars:
+    test_data_path: /test-materials
+...
