@@ -44,15 +44,12 @@ public class OutboundMessageController {
     List<MessageDTO> getAllMessages(@RequestParam Map<String, String> requestParams) {
         TableParameters tableParameters = new TableParameters(requestParams);
         return messageService.getAllMessages(tableParameters);
-        //return messageService.getMessageList(tableParameters);
     }
 
     @RequestMapping(value = "/count", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
-    public
     @ResponseBody
-    String getAllMessageCount() {
-        // return "{\"length\": " + String.valueOf(messageService.getAllMessageCount()) + "}"; this was a bug, like srsly ????
+    public String getAllMessageCount() {
         return "{\"length\": " + String.valueOf(messageService.getAllOutboundMessageCount()) + "}";
     }
 

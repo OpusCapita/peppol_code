@@ -64,7 +64,6 @@ angular.module('peppolApp').directive('fileStatus', function () {
         },
         template: '<span class="label {{label}}">{{status}}</span>',
         link: function ($scope) {
-            console.log("Direction: " + $scope.direction);
             if (typeof $scope.file.status != 'undefined') {
                 if ($scope.file.status != 'resolved') {
                     setStatus($scope, $scope.file.status);

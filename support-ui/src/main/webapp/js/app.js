@@ -9,7 +9,9 @@ angular.module('peppolApp', [
     'ngAnimate',
     'ui.bootstrap'
 ])
+
     .config(function ($routeProvider, $httpProvider, $locationProvider, $logProvider) {
+
         $routeProvider.when('/customers', {
             templateUrl: '/views/customer-list.html',
             controller: 'CustomerCtrl',

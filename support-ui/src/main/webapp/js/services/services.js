@@ -31,27 +31,6 @@ services.factory('MessageFactory', function ($resource, $cacheFactory) {
     var cache = $cacheFactory('MessageFactory');
     var url = '/rest/outbound';
     return getAllMessageFactory($resource, url, cache);
-    /*var Message = $resource(url, {}, {
-     query: { method: 'GET', isArray: true},
-     size: { method: 'GET', url: url + '/count'},
-     get_details: { method: 'GET', url: url + '/details/:msg_id', isArray: true}
-     });
-     return {
-     query: function (query, callback) {
-     Message.query(query, callback);
-     },
-     size: function (callback) {
-     Message.size(callback);
-     },
-     get_details: function (msg_id, callback) {
-     var details = cache.get(msg_id);
-     if (!details) {
-     details = Message.get_details({msg_id: msg_id});
-     cache.put(msg_id, details);
-     }
-     details.$promise.then(callback);
-     }
-     }*/
 });
 
 services.factory("InboundMessageFactory", function ($resource, $cacheFactory) {
@@ -61,6 +40,7 @@ services.factory("InboundMessageFactory", function ($resource, $cacheFactory) {
 });
 
 var getAllMessageFactory = function ($resource, url, cache) {
+
     var Message = $resource(url, {}, {
         query: {method: 'GET', isArray: true},
         size: {method: 'GET', url: url + '/count'},
@@ -85,6 +65,7 @@ var getAllMessageFactory = function ($resource, url, cache) {
 };
 
 services.factory('FailedFactory', function ($resource) {
+
     var url = '/rest/outbound/failed';
     return $resource(url, {}, {
         query: {method: 'GET', isArray: true},
@@ -100,6 +81,7 @@ services.factory('FailedFactory', function ($resource) {
 });
 
 services.factory('ReprocessFactory', function ($resource) {
+
     var url = '/rest/reprocess';
     return $resource(url, {}, {
         reprocess_inbound: {method: 'POST', url: url + '/inbound/:file_ids', params: {file_ids: '@file_ids'}},
@@ -108,6 +90,7 @@ services.factory('ReprocessFactory', function ($resource) {
 });
 
 services.factory('InvalidFactory', function ($resource) {
+
     var url = '/rest/outbound/invalid';
     return $resource(url, {}, {
         query: {method: 'GET', isArray: true},

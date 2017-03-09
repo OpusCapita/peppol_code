@@ -273,6 +273,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Cacheable("allOutboundMessages")
+    public int getAllOutboundMessageCount() throws HibernateException{
+        return messageDAO.getAllOutboundMessageCount();
+    }
+
+    @Override
     public String getErrorMessage(String filePath) {
         String result = null;
         File file = new File(filePath);
@@ -319,11 +325,4 @@ public class MessageServiceImpl implements MessageService {
         }
         messageDAO.resolveManually(messageId, comment);
     }
-
-    @Override
-    @Cacheable("allOutboundMessages")
-    public int getAllOutboundMessageCount() throws HibernateException{
-        return messageDAO.getAllOutboundMessageCount();
-    }
-
 }

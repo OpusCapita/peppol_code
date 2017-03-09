@@ -56,10 +56,9 @@ public class RootConfiguration {
                 "allInboundMessages");
 
         CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
-                .maximumSize(1)
-                .expireAfterWrite(5, TimeUnit.MINUTES);
+                .refreshAfterWrite(20, TimeUnit.SECONDS).maximumSize(1);
         cacheManager.setCacheBuilder(cacheBuilder);
-        return  cacheManager;
+        return cacheManager;
     }
 
     @Bean

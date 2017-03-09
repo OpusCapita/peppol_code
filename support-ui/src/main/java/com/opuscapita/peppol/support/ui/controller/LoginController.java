@@ -3,6 +3,7 @@ package com.opuscapita.peppol.support.ui.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -15,8 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LoginController {
 
-    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-    public ModelAndView showLoginPage() {
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ModelAndView login(@RequestParam(value = "logout", required = false) String logout){
+        String test = logout;
         return new ModelAndView("login");
     }
 
@@ -27,8 +29,19 @@ public class LoginController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ModelAndView logout() {
-        return new ModelAndView("login");
+    /*@RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
+    public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
+        String t = "Asdasd";
+        System.out.println(request.toString());
+        return null;
+        //return new ModelAndView("login");
     }
+
+    @RequestMapping(value = {"/logout"}, method = RequestMethod.POST)
+    public ModelAndView logoutPost(HttpServletRequest request,HttpServletResponse response) {
+        String t = "Asdasd";
+        System.out.println(request.toString());
+        return null;
+        //return new ModelAndView("login");
+    }*/
 }

@@ -9,6 +9,7 @@ function escapeParams(params) {
 }
 
 function createTable(ngTableParams, $location, $timeout, Factory, $scope, inbound) {
+
     return new ngTableParams(
         angular.extend({
                 page: 1,            // show first page
@@ -51,16 +52,6 @@ function createTable(ngTableParams, $location, $timeout, Factory, $scope, inboun
 /* Controllers */
 
 var app = angular.module('peppolApp.controllers', []);
-
-// Clear browser cache (in development mode)
-//
-// http://stackoverflow.com/questions/14718826/angularjs-disable-partial-caching-on-dev-machine
-/*app.run(function ($rootScope, $templateCache) {
-    $rootScope.$on('$viewContentLoaded', function () {
-        $templateCache.removeAll();
-    });
- });*/
-
 
 app.controller('CustomerCtrl', ['$scope', 'CustomerFactory', '$resource', '$location', 'ngTableParams', '$timeout',
     function ($scope, CustomerFactory, $resource, $location, ngTableParams, $timeout) {
@@ -200,10 +191,10 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             return (normalizedName.length <= chars) ? normalizedName : normalizedName.substr(0, chars) + '...';
         };
 
-        var getSimpleName = function (fileName){
+        var getSimpleName = function (fileName) {
             if (!Boolean(fileName))
                 return '';
-            return  fileName.split(/(\\|\/)/g).pop();
+            return fileName.split(/(\\|\/)/g).pop();
         };
 
         $scope.showSimpleName = function (fileName) {
@@ -231,7 +222,7 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             }
         };
         $scope.downloadFile = function (filename) {
-            $window.open('/rest/outbound/download/' +filename);
+            $window.open('/rest/outbound/download/' + filename);
         };
 
         $scope.isAllowedToReprocess = function () {
@@ -335,21 +326,6 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
         }, true);
 
-        /*$scope.isAllowedToReprocess = function () {
-         var hasFailedMessages = false,
-         notOnlyErrors = true;
-
-         angular.forEach($scope.checkboxes.items, function (item, key) {
-         if ($scope.messageList != undefined && item && ($scope.messageList[key].status == "failed" || $scope.messageList[key].status == "processing")) {
-         hasFailedMessages = true;
-         } else if ($scope.messageList != undefined && item) {
-         notOnlyErrors = false;
-         }
-         });
-         return !(hasFailedMessages && notOnlyErrors);
-         };*/
-
-
         $scope.isAllowedToResolve = function () {
             var hasErrorMessages = false,
                 notOnlyErrors = true;
@@ -398,13 +374,13 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             return "Recipient";
         };
         <!--invoiceDate-->
-        $scope.today = function() {
+        $scope.today = function () {
             $scope.invoiceDate = new Date();
         };
 
         $scope.today();
 
-        $scope.clear = function() {
+        $scope.clear = function () {
             $scope.invoiceDate = null;
         };
 
@@ -459,15 +435,15 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
         var afterTomorrow = new Date();
         afterTomorrow.setDate(tomorrow.getDate() + 1);
 
-        $scope.changeSelect= function(dt){
+        $scope.changeSelect = function (dt) {
             if (dt == undefined)
                 return;
-            console.log("before: " + dt);
+            // console.log("before: " + dt);
             var userDate = new Date();
             dt.setHours(userDate.getHours());
             dt.setMinutes(userDate.getMinutes());
             dt.setSeconds(userDate.getSeconds());
-            console.log("after: " + dt);
+            // console.log("after: " + dt);
         };
 
         $scope.events = [
@@ -556,7 +532,6 @@ app.controller('CustomerMessageCtrl', ['$scope', 'CustomerMessageFactory', '$res
                     angular.extend(url, customer);
                     CustomerMessageFactory.query(url, function (data) {
                         $timeout(function () {
-                            // set new data
                             $defer.resolve(data);
                         }, 200);
                     });
@@ -607,102 +582,13 @@ app.controller('StatusCtrl', ['$scope', 'StatusFactory', '$location', function (
     });
 }]);
 
-/*app.controller("LogoutCtrl", ["$resource", "$route", "$location", function ($resource, $route, $location) {
-    $resource('/logout', {}, {
-        get: {method: 'GET'}
-    }).get({}, function (data) {
- $location.path("/logout");
-        $route.reload();
-    })
- }]);*/
-
-app.controller("LogoutCtrl", ["$resource", "$route", "$location", function ($resource, $route, $location) {
-    window.location = '/logout';
+app.controller("LogoutCtrl", ["$scope", "$location", "$route", function ($scope, $location, $route) {
+    console.log("logout controller");
+    /* window.localStorage.clear();
+     window.location = '/login?logout=true';*/
+    //$route.reload();
 }]);
 
-/*app.controller("DatepickerCtrl", ['$scope', function ($scope) {
-
-    $scope.inlineOptions = {
-        customClass: getDayClass,
-        minDate: new Date(),
-        showWeeks: true
-    };
-
-    $scope.dateOptions = {
-        dateDisabled: disabled,
-        formatYear: 'yy',
-        startingDay: 1
-    };
-
-    $scope.toggleMin = function () {
-        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
-        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
-    };
-
-    $scope.toggleMin();
-
-    $scope.setDate = function (year, month, day) {
-        $scope.dt = new Date(year, month, day);
-    };
-
-    $scope.dt = new Date();
-    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-    $scope.format = "yyyy-MM-dd";
-    $scope.altInputFormats = ['yyyy/M!/d!'];
-
-    $scope.popup = {
-        opened: false
-    };
-
-    $scope.openDatePicker = function ($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.popup.opened = true;
-    };
-
-    // Disable weekend selection
-    function disabled(data) {
-        var date = data.date,
-            mode = data.mode;
-        return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-    }
-
-    var tomorrow = new Date();
-
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    var afterTomorrow = new Date();
-
-    afterTomorrow.setDate(tomorrow.getDate() + 1);
-    $scope.events = [
-        {
-            date: tomorrow,
-            status: 'full'
-        },
-        {
-            date: afterTomorrow,
-            status: 'partially'
-        }
-    ];
-
-    function getDayClass(data) {
-        var date = data.date,
-            mode = data.mode;
-        if (mode === 'day') {
-            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-            for (var i = 0; i < $scope.events.length; i++) {
-                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-
-                if (dayToCheck === currentDay) {
-                    return $scope.events[i].status;
-                }
-            }
-        }
-        return '';
-    };
-
-}]);*/
 
 app.controller('sideMenu', ['$scope', function ($scope) {
     $scope.active;

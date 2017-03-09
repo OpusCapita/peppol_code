@@ -35,8 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/favicon.ico", "/login*", "/css/**", "/images/**").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/favicon.ico", "/login*", "/css/**", "/images/**").anonymous()
+                .anyRequest()
+                .authenticated();
         http
                 .formLogin()
                 .loginPage("/login")
@@ -44,18 +45,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/error-login")
                 .loginProcessingUrl("/login")
                 .permitAll();
-        http
+       http
                 .logout()
-                .logoutSuccessUrl("/login")
+               // .addLogoutHandler(customLogoutHandler())
+                //.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutUrl("/logout")
-                .deleteCookies("JSESSIONID")
-                .permitAll();
+                .logoutSuccessUrl("/login")
+                        .deleteCookies("JSESSIONID")
+                            .invalidateHttpSession(true)
+                               .permitAll();
         http.httpBasic();
         //http.addFilterAfter(digestAuthenticationFilter(), BasicAuthenticationFilter.class);
         //http.addFilter(digestAuthenticationFilter());
         http.csrf().disable();
         http.sessionManagement()
-                .maximumSessions(2)
+                .maximumSessions(1)
+                .expiredUrl("/login")
                 .and()
                 .invalidSessionUrl("/login");
     }
@@ -75,28 +80,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-   /* @Override
-    @Bean
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return super.userDetailsServiceBean();
-    }
-
-    @Bean
-    public DigestAuthenticationFilter digestAuthenticationFilter() throws Exception {
-        DigestAuthenticationFilter digestAuthenticationFilter = new DigestAuthenticationFilter();
-        digestAuthenticationFilter.setAuthenticationEntryPoint(digestEntryPoint());
-        digestAuthenticationFilter.setUserDetailsService(userDetailsServiceBean());
-        return digestAuthenticationFilter;
-    }
-    @Bean
-    public DigestAuthenticationEntryPoint digestEntryPoint() {
-        DigestAuthenticationEntryPoint digestAuthenticationEntryPoint = new DigestAuthenticationEntryPoint();
-        digestAuthenticationEntryPoint.setKey("peppol-OC-key");
-        digestAuthenticationEntryPoint.setRealmName(realm);
-        return digestAuthenticationEntryPoint;
-    }*/
-
-
 }
 
