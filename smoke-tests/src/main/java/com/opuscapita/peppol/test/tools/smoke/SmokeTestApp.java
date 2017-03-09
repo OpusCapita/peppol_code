@@ -1,10 +1,8 @@
 package com.opuscapita.peppol.test.tools.smoke;
 
-import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
+import com.opuscapita.peppol.test.tools.smoke.checks.*;
 import com.opuscapita.peppol.test.tools.smoke.configs.SmokeTestConfig;
-import com.opuscapita.peppol.test.tools.smoke.util.HtmlResultBuilder;
-import com.opuscapita.peppol.test.tools.smoke.util.LoggingResultBuilder;
-import com.opuscapita.peppol.test.tools.smoke.util.SmokeTestConfigReader;
+import com.opuscapita.peppol.test.tools.smoke.util.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
