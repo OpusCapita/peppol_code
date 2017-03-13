@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.MultipartPostMethod;
 import org.apache.log4j.LogManager;
 
 import java.io.File;
@@ -41,19 +43,17 @@ public class WebUiProducer implements Producer {
             return;
         }
         try {
-            //HtmlUnitDriver doesn't need the browser which allows to run the code on server
-          //  WebDriverRunner.setWebDriver(new HtmlUnitDriver(true));
-            //selenide here
-/*
+            HttpClient c = new HttpClient();
             for (File file : directory.listFiles()) {
-                open(link);
-                $(By.id("datafile")).uploadFile(file);
-                $("#submit").click();
-                String testResult = $("#validationStatus").getText();
-                results.put(file.getName(), testResult.replaceAll("Validation status: ", ""));
+                MultipartPostMethod mPost = new MultipartPostMethod(link);
+                mPost.addParameter("datafile", file);
+                mPost.addParameter("action", "upload");
+                mPost.addParameter("ajax", "true");
+                c.executeMethod(mPost);
+                String response = mPost.getResponseBodyAsString();
+                String testResult = response.contains("Validation status: true") ? "true" : "false";
+                results.put(file.getName(), testResult);
             }
-            close();
-*/
             saveResult(results);
         } catch (Throwable th) {
             logger.error("Error running web ui producer: ", th);

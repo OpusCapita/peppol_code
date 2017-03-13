@@ -41,10 +41,10 @@ tests:
             source file:  C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result\webUiResult
             consumers: 2
      consumers:
-        - queue msg count check:
-            id: 1
-            expected value: 5
-            name: validation Mq check
+   #     - queue msg count check:
+    #        id: 1
+     #       expected value: 5
+      #      name: validation Mq check
         - web ui check:
             id: 2
             expected value: 5

@@ -1,1 +1,6 @@
-#Mon Mar 13 15:20:17 EET 2017
+#Mon Mar 13 16:20:48 EET 2017
+EHF_profile-bii05_invoice_OC_zero_values.xml=true
+EHF_profile-bii05_invoice.xml=true
+SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml=true
+EHF_profile-bii05_invoice_OC.xml=true
+EHF_profile-bii05_creditnote.xml=true

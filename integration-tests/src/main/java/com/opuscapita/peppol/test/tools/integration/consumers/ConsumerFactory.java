@@ -39,7 +39,7 @@ public class ConsumerFactory {
                 return new FileConsumer(id, fileTestName, directory, fileTestExpression);
             case "web ui check":
             case "web ui test":
-                return new WebUiConsumer(id, properties.get("expected value"));
+                return new WebUiConsumer(id, (String) properties.get("name"), properties.get("expected value"));
             case "rest test":
             case "rest check":
                 return new RestConsumer(id, (String)properties.get("name"));
