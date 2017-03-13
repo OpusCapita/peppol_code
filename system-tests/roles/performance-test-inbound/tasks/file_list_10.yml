@@ -1,7 +1,0 @@
----
-- include: file_to_inbound.yml
-  vars: 
-    file: "{{item}}"
-  with_fileglob:
-    - "{{test_data_path}}/performance-tests-materials/performance-test-10/*"
-...
