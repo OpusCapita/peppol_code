@@ -1,0 +1,7 @@
+---
+- hosts: peppol
+  roles:
+    - soak-tests
+  vars:
+    test_data_path: /test-materials
+...
