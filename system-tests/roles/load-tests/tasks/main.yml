@@ -1,5 +1,5 @@
 ---
 - include: set-up.yml
 - include: file_list.yml
-  with_sequence: count=100
+#  with_sequence: count=100
 ...
