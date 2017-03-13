@@ -1,0 +1,14 @@
+---
+#File_list.yml#
+#This is where all the test materials are taken from #
+
+- include: file_to_inbound.yml
+  vars:
+    file: "{{item}}"
+  with_fileglob:
+#    - "{{test_data_path}}/performance-tests-materials/performance-test-10/*"
+    - "{{test_data_path}}/performance-tests-materials/performance-test-100/*"
+#    - "{{test_data_path}}/performance-tests-materials/performance-test-1k/*"
+
+...
+

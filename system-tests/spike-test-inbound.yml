@@ -1,0 +1,7 @@
+---
+- hosts: peppol
+  roles:
+    - spike-test-inbound
+  vars:
+    test_data_path: /test-materials
+...

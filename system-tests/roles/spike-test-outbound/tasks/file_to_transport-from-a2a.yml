@@ -1,0 +1,17 @@
+---
+- name: Copy file to outbound from-a2a dir
+  become: no
+  copy:
+    remote_src: True
+    src: "{{file}}"
+    dest: /peppol-a2a-nfs/out/test/data
+- set_fact: file="{{file}}"
+- debug: var=file
+
+- name: find fileName
+  shell: echo "{{file}}" | grep .xml |xargs -L 1 basename
+  register: fileName
+- set_fact: fileName="{{fileName.stdout}}"
+- debug: var=fileName
+
+...
