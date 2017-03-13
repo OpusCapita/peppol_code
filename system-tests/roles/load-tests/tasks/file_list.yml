@@ -7,7 +7,7 @@
   vars:
     file: "{{item}}"
   with_fileglob:
-    - "{{test_data_path}}/performance-tests-materials/performance-test-100/*"
+    - "{{test_data_path}}/performance-tests-materials/performance-test-10/*"
 
 #send to inbound flow
 - include: file_to_inbound.yml

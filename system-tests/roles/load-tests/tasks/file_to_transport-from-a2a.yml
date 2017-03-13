@@ -10,8 +10,8 @@
   async: 1
   poll: 0
 
-- pause:
-    seconds: 1
+#- pause:
+#    seconds: 1
 
 - set_fact: file="{{file}}"
 - debug: var=file
