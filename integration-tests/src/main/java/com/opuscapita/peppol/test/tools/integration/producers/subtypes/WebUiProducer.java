@@ -42,8 +42,9 @@ public class WebUiProducer implements Producer {
         }
         try {
             //HtmlUnitDriver doesn't need the browser which allows to run the code on server
-         /*   WebDriverRunner.setWebDriver(new HtmlUnitDriver(true));
+          //  WebDriverRunner.setWebDriver(new HtmlUnitDriver(true));
             //selenide here
+/*
             for (File file : directory.listFiles()) {
                 open(link);
                 $(By.id("datafile")).uploadFile(file);
@@ -51,7 +52,8 @@ public class WebUiProducer implements Producer {
                 String testResult = $("#validationStatus").getText();
                 results.put(file.getName(), testResult.replaceAll("Validation status: ", ""));
             }
-            close();*/
+            close();
+*/
             saveResult(results);
         } catch (Throwable th) {
             logger.error("Error running web ui producer: ", th);

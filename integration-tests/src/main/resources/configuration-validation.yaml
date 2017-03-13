@@ -8,33 +8,37 @@ configurations:
             username: guest
             password: guest
             virtual host: /
-    validation result folder: /etc/resources/validation-result
+    validation result folder: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result
 tests:
    validation:
      producers:
-       mq producer:
-         mq connection: mq1
-         source directory: /etc/resources/validation-xml-test
-         destination queue: validator
-         endpoint: validation-integration-test
-       rest producer:
-         source directory: /etc/resources/validation-xml-test
-         destination link: http://validator:8080/validator/validate
-         result directory: validation result folder
-         rest method: post
+       web ui producer:
+          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
+          destination link: http://10.117.83.32:8083/validator/
+          result directory: validation result folder
+     # mq producer:
+      #   mq connection: mq1
+       #  source directory: /etc/resources/validation-xml-test
+        # destination queue: validator
+         #endpoint: validation-integration-test
+      # rest producer:
+       #  source directory: /etc/resources/validation-xml-test
+        # destination link: http://validator:8080/validator/validate
+         #result directory: validation result folder
+#         rest method: post
      subscribers:
-        - mq subscriber:
-            source queue: validation-integration-test
-            timeout: 1500
-            consumers: 1
+       # - mq subscriber:
+        #    source queue: validation-integration-test
+         #   timeout: 1500
+          #  consumers: 1
         - snc subscriber:
             consumers: 2
             timeout: 500
+      #  - file subscriber:
+       #     source file:  C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result\restResult
+        #    consumers: 3
         - file subscriber:
-            source file:  /etc/resources/validation-result/restResult
-            consumers: 3
-        - file subscriber:
-            source file:  /etc/resources/validation-result/webUiResult
+            source file:  C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result\webUiResult
             consumers: 2
      consumers:
         - queue msg count check:

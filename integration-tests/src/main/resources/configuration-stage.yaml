@@ -79,6 +79,10 @@ tests:
                 source directory: /etc/resources/validation-xml-test
                 destination queue: validator
                 endpoint: validation-integration-test
+            web ui producer:
+                source directory: /etc/resources/validation-xml-test
+                destination link: http://validator:8080/validator/
+                result directory: validation result folder
             rest producer:
                 source directory: /etc/resources/validation-xml-test
                 destination link: http://validator:8080/validator/validate
