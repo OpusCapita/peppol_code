@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -44,7 +45,7 @@ public class ErrorHandler {
     }
 
     public void reportToServiceNow(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription) {
-        reportToServiceNow(cm.convertToJson(), cm.getCustomerId(), e, shortDescription);
+        createTicketFromContainerMessage(cm, e, shortDescription);
     }
 
     public void reportToServiceNow(String json, String customerId, Exception e) {
@@ -62,6 +63,74 @@ public class ErrorHandler {
             logger.info("Dumped erroneous message to: " + dumpFileName);
         }
         createSncTicket(dumpFileName, json, customerId, e, shortDescription, correlationIdPrefix);
+    }
+
+    private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription) {
+        String detailedDescription = "Failed to process message";
+
+        detailedDescription += "\nFile name: " + cm.getFileName();
+
+        if (StringUtils.isNotBlank(cm.getCustomerId())) {
+            detailedDescription += "\nCustomerID: " + cm.getCustomerId();
+        }
+
+        if (e != null && StringUtils.isNotBlank(e.getMessage())) {
+            detailedDescription += "\nError message: " + e.getMessage();
+        }
+
+        Exception processingException = null;
+        if (cm.getBaseDocument() instanceof InvalidDocument) {
+            detailedDescription += "\nProcessing error: " + ((InvalidDocument) cm.getBaseDocument()).getReason();
+
+            if (exceptionMessageToString(((InvalidDocument) cm.getBaseDocument()).getException()) != null) {
+                processingException = ((InvalidDocument) cm.getBaseDocument()).getException();
+                detailedDescription += "\nProcessing exception message: " + exceptionMessageToString(processingException);
+            }
+        }
+
+        detailedDescription += "\nLast processing status: " + cm.getProcessingStatus();
+
+        String exceptionMessage = exceptionMessageToString(e);
+        if (exceptionMessage != null) {
+            detailedDescription += "\nPlatform exception message: " + exceptionMessage;
+        }
+
+        String json = cm.convertToJson().replaceAll("\\{|\\}|\\\"|\\'", "");
+        detailedDescription += "\nMessage content: \n" + json + "\n";
+
+        if (e != null) {
+            detailedDescription += "\n\nPlatform exception: " + ExceptionUtils.getStackTrace(e) + "\n";
+        }
+        if (processingException != null) {
+            detailedDescription += "\n\nProcessing exception: " + ExceptionUtils.getStackTrace(processingException);
+        }
+
+        createTicket(shortDescription, detailedDescription, cm.getCorrelationId() + cm.getProcessingStatus(), cm.getCustomerId());
+    }
+
+    @Nullable
+    private String exceptionMessageToString(@Nullable Exception e) {
+        if (e == null) {
+            return null;
+        }
+        if (StringUtils.isBlank(e.getMessage())) {
+            return null;
+        }
+        return e.getMessage();
+    }
+
+    private void createTicket(@NotNull String shortDescription, @NotNull String detailedDescription,
+                              @NotNull String correlationId, @Nullable String customerId) {
+        if (StringUtils.isBlank(customerId)) {
+            customerId = "n/a";
+        }
+        SncEntity ticket = new SncEntity(shortDescription, detailedDescription, correlationId, customerId, 0);
+        try {
+            serviceNowRest.insert(ticket);
+            logger.info("ServiceNow ticket created");
+        } catch (Exception e) {
+            logger.error("Failed to create SNC ticket for " + customerId + " about " + shortDescription + " with data: " + detailedDescription, e);
+        }
     }
 
     private void createSncTicket(@Nullable String dumpFileName, @Nullable String json, @Nullable String customerId,
