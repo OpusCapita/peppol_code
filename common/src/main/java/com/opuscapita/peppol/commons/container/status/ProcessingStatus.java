@@ -46,4 +46,8 @@ public class ProcessingStatus implements Serializable {
         return correlationId;
     }
 
+    @Override
+    public String toString() {
+        return "Endpoint = " + endpoint + ", status = " + result;
+    }
 }
