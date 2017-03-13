@@ -141,7 +141,7 @@ public class EmailController {
         String message = "E-mail address not set for the customer " + customer.getIdentifier() + " (" + customer.getName() + ")";
         logger.warn(message);
         if (errorHandler != null) {
-            errorHandler.reportToServiceNow(message, customer.getIdentifier(), null, "Customer e-mail address missing");
+            errorHandler.reportToServiceNow(cm, null, message);
         }
     }
 

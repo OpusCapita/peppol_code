@@ -62,7 +62,7 @@ public class StatusReporter {
                 errorHandler.reportToServiceNow("{}", "n/a", e);
                 return;
             }
-            errorHandler.reportToServiceNow(new String(cm.convertToJsonByteArray()), cm.getCustomerId(), e);
+            errorHandler.reportToServiceNow(cm, e, e.getMessage());
         } catch (Exception exception) {
             logger.error("Failed to report issue to ServiceNow: ", exception);
         }
