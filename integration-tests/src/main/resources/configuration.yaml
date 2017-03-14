@@ -1,3 +1,4 @@
+#local complete configuration
 configurations:
     databases:
         db1: jdbc:mysql://t-l-mysql01.ocnet.local:3306/oxalis?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true

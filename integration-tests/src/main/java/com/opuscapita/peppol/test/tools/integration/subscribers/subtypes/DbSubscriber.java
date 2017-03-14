@@ -36,6 +36,10 @@ public class DbSubscriber extends Subscriber {
                 logger.info("DbSubscriber: got no result, retrying in " + timeout);
                 Thread.sleep(timeout);
                 executionResult = getQuerryResult(); //second attempt
+                if(executionResult.equals("0"))
+                    logger.info("DbSubscriber: still no results");
+                else
+                    logger.info("DbSubscriber: got the result after retry, nice");
             }
             for (Consumer consumer : consumers) {
                 TestResult testResult = consumer.consume(executionResult);

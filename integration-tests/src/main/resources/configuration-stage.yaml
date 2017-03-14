@@ -1,3 +1,4 @@
+#complete configuration for stage
 configurations:
     databases:
         db1: jdbc:mysql://mysql.docker.local:3306/peppol?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
@@ -39,22 +40,6 @@ tests:
                 name: Message persisted into DB positive test
                 connection string: db1
                 expected value: 1
-            - SNC test:
-                name: Invalid message error case- ticket is sent to SNC (snc stub)
-                id: 7
-                expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
-            - SNC test:
-                name: Not JSON file in input- Error case -> ticket to SNC
-                id: 8
-                expected value: nojson
-            - SNC test:
-                name: Invalid msg field lenghts and corrupted contents- negative test
-                id: 9
-                expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
-            - SNC test:
-                name: correlationID start with invoice file name for SNC tickets- positive test
-                id: 10
-                expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8
    support-ui:
         producers:
             file producer:
