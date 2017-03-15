@@ -4,9 +4,9 @@ tests:
      params:
        reference: http://peppol.itella.net/login
    validation:
-        type: link
-        params:
-          reference: http://validator:8083/
+     type: link
+     params:
+       reference: http://validator:8083/
    configuration-server:
      type: reference
      params:
