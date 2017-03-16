@@ -17,8 +17,8 @@ import org.springframework.core.env.Environment;
 public class ServiceNowConfigurator {
     @Bean
     @ConditionalOnProperty("snc.enabled")
-    public ErrorHandler errorHandler(@NotNull ServiceNow serviceNowRest, @NotNull Environment environment) {
-        return new ErrorHandler(serviceNowRest, environment);
+    public ErrorHandler errorHandler(@NotNull ServiceNow serviceNowRest) {
+        return new ErrorHandler(serviceNowRest);
     }
 
     @Bean

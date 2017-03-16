@@ -55,7 +55,7 @@ public class EmailController {
             String message = "Cannot determine customer ID from the file: " + cm.getFileName();
             logger.warn(message);
             if (errorHandler != null) {
-                errorHandler.reportToServiceNow(cm, null, message);
+                errorHandler.reportWithContainerMessage(cm, null, message);
             }
             return;
         }
@@ -66,7 +66,7 @@ public class EmailController {
             String message = "Customer not found in the database: " + customerId;
             logger.warn(message);
             if (errorHandler != null) {
-                errorHandler.reportToServiceNow(cm, null, message);
+                errorHandler.reportWithContainerMessage(cm, null, message);
             }
             return;
         }
@@ -141,7 +141,7 @@ public class EmailController {
         String message = "E-mail address not set for the customer " + customer.getIdentifier() + " (" + customer.getName() + ")";
         logger.warn(message);
         if (errorHandler != null) {
-            errorHandler.reportToServiceNow(cm, null, message);
+            errorHandler.reportWithContainerMessage(cm, null, message);
         }
     }
 

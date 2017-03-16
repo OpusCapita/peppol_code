@@ -66,7 +66,8 @@ public class EventQueueListener {
 
     private void handleError(String message, String customerId, Exception e) {
         try {
-            errorHandler.reportToServiceNow(message, customerId, e, "Failed to persist event", extractFileNameFromMessage(message));
+            String fileName = extractFileNameFromMessage(message);
+            errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to persist event", fileName, fileName);
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
