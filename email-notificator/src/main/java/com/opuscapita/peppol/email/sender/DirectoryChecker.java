@@ -61,7 +61,7 @@ public class DirectoryChecker {
             files = FileUtils.iterateFiles(new File(directory), ageFileFilter, null);
         } catch (Exception e) {
             logger.error("Failed to check e-mail directory", e);
-            errorHandler.reportToServiceNow("", "n/a", e, "Failed to check e-mail directory");
+            errorHandler.reportWithoutContainerMessage(null, e, "Failed to check e-mail directory", null, null);
             return;
         }
 
@@ -81,7 +81,7 @@ public class DirectoryChecker {
                     subject = normalizeSubjects(subjects);
                 } catch (Exception e) {
                     logger.error("Failed to prepare e-mail message", e);
-                    errorHandler.reportToServiceNow("", "n/a", e, "Failed to prepare e-mail message");
+                    errorHandler.reportWithoutContainerMessage(baseName, e, "Failed to prepare e-mail message", baseName, next.getName());
                     return;
                 }
 
@@ -91,7 +91,7 @@ public class DirectoryChecker {
                     backupOrDelete(baseName, sent, customerId);
                 } catch (Exception e) {
                     logger.error("Failed to send an e-mail to " + to, e);
-                    errorHandler.reportToServiceNow("", customerId, e, "Failed to send an e-mail to " + to);
+                    errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to send an e-mail to " + to, baseName, next.getName());
                     backupOrDelete(baseName, failed, customerId);
                 }
             }
@@ -107,7 +107,7 @@ public class DirectoryChecker {
                 logger.info("Deleted processed files related to " + baseName);
             } catch (Exception e) {
                 logger.error("Failed to delete e-mail files about " + baseName);
-                errorHandler.reportToServiceNow("", customerId, e, "Failed to delete e-mail files about " + baseName);
+                errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to delete e-mail files about " + baseName, baseName, baseName + EXT_TO);
             }
         } else {
             try {
@@ -118,7 +118,7 @@ public class DirectoryChecker {
                 logger.info("Files for " + baseName + " moved to directory " + destination);
             } catch (Exception e) {
                 logger.error("Failed to move e-mails to " + directory, e);
-                errorHandler.reportToServiceNow("", customerId, e, "Failed to move e-mails to " + directory);
+                errorHandler.reportWithoutContainerMessage(baseName, e, "Failed to move e-mails to " + directory, baseName, baseName + EXT_TO);
             }
         }
     }

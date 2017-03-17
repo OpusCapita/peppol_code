@@ -74,13 +74,13 @@ public class IncomingChecker {
         if (!dir.exists() || !dir.isDirectory()) {
             String msg = directory + " is not a valid directory, please check the configuration";
             logger.error(msg);
-            errorHandler.reportToServiceNow("", "n/a", new IllegalArgumentException(msg), msg);
+            errorHandler.reportWithoutContainerMessage(null, new IllegalArgumentException(msg), msg, "peppol-ap", null);
         }
 
         try {
             receive(dir);
         } catch (Exception e) {
-            errorHandler.reportToServiceNow("", "n/a", e, "Failed to read input file: " + e.getMessage());
+            errorHandler.reportWithoutContainerMessage(null, e, "Failed to read input file", "peppol-ap", null);
         }
     }
 

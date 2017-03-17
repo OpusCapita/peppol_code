@@ -48,7 +48,7 @@ public class InternalRoutingApp {
                 if (cm.getRoute() == null) {
                     String error = "Cannot define route for " + cm.getFileName() + " originated by " + cm.getSource();
                     cm.setStatus(endpoint, error);
-                    errorHandler.reportToServiceNow(cm, null, error);
+                    errorHandler.reportWithContainerMessage(cm, null, error);
                     reporter.reportError(cm, null);
                     return;
                 }

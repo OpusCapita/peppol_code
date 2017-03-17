@@ -38,7 +38,7 @@ public class StatusReporter {
         try {
             rabbitTemplate.convertAndSend(reportDestination, cm);
         } catch (Exception e) {
-            handleError(cm, e);
+            failedToProcess(cm, e, "Failed to report service status");
         }
     }
 
@@ -51,18 +51,18 @@ public class StatusReporter {
         try {
             rabbitTemplate.convertAndSend(reportDestination, cm);
         } catch (Exception exception) {
-            handleError(cm, e);
+            failedToProcess(cm, e, "Failed to report service error");
         }
     }
 
-    private void handleError(ContainerMessage cm, Exception e) {
+    private void failedToProcess(ContainerMessage cm, Exception e, String shortDescription) {
         logger.warn("Reporting an issue to ServiceNow: " + e.getMessage());
         try {
             if (cm == null) {
-                errorHandler.reportToServiceNow("{}", "n/a", e);
-                return;
+                errorHandler.reportWithoutContainerMessage("n/a", e, shortDescription, null, null);
+            } else {
+                errorHandler.reportWithContainerMessage(cm, e, e.getMessage());
             }
-            errorHandler.reportToServiceNow(cm, e, e.getMessage());
         } catch (Exception exception) {
             logger.error("Failed to report issue to ServiceNow: ", exception);
         }
