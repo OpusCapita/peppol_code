@@ -5,6 +5,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by bambr on 16.28.12.
@@ -36,7 +37,7 @@ public class AccessFilterProperties {
 
     public void setServicesToBypass(String servicesToBypass) {
         if(servicesToBypass != null) {
-            this.servicesToBypass = Arrays.asList(servicesToBypass.split(","));
+            this.servicesToBypass = Arrays.asList(servicesToBypass.split(",")).stream().map(raw -> raw.trim()).collect(Collectors.toList());
         }
     }
 
@@ -45,7 +46,7 @@ public class AccessFilterProperties {
     }
 
     public void setAllowFrom(String allowFrom) {
-        this.allowFrom = allowFrom == null ? Collections.emptyList() : Arrays.asList(allowFrom.split(","));
+        this.allowFrom = allowFrom == null ? Collections.emptyList() : Arrays.asList(allowFrom.split(",")).stream().map(raw -> raw.trim()).collect(Collectors.toList());
     }
 
     public List<String> getDenyFrom() {
@@ -53,7 +54,7 @@ public class AccessFilterProperties {
     }
 
     public void setDenyFrom(String denyFrom) {
-        this.denyFrom = denyFrom == null ? Collections.emptyList() : Arrays.asList(denyFrom.split(","));
+        this.denyFrom = denyFrom == null ? Collections.emptyList() : Arrays.asList(denyFrom.split(",")).stream().map(raw -> raw.trim()).collect(Collectors.toList());
     }
 
     public Map<String, List<String>> getServicesAllowFrom() {
@@ -63,7 +64,7 @@ public class AccessFilterProperties {
     public void setServicesAllowFrom(Map<String, String> servicesAllowFrom) {
         if (servicesAllowFrom != null) {
             this.servicesAllowFrom = new HashMap<>(servicesAllowFrom.size());
-            servicesAllowFrom.entrySet().forEach(entry -> this.servicesAllowFrom.put(entry.getKey(), Arrays.asList(entry.getValue().split(","))));
+            servicesAllowFrom.entrySet().forEach(entry -> this.servicesAllowFrom.put(entry.getKey(), Arrays.asList(entry.getValue().split(",")).stream().map(raw -> raw.trim()).collect(Collectors.toList())));
         } else {
             this.servicesAllowFrom = null;
         }
@@ -76,7 +77,7 @@ public class AccessFilterProperties {
     public void setServicesDenyFrom(Map<String, String> servicesDenyFrom) {
         if (servicesDenyFrom != null) {
             this.servicesDenyFrom = new HashMap<>(servicesDenyFrom.size());
-            servicesDenyFrom.entrySet().forEach(entry -> this.servicesDenyFrom.put(entry.getKey(), Arrays.asList(entry.getValue().split(","))));
+            servicesDenyFrom.entrySet().forEach(entry -> this.servicesDenyFrom.put(entry.getKey(), Arrays.asList(entry.getValue().split(",")).stream().map(raw -> raw.trim()).collect(Collectors.toList())));
         } else {
             this.servicesDenyFrom = null;
         }

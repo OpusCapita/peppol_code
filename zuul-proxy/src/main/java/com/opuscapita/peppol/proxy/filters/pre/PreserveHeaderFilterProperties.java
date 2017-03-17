@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by bambr on 17.3.3.
@@ -28,6 +29,6 @@ public class PreserveHeaderFilterProperties {
     }
 
     public void setHeadersToPreserve(String headersToPreserve) {
-        this.headersToPreserve = Arrays.asList(headersToPreserve.split(","));
+        this.headersToPreserve = Arrays.asList(headersToPreserve.split(",")).stream().map(raw -> raw.trim()).collect(Collectors.toList());
     }
 }
