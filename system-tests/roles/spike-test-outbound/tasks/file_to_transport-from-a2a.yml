@@ -14,4 +14,17 @@
 - set_fact: fileName="{{fileName.stdout}}"
 - debug: var=fileName
 
+- set_fact: counter="{{counter| int +1 }}"
+  register: counter
+
+- debug: var=counter
+
+- name: update test results
+  lineinfile:
+    create: yes
+    dest: /home/berzima1/git/peppol2.0/system-tests/reports/spike-outbound-report.txt
+    state: present
+    line: 'Filename {{counter}}: {{file}}'
+
+
 ...
