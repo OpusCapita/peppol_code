@@ -4,4 +4,5 @@
     - spike-test-inbound
   vars:
     test_data_path: /test-materials
+    counter: 0
 ...

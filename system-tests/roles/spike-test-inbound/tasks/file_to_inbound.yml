@@ -5,6 +5,22 @@
   async: 45
   poll: 0
 
+- set_fact: file="{{file}}"
+- debug: var=file
+
+- set_fact: counter="{{counter| int +1 }}"
+  register: counter
+
+- debug: var=counter
+
+- name: update test results
+  lineinfile:
+    create: yes
+    dest: /home/berzima1/git/peppol2.0/system-tests/reports/spike-report.txt
+    state: present
+    line: 'Filename {{counter}}: {{file}}'
+
+
 #- name: find transmissionId
 #  shell: echo "{{inbound_output.stdout_lines[-5:]}}" |grep -oh 'transmissionId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
 #  register: transmissionId
