@@ -4,6 +4,7 @@ import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Daniil on 19.07.2016.
@@ -146,6 +148,11 @@ public class ErrorHandler {
             logger.error("Failed to create SNC ticket for customer: " + customerId + ", file: " + fileName +
                     " about " + shortDescription + " with data: " + detailedDescription, e);
         }
+    }
+
+    @NotNull
+    String correlationIdDigest(@NotNull String correlationId) throws NoSuchAlgorithmException {
+        return Hex.encodeHexString(MessageDigest.getInstance("SHA-1").digest(correlationId.getBytes()));
     }
 
 }
