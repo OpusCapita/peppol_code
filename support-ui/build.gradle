@@ -42,6 +42,5 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-orm', version: '4.0.1.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '4.0.1.RELEASE'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    //compile group: 'com.jcabi', name: 'jcabi-aspects', version: '0.22.5'
     compile fileTree(dir: 'src/main/webapp/WEB-INF/lib/', include: '*jar')
 }

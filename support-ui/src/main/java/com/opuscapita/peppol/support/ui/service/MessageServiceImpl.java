@@ -34,6 +34,15 @@ import java.util.TreeSet;
 @Service
 public class MessageServiceImpl implements MessageService {
     private static final Logger logger = Logger.getLogger(MessageService.class);
+    private static final String INVALID_MESSAGES = "invalidMessages";
+    private static final String FAILED_MESSAGES = "failedMessages";
+    private static final String SENT_MESSAGES = "sentMessages";
+    private static final String REPROCESSED_MESSAGES = "reprocessedMessages";
+    private static final String INVALID_INBOUND_MESSAGES = "invalidInboundMessages";
+    private static final String ALL_INBOUND_MESSAGES = "allInboundMessages";
+    private static final String ALL_OUTBOUND_MESSAGES = "allOutboundMessages";
+    private static final String PROCESSING_MESSAGES = "processingMessages";
+    private static final String ALL_MESSAGES= "allMessages";
 
     @Autowired
     private MessageDAO messageDAO;
@@ -215,37 +224,37 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    @Cacheable("allMessages")
+    @Cacheable(ALL_MESSAGES)
     public int getAllMessageCount() throws HibernateException {
         return messageDAO.getAllMessageCount();
     }
 
     @Override
-    @Cacheable("invalidMessages")
+    @Cacheable(INVALID_MESSAGES)
     public int getInvalidMessageCount() throws HibernateException {
         return messageDAO.getInvalidMessageCount();
     }
 
     @Override
-    @Cacheable("failedMessages")
+    @Cacheable(FAILED_MESSAGES)
     public int getFailedMessageCount() throws HibernateException {
         return messageDAO.getFailedMessageCount();
     }
 
     @Override
-    @Cacheable("sentMessages")
+    @Cacheable(SENT_MESSAGES)
     public int getSentMessageCount() throws HibernateException {
         return messageDAO.getSentMessageCount();
     }
 
     @Override
-    @Cacheable("reprocessedMessages")
+    @Cacheable(REPROCESSED_MESSAGES)
     public int getReprocessedMessageCount() throws HibernateException {
         return messageDAO.getReprocessedMessageCount();
     }
 
     @Override
-    @Cacheable("processingMessages")
+    @Cacheable(PROCESSING_MESSAGES)
     public int getProcessingMessageCount() throws HibernateException {
         return messageDAO.getProcessingMessageCount();
     }
@@ -261,19 +270,19 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    @Cacheable("invalidInboundMessages")
+    @Cacheable(INVALID_INBOUND_MESSAGES)
     public int getInvalidInboundMessageCount() throws HibernateException {
         return messageDAO.getInvalidInboundMessageCount();
     }
 
     @Override
-    @Cacheable("allInboundMessages")
+    @Cacheable(ALL_INBOUND_MESSAGES)
     public int getAllInboundMessageCount() throws HibernateException {
         return messageDAO.getAllInboundMessageCount();
     }
 
     @Override
-    @Cacheable("allOutboundMessages")
+    @Cacheable(ALL_OUTBOUND_MESSAGES)
     public int getAllOutboundMessageCount() throws HibernateException{
         return messageDAO.getAllOutboundMessageCount();
     }

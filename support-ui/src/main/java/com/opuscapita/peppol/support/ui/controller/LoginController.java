@@ -18,7 +18,6 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(@RequestParam(value = "logout", required = false) String logout){
-        String test = logout;
         return new ModelAndView("login");
     }
 
@@ -31,17 +30,11 @@ public class LoginController {
 
     /*@RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
     public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
-        String t = "Asdasd";
-        System.out.println(request.toString());
-        return null;
         //return new ModelAndView("login");
     }
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.POST)
     public ModelAndView logoutPost(HttpServletRequest request,HttpServletResponse response) {
-        String t = "Asdasd";
-        System.out.println(request.toString());
-        return null;
         //return new ModelAndView("login");
     }*/
 }

@@ -14,6 +14,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Properties;
@@ -29,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableTransactionManagement
 @EnableCaching
+@EnableScheduling
 @ComponentScan(basePackages = {"com.opuscapita.peppol.support.ui"},
         excludeFilters = {@ComponentScan.Filter(type = FilterType.CUSTOM, value = {WebPackageFilter.class})})
 @PropertySource({"file:${PEPPOL_CONFIG_PATH}/jdbc.properties", "file:${PEPPOL_CONFIG_PATH}/config.properties"})
@@ -45,18 +47,9 @@ public class RootConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        GuavaCacheManager cacheManager = new GuavaCacheManager("allMessages",
-                "invalidMessages",
-                "failedMessages",
-                "sentMessages",
-                "allOutboundMessages",
-                "reprocessedMessages",
-                "processingMessages",
-                "invalidInboundMessages",
-                "allInboundMessages");
-
+        GuavaCacheManager cacheManager = new GuavaCacheManager(CacheName.getNames());
         CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
-                .refreshAfterWrite(20, TimeUnit.SECONDS).maximumSize(1);
+                .expireAfterAccess(20, TimeUnit.SECONDS).maximumSize(1);
         cacheManager.setCacheBuilder(cacheBuilder);
         return cacheManager;
     }
@@ -110,5 +103,10 @@ public class RootConfiguration {
     @Bean
     public PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor() {
         return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    @Bean
+    public CacheCleaner cacheCleaner(){
+        return new CacheCleaner();
     }
 }
