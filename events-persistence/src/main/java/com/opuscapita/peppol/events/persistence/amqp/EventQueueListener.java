@@ -49,7 +49,7 @@ public class EventQueueListener {
 //                }
 //            });
         } catch (Exception e) {
-            logger.warn("Failed to process message", e);
+            logger.warn("Failed to process message: " + data, e);
             handleError(message, customerId, e);
         }
 
