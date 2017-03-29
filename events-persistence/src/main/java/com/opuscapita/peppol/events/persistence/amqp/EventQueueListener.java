@@ -33,11 +33,10 @@ public class EventQueueListener {
 
     @SuppressWarnings("WeakerAccess")
     public synchronized void receiveMessage(String data) {
-        String message = data.replace("\"urn\"", "urn"); //Sort of hack
-        message = message.replaceAll("\\\\u003d", "=");  //Workaround for escaped = sign.
+
         String customerId = "n/a";
         try {
-            PeppolEvent peppolEvent = deserializePeppolEvent(message);
+            PeppolEvent peppolEvent = deserializePeppolEvent(data);
             customerId = peppolEvent.getProcessType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
 //            retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
 //                @Override
@@ -50,7 +49,7 @@ public class EventQueueListener {
 //            });
         } catch (Exception e) {
             logger.warn("Failed to process message: " + data, e);
-            handleError(message, customerId, e);
+            handleError(data, customerId, e);
         }
 
     }
@@ -60,7 +59,10 @@ public class EventQueueListener {
         receiveMessage(new String(data));
     }
 
-    private PeppolEvent deserializePeppolEvent(String message) {
+    protected PeppolEvent deserializePeppolEvent(String message) {
+        message = message.replace("\"urn\"", "urn"); //Sort of hack
+        message = message.replaceAll("\\\\u003d", "=");  //Workaround for escaped = sign.
+        message = message.replace("transportType", "processType");
         return gson.fromJson(message, PeppolEvent.class);
     }
 
