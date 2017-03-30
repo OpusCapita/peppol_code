@@ -17,6 +17,6 @@ public class CacheCleaner {
     "processingMessages", "invalidInboundMessages", "allInboundMessages", "allMessages"}, allEntries = true)
     public void cacheCleanUp() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-        System.out.println("Cache cleaned: " + timeStamp);
+        //System.out.println("Cache cleaned: " + timeStamp);
     }
 }
