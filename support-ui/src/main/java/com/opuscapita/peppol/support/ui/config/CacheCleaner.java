@@ -12,7 +12,7 @@ import java.util.Calendar;
 
 public class CacheCleaner {
 
-    @Scheduled(fixedRate = 10 * 60 * 1000) //every 6 minutes
+    @Scheduled(fixedRate = 30 * 1000) //every 30 seconds
     @CacheEvict(value = {"invalidMessages", "failedMessages", "sentMessages", "allOutboundMessages", "reprocessedMessages",
     "processingMessages", "invalidInboundMessages", "allInboundMessages", "allMessages"}, allEntries = true)
     public void cacheCleanUp() {
