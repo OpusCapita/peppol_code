@@ -75,7 +75,12 @@ public class ErrorHandler {
                 correlationId += exceptionMessage;
             }
         }
-
+        try {
+            correlationId = correlationIdDigest(correlationId);
+        } catch (NoSuchAlgorithmException e1) {
+            logger.warn("Failed to create SHA-1 has of correlation id");
+            e1.printStackTrace();
+        }
         createTicket(shortDescription, detailedDescription, correlationId, customerId, fileName);
     }
 
