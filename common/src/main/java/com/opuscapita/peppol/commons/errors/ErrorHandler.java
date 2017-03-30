@@ -34,16 +34,25 @@ public class ErrorHandler {
     }
 
     public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription) {
-        createTicketFromContainerMessage(cm, e, shortDescription);
+        reportWithContainerMessage(cm, e, shortDescription, null);
+    }
+
+    public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription, @Nullable String additionalDetails) {
+        createTicketFromContainerMessage(cm, e, shortDescription, additionalDetails);
+    }
+    public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Exception e, @NotNull String shortDescription,
+                                              @Nullable String correlationId, @Nullable String fileName) {
+        reportWithoutContainerMessage(customerId, e, shortDescription, correlationId, fileName, null);
+
     }
 
     public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Exception e, @NotNull String shortDescription,
-                                              @Nullable String correlationId, @Nullable String fileName) {
-        createTicketWithoutContainerMessage(customerId, e, fileName, shortDescription, correlationId);
+                                              @Nullable String correlationId, @Nullable String fileName, @Nullable String additionalDetails) {
+        createTicketWithoutContainerMessage(customerId, e, fileName, shortDescription, correlationId, additionalDetails);
     }
 
     private void createTicketWithoutContainerMessage(@Nullable String customerId, @Nullable Exception e, @Nullable String fileName,
-                                                     @NotNull String shortDescription, @Nullable String correlationId) {
+                                                     @NotNull String shortDescription, @Nullable String correlationId, String additionalDetails) {
         String detailedDescription = "Failed to process message";
 
         if (fileName != null) {
@@ -69,6 +78,10 @@ public class ErrorHandler {
             detailedDescription += "\n\nPlatform exception: " + ExceptionUtils.getStackTrace(e) + "\n";
         }
 
+        if(additionalDetails != null) {
+            detailedDescription += "\n\nAdditional details: " + additionalDetails + "\n";
+        }
+
         if (StringUtils.isBlank(correlationId)) {
             correlationId = fileName;
             if (StringUtils.isNotBlank(exceptionMessage)) {
@@ -84,7 +97,7 @@ public class ErrorHandler {
         createTicket(shortDescription, detailedDescription, correlationId, customerId, fileName);
     }
 
-    private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription) {
+    private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription, String additionalDetails) {
         String detailedDescription = "Failed to process message";
 
         detailedDescription += "\nFile name: " + cm.getFileName();
@@ -122,6 +135,10 @@ public class ErrorHandler {
         }
         if (processingException != null) {
             detailedDescription += "\n\nProcessing exception: " + ExceptionUtils.getStackTrace(processingException);
+        }
+
+        if(additionalDetails != null) {
+            detailedDescription += "\n\nAdditional details: " + additionalDetails;
         }
 
         createTicket(shortDescription, detailedDescription, cm.getCorrelationId() + cm.getProcessingStatus(),
