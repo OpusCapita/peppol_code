@@ -37,6 +37,10 @@ public class EventQueueListener {
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(data);
+            if(peppolEvent.getFileName() != null && !peppolEvent.getFileName().toLowerCase().endsWith("xml")) {
+                logger.warn("Ignored event for non-data file: " + peppolEvent.getFileName());
+                return;
+            }
             customerId = peppolEvent.getProcessType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
 //            retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
 //                @Override
@@ -69,6 +73,10 @@ public class EventQueueListener {
     private void handleError(String message, String customerId, Exception e) {
         try {
             String fileName = extractFileNameFromMessage(message);
+            if(fileName != null && !fileName.toLowerCase().endsWith("xml")) {
+                logger.warn("Ignored event for non-data file: " + fileName);
+                return;
+            }
             errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to persist event", fileName, fileName,message);
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
