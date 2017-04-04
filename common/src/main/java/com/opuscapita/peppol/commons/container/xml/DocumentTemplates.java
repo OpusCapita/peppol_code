@@ -32,7 +32,7 @@ public class DocumentTemplates {
     }
 
     private void loadDir(@NotNull String dir) {
-        logger.debug("Reading document templates from directory " + dir + File.separator);
+        logger.info("Reading document templates from directory " + dir + File.separator);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(DocumentTemplates.class.getResourceAsStream(dir)))) {
             String fileName = reader.readLine();
             while (fileName != null) {
@@ -46,7 +46,7 @@ public class DocumentTemplates {
         } catch (Exception e) {
             if (errorHandler != null) {
                 errorHandler.reportWithoutContainerMessage(
-                        null, e, "Failed to read document templates", null, null);
+                        null, e, "Failed to read document templates from " + dir, null, null);
             }
         }
     }
