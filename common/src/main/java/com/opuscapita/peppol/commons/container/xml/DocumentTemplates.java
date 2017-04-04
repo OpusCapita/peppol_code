@@ -27,30 +27,56 @@ public class DocumentTemplates {
     public DocumentTemplates(@Nullable ErrorHandler errorHandler, @NotNull Gson gson) {
         this.errorHandler = errorHandler;
         this.gson = gson;
-        loadDir("/document_types");
 
         // FIXME this is really bad hack
-        File test = new File("/document_types");
+        File test = new File("document_types");
         if (test.exists()) {
-            loadDir("/document_types");
-        }
-        test = new File("document_types");
-        if (test.exists()) {
-            loadDir("document_types");
+            loadRealDir("document_types");
+        } else {
+            loadResourceDir("/document_types");
         }
 
         logger.info("Read " + templates.size() + " document format templates");
     }
 
-    private void loadDir(@NotNull String dir) {
+    private void loadRealDir(@NotNull String dir) {
         logger.info("Reading document templates from directory " + dir + File.separator);
+        String[] files = new File(dir).list();
+        if (files == null) {
+            return;
+        }
+
+        for (String file : files) {
+            if (new File(file).isDirectory()) {
+                loadRealDir(dir + File.separator + file);
+            } else {
+                if (file.endsWith(".json")) {
+                    loadTemplateFromFile(dir + File.separator + file);
+                }
+            }
+        }
+    }
+
+    private void loadTemplateFromFile(@NotNull String fileName) {
+        try (Reader reader = new BufferedReader(new FileReader(fileName))) {
+            templates.add(gson.fromJson(reader, DocumentTemplate.class));
+        } catch (Exception e) {
+            if (errorHandler != null) {
+                errorHandler.reportWithoutContainerMessage(null, e,
+                        "Failed to read document templates from file " + fileName, null, null);
+            }
+        }
+    }
+
+    private void loadResourceDir(@NotNull String dir) {
+        logger.info("Reading document templates as resources from " + dir + File.separator);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(DocumentTemplates.class.getResourceAsStream(dir)))) {
             String fileName = reader.readLine();
             while (fileName != null) {
                 if (fileName.endsWith(".json")) {
                     loadTemplate(dir + File.separator + fileName);
                 } else {
-                    loadDir(dir + File.separator + fileName);
+                    loadResourceDir(dir + File.separator + fileName);
                 }
                 fileName = reader.readLine();
             }
