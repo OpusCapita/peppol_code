@@ -34,7 +34,7 @@ public abstract class AbstractQueueListener {
 
     @SuppressWarnings({"unused", "ConstantConditions"})
     public synchronized void receiveMessage(@NotNull ContainerMessage cm) {
-        logger.debug("Message received, file id: " + cm == null ? "UNAVAILABLE" : cm.getFileName());
+        logger.debug("Message received, file id: " + (cm == null ? "UNAVAILABLE" : cm.getFileName()));
 
         try {
             processMessage(cm);
