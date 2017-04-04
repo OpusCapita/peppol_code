@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * @author Sergejs.Roze
  */
+@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public class DocumentTemplate {
     private final List<FieldInfo> fields = new ArrayList<>();
     private String name;
@@ -35,5 +36,26 @@ public class DocumentTemplate {
 
     public void setRoot(@Nullable String root) {
         this.root = root;
+    }
+
+    @SuppressWarnings("SimplifiableIfStatement")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DocumentTemplate)) return false;
+
+        DocumentTemplate template = (DocumentTemplate) o;
+
+        if (!fields.equals(template.fields)) return false;
+        if (name != null ? !name.equals(template.name) : template.name != null) return false;
+        return root != null ? root.equals(template.root) : template.root == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fields.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (root != null ? root.hashCode() : 0);
+        return result;
     }
 }

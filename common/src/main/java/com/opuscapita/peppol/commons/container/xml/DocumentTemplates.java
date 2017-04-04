@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Sergejs.Roze
@@ -20,7 +20,7 @@ import java.util.List;
 public class DocumentTemplates {
     private final static Logger logger = LoggerFactory.getLogger(DocumentTemplates.class);
 
-    private final List<DocumentTemplate> templates = new ArrayList<>();
+    private final Set<DocumentTemplate> templates = new HashSet<>();
     private final ErrorHandler errorHandler;
     private final Gson gson;
 
@@ -29,12 +29,15 @@ public class DocumentTemplates {
         this.gson = gson;
         loadDir("/document_types");
 
+        // FIXME this is really bad hack
         File test = new File("/document_types");
-        logger.info("" + test.exists());
+        if (test.exists()) {
+            loadDir("/document_types");
+        }
         test = new File("document_types");
-        logger.info("" + test.exists());
-        test = new File("./document_types");
-        logger.info("" + test.exists());
+        if (test.exists()) {
+            loadDir("document_types");
+        }
 
         logger.info("Read " + templates.size() + " document format templates");
     }
@@ -66,7 +69,7 @@ public class DocumentTemplates {
         }
     }
 
-    public List<DocumentTemplate> getTemplates() {
-        return Collections.unmodifiableList(templates);
+    public Set<DocumentTemplate> getTemplates() {
+        return Collections.unmodifiableSet(templates);
     }
 }

@@ -16,6 +16,7 @@ public class FieldInfo {
     private final String mask;
     private final String constant;
 
+    @SuppressWarnings("unused")
     public FieldInfo(@NotNull String id, boolean mandatory, @Nullable String mask, @Nullable String constant, @NotNull String... paths) {
         this.id = id;
         this.constant = constant;
@@ -24,7 +25,7 @@ public class FieldInfo {
         this.mask = mask;
     }
 
-    public FieldInfo(@NotNull String id, boolean mandatory, @Nullable String mask, @Nullable String constant, @Nullable List<String> paths) {
+    FieldInfo(@NotNull String id, boolean mandatory, @Nullable String mask, @Nullable String constant, @Nullable List<String> paths) {
         this.id = id;
         this.constant = constant;
         this.paths = paths;
