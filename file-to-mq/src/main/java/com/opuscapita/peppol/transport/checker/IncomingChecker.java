@@ -1,10 +1,9 @@
 package com.opuscapita.peppol.transport.checker;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
-import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
-import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.storage.Storage;
@@ -116,7 +115,8 @@ public class IncomingChecker {
         Endpoint source = new Endpoint(componentName, reprocess ? ProcessType.OUT_REPROCESS : ProcessType.OUT_FILE_TO_MQ);
 
         ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
-                fileName, source).setStatus(new ProcessingStatus(source, "received", fileName));
+                fileName, source);
+        cm.setStatus(source, "received");
 
         messageQueue.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");

@@ -3,7 +3,8 @@ package com.opuscapita.peppol.commons.errors;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
+import com.opuscapita.peppol.commons.container.document.DocumentError;
+import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.stream.Collectors;
 
 /**
  * Created by Daniil on 19.07.2016.
@@ -78,7 +80,7 @@ public class ErrorHandler {
             detailedDescription += "\n\nPlatform exception: " + ExceptionUtils.getStackTrace(e) + "\n";
         }
 
-        if(additionalDetails != null) {
+        if (additionalDetails != null) {
             detailedDescription += "\n\nAdditional details: " + additionalDetails + "\n";
         }
 
@@ -88,6 +90,7 @@ public class ErrorHandler {
                 correlationId += exceptionMessage;
             }
         }
+
         try {
             correlationId = correlationIdDigest(correlationId);
         } catch (NoSuchAlgorithmException e1) {
@@ -110,17 +113,16 @@ public class ErrorHandler {
             detailedDescription += "\nError message: " + e.getMessage();
         }
 
-        Exception processingException = null;
-        if (cm.getBaseDocument() instanceof InvalidDocument) {
-            detailedDescription += "\nProcessing error: " + ((InvalidDocument) cm.getBaseDocument()).getReason();
-
-            if (exceptionMessageToString(((InvalidDocument) cm.getBaseDocument()).getException()) != null) {
-                processingException = ((InvalidDocument) cm.getBaseDocument()).getException();
-                detailedDescription += "\nProcessing exception message: " + exceptionMessageToString(processingException);
-            }
+        if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getWarnings().size() > 0) {
+            detailedDescription += "\nDocument warnings: " +
+                    cm.getDocumentInfo().getWarnings().stream().map(DocumentWarning::toString).collect(Collectors.joining("\n\t"));
+        }
+        if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getErrors().size() > 0) {
+            detailedDescription += "\nDocument errors: " +
+                    cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining("\n\t"));
         }
 
-        detailedDescription += "\nLast processing status: " + cm.getProcessingStatus();
+        detailedDescription += "\nLast processing status: " + cm.getProcessingInfo().getCurrentStatus();
 
         String exceptionMessage = exceptionMessageToString(e);
         if (exceptionMessage != null) {
@@ -133,15 +135,8 @@ public class ErrorHandler {
         if (e != null) {
             detailedDescription += "\n\nPlatform exception: " + ExceptionUtils.getStackTrace(e) + "\n";
         }
-        if (processingException != null) {
-            detailedDescription += "\n\nProcessing exception: " + ExceptionUtils.getStackTrace(processingException);
-        }
 
-        if(additionalDetails != null) {
-            detailedDescription += "\n\nAdditional details: " + additionalDetails;
-        }
-
-        createTicket(shortDescription, detailedDescription, cm.getCorrelationId() + cm.getProcessingStatus(),
+        createTicket(shortDescription, detailedDescription, cm.getCorrelationId() + cm.getProcessingInfo().getCurrentStatus(),
                 cm.getCustomerId(), cm.getFileName());
     }
 

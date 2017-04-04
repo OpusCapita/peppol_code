@@ -2,9 +2,8 @@ package com.opuscapita.peppol.validator.rest;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
@@ -41,18 +40,24 @@ public class RestValidator {
         ValidationResult validationResult;
         ContainerMessage containerMessage;
         try {
-            containerMessage = new ContainerMessage("REST /validate", file.getName(), new Endpoint("validator_rest", ProcessType.REST))
-                    .setBaseDocument(documentLoader.load(file.getInputStream(), file.getName()));
+            Endpoint endpoint = new Endpoint("validator_rest", ProcessType.REST);
+            containerMessage = new ContainerMessage("REST /validate", file.getName(), endpoint);
+            containerMessage.setDocumentInfo(documentLoader.load(file.getInputStream(), file.getName(), endpoint));
             validationResult = validationController.validate(containerMessage);
             logger.info("Validation performed normally with result: " + validationResult.isPassed());
         } catch (IOException e) {
             logger.error("Validation failed with error: " + e.getMessage());
             e.printStackTrace();
-            validationResult = new ValidationResult(Archetype.INVALID);
+            validationResult = new ValidationResult();
             validationResult.addError(new ValidationError("I/O failure when validating via ReST").withText(e.getMessage()));
         } catch (IllegalArgumentException e) {
-            validationResult = new ValidationResult(Archetype.INVALID);
+            validationResult = new ValidationResult();
             validationResult.addError(new ValidationError("Validation technical failure").withText(StringEscapeUtils.escapeHtml(e.getCause().getMessage())));
+        } catch (Exception e) {
+            logger.error("Validation failed with error: " + e.getMessage());
+            e.printStackTrace();
+            validationResult = new ValidationResult();
+            validationResult.addError(new ValidationError("Validator error").withText(e.getMessage()));
         }
 
 

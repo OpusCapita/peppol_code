@@ -1,6 +1,6 @@
 import com.opuscapita.peppol.commons.container.ContainerMessage
 import com.opuscapita.peppol.commons.container.document.DocumentLoader
-import com.opuscapita.peppol.commons.container.route.Endpoint
+import com.opuscapita.peppol.commons.container.process.route.Endpoint
 import com.opuscapita.peppol.internal_routing.controller.RoutingController
 import com.opuscapita.peppol.testapp.Helper
 

@@ -1,10 +1,11 @@
 package com.opuscapita.peppol.preprocessing;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
-import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.process.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -58,8 +59,9 @@ public class PreprocessingApp {
     @Bean
     @NotNull
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull StatusReporter reporter,
-                                        @NotNull PreprocessingController controller, @NotNull MessageQueue messageQueue) {
-        return new AbstractQueueListener(errorHandler, reporter) {
+                                        @NotNull PreprocessingController controller, @NotNull MessageQueue messageQueue,
+                                        @NotNull Gson gson) {
+        return new AbstractQueueListener(errorHandler, reporter, gson) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Message received, file id: " + cm.getFileName());
@@ -69,7 +71,7 @@ public class PreprocessingApp {
                 } else {
                     cm.setStatus(new Endpoint(componentName, ProcessType.OUT_REPROCESS), "read");
                 }
-                if (cm.getBaseDocument() instanceof InvalidDocument) {
+                if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
                     messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Invalid message sent to " + errorQueue + " queue");
                 } else {

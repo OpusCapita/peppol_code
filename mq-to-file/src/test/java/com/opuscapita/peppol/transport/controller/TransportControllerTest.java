@@ -1,11 +1,11 @@
 package com.opuscapita.peppol.transport.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.impl.ubl.UblDocumentType;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -27,10 +27,10 @@ public class TransportControllerTest {
     public void storeMessage() throws Exception {
         ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", ProcessType.TEST));
 
-        BaseDocument doc = mock(BaseDocument.class);
+        DocumentInfo doc = mock(DocumentInfo.class);
         when(doc.getArchetype()).thenReturn(Archetype.PEPPOL_BIS);
         when(doc.getDocumentType()).thenReturn(UblDocumentType.ORDER.getTag());
-        cm.setBaseDocument(doc);
+        cm.setDocumentInfo(doc);
 
         TransportController controller = new TransportController() {
             @Override

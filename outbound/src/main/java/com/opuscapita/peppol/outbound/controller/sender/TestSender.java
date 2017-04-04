@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.outbound.controller.sender;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.outbound.util.OxalisUtils;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
@@ -58,7 +58,7 @@ public class TestSender extends UblSender {
             return fakeSender.send(cm);
         }
 
-        BaseDocument document = cm.getBaseDocument();
+        DocumentInfo document = cm.getDocumentInfo();
         if (document == null) {
             throw new IllegalArgumentException("There is no document in message");
         }
@@ -90,8 +90,8 @@ public class TestSender extends UblSender {
         int sizeI = sizeL > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) sizeL;
         org.apache.commons.io.output.ByteArrayOutputStream result = new org.apache.commons.io.output.ByteArrayOutputStream(sizeI);
 
-        String senderId = cm.getBaseDocument().getSenderId();
-        String recipientId = cm.getBaseDocument().getRecipientId();
+        String senderId = cm.getDocumentInfo().getSenderId();
+        String recipientId = cm.getDocumentInfo().getRecipientId();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(cm.getFileName()))) {
             String line = reader.readLine();

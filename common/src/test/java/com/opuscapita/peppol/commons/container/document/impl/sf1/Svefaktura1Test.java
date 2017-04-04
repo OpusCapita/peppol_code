@@ -1,27 +1,48 @@
 package com.opuscapita.peppol.commons.container.document.impl.sf1;
 
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.google.gson.Gson;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.container.document.impl.SveFaktura1Document;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.container.xml.DocumentParser;
+import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
  */
 public class Svefaktura1Test {
+    private final DocumentLoader loader;
+    private ErrorHandler errorHandler = mock(ErrorHandler.class);
+
+    public Svefaktura1Test() throws ParserConfigurationException, SAXException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+
+        DocumentTemplates templates = new DocumentTemplates(errorHandler, new Gson());
+        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
+        loader = new DocumentLoader(parser);
+    }
+
 
     @Test
     public void testSvefaktura1() throws Exception {
-        BaseDocument document;
+        DocumentInfo document;
 
         try (InputStream inputStream = Svefaktura1Test.class.getResourceAsStream("/valid/svefaktura1.xml")) {
-            document = new DocumentLoader().load(inputStream, "test");
-            assertTrue(document instanceof SveFaktura1Document);
+            document = loader.load(inputStream, "test", new Endpoint("test", ProcessType.TEST));
+            assertEquals(Archetype.SVEFAKTURA1, document.getArchetype());
         }
 
         assertEquals("0008:7381034999991", document.getSenderId());
@@ -30,7 +51,6 @@ public class Svefaktura1Test {
         assertEquals("1.0", document.getVersionId());
         assertEquals("2016-04-13", document.getIssueDate());
         assertEquals("2016-05-18", document.getDueDate());
-        assertEquals("Martin & Servera AB", document.getSenderName());
         assertEquals("LÄNSSTYRELSEN", document.getRecipientName());
         assertEquals("SE", document.getSenderCountryCode());
         assertEquals("SE", document.getRecipientCountryCode());
@@ -40,11 +60,11 @@ public class Svefaktura1Test {
 
     @Test
     public void testSvefaktura1WithAttachment() throws Exception {
-        BaseDocument document;
+        DocumentInfo document;
 
         try (InputStream inputStream = Svefaktura1Test.class.getResourceAsStream("/valid/sv1_with_attachment.xml")) {
-            document = new DocumentLoader().load(inputStream, "test2");
-            assertTrue(document instanceof SveFaktura1Document);
+            document = loader.load(inputStream, "test2", new Endpoint("test", ProcessType.TEST));
+            assertEquals(Archetype.SVEFAKTURA1, document.getArchetype());
         }
 
         assertEquals("0008:1234567890123", document.getSenderId());

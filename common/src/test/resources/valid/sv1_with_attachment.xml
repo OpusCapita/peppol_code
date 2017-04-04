@@ -26,8 +26,8 @@
             </Scope>
         </BusinessScope>
     </StandardBusinessDocumentHeader>
-    <Invoice xmlns="urn:sfti:documents:BasicInvoice:1:0" xmlns:cac="urn:sfti:CommonAggregateComponents:1:0"
-             xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0"
+    <Invoice xmlns:cac="urn:sfti:CommonAggregateComponents:1:0" xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0"
+             xmlns="urn:sfti:documents:BasicInvoice:1:0"
     >
         <ID>310791199</ID>
         <cbc:IssueDate>2016-07-21</cbc:IssueDate>
@@ -56,7 +56,7 @@
                     <cbc:PostalZone>83826</cbc:PostalZone>
                 </cac:Address>
                 <cac:PartyTaxScheme>
-                    <cac:CompanyID>2021006297</cac:CompanyID>
+                    <cac:CompanyID>1234567890123</cac:CompanyID>
                     <cac:RegistrationAddress>
                         <cac:Country>
                             <cac:IdentificationCode>SE</cac:IdentificationCode>
@@ -67,7 +67,7 @@
                     </cac:TaxScheme>
                 </cac:PartyTaxScheme>
                 <cac:PartyTaxScheme>
-                    <cac:CompanyID>SE202100629701</cac:CompanyID>
+                    <cac:CompanyID>1234567890123</cac:CompanyID>
                     <cac:RegistrationAddress>
                         <cac:Country>
                             <cac:IdentificationCode>SE</cac:IdentificationCode>

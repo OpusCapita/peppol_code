@@ -37,7 +37,7 @@ public class EventQueueListener {
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(data);
-            if(peppolEvent.getFileName() != null && !peppolEvent.getFileName().toLowerCase().endsWith("xml")) {
+            if (peppolEvent.getFileName() != null && !peppolEvent.getFileName().toLowerCase().endsWith("xml")) {
                 logger.warn("Ignored event for non-data file: " + peppolEvent.getFileName());
                 return;
             }

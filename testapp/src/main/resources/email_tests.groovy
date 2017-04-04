@@ -1,6 +1,6 @@
 import com.opuscapita.peppol.commons.container.ContainerMessage
 import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument
-import com.opuscapita.peppol.commons.container.route.Endpoint
+import com.opuscapita.peppol.commons.container.process.route.Endpoint
 import com.opuscapita.peppol.commons.model.Customer
 import com.opuscapita.peppol.email.controller.EmailController
 import com.opuscapita.peppol.email.model.CustomerRepository

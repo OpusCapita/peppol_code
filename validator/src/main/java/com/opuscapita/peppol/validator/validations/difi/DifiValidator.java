@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.validator.validations.difi;
 
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
@@ -40,7 +39,7 @@ public class DifiValidator implements BasicValidator {
 
     @Override
     public ValidationResult validate(byte[] data) {
-        ValidationResult result = new ValidationResult(Archetype.PEPPOL_BIS);
+        ValidationResult result = new ValidationResult();
         List<ValidationError> errors;
         Validation validation = validator.validate(new ByteArrayInputStream(data));
         result.setPassed(validation.getReport().getFlag() != FlagType.ERROR && validation.getReport().getFlag() != FlagType.FATAL);

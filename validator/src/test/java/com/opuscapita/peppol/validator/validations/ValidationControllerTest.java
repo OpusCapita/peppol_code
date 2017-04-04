@@ -2,13 +2,9 @@ package com.opuscapita.peppol.validator.validations;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.TestConfig;
 import com.opuscapita.peppol.validator.validations.common.TestCommon;
-import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -69,7 +64,6 @@ public class ValidationControllerTest extends TestCommon {
                 if ((result.isPassed() && file.getName().contains("invalid"))
                         || (!result.isPassed() && file.getName().contains("Valid")
                         && !file.getName().contains("invalid"))) {
-                    System.out.println("Validation type: " + result.getValidationType());
                     fail("Failed on expected validation result: " + result.isPassed() + " on " + file.getName()+ " [" + documentProfile + "]");
                 }
             } catch (Exception e) {

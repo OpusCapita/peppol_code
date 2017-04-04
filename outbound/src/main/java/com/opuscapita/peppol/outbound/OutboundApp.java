@@ -1,9 +1,10 @@
 package com.opuscapita.peppol.outbound;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
-import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.outbound.controller.OutboundController;
@@ -36,13 +37,14 @@ public class OutboundApp {
 
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
-                                        @NotNull OutboundController controller, @NotNull StatusReporter reporter) {
-        return new AbstractQueueListener(errorHandler, reporter) {
+                                        @NotNull OutboundController controller, @NotNull StatusReporter reporter,
+                                        @NotNull Gson gson) {
+        return new AbstractQueueListener(errorHandler, reporter, gson) {
             @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 controller.send(cm);
-                logger.debug("Message " + cm.getFileName() + "delivered with transaction id = " + cm.getTransactionId());
+                logger.debug("Message " + cm.getFileName() + "delivered with transaction id = " + cm.getProcessingInfo().getTransactionId());
                 cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "delivered");
             }
         };

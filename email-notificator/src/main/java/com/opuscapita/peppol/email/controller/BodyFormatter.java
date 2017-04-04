@@ -1,11 +1,9 @@
 package com.opuscapita.peppol.email.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
-import com.opuscapita.peppol.commons.validation.ValidationError;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.document.DocumentError;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -20,64 +18,36 @@ import org.springframework.stereotype.Component;
 public class BodyFormatter {
 
     @NotNull
-    public String format(@NotNull ContainerMessage cm) {
-        if (cm.getBaseDocument() == null) {
+    String format(@NotNull ContainerMessage cm) {
+        if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Container message has no document set");
         }
 
-        if (cm.getBaseDocument() instanceof InvalidDocument) {
-            return formatDocument(cm) + formatInvalid(cm);
-        } else {
-            return formatDocument(cm) + formatValidationErrors(cm);
-        }
+        return formatDocument(cm) + formatValidationErrors(cm);
     }
 
     private String formatValidationErrors(ContainerMessage cm) {
-        String result = "";
-        if (cm.getValidationResult() != null && cm.getValidationResult().getErrors() != null && cm.getValidationResult().getErrors().size() > 0) {
-            if (cm.getValidationResult().getErrors().size() == 1) {
-                result += "\n- ERROR               : ";
-                result += cm.getValidationResult().getErrors().get(0).toString();
+        StringBuilder result = new StringBuilder();
+        if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getErrors().size() > 0) {
+            if (cm.getDocumentInfo().getErrors().size() == 1) {
+                result.append("\n- ERROR               : ");
+                result.append(cm.getDocumentInfo().getErrors().get(0).toString());
             } else {
-                result += "\n- ERRORS              : ";
-                for (ValidationError error : cm.getValidationResult().getErrors()) {
-                    result += "\n\t" + error.toString();
+                result.append("\n- ERRORS              : ");
+                for (DocumentError error : cm.getDocumentInfo().getErrors()) {
+                    result.append("\n\t").append(error.toString());
                 }
             }
         } else {
-            result += "\n- ERROR               : Unspecified validation error";
+            result.append("\n- ERROR               : Unspecified validation error");
         }
 
-        return result;
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private String formatInvalid(ContainerMessage cm) {
-        InvalidDocument doc = (InvalidDocument) cm.getBaseDocument();
-
-        String result = "";
-        boolean someInfoProvided = false;
-
-        if (StringUtils.isNotBlank(doc.getReason())) {
-            result += "\n- REASON              : " + doc.getReason();
-            someInfoProvided = true;
-        }
-        if (doc.getException() != null) {
-            result += "\n- EXCEPTION           : " + ExceptionUtils.getRootCauseMessage(doc.getException());
-            result += "\n" + ExceptionUtils.getStackTrace(doc.getException());
-            someInfoProvided = true;
-        }
-
-        if (!someInfoProvided) {
-            result += "\n- REASON              : Unspecified document parsing error";
-        }
-
-        return result;
+        return result.toString();
     }
 
     @SuppressWarnings("ConstantConditions")
     private String formatDocument(ContainerMessage cm) {
-        BaseDocument doc = cm.getBaseDocument();
+        DocumentInfo doc = cm.getDocumentInfo();
 
         String result = "\n********************************************************************************";
         result += "\n- INVID               : " + doc.getDocumentId();

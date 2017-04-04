@@ -60,8 +60,9 @@ public class EventingApp {
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EventPersistenceReporter eventPersistenceReporter) {
-        return new AbstractQueueListener(errorHandler, null) {
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EventPersistenceReporter eventPersistenceReporter,
+                                        @NotNull Gson gson) {
+        return new AbstractQueueListener(errorHandler, null, gson) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 // add other handlers here, e.g. NTT

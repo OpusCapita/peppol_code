@@ -1,37 +1,25 @@
 package com.opuscapita.peppol.commons.container;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
-import com.opuscapita.peppol.commons.container.document.GsonDocumentAdapter;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
-import com.opuscapita.peppol.commons.container.route.Route;
-import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
-import com.opuscapita.peppol.commons.validation.ValidationResult;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
 /**
- * Holds the whole data exchange bean inside the application.
+ * Holds the whole data exchange bean inside the application.<br/>
+ * Consists of two parts - document information and process information.
+ * The first one describes the real content of the document while the second is responsible for holding Peppol AP specific data.
  *
  * @author Sergejs.Roze
  */
 public class ContainerMessage implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    private final Endpoint source;
-    private final String sourceMetadata;
-
+    private final ProcessingInfo processingInfo;
     private String fileName;
-
-    private BaseDocument document;
-    private Route route;
-    private String transactionId;
-    private ProcessingStatus status;
-    private ValidationResult validationResult;
+    private DocumentInfo documentInfo;
 
     /**
      * Instantiates new container of the message.
@@ -41,26 +29,8 @@ public class ContainerMessage implements Serializable {
      * @param source the originator of the message
      */
     public ContainerMessage(@NotNull String metadata, @NotNull String fileName, @NotNull Endpoint source) {
-        this.source = source;
+        this.processingInfo = new ProcessingInfo(source, metadata);
         this.fileName = fileName;
-        this.sourceMetadata = metadata;
-    }
-
-    /**
-     * Returns GSON serializer/deserializer that must be used in order to properly handle org.w3c.dom.Document
-     *
-     * @return GSON serializer
-     */
-    @NotNull
-    public static Gson prepareGson() {
-        return ContainerMessage.prepareGson(null);
-    }
-
-    @NotNull
-    private static Gson prepareGson(@Nullable String fileName) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(BaseDocument.class, new GsonDocumentAdapter(fileName));
-        return gsonBuilder.create();
     }
 
     @NotNull
@@ -74,25 +44,19 @@ public class ContainerMessage implements Serializable {
         return this;
     }
 
-    @Nullable
-    public Route getRoute() {
-        return route;
-    }
-
     @NotNull
-    public ContainerMessage setRoute(@NotNull Route route) {
-        this.route = route;
-        return this;
+    public ProcessingInfo getProcessingInfo() {
+        return processingInfo;
     }
 
     @Nullable
-    public BaseDocument getBaseDocument() {
-        return document;
+    public DocumentInfo getDocumentInfo() {
+        return documentInfo;
     }
 
     @NotNull
-    public ContainerMessage setBaseDocument(@NotNull BaseDocument baseDocument) {
-        this.document = baseDocument;
+    public ContainerMessage setDocumentInfo(@NotNull DocumentInfo documentInfo) {
+        this.documentInfo = documentInfo;
         return this;
     }
 
@@ -103,7 +67,7 @@ public class ContainerMessage implements Serializable {
      * @return true if this is inbound document
      */
     public boolean isInbound() {
-        return source.isInbound();
+        return processingInfo.isInbound();
     }
 
     /**
@@ -111,59 +75,23 @@ public class ContainerMessage implements Serializable {
      */
     @Nullable
     public String getCustomerId() {
-        if (getBaseDocument() == null) {
+        if (getDocumentInfo() == null) {
             return null;
         }
-        return isInbound() ? getBaseDocument().getRecipientId() : getBaseDocument().getSenderId();
+        return isInbound() ? getDocumentInfo().getRecipientId() : getDocumentInfo().getSenderId();
     }
 
-    @NotNull
-    public String getSourceMetadata() {
-        return sourceMetadata;
-    }
-
-    @NotNull
-    public Endpoint getSource() {
-        return source;
-    }
-
+    /**
+     * Serializes object to JSON.
+     *
+     * @return the JSON serialized version of this object
+     */
     public String convertToJson() {
-        return prepareGson(getFileName()).toJson(this);
+        return new Gson().toJson(this);
     }
 
     public byte[] convertToJsonByteArray() {
         return convertToJson().getBytes();
-    }
-
-    @Nullable
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    @NotNull
-    public ContainerMessage setTransactionId(@NotNull String transactionId) {
-        this.transactionId = transactionId;
-        return this;
-    }
-
-    @NotNull
-    public ProcessingStatus getProcessingStatus() {
-        if (status == null) {
-            return new ProcessingStatus(new Endpoint("", ProcessType.UNKNOWN), "", fileName);
-        }
-        return status;
-    }
-
-    @NotNull
-    public ContainerMessage setStatus(@NotNull ProcessingStatus status) {
-        this.status = status;
-        return this;
-    }
-
-    @NotNull
-    public ContainerMessage setStatus(@NotNull Endpoint endpoint, @NotNull String result) {
-        this.status = this.getProcessingStatus().withEndpoint(endpoint).setResult(result);
-        return this;
     }
 
     /**
@@ -173,28 +101,36 @@ public class ContainerMessage implements Serializable {
      */
     @NotNull
     public String getCorrelationId() {
-        return getProcessingStatus().getCorrelationId();
+        if (StringUtils.isNotBlank(processingInfo.getCorrelationId())) {
+            return processingInfo.getCorrelationId();
+        }
+        return fileName;
     }
 
     @Override
     @NotNull
     public String toString() {
-        String result = fileName + " from " + source;
-        if (document != null) {
-            result += " [" + document.getClass().getName() + "]";
+        String result = fileName + " from " + processingInfo.getSource();
+        if (documentInfo != null) {
+            result += " [" + documentInfo.getClass().getName() + "]";
         }
-        if (route != null) {
-            result += ":" + route;
+        if (processingInfo.getRoute() != null) {
+            result += ": " + processingInfo.getRoute();
         }
 
         return result;
     }
 
-    public ValidationResult getValidationResult() {
-        return validationResult;
+    public void setStatus(@NotNull Endpoint endpoint, @NotNull String status) {
+        processingInfo.setCurrentStatus(endpoint, status);
     }
 
-    public void setValidationResult(ValidationResult validationResult) {
-        this.validationResult = validationResult;
+    @Nullable
+    public String popRoute() {
+        if (processingInfo.getRoute() != null) {
+            return processingInfo.getRoute().pop();
+        }
+        return null;
     }
+
 }

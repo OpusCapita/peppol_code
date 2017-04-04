@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.validator.validations.common;
 
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.validator.validations.difi.DifiValidator;
 import com.opuscapita.peppol.validator.validations.difi.DifiValidatorConfig;

@@ -1,9 +1,10 @@
 package com.opuscapita.peppol.internal_routing;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
-import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -35,8 +36,8 @@ public class InternalRoutingApp {
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
                                         @NotNull RoutingController controller, @NotNull MessageQueue messageQueue,
-                                        @NotNull StatusReporter reporter) {
-        return new AbstractQueueListener(errorHandler, reporter) {
+                                        @NotNull StatusReporter reporter, @NotNull Gson gson) {
+        return new AbstractQueueListener(errorHandler, reporter, gson) {
             @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
@@ -45,16 +46,16 @@ public class InternalRoutingApp {
                 Endpoint endpoint = cm.isInbound() ?
                         new Endpoint(componentName, ProcessType.IN_ROUTING) : new Endpoint(componentName, ProcessType.OUT_ROUTING);
 
-                if (cm.getRoute() == null) {
-                    String error = "Cannot define route for " + cm.getFileName() + " originated by " + cm.getSource();
+                if (cm.getProcessingInfo().getRoute() == null) {
+                    String error = "Cannot define route for " + cm.getFileName() + " originated by " + cm.getProcessingInfo().getSource();
                     cm.setStatus(endpoint, error);
                     errorHandler.reportWithContainerMessage(cm, null, error);
                     reporter.reportError(cm, null);
                     return;
                 }
-                logger.info("Route set to " + cm.getRoute());
+                logger.info("Route set to " + cm.getProcessingInfo().getRoute());
 
-                String queueOut = cm.getRoute().pop();
+                String queueOut = cm.popRoute();
                 messageQueue.convertAndSend(queueOut, cm);
                 cm.setStatus(endpoint, "route set");
                 logger.info("Route for " + cm.getFileName() + " defined, message sent to " + queueOut + " queue");

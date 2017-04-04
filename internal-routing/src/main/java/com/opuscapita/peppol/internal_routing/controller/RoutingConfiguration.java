@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.internal_routing.controller;
 
-import com.opuscapita.peppol.commons.container.route.Route;
+import com.opuscapita.peppol.commons.container.process.route.Route;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

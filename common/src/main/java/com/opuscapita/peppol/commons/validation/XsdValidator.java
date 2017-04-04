@@ -1,7 +1,8 @@
 package com.opuscapita.peppol.commons.validation;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.DocumentContentUtils;
+import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -12,18 +13,18 @@ import javax.xml.validation.SchemaFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by bambr on 16.3.10.
  */
 public interface XsdValidator {
-    List<ValidationError> performXsdValidation(ContainerMessage containerMessage);
+    List<ValidationError> performXsdValidation(@NotNull ContainerMessage containerMessage, @NotNull Document dom);
 
-    default void validateAgainstXsd(ContainerMessage containerMessage, String xsdPath) throws SAXException, TransformerException, IOException, InterruptedException, ExecutionException, TimeoutException {
-        byte[] data = DocumentContentUtils.getDocumentBytes(containerMessage.getBaseDocument().getDocument());
+    default void validateAgainstXsd(ContainerMessage containerMessage, String xsdPath) throws Exception {
+        byte[] data = Files.readAllBytes(Paths.get(containerMessage.getFileName()));
         validateAgainstXsd(data, xsdPath);
     }
 

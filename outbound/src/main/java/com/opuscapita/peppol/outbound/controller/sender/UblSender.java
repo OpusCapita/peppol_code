@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.outbound.controller.sender;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.outbound.util.OxalisUtils;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
@@ -40,7 +40,7 @@ public class UblSender {
     @SuppressWarnings("unused")
     @NotNull
     public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
-        BaseDocument document = cm.getBaseDocument();
+        DocumentInfo document = cm.getDocumentInfo();
         if (document == null) {
             throw new IllegalArgumentException("There is no document in message");
         }

@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.commons.model;
 
-import com.opuscapita.peppol.commons.container.route.ProcessType;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 
 /**
  * Created with IntelliJ IDEA.

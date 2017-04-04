@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.outbound.util;
 
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
 import eu.peppol.identifier.CustomizationIdentifier;
 import eu.peppol.identifier.PeppolDocumentTypeId;
 import org.jetbrains.annotations.NotNull;
@@ -12,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class OxalisUtils {
 
-    public static PeppolDocumentTypeId getPeppolDocumentTypeId(@NotNull BaseDocument document) {
+    public static PeppolDocumentTypeId getPeppolDocumentTypeId(@NotNull DocumentInfo document) {
         return new PeppolDocumentTypeId(
-                document.getRootNode().getNamespaceURI(),
-                document.getRootNode().getLocalName(),
+                document.getRootNameSpace(),
+                document.getRootNodeName(),
                 new CustomizationIdentifier(document.getCustomizationId()),
                 document.getVersionId()
         );

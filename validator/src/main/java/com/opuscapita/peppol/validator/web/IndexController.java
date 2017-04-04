@@ -2,8 +2,8 @@ package com.opuscapita.peppol.validator.web;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -70,12 +69,12 @@ public class IndexController {
             containerMessage = loadContainerMessageFromMultipartFile(dataFile);
             ValidationResult validationResult = validationController.validate(containerMessage);
             System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
-            System.out.println(containerMessage.getBaseDocument().getProfileId());
-            System.out.println(containerMessage.getBaseDocument().getCustomizationId());
+            System.out.println(containerMessage.getDocumentInfo().getProfileId());
+            System.out.println(containerMessage.getDocumentInfo().getCustomizationId());
             validationResult.getErrors().forEach(error -> System.out.println(error.toString()));
             result.addObject("status", validationResult.isPassed());
             result.addObject("errors", validationResult.getErrors());
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             ValidationError exceptionalError = new ValidationError().withFlag("FATAL").withTitle(e.getMessage()).withText(StringEscapeUtils.escapeHtml(e.getCause() == null ? e.getMessage() : e.getCause().getMessage()));
             result.addObject("status", false);
@@ -87,9 +86,10 @@ public class IndexController {
     }
 
     @NotNull
-    private ContainerMessage loadContainerMessageFromMultipartFile(MultipartFile dataFile) throws IOException {
-        return new ContainerMessage(
-                dataFile.getName(), dataFile.getName(), new Endpoint("validator_rest", ProcessType.REST))
-                .setBaseDocument(documentLoader.load(dataFile.getInputStream(), dataFile.getName()));
+    private ContainerMessage loadContainerMessageFromMultipartFile(MultipartFile dataFile) throws Exception {
+        Endpoint endpoint = new Endpoint("validator_rest", ProcessType.REST);
+        ContainerMessage result = new ContainerMessage(dataFile.getName(), dataFile.getName(), endpoint);
+        result.setDocumentInfo(documentLoader.load(dataFile.getInputStream(), dataFile.getName(), endpoint));
+        return result;
     }
 }

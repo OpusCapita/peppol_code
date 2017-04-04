@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.document;
 
+import com.opuscapita.peppol.commons.container.ContainerMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.StringUtils;
@@ -13,6 +14,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Common XPath utils.
@@ -63,7 +66,7 @@ public class DocumentUtils {
      * @return the first child node with required XPath or null if no such node found
      */
     @Nullable
-    public static Node searchForXPath(@NotNull Node from, @NotNull String... xpath) {
+    static Node searchForXPath(@NotNull Node from, @NotNull String... xpath) {
         for (String name : xpath) {
             from = searchForChildNode(from, name);
             if (from == null) {
@@ -102,12 +105,17 @@ public class DocumentUtils {
      * @return the document object from the byte array
      */
     @NotNull
-    public static Document getDocument(@NotNull byte[] bytes)
+    static Document getDocument(@NotNull byte[] bytes)
             throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder db = dbf.newDocumentBuilder();
         return db.parse(new ByteArrayInputStream(bytes));
+    }
+
+    @NotNull
+    public static Document getDocument(@NotNull ContainerMessage cm) throws Exception {
+        return getDocument(Files.readAllBytes(Paths.get(cm.getFileName())));
     }
 
     /**
@@ -117,7 +125,7 @@ public class DocumentUtils {
      * @return the SBDH block if any or null if no SBDH found
      */
     @Nullable
-    public static Node getSBDH(@NotNull Document document) {
+    static Node getSBDH(@NotNull Document document) {
         NodeList nodes = document.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);

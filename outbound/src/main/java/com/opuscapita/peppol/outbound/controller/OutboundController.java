@@ -50,7 +50,7 @@ public class OutboundController {
     }
 
     public void send(@NotNull ContainerMessage cm) throws Exception {
-        if (cm.getBaseDocument() == null) {
+        if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("There is no document in message: " + cm);
         }
 
@@ -76,7 +76,7 @@ public class OutboundController {
                     }
                 } else {
                     // production sending takes place here
-                    switch (cm.getBaseDocument().getArchetype()) {
+                    switch (cm.getDocumentInfo().getArchetype()) {
                         case INVALID:
                             throw new IllegalArgumentException("Unable to send invalid documents");
                         case SVEFAKTURA1:
@@ -88,13 +88,13 @@ public class OutboundController {
                 }
             }
             logger.info("Message " + cm.getFileName() + " sent with transmission ID = " + transmissionResponse.getTransmissionId());
-            cm.setTransactionId(transmissionResponse.getTransmissionId().toString());
+            cm.getProcessingInfo().setTransactionId(transmissionResponse.getTransmissionId().toString());
         } catch (IOException ioe) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with error: " + ioe.getMessage());
 
             // try to retry if it is defined in route
-            if (cm.getRoute() != null) {
-                String next = cm.getRoute().pop();
+            if (cm.getProcessingInfo().getRoute() != null) {
+                String next = cm.popRoute();
                 if (StringUtils.isNotBlank(next)) {
                     logger.info("Message " + cm.getFileName() + " queued for retry");
                     messageQueue.convertAndSend(next, cm);

@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.validator.validations.svefaktura1;
 
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
@@ -50,7 +49,7 @@ public class SveFaktura1Validator implements BasicValidator {
     @Override
     public ValidationResult validate(byte[] data) {
         List<ValidationError> errors = new ArrayList<>();
-        ValidationResult result = new ValidationResult(Archetype.SVEFAKTURA1);
+        ValidationResult result = new ValidationResult();
         svefaktura1XsdValidator.performXsdValidation(data);
 
         if (svefaktura1ValidatorConfig.getSchematronValidationEnabled()) {
@@ -146,7 +145,7 @@ public class SveFaktura1Validator implements BasicValidator {
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.METHOD, "templates");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");

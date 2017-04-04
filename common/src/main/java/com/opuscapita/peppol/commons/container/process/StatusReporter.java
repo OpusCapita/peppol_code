@@ -1,7 +1,6 @@
-package com.opuscapita.peppol.commons.container.status;
+package com.opuscapita.peppol.commons.container.process;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import org.jetbrains.annotations.NotNull;
@@ -43,11 +42,7 @@ public class StatusReporter {
     }
 
     public void reportError(@NotNull ContainerMessage cm, @Nullable Exception e) {
-        ProcessingStatus status = cm.getProcessingStatus();
-        if (!(cm.getBaseDocument() instanceof InvalidDocument)) {
-            cm.setBaseDocument(new InvalidDocument(cm.getBaseDocument(), status.getResult(), e));
-        }
-
+        cm.getProcessingInfo().setProcessingException(e);
         try {
             rabbitTemplate.convertAndSend(reportDestination, cm);
         } catch (Exception exception) {

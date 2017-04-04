@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.commons.validation;
 
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -12,13 +11,8 @@ import java.util.stream.Collectors;
  * Created by Daniil on 03.05.2016.
  */
 public class ValidationResult implements Serializable {
-    private final Archetype validationType;
     private boolean passed;
     private List<ValidationError> errors = new ArrayList<>();
-
-    public ValidationResult(Archetype validationType) {
-        this.validationType = validationType;
-    }
 
     public boolean isPassed() {
         return passed;
@@ -26,10 +20,6 @@ public class ValidationResult implements Serializable {
 
     public void setPassed(boolean passed) {
         this.passed = passed;
-    }
-
-    public Archetype getValidationType() {
-        return validationType;
     }
 
     public void addError(ValidationError error) {

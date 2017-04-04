@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.commons.container.route;
+package com.opuscapita.peppol.commons.container.process.route;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +57,6 @@ public class Endpoint implements Serializable {
 
     @Override
     public String toString() {
-        return name + " (type:" + type + ")";
+        return "Service " + name + " (type:" + type + ")";
     }
 }

@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.commons.container.route;
+package com.opuscapita.peppol.commons.container.process.route;
 
 import org.junit.Test;
 

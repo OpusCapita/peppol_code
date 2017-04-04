@@ -1,33 +1,41 @@
 package com.opuscapita.peppol.commons.container.document;
 
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
-import com.opuscapita.peppol.commons.container.document.test.TestTypeOne;
-import com.opuscapita.peppol.commons.container.document.test.TestTypeTwo;
+import com.google.gson.Gson;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.container.xml.DocumentParser;
+import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
  */
 public class DocumentLoaderTest {
-    private final DocumentLoader loader = new DocumentLoader();
+    private final DocumentLoader loader;
 
-    @Test
-    public void testDocumentLoader() throws Exception {
-        Set<BaseDocument> result = DocumentLoader.reloadDocumentTypes("com.opuscapita.peppol.commons.container.document.test");
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertTrue(result.toArray()[0].getClass() == TestTypeOne.class ||
-                result.toArray()[0].getClass() == TestTypeTwo.class);
-        assertTrue(result.toArray()[1].getClass() == TestTypeOne.class ||
-                result.toArray()[1].getClass() == TestTypeTwo.class);
+    public DocumentLoaderTest() throws ParserConfigurationException, SAXException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+
+        ErrorHandler errorHandler = mock(ErrorHandler.class);
+        DocumentTemplates templates = new DocumentTemplates(errorHandler, new Gson());
+        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
+        loader = new DocumentLoader(parser);
     }
+
 
     @Test
     public void testTypes() throws Exception {
@@ -89,7 +97,8 @@ public class DocumentLoaderTest {
     private void checkTypes(List<String> list, Archetype archetype) throws Exception {
         for (String fileName : list) {
             try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream(fileName)) {
-                BaseDocument document = loader.load(inputStream, "test");
+                DocumentInfo document = loader.load(inputStream, fileName, new Endpoint("test", ProcessType.TEST));
+                System.out.println(document.getErrors().stream().map(DocumentError::getMessage).collect(Collectors.joining("\t\n")));
                 assertEquals("Failed for file: " + fileName, archetype, document.getArchetype());
             }
         }

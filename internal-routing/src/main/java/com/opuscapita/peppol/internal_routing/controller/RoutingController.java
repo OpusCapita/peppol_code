@@ -1,11 +1,9 @@
 package com.opuscapita.peppol.internal_routing.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
-import com.opuscapita.peppol.commons.container.route.Route;
-import com.opuscapita.peppol.commons.container.status.StatusReporter;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.process.route.Route;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,18 +22,14 @@ import java.util.Objects;
 public class RoutingController {
     private final static Logger logger = LoggerFactory.getLogger(RoutingController.class);
     private final RoutingConfiguration routingConfiguration;
-    private final ErrorHandler errorHandler;
-    private final StatusReporter statusReporter;
+
     @Value("${peppol.email-notificator.queue.in.name}")
     private String errorQueue;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    public RoutingController(@NotNull RoutingConfiguration routingConfiguration, @NotNull ErrorHandler errorHandler,
-                             @NotNull StatusReporter statusReporter) {
+    public RoutingController(@NotNull RoutingConfiguration routingConfiguration) {
         this.routingConfiguration = routingConfiguration;
-        this.errorHandler = errorHandler;
-        this.statusReporter = statusReporter;
     }
 
     /**
@@ -50,33 +44,36 @@ public class RoutingController {
     @NotNull
     public ContainerMessage loadRoute(@NotNull ContainerMessage cm) throws IOException {
         logger.info("Processing message " + cm.getFileName());
-        String source = cm.getSource().getName();
-        BaseDocument baseDocument = cm.getBaseDocument();
+        String source = cm.getProcessingInfo().getSource().getName();
+        DocumentInfo documentInfo = cm.getDocumentInfo();
 
-        if (baseDocument instanceof InvalidDocument) {
+        if (documentInfo.getArchetype() == Archetype.INVALID) {
             Route error = new Route();
             error.setDescription("ERROR");
             error.setEndpoints(Collections.singletonList(errorQueue));
-            error.setSource(cm.getSource().getName());
-            cm.setRoute(error);
+            error.setSource(cm.getProcessingInfo().getSource().getName());
+            cm.getProcessingInfo().setRoute(error);
             return cm;
         }
 
         for (Route route : routingConfiguration.getRoutes()) {
             if (Objects.equals(source, route.getSource())) {
                 if (route.getMask() != null) {
-                    if (baseDocument.getRecipientId().matches(route.getMask())) {
+                    if (documentInfo.getRecipientId().matches(route.getMask())) {
                         logger.debug("Route selected by source and mask");
-                        return cm.setRoute(new Route(route));
+                        cm.getProcessingInfo().setRoute(new Route(route));
+                        return cm;
                     }
                 } else {
                     logger.debug("Route selected by source");
-                    return cm.setRoute(new Route(route));
+                    cm.getProcessingInfo().setRoute(new Route(route));
+                    return cm;
                 }
             }
         }
-        logger.warn("Cannot define route for " + cm.getFileName() + " originated from " + cm.getSource());
-        return cm.setRoute(null);
+        logger.warn("Cannot define route for " + cm.getFileName() + " originated from " + cm.getProcessingInfo().getSource());
+        cm.getProcessingInfo().setRoute(null);
+        return cm;
     }
 
 

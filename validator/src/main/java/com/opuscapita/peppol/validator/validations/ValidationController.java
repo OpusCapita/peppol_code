@@ -1,9 +1,9 @@
 package com.opuscapita.peppol.validator.validations;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentContentUtils;
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
+import com.opuscapita.peppol.commons.container.document.DocumentUtils;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
@@ -19,11 +19,7 @@ import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by bambr on 16.5.8.
@@ -44,12 +40,12 @@ public class ValidationController {
     }
 
     public ValidationResult validate(@NotNull ContainerMessage containerMessage) {
-        if (containerMessage.getBaseDocument() == null) {
+        if (containerMessage.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document is null for " + containerMessage.getFileName());
         }
 
-        Archetype archetype = containerMessage.getBaseDocument().getArchetype();
-        String customizationId = containerMessage.getBaseDocument().getCustomizationId();
+        Archetype archetype = containerMessage.getDocumentInfo().getArchetype();
+        String customizationId = containerMessage.getDocumentInfo().getCustomizationId();
         if (archetype == Archetype.EHF || archetype == Archetype.PEPPOL_BIS) {
             //Detecting sub-types, like AT or SI
             if (customizationId.contains("erechnung")) {
@@ -64,7 +60,7 @@ public class ValidationController {
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
-    private ValidationResult performValidation(@NotNull ContainerMessage containerMessage, Archetype archetype) {
+    private ValidationResult performValidation(@NotNull ContainerMessage containerMessage, @NotNull Archetype archetype) {
         BasicValidator validator;
         try {
             validator = validatorFactory.getValidatorByArchetype(archetype);
@@ -73,17 +69,19 @@ public class ValidationController {
             throw new IllegalArgumentException("No validator defined for archetype " + archetype + ", error: " + validatorFetchingError);
         }
 
-        ValidationResult result = new ValidationResult(containerMessage.getBaseDocument().getArchetype());
+        ValidationResult result = new ValidationResult();
         result.setPassed(false);
 
         byte[] data;
+        Document dom;
         try {
-            data = DocumentContentUtils.getDocumentBytes(getRootDocument(containerMessage));
-        } catch (ParserConfigurationException | TransformerException | InterruptedException | ExecutionException | TimeoutException e) {
+            dom = DocumentUtils.getDocument(containerMessage);
+            data = DocumentContentUtils.getDocumentBytes(getRootDocument(containerMessage, dom));
+        } catch (Exception e) {
             throw new IllegalArgumentException("Validation failed during XML transformation", e);
         }
 
-        List<ValidationError> sbdhValidationErrors = sbdhValidator.performXsdValidation(containerMessage);
+        List<ValidationError> sbdhValidationErrors = sbdhValidator.performXsdValidation(containerMessage, dom);
         ValidationResult validatorResult = validator.validate(data);
         result.setPassed(validatorResult.isPassed() && sbdhValidationErrors.size() == 0);
         if (!result.isPassed()) {
@@ -94,12 +92,13 @@ public class ValidationController {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private Document getRootDocument(@NotNull ContainerMessage containerMessage) throws ParserConfigurationException {
-        if (containerMessage.getBaseDocument() instanceof InvalidDocument) {
-            InvalidDocument invalidDocument = (InvalidDocument) containerMessage.getBaseDocument();
-            throw new IllegalArgumentException("Unable to validate invalid documents", invalidDocument.getException());
+    private Document getRootDocument(@NotNull ContainerMessage containerMessage, @NotNull Document dom) throws Exception {
+        if (containerMessage.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+            throw new IllegalArgumentException("Unable to validate invalid documents: " + containerMessage.getFileName());
         }
-        if (containerMessage.getBaseDocument().getRootNode() == null) {
+
+        Node rootNode = DocumentUtils.getRootNode(dom);
+        if (rootNode == null) {
             throw new IllegalArgumentException("No root node in the document");
         }
 
@@ -108,7 +107,7 @@ public class ValidationController {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document newDocument = builder.newDocument();
 
-        Node importedNode = newDocument.importNode(containerMessage.getBaseDocument().getRootNode(), true);
+        Node importedNode = newDocument.importNode(rootNode, true);
         newDocument.appendChild(importedNode);
         return newDocument;
     }

@@ -41,6 +41,6 @@ public class WebWatchDogMessenger {
     }
 
     public boolean isApplicableForFile(String fileName) {
-        return fileName.toLowerCase().startsWith("logger_") && fileName.toLowerCase().endsWith("xml");
+        return fileName.toLowerCase().startsWith("logger_") && fileName.toLowerCase().endsWith("document_types");
     }
 }

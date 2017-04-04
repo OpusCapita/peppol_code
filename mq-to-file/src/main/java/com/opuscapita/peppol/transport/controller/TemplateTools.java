@@ -45,10 +45,10 @@ public class TemplateTools {
                         result += "%";
                         break;
                     case T_ARCHETYPE:
-                        result += cm.getBaseDocument() == null ? "NA" : cm.getBaseDocument().getArchetype();
+                        result += cm.getDocumentInfo() == null ? "NA" : cm.getDocumentInfo().getArchetype();
                         break;
                     case T_DOCUMENT_TYPE:
-                        result += cm.getBaseDocument() == null ? "NA" : cm.getBaseDocument().getDocumentType();
+                        result += cm.getDocumentInfo() == null ? "NA" : cm.getDocumentInfo().getDocumentType();
                         break;
                     default:
                         logger.error("Unknown template: " + BEGIN_END + token + BEGIN_END);

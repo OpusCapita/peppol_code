@@ -1,11 +1,13 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
-import com.opuscapita.peppol.commons.container.route.Route;
-import com.opuscapita.peppol.commons.container.status.ProcessingStatus;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.container.process.route.Route;
+import com.opuscapita.peppol.commons.container.xml.DocumentParser;
+import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
@@ -13,6 +15,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
 
+import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,7 +32,7 @@ import java.util.Properties;
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
     private final String endpoint;
-    DocumentLoader documentLoader = new DocumentLoader();
+    DocumentLoader documentLoader;
     MessageQueue mq;
     private String dbConnection = null;
     private String dbPreprocessQuery = null;
@@ -45,6 +48,17 @@ public class MqProducer implements Producer {
         this.dbConnection = dbConnection;
         this.dbPreprocessQuery = dbPreprocessQuery;
         this.mq = mq;
+
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentTemplates templates = new DocumentTemplates(null, new Gson());
+        DocumentParser dp;
+        try {
+            dp = new DocumentParser(factory.newSAXParser(), templates);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialize DocumentLoader", e);
+        }
+        documentLoader = new DocumentLoader(dp);
     }
 
     /*
@@ -80,12 +94,12 @@ public class MqProducer implements Producer {
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
                     ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(), new Endpoint("integration-tests", ProcessType.TEST))
-                            .setBaseDocument(documentLoader.load(file));
-                    cm.setStatus(new ProcessingStatus(new Endpoint("outbound", ProcessType.TEST),"testing?", file.getName()));
+                            .setDocumentInfo(documentLoader.load(file, new Endpoint("outbound", ProcessType.TEST)));
+                    cm.setStatus(new Endpoint("outbound", ProcessType.TEST), file.getName());
                     Route route = new Route();
                     List<String> endpoints = Arrays.asList(endpoint); //new queue for integration tests
                     route.setEndpoints(endpoints);
-                    cm.setRoute(route);
+                    cm.getProcessingInfo().setRoute(route);
                     logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue + " -> " + endpoint);
                     mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
                     //channel.basicPublish("", destinationQueue, null, cm);
@@ -100,7 +114,7 @@ public class MqProducer implements Producer {
                     connection.close();
                 if (channel != null)
                     channel.close();
-            } catch (Exception inore) {
+            } catch (Exception ignore) {
             }
             return;
         }

@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.commons.container.document.impl;
+package com.opuscapita.peppol.commons.container.document;
 
 /**
  * @author Sergejs.Roze

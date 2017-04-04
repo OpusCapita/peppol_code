@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.commons.container.document.impl.sf1;
 
-import com.opuscapita.peppol.commons.container.document.BaseDocument;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentUtils;
 import com.opuscapita.peppol.commons.container.document.impl.FieldsReader;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import static com.opuscapita.peppol.commons.container.document.DocumentUtils.sel
 public class Svefaktura1 implements FieldsReader {
 
     @Override
-    public boolean fillFields(@Nullable Node sbdh, @NotNull Node root, @NotNull BaseDocument base) {
+    public boolean fillFields(@Nullable Node sbdh, @NotNull Node root, @NotNull DocumentInfo base) {
         boolean success = true;
 
         String value = selectValueFrom(null, sbdh, "Sender", "Identifier");

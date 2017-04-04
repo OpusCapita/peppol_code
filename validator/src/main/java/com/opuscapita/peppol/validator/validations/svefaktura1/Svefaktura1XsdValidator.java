@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.validation.XsdValidator;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class Svefaktura1XsdValidator implements XsdValidator {
     }
 
     @Override
-    public List<ValidationError> performXsdValidation(ContainerMessage containerMessage) {
+    public List<ValidationError> performXsdValidation(@NotNull ContainerMessage containerMessage, @NotNull Document dom) {
         try {
             validateAgainstXsd(containerMessage, svefaktura1ValidatorConfig.getSvefaktura1XsdPath());
         } catch (Exception e) {

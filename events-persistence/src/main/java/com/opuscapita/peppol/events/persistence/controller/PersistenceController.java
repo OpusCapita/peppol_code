@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.events.persistence.controller;
 
 
-import com.opuscapita.peppol.commons.container.route.ProcessType;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.*;
 import com.opuscapita.peppol.events.persistence.model.*;
 import org.jetbrains.annotations.NotNull;

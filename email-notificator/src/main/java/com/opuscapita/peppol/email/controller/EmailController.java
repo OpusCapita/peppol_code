@@ -1,7 +1,6 @@
 package com.opuscapita.peppol.email.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.impl.InvalidDocument;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.model.Customer;
 import com.opuscapita.peppol.email.model.CustomerRepository;
@@ -39,6 +38,7 @@ public class EmailController {
     @Value("${peppol.email-notificator.directory}")
     private String directory;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public EmailController(@NotNull CustomerRepository customerRepository, @Nullable ErrorHandler errorHandler,
                            @NotNull BodyFormatter bodyFormatter) {
@@ -87,7 +87,7 @@ public class EmailController {
 
     private void storeMessage(String emails, ContainerMessage cm) throws IOException {
         String fileName = getFileName(cm.getCustomerId());
-        if (cm.getBaseDocument() == null) {
+        if (cm.getDocumentInfo() == null) {
             String msg = "Document is null";
             logger.error(msg);
             throw new IllegalStateException(msg);
@@ -103,16 +103,10 @@ public class EmailController {
 
     @SuppressWarnings("ConstantConditions")
     private void storeDocument(ContainerMessage cm, String fileName) throws IOException {
-        if (cm.getBaseDocument() instanceof InvalidDocument) {
-            InvalidDocument doc = (InvalidDocument) cm.getBaseDocument();
-            String subject = StringUtils.isBlank(doc.getReason()) ? "Failed to process document" : doc.getReason();
-            storeSubject(subject, fileName);
-        } else {
-            if (cm.getValidationResult() == null) {
-                throw new IllegalArgumentException("Document received by email-notificator has no error description: " + cm.getFileName());
-            }
-            storeSubject("Validation errors in document", fileName);
+        if ((cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) && cm.getProcessingInfo().getProcessingException() == null) {
+            throw new IllegalArgumentException("Document received by email-notificator has no errors: " + cm.getFileName());
         }
+        storeSubject("Validation errors in document", fileName);
 
         File body = new File(fileName + EXT_BODY);
 

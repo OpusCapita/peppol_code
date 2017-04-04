@@ -1,0 +1,95 @@
+{
+  "name": "PEPPOL_BIS.Invoice",
+  "root": "Invoice",
+  "fields": [
+    {
+      "id": "sender_id",
+      "paths": [
+         "$ROOT/AccountingSupplierParty/Party/EndpointID",
+         "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "recipient_id",
+      "paths": [
+         "$ROOT/AccountingCustomerParty/Party/EndpointID",
+         "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "version_id",
+      "paths": [
+         "$ROOT/UBLVersionID"
+      ],  
+      "mandatory": true
+    },
+    {
+      "id": "document_id",
+      "paths": [
+         "$ROOT/ID"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "issue_date",
+      "paths": [
+         "$ROOT/IssueDate"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "due_date",
+      "paths": [
+         "$ROOT/PaymentMeans/PaymentDueDate"
+      ],
+      "mandatory": false
+    },
+    {
+      "id": "sender_name",
+      "paths": [
+         "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "sender_country_code",
+      "paths": [
+         "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "recipient_name",
+      "paths": [
+         "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "recipient_country_code",
+      "paths": [
+         "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "profile_id",
+      "paths": [
+         "$ROOT/ProfileID"
+      ],
+      "mandatory": true,
+      "mask": "urn:www\\.cenbii\\.eu:profile:bii(04|05|xx):ver[1-2]\\.0"
+    },
+    {
+      "id": "customization_id",
+      "paths": [
+         "$ROOT/CustomizationID"
+      ],
+      "mandatory": true,
+      "mask": "(?!.*extended:urn:www.difi.no:ehf.*).*"
+    }
+  ]
+}
+

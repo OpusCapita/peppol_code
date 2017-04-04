@@ -1,9 +1,8 @@
 package com.opuscapita.peppol.commons.container.document.impl.ubl;
 
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentUtils;
 import com.opuscapita.peppol.commons.container.document.PeppolDocument;
-import com.opuscapita.peppol.commons.container.document.impl.Archetype;
-import com.opuscapita.peppol.commons.container.document.impl.UblDocument;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -14,7 +13,7 @@ import org.w3c.dom.Node;
 @PeppolDocument("EHF document")
 public class EhfDocument extends UblDocument {
 
-    @Override
+
     public boolean recognize(@NotNull Document document) {
         String fromSbdh = DocumentUtils.readSbdhStandard(document);
         if (fromSbdh != null) {
@@ -44,14 +43,14 @@ public class EhfDocument extends UblDocument {
         }
 
         String rootName = root.getLocalName();
-        UblDocumentType type = recognizeType(rootName);
-
-        return type != UblDocumentType.UNDEFINED;
+//        UblDocumentType type = recognizeType(rootName);
+//
+//        return type != UblDocumentType.UNDEFINED;
+        return true;
 
     }
 
     @NotNull
-    @Override
     public Archetype getArchetype() {
         return Archetype.EHF;
     }

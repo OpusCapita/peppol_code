@@ -2,7 +2,7 @@ package com.opuscapita.peppol.commons.template;
 
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -24,11 +24,12 @@ public abstract class AbstractQueueListener {
 
     private final ErrorHandler errorHandler;
     private final StatusReporter reporter;
-    private final Gson gson = ContainerMessage.prepareGson();
+    private final Gson gson;
 
-    protected AbstractQueueListener(@Nullable ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
+    protected AbstractQueueListener(@Nullable ErrorHandler errorHandler, @Nullable StatusReporter statusReporter, @NotNull Gson gson) {
         this.errorHandler = errorHandler;
         this.reporter = statusReporter;
+        this.gson = gson;
     }
 
     @SuppressWarnings({"unused", "ConstantConditions"})

@@ -5,9 +5,9 @@ import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.route.Endpoint;
-import com.opuscapita.peppol.commons.container.route.ProcessType;
-import com.opuscapita.peppol.commons.container.status.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.StatusReporter;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -122,14 +122,14 @@ public class PeppolValidatorApplication {
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
                                         @NotNull ValidationController controller, @NotNull MessageQueue messageQueue,
-                                        @NotNull StatusReporter reporter) {
-        return new AbstractQueueListener(errorHandler, reporter) {
+                                        @NotNull StatusReporter reporter, @NotNull Gson gson) {
+        return new AbstractQueueListener(errorHandler, reporter, gson) {
             @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
 
                 ValidationResult validationResult = controller.validate(cm);
-                cm.setValidationResult(validationResult);
+                cm.getProcessingInfo().setValidationResult(validationResult);
 
                 if (!validationResult.isPassed()) {
                     messageQueue.convertAndSend(errorQueue, cm);
@@ -137,7 +137,7 @@ public class PeppolValidatorApplication {
                     return;
                 }
 
-                String queueOut = cm.getRoute().pop();
+                String queueOut = cm.popRoute();
                 messageQueue.convertAndSend(queueOut, cm);
                 if (cm.isInbound()) {
                     cm.setStatus(new Endpoint(componentName, ProcessType.IN_VALIDATION), "validation passed");

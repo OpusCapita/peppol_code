@@ -1,10 +1,14 @@
 package com.opuscapita.peppol.validator.validations.common;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.DocumentUtils;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.XsdValidator;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,12 +23,13 @@ public class SbdhValidator implements XsdValidator {
     String xsdPath;
 
     @Override
-    public List<ValidationError> performXsdValidation(ContainerMessage containerMessage) {
-        if (containerMessage.getBaseDocument() == null || containerMessage.getBaseDocument().getRootNode() == null) {
-            throw new IllegalArgumentException("No document present to validate");
+    public List<ValidationError> performXsdValidation(@NotNull ContainerMessage containerMessage, @NotNull Document dom) {
+        Node rootNode = DocumentUtils.getRootNode(dom);
+        if (rootNode == null) {
+            throw new IllegalArgumentException("Failed to locate root node in document: " + containerMessage.getFileName());
         }
 
-        String contentRootNode = containerMessage.getBaseDocument().getRootNode().getNodeName();
+        String contentRootNode = rootNode.getNodeName();
         try {
             validateAgainstXsd(containerMessage, xsdPath);
         } catch (Exception e) {
