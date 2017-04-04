@@ -3,10 +3,12 @@ package com.opuscapita.peppol.commons.container.document;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 /**
  * @author Sergejs.Roze
  */
-public class DocumentError {
+public class DocumentError implements Serializable {
     private final Endpoint source;
     private final String message;
 
