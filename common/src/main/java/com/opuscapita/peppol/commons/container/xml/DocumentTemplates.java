@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author Sergejs.Roze
@@ -20,7 +20,7 @@ import java.util.Set;
 public class DocumentTemplates {
     private final static Logger logger = LoggerFactory.getLogger(DocumentTemplates.class);
 
-    private final Set<DocumentTemplate> templates = new HashSet<>();
+    private final List<DocumentTemplate> templates = new ArrayList<>();
     private final ErrorHandler errorHandler;
     private final Gson gson;
 
@@ -69,7 +69,7 @@ public class DocumentTemplates {
         }
     }
 
-    public Set<DocumentTemplate> getTemplates() {
-        return Collections.unmodifiableSet(templates);
+    public List<DocumentTemplate> getTemplates() {
+        return Collections.unmodifiableList(templates);
     }
 }
