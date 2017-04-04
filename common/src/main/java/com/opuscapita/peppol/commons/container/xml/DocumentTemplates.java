@@ -28,6 +28,14 @@ public class DocumentTemplates {
         this.errorHandler = errorHandler;
         this.gson = gson;
         loadDir("/document_types");
+
+        File test = new File("/document_types");
+        logger.info("" + test.exists());
+        test = new File("document_types");
+        logger.info("" + test.exists());
+        test = new File("./document_types");
+        logger.info("" + test.exists());
+
         logger.info("Read " + templates.size() + " document format templates");
     }
 
