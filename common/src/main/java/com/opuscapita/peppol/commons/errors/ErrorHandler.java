@@ -3,8 +3,11 @@ package com.opuscapita.peppol.commons.errors;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -122,7 +125,12 @@ public class ErrorHandler {
                     cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining("\n\t"));
         }
 
-        detailedDescription += "\nLast processing status: " + cm.getProcessingInfo().getCurrentStatus();
+        if (cm.getProcessingInfo() == null) {
+            cm.setProcessingInfo(new ProcessingInfo(new Endpoint("error_handler", ProcessType.UNKNOWN),
+                    "Processing info missing in Container Message"));
+        } else {
+            detailedDescription += "\nLast processing status: " + cm.getProcessingInfo().getCurrentStatus();
+        }
 
         String exceptionMessage = exceptionMessageToString(e);
         if (exceptionMessage != null) {

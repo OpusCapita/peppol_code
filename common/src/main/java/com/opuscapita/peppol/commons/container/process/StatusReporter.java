@@ -1,6 +1,9 @@
 package com.opuscapita.peppol.commons.container.process;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ProcessingInfo;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +45,10 @@ public class StatusReporter {
     }
 
     public void reportError(@NotNull ContainerMessage cm, @Nullable Exception e) {
+        if (cm.getProcessingInfo() == null) {
+            cm.setProcessingInfo(new ProcessingInfo(
+                    new Endpoint("status_reporter", ProcessType.UNKNOWN), "Process info missing in Container Message"));
+        }
         cm.getProcessingInfo().setProcessingException(e);
         try {
             rabbitTemplate.convertAndSend(reportDestination, cm);

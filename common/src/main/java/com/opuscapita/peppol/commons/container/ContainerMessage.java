@@ -44,7 +44,7 @@ public class ContainerMessage implements Serializable {
         return this;
     }
 
-    @NotNull
+    @Nullable
     public ProcessingInfo getProcessingInfo() {
         return processingInfo;
     }
