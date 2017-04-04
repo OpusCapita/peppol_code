@@ -29,9 +29,9 @@ public class DocumentTemplates {
         this.gson = gson;
 
         // FIXME this is really bad hack
-        File test = new File("/document_types");
+        File test = new File("document_types");
         if (test.exists()) {
-            loadRealDir("/document_types");
+            loadRealDir("document_types");
         } else {
             loadResourceDir("/document_types");
         }
