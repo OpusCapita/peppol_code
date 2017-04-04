@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 public class ContainerMessage implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final ProcessingInfo processingInfo;
+    private ProcessingInfo processingInfo;
     private String fileName;
     private DocumentInfo documentInfo;
 
@@ -47,6 +47,10 @@ public class ContainerMessage implements Serializable {
     @NotNull
     public ProcessingInfo getProcessingInfo() {
         return processingInfo;
+    }
+
+    public void setProcessingInfo(@NotNull ProcessingInfo processingInfo) {
+        this.processingInfo = processingInfo;
     }
 
     @Nullable

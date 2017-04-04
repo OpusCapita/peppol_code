@@ -23,7 +23,7 @@ public class DocumentLoader {
     private final DocumentParser parser;
 
     @Autowired
-    public DocumentLoader(DocumentParser parser) {
+    public DocumentLoader(@NotNull DocumentParser parser) {
         this.parser = parser;
     }
 

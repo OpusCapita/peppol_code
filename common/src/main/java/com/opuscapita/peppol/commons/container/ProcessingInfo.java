@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 public class ProcessingInfo implements Serializable {
     private final Endpoint source;
-    private final String sourceMetadata;
+    private String sourceMetadata;
     private Route route;
     private String transactionId;
     private ValidationResult validationResult;
@@ -84,5 +84,14 @@ public class ProcessingInfo implements Serializable {
 
     public void setTransactionId(@NotNull String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    @NotNull
+    public String getSourceMetadata() {
+        return sourceMetadata;
+    }
+
+    public void setSourceMetadata(@NotNull String sourceMetadata) {
+        this.sourceMetadata = sourceMetadata;
     }
 }

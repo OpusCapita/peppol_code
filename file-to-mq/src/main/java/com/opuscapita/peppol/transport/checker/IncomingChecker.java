@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.transport.checker;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
@@ -118,6 +119,7 @@ public class IncomingChecker {
                 fileName, source);
         cm.setStatus(source, "received");
 
+        logger.info("Sending message: " + new Gson().toJson(cm));
         messageQueue.convertAndSend(queue, cm);
         logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");
 
