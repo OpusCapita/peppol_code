@@ -30,6 +30,7 @@ public class DocumentTemplates {
         this.errorHandler = errorHandler;
         this.gson = gson;
         loadDir("/document_types");
+        logger.info("Read " + templates.size() + " document format templates");
     }
 
     private void loadDir(@NotNull String dir) {
