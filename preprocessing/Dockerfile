@@ -12,6 +12,8 @@ RUN \
 
 WORKDIR "${PREPROCESSING_HOME}"
 ADD ["build/libs/preprocessing.jar", "preprocessing.jar"]
+
+WORKDIR "${PREPROCESSING_CONFIG}"
 ADD ["src/main/resources/document_types", "document_types"]
 
 CMD java $JAVA_OPTS -jar preprocessing.jar
