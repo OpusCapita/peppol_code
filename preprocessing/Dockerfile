@@ -10,11 +10,11 @@ RUN \
     mkdir -p "${PREPROCESSING_CONFIG}" && \
     ln -s "${PREPROCESSING_CONFIG}/" "${PREPROCESSING_HOME}/config"
 
-WORKDIR "${PREPROCESSING_HOME}"
-ADD ["build/libs/preprocessing.jar", "preprocessing.jar"]
-
 WORKDIR "${PREPROCESSING_CONFIG}"
 ADD ["src/main/resources/document_types", "document_types"]
+
+WORKDIR "${PREPROCESSING_HOME}"
+ADD ["build/libs/preprocessing.jar", "preprocessing.jar"]
 
 CMD java $JAVA_OPTS -jar preprocessing.jar
 
