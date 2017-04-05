@@ -10,10 +10,8 @@ RUN set -x \
     && mkdir -p "${INBOUND_HOME}" \
     && mkdir -p "${INBOUND_CONFIG}" \
     && ln -s "${INBOUND_CONFIG}/" "${INBOUND_HOME}/config" \
-    && ln -s "${INBOUND_CONFIG}/application.properties" "${INBOUND_HOME}/application.properties" \
-    && chown -R peppol:elmaci "${INBOUND_HOME}" "${INBOUND_CONFIG}"
+    && ln -s "${INBOUND_CONFIG}/application.properties" "${INBOUND_HOME}/application.properties"
 
-USER peppol
 WORKDIR "${INBOUND_HOME}"
 
 # oxalis-standalone for testing
@@ -23,6 +21,12 @@ ADD ["bin/send-to-peppol.sh", "send-to-peppol.sh"]
 # custom persistence module
 ADD ["build/libs/inbound.jar", "inbound.jar"]
 
+# set the correct user, group and permissions
+RUN set -x \
+    && chown -R peppol:elmaci "${INBOUND_HOME}" "${INBOUND_CONFIG}" \
+    && chmod 500 "${INBOUND_HOME}/send-to-peppol.sh"
+
+USER peppol
 ENV JAVA_OPTS "\
     -Dhttp.proxyHost=10.202.9.33 \
     -Dhttp.proxyPort=8080 \
