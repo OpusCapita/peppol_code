@@ -13,6 +13,7 @@ import java.io.Serializable;
  *
  * @author Sergejs.Roze
  */
+@SuppressWarnings("WeakerAccess")
 public class ProcessingInfo implements Serializable {
     private final Endpoint source;
     private String sourceMetadata;
