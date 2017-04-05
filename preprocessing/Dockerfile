@@ -11,7 +11,7 @@ RUN \
     ln -s "${PREPROCESSING_CONFIG}/" "${PREPROCESSING_HOME}/config"
 
 WORKDIR "${PREPROCESSING_CONFIG}"
-ADD ["src/main/resources/document_types", "document_types"]
+ADD ["build/resources/main/document_types", "/opt/local/services/peppol2.0"]
 
 WORKDIR "${PREPROCESSING_HOME}"
 ADD ["build/libs/preprocessing.jar", "preprocessing.jar"]
