@@ -8,6 +8,7 @@ import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.xml.DocumentParser;
 import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
+import com.opuscapita.peppol.commons.container.xml.JsonDocumentTemplates;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -30,7 +31,7 @@ public class Svefaktura1Test {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
 
-        DocumentTemplates templates = new DocumentTemplates(errorHandler, new Gson());
+        DocumentTemplates templates = new JsonDocumentTemplates(errorHandler, new Gson());
         DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
         loader = new DocumentLoader(parser);
     }

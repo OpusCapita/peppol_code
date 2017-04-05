@@ -22,7 +22,7 @@ public class DocumentParserTest {
 
     @Test
     public void testParseValid() throws Exception {
-        DocumentTemplates templates = new DocumentTemplates(errorHandler, new Gson());
+        DocumentTemplates templates = new JsonDocumentTemplates(errorHandler, new Gson());
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
@@ -55,7 +55,7 @@ public class DocumentParserTest {
 
     @Test
     public void testParseAlmostValid() throws Exception {
-        DocumentTemplates templates = new DocumentTemplates(errorHandler, new Gson());
+        DocumentTemplates templates = new JsonDocumentTemplates(errorHandler, new Gson());
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);

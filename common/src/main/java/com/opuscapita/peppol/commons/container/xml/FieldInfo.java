@@ -10,11 +10,13 @@ import java.util.List;
  * @author Sergejs.Roze
  */
 public class FieldInfo {
-    private final String id;
-    private final List<String> paths;
-    private final boolean mandatory;
-    private final String mask;
-    private final String constant;
+    private String id;
+    private List<String> paths;
+    private boolean mandatory;
+    private String mask;
+    private String constant;
+
+    public FieldInfo() {}
 
     @SuppressWarnings("unused")
     public FieldInfo(@NotNull String id, boolean mandatory, @Nullable String mask, @Nullable String constant, @NotNull String... paths) {
@@ -38,8 +40,16 @@ public class FieldInfo {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public boolean isMandatory() {
         return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
     }
 
     @Nullable
@@ -47,14 +57,26 @@ public class FieldInfo {
         return mask;
     }
 
+    public void setMask(String mask) {
+        this.mask = mask;
+    }
+
     @Nullable
     public List<String> getPaths() {
         return paths;
     }
 
+    public void setPaths(List<String> paths) {
+        this.paths = paths;
+    }
+
     @Nullable
     public String getConstant() {
         return constant;
+    }
+
+    public void setConstant(String constant) {
+        this.constant = constant;
     }
 
     @SuppressWarnings("SimplifiableIfStatement")

@@ -1,27 +1,37 @@
 package com.opuscapita.peppol.commons.container.xml;
 
-import com.google.gson.Gson;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
  */
+@SuppressWarnings("SpringJavaAutowiredMembersInspection")
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@TestPropertySource(locations="classpath:application.yml")
 public class DocumentTemplatesTest {
-    private ErrorHandler errorHandler = mock(ErrorHandler.class);
+    @Autowired
+    private DocumentTemplates documentTemplates;
 
     @Test
-    public void testInitialization() throws Exception {
-        DocumentTemplates it = new DocumentTemplates(errorHandler, new Gson());
-
-        DocumentTemplate invoice =
-                it.getTemplates().stream().filter(dt -> "PEPPOL_BIS.Invoice".equals(dt.getName())).findFirst().orElse(null);
-        assertNotNull(invoice);
-        assertEquals(12, invoice.getFields().size());
+    public void testLoader() {
+        assertNotNull(documentTemplates);
+        List<DocumentTemplate> result = documentTemplates.getTemplates();
+        assertNotNull(result);
+        assertEquals(2, result.stream().map(DocumentTemplate::getName).filter("SVEFAKTURA1.Invoice"::equals).count());
+        assertEquals(2, result.stream().map(DocumentTemplate::getName).filter("PEPPOL_BIS.Invoice"::equals).count());
+        assertEquals(2, result.stream().map(DocumentTemplate::getName).filter("EHF.Invoice"::equals).count());
+        assertEquals(1, result.stream().map(DocumentTemplate::getName).filter("PEPPOL_BIS.CreditNote"::equals).count());
+        assertEquals(1, result.stream().map(DocumentTemplate::getName).filter("EHF.CreditNote"::equals).count());
     }
-
 }

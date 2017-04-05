@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ import java.util.List;
  */
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public class DocumentTemplate {
-    private final List<FieldInfo> fields = new ArrayList<>();
+    private List<FieldInfo> fields = new ArrayList<>();
     private String name;
     private String root;
 
@@ -26,7 +25,11 @@ public class DocumentTemplate {
     }
 
     public List<FieldInfo> getFields() {
-        return Collections.unmodifiableList(fields);
+        return fields;
+    }
+
+    public void setFields(List<FieldInfo> fields) {
+        this.fields = fields;
     }
 
     @Nullable

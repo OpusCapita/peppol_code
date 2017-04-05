@@ -9,6 +9,7 @@ import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.xml.DocumentParser;
 import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
+import com.opuscapita.peppol.commons.container.xml.JsonDocumentTemplates;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ public class TemplateToolsTest {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
         ErrorHandler errorHandler = mock(ErrorHandler.class);
-        DocumentTemplates templates = new DocumentTemplates(errorHandler, new Gson());
+        DocumentTemplates templates = new JsonDocumentTemplates(errorHandler, new Gson());
         parser = new DocumentParser(factory.newSAXParser(), templates);
     }
 

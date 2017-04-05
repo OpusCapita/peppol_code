@@ -8,6 +8,7 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.container.xml.DocumentParser;
 import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
+import com.opuscapita.peppol.commons.container.xml.JsonDocumentTemplates;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
@@ -51,7 +52,7 @@ public class MqProducer implements Producer {
 
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
-        DocumentTemplates templates = new DocumentTemplates(null, new Gson());
+        DocumentTemplates templates = new JsonDocumentTemplates(null, new Gson());
         DocumentParser dp;
         try {
             dp = new DocumentParser(factory.newSAXParser(), templates);

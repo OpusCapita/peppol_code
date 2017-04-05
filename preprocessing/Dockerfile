@@ -10,9 +10,6 @@ RUN \
     mkdir -p "${PREPROCESSING_CONFIG}" && \
     ln -s "${PREPROCESSING_CONFIG}/" "${PREPROCESSING_HOME}/config"
 
-WORKDIR "${PREPROCESSING_CONFIG}"
-ADD ["build/resources/main/document_types/", "/opt/local/services/peppol2.0/document_types"]
-
 WORKDIR "${PREPROCESSING_HOME}"
 ADD ["build/libs/preprocessing.jar", "preprocessing.jar"]
 

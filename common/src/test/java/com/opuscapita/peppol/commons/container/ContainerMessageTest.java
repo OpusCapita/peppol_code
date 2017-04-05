@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.container.xml.DocumentParser;
 import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
+import com.opuscapita.peppol.commons.container.xml.JsonDocumentTemplates;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -32,7 +33,7 @@ public class ContainerMessageTest {
     @Before
     public void before() throws Exception {
         ErrorHandler errorHandler = mock(ErrorHandler.class);
-        DocumentTemplates templates = new DocumentTemplates(errorHandler, new Gson());
+        DocumentTemplates templates = new JsonDocumentTemplates(errorHandler, new Gson());
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
