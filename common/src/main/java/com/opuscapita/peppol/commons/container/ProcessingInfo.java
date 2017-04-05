@@ -61,7 +61,7 @@ public class ProcessingInfo implements Serializable {
 
     public ProcessingInfo setCurrentStatus(@NotNull Endpoint endpoint, @NotNull String status) {
         this.currentStatus = status;
-        this.currentEndpoint = currentEndpoint;
+        this.currentEndpoint = endpoint;
         return this;
     }
 
