@@ -16,10 +16,11 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class ContainerMessage implements Serializable {
-    private static final long serialVersionUID = 1L;
     private ProcessingInfo processingInfo;
     private String fileName;
     private DocumentInfo documentInfo;
+
+    public ContainerMessage() {}
 
     /**
      * Instantiates new container of the message.
