@@ -71,7 +71,7 @@ public class PersistenceController {
                 peppolEvent.getProcessType() == ProcessType.OUT_FILE_TO_MQ ||
                 peppolEvent.getProcessType() == ProcessType.REST) {
             // some events cannot be processed
-            logger.info("Event is of unsupported type, skipping");
+            logger.info("Skipping persisting of Peppol event for unsupported type [" +peppolEvent.getProcessType().name()+ "]");
             return;
         }
 
