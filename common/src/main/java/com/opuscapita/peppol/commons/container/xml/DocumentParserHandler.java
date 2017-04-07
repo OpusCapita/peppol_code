@@ -38,7 +38,7 @@ public class DocumentParserHandler extends DefaultHandler {
 
     private String value;
 
-    public DocumentParserHandler(@Nullable String fileName, @NotNull DocumentTemplates templates, @NotNull Endpoint endpoint) {
+    DocumentParserHandler(@Nullable String fileName, @NotNull DocumentTemplates templates, @NotNull Endpoint endpoint) {
         this.fileName = fileName;
         this.endpoint = endpoint;
         for (DocumentTemplate dt : templates.getTemplates()) {
@@ -238,24 +238,24 @@ public class DocumentParserHandler extends DefaultHandler {
     @Override
     public void warning(SAXParseException e) throws SAXException {
         warnings.add(new DocumentWarning(endpoint,
-                "Parsing warning in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
-        logger.warn("Parsing warning in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +
+                "Parser warning in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
+        logger.warn("Parser warning in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +
                 " in " + fileName);
     }
 
     @Override
     public void error(SAXParseException e) throws SAXException {
         errors.add(new DocumentError(endpoint,
-                "Parsing error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
-        logger.warn("Parsing error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +
+                "Parser error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
+        logger.warn("Parser error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +
                 " in " + fileName);
     }
 
     @Override
     public void fatalError(SAXParseException e) throws SAXException {
         errors.add(new DocumentError(endpoint,
-                "Fatal parsing error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
-        logger.warn("Fatal parsing error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +
+                "Fatal parser error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
+        logger.warn("Fatal parser error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +
                 " in " + fileName);
     }
 

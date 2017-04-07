@@ -16,6 +16,7 @@ public class FieldInfo {
     private String mask;
     private String constant;
 
+    @SuppressWarnings("unused")
     public FieldInfo() {}
 
     @SuppressWarnings("unused")
