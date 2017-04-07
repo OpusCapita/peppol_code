@@ -67,7 +67,7 @@ public class PersistenceController {
     @Retryable(include = ConnectException.class, maxAttempts = 5, backoff = @Backoff(10000L))
     public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
         logger.info("About to process peppol event " + peppolEvent);
-        if (peppolEvent.getProcessType() == ProcessType.IN_INBOUND ||
+        if (/*peppolEvent.getProcessType() == ProcessType.IN_INBOUND ||*/
                 peppolEvent.getProcessType() == ProcessType.OUT_FILE_TO_MQ ||
                 peppolEvent.getProcessType() == ProcessType.REST) {
             // some events cannot be processed
