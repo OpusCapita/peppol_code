@@ -112,6 +112,7 @@ public class PersistenceController {
                 addReprocessInfo(fileInfo);
                 break;
             case IN_IN:
+            case IN_INBOUND:
             case OUT_IN:
             case IN_VALIDATION:
             case OUT_VALIDATION:
