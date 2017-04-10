@@ -2,6 +2,7 @@ package com.opuscapita.peppol.preprocessing.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
@@ -41,6 +42,7 @@ public class PreprocessingController {
      * @return the container message without route
      * @throws Exception something went wrong
      */
+    @SuppressWarnings("ConstantConditions")
     @NotNull
     public ContainerMessage process(@NotNull ContainerMessage cm) throws Exception {
         if (StringUtils.isBlank(cm.getFileName())) {
@@ -50,19 +52,27 @@ public class PreprocessingController {
         try {
             logger.info("Parsing file: " + cm.getFileName());
             DocumentInfo document;
+            Endpoint endpoint;
             if (cm.isInbound()) {
-                document = documentLoader.load(cm.getFileName(), new Endpoint(componentName, ProcessType.IN_PREPROCESS));
+                endpoint = new Endpoint(componentName, ProcessType.IN_PREPROCESS);
             } else {
-                document = documentLoader.load(cm.getFileName(), new Endpoint(componentName, ProcessType.OUT_PREPROCESS));
+                endpoint = new Endpoint(componentName, ProcessType.OUT_PREPROCESS);
             }
+            document = documentLoader.load(cm.getFileName(), endpoint);
 
             String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
             logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
             cm.setDocumentInfo(document).setFileName(longTerm);
 
+            cm.setStatus(endpoint, "parsed");
+
             return cm;
         } catch (Exception e) {
             logger.warn("Failed to process file: " + e.getMessage());
+            if (cm.getProcessingInfo() == null) {
+                cm.setProcessingInfo(new ProcessingInfo(new Endpoint(componentName, ProcessType.IN_PREPROCESS),
+                        "Preprocessing failed"));
+            }
             cm.getProcessingInfo().setProcessingException(e);
             return cm;
         }
