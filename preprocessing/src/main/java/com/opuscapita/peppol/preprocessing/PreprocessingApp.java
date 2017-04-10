@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
-import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -66,11 +64,7 @@ public class PreprocessingApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Message received, file id: " + cm.getFileName());
                 cm = controller.process(cm);
-                if (cm.isInbound()) {
-                    cm.setStatus(new Endpoint(componentName, ProcessType.IN_PREPROCESS), "read");
-                } else {
-                    cm.setStatus(new Endpoint(componentName, ProcessType.OUT_REPROCESS), "read");
-                }
+
                 if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
                     messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Invalid message sent to " + errorQueue + " queue");
