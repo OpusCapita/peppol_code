@@ -95,4 +95,8 @@ public class ProcessingInfo implements Serializable {
     public void setSourceMetadata(@NotNull String sourceMetadata) {
         this.sourceMetadata = sourceMetadata;
     }
+
+    public Endpoint getCurrentEndpoint() {
+        return currentEndpoint;
+    }
 }
