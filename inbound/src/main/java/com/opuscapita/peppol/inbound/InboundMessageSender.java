@@ -36,6 +36,7 @@ public class InboundMessageSender {
         try {
             mq.convertAndSend(properties.getProperty(EVENTING_QUEUE_NAME) + ConnectionString.QUEUE_SEPARATOR +
                 ConnectionString.EXCHANGE + ConnectionString.VALUE_SEPARATOR + properties.getProperty(INBOUND_MQ_EXCHANGE), cm);
+            logger.warn("****** message to eventing, cm.getDocumentInfo() == null" + (cm.getDocumentInfo() == null));
         } catch (Exception e) {
             logger.error("Failed to report received file to " + properties.getProperty(EVENTING_QUEUE_NAME) + " queue");
         }
