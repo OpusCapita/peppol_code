@@ -66,7 +66,7 @@ public class EventPersistenceReporter {
         }
 
         ProcessingInfo ps = cm.getProcessingInfo();
-        Endpoint endpoint = ps.getSource();
+        Endpoint endpoint = ps.getCurrentEndpoint();
 
         PeppolEvent result = new PeppolEvent();
         result.setFileName(cm.getFileName());
