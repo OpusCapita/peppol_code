@@ -282,7 +282,7 @@ public class MessageDAOImpl implements MessageDAO {
     private ProjectionList createMessageProjection() {
         return Projections.projectionList()
                 .add(Projections.groupProperty("id"), "id")
-                .add(Projections.groupProperty("file.arrivedTimeStamp"), "arrivedTimeStamp")
+                //.add(Projections.groupProperty("file.arrivedTimeStamp"), "arrivedTimeStamp")
                 .add(Projections.property("direction"), "direction")
                 .add(Projections.property("documentType"), "documentType")
                 .add(Projections.property("recipientId"), "recipientId")
