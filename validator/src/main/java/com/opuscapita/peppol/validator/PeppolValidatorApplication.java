@@ -139,8 +139,8 @@ public class PeppolValidatorApplication {
                 }
 
                 String queueOut = cm.popRoute();
-                messageQueue.convertAndSend(queueOut, cm);
                 cm.setStatus(endpoint, "validation passed");
+                messageQueue.convertAndSend(queueOut, cm);
                 logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
             }
         };
