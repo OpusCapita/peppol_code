@@ -26,18 +26,17 @@ import java.util.ArrayList;
  */
 @Controller
 public class IndexController {
-    @Autowired
-    ValidationController validationController;
+    private final ValidationController validationController;
+    private final DocumentLoader documentLoader;
+    private final ServerProperties serverProperties;
 
     @Autowired
-    DocumentLoader documentLoader;
-
-    @Autowired
-    ServerProperties serverProperties;
-
-
-    public IndexController() {
+    public IndexController(@NotNull ValidationController validationController, @NotNull DocumentLoader documentLoader,
+                           @NotNull ServerProperties serverProperties) {
         System.out.println("IndexController created.");
+        this.validationController = validationController;
+        this.documentLoader = documentLoader;
+        this.serverProperties = serverProperties;
     }
 
 
@@ -64,10 +63,12 @@ public class IndexController {
 
         ModelAndView result = new ModelAndView("result");
         result.addObject("root", getServiceName(request));
-        ContainerMessage containerMessage = null;
+        ContainerMessage containerMessage;
         try {
             containerMessage = loadContainerMessageFromMultipartFile(dataFile);
-            ValidationResult validationResult = validationController.validate(containerMessage);
+            containerMessage = validationController.validate(containerMessage);
+            ValidationResult validationResult = ValidationResult.fromContainerMessage(containerMessage);
+
             System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
             System.out.println(containerMessage.getDocumentInfo().getProfileId());
             System.out.println(containerMessage.getDocumentInfo().getCustomizationId());

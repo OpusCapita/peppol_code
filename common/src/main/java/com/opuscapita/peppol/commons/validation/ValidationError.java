@@ -1,10 +1,15 @@
 package com.opuscapita.peppol.commons.validation;
 
+import com.opuscapita.peppol.commons.container.document.DocumentError;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 /**
  * Created by Daniil on 03.05.2016.
  */
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public class ValidationError implements Serializable {
     private String title;
     private String identifier;
@@ -75,6 +80,11 @@ public class ValidationError implements Serializable {
 
     public String getTest() {
         return test;
+    }
+
+    @NotNull
+    public DocumentError toDocumentError(@NotNull Endpoint source) {
+        return new DocumentError(source, this.toString());
     }
 
     @Override

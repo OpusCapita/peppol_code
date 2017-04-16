@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Created by gamanse1 on 2016.12.09..
- * Reads file got from rest validation, it's content contains validation result in json one line per tesst file:
+ * Reads file got from rest validation, it's content contains validation result in json one line per test file:
  * {"validationType":"UBL","passed":true,"errors":[]}
  */
 public class RestConsumer extends Consumer {

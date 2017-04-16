@@ -5,13 +5,13 @@ import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
-import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
 import com.opuscapita.peppol.validator.validations.difi.DifiValidatorConfig;
 import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1ValidatorConfig;
@@ -128,10 +128,11 @@ public class PeppolValidatorApplication {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
 
-                ValidationResult validationResult = controller.validate(cm);
-                cm.getProcessingInfo().setValidationResult(validationResult);
+                Endpoint endpoint = new Endpoint(componentName, cm.isInbound() ? ProcessType.IN_VALIDATION : ProcessType.OUT_VALIDATION);
+                cm.getProcessingInfo().setCurrentStatus(endpoint, "performing validation");
+                cm = controller.validate(cm);
 
-                if (!validationResult.isPassed()) {
+                if (cm.getDocumentInfo().getArchetype() == Archetype.INVALID || !cm.getDocumentInfo().getErrors().isEmpty()) {
                     messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
                     return;
@@ -139,11 +140,7 @@ public class PeppolValidatorApplication {
 
                 String queueOut = cm.popRoute();
                 messageQueue.convertAndSend(queueOut, cm);
-                if (cm.isInbound()) {
-                    cm.setStatus(new Endpoint(componentName, ProcessType.IN_VALIDATION), "validation passed");
-                } else {
-                    cm.setStatus(new Endpoint(componentName, ProcessType.OUT_VALIDATION), "validation passed");
-                }
+                cm.setStatus(endpoint, "validation passed");
                 logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
             }
         };

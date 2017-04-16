@@ -15,13 +15,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * Created by bambr on 16.3.10.
  */
 public interface XsdValidator {
-    List<ValidationError> performXsdValidation(@NotNull ContainerMessage containerMessage, @NotNull Document dom);
+    void performXsdValidation(@NotNull ContainerMessage containerMessage, @NotNull Document dom);
 
     default void validateAgainstXsd(ContainerMessage containerMessage, String xsdPath) throws Exception {
         byte[] data = Files.readAllBytes(Paths.get(containerMessage.getFileName()));

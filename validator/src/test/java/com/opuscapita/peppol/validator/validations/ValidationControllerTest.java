@@ -5,8 +5,6 @@ import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.TestConfig;
 import com.opuscapita.peppol.validator.validations.common.TestCommon;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,20 +32,8 @@ public class ValidationControllerTest extends TestCommon {
     @Autowired
     private DocumentLoader documentLoader;
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
-
     @Test
-    //@Ignore("Caused by: org.springframework.amqp.rabbit.listener.QueuesNotAvailableException")
-    public void validateSveFaktura1Files() throws Exception {
+    public void validateSvefaktura1Files() throws Exception {
         Arrays.stream(documentProfilesToBeTested).forEach(this::testDocumentProfileValidation);
     }
 
@@ -58,7 +44,7 @@ public class ValidationControllerTest extends TestCommon {
                 ContainerMessage containerMessage = createContainerMessageFromFile(documentLoader, file);
                 if (containerMessage == null) return;
 
-                ValidationResult result = validationController.validate(containerMessage);
+                ValidationResult result = ValidationResult.fromContainerMessage(validationController.validate(containerMessage));
                 System.out.println("result: " + result.isPassed() + " on " + file.getName());
                 result.getErrors().forEach(System.out::println);
                 if ((result.isPassed() && file.getName().contains("invalid"))
