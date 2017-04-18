@@ -42,9 +42,11 @@ public class ErrorHandler {
         reportWithContainerMessage(cm, e, shortDescription, null);
     }
 
+    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription, @Nullable String additionalDetails) {
         createTicketFromContainerMessage(cm, e, shortDescription, additionalDetails);
     }
+
     public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Exception e, @NotNull String shortDescription,
                                               @Nullable String correlationId, @Nullable String fileName) {
         reportWithoutContainerMessage(customerId, e, shortDescription, correlationId, fileName, null);
@@ -103,7 +105,8 @@ public class ErrorHandler {
         createTicket(shortDescription, detailedDescription, correlationId, customerId, fileName);
     }
 
-    private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription, String additionalDetails) {
+    private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e,
+                                                  @NotNull String shortDescription, @Nullable String additionalDetails) {
         String detailedDescription = "Failed to process message";
 
         detailedDescription += "\nFile name: " + cm.getFileName();
@@ -114,6 +117,10 @@ public class ErrorHandler {
 
         if (e != null && StringUtils.isNotBlank(e.getMessage())) {
             detailedDescription += "\nError message: " + e.getMessage();
+        }
+
+        if (additionalDetails != null) {
+            detailedDescription += "\nDetails: " + additionalDetails;
         }
 
         if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getWarnings().size() > 0) {
@@ -165,7 +172,7 @@ public class ErrorHandler {
             customerId = "n/a";
         }
         try {
-            String md5 = new String(MessageDigest.getInstance("MD5").digest(correlationId.getBytes()));
+            String md5 = correlationIdDigest(correlationId);
             SncEntity ticket = new SncEntity(shortDescription, detailedDescription, md5, customerId, 0);
             serviceNowRest.insert(ticket);
             logger.info("ServiceNow ticket created for " + fileName + " about " + shortDescription);

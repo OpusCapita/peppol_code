@@ -47,11 +47,11 @@ public class PreserveHeadersFilter extends ZuulFilter {
             headersToPreserve.add(HEADER_HOST);
         }
         headersToPreserve.forEach(header -> {
-            logger.info("Header: " + header + " does have value -> " + headerHasValue(ctx, header));
+            logger.debug("Header: " + header + " does have value -> " + headerHasValue(ctx, header));
             if (headerHasValue(ctx, header)) {
                 String value = ctx.getRequest().getHeaders(header).nextElement();
                 ctx.getZuulRequestHeaders().put(header, value);
-                logger.info("Stored to zuul request headers [" + header + ":" + value + "]");
+                logger.debug("Stored to zuul request headers [" + header + ":" + value + "]");
             }
         });
         /*String host = ctx.getRequest().getHeaders(HEADER_HOST).nextElement();

@@ -1,5 +1,10 @@
 package com.opuscapita.peppol.commons.validation;
 
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.DocumentError;
+import com.opuscapita.peppol.commons.container.document.DocumentWarning;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -11,22 +16,38 @@ import java.util.stream.Collectors;
  * Created by Daniil on 03.05.2016.
  */
 public class ValidationResult implements Serializable {
-    private boolean passed;
-    private List<ValidationError> errors = new ArrayList<>();
+    private List<DocumentError> errors = new ArrayList<>();
+    private List<DocumentWarning> warnings = new ArrayList<>();
+
+    @NotNull
+    public static ValidationResult fromContainerMessage(@NotNull ContainerMessage cm) {
+        Endpoint endpoint = cm.getProcessingInfo() == null ?
+                new Endpoint("unknown", ProcessType.UNKNOWN) : cm.getProcessingInfo().getCurrentEndpoint();
+
+        ValidationResult result = new ValidationResult();
+        if (cm.getDocumentInfo() == null) {
+            result.errors.add(new DocumentError(endpoint, "No document information in message"));
+        } else {
+            result.errors.addAll(cm.getDocumentInfo().getErrors());
+            result.warnings.addAll(cm.getDocumentInfo().getWarnings());
+        }
+
+        return result;
+    }
 
     public boolean isPassed() {
-        return passed;
+        return errors.isEmpty();
     }
 
-    public void setPassed(boolean passed) {
-        this.passed = passed;
-    }
-
-    public void addError(ValidationError error) {
+    public void addError(DocumentError error) {
         errors.add(error);
     }
 
-    public List<ValidationError> getErrors() {
+    public void addWarning(DocumentWarning documentWarning) {
+        warnings.add(documentWarning);
+    }
+
+    public List<DocumentError> getErrors() {
         return errors;
     }
 
@@ -37,7 +58,8 @@ public class ValidationResult implements Serializable {
      */
     public @NotNull String getErrorsString() {
         return errors.stream()
-                .map(ValidationError::toString)
+                .map(DocumentError::toString)
                 .collect(Collectors.joining("; "));
     }
+
 }

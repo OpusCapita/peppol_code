@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Created by bambr on 16.3.10.
  */
@@ -22,24 +18,25 @@ public class SbdhValidator implements XsdValidator {
     @Value("${peppol.validator.sbdh.xsd}")
     String xsdPath;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
-    public List<ValidationError> performXsdValidation(@NotNull ContainerMessage containerMessage, @NotNull Document dom) {
+    public void performXsdValidation(@NotNull ContainerMessage cm, @NotNull Document dom) {
         Node rootNode = DocumentUtils.getRootNode(dom);
         if (rootNode == null) {
-            throw new IllegalArgumentException("Failed to locate root node in document: " + containerMessage.getFileName());
+            throw new IllegalArgumentException("Failed to locate root node in document: " + cm.getFileName());
         }
 
         String contentRootNode = rootNode.getNodeName();
         try {
-            validateAgainstXsd(containerMessage, xsdPath);
+            validateAgainstXsd(cm, xsdPath);
         } catch (Exception e) {
-            if (!(e.getMessage().contains("Cannot find the declaration of element '" + contentRootNode + "'") || (e.getMessage().contains("Invalid content was found starting with element '" + contentRootNode + "'")))) {
-                return new ArrayList<ValidationError>() {{
-                    add(new ValidationError("SBDH validation failure").withText(e.getMessage()));
-                }};
+            if (!(e.getMessage().contains("Cannot find the declaration of element '" + contentRootNode + "'")
+                    || (e.getMessage().contains("Invalid content was found starting with element '" + contentRootNode + "'")))) {
+                cm.getDocumentInfo().getErrors().add(
+                        new ValidationError("SBDH validation failure").withText(e.getMessage())
+                                .toDocumentError(cm.getProcessingInfo().getCurrentEndpoint()));
             }
         }
-        return Collections.emptyList();
     }
 
 
