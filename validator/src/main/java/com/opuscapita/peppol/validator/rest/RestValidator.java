@@ -5,8 +5,11 @@ import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.ValidationController;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,24 +27,34 @@ public class RestValidator {
     private final static Logger logger = LoggerFactory.getLogger(RestValidator.class);
     private final ValidationController validationController;
     private final DocumentLoader documentLoader;
+    private final Storage storage;
+    private final Endpoint endpoint = new Endpoint("validator_rest", ProcessType.REST);
 
     @Autowired
-    public RestValidator(ValidationController validationController, DocumentLoader documentLoader) {
+    public RestValidator(@NotNull ValidationController validationController, @NotNull DocumentLoader documentLoader,
+                         @NotNull Storage storage) {
         this.validationController = validationController;
         this.documentLoader = documentLoader;
+        this.storage = storage;
     }
 
     @RequestMapping(value = "/validate", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ValidationResult validate(@RequestParam("file") MultipartFile file, @RequestParam(name = "test", required = false, defaultValue = "false") boolean useTestArtifacts) {
-        logger.info("About to validate file: " + file.getOriginalFilename());
+        if (StringUtils.isNotBlank(file.getOriginalFilename())) {
+            logger.info("About to validate custom file: " + file.getOriginalFilename());
+        }
+
         ValidationResult result = new ValidationResult();
-        Endpoint endpoint = new Endpoint("validator_rest", ProcessType.REST);
         ContainerMessage containerMessage;
         try {
-            containerMessage = new ContainerMessage("REST /validate", file.getName(), endpoint);
-            containerMessage.setDocumentInfo(documentLoader.load(file.getInputStream(), file.getName(), endpoint));
+            String fileId = storage.storeTemporary(file.getInputStream(), file.getName());
+            logger.info("Validating file received via REST call and stored as " + fileId);
+
+            containerMessage = new ContainerMessage("REST /validate", fileId, endpoint);
+            containerMessage.setDocumentInfo(documentLoader.load(fileId, endpoint));
             containerMessage = validationController.validate(containerMessage);
+
             result = ValidationResult.fromContainerMessage(containerMessage);
 
             logger.info("Validation performed normally with result: " + result.isPassed());
