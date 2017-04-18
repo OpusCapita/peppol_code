@@ -39,7 +39,7 @@ public class AccessCheckFilter extends ZuulFilter {
         HttpServletRequest request = requestContext.getRequest();
         String requestedService = RequestUtils.extractRequestedService(request);
         boolean result = !accessFilterProperties.getServicesToBypass().contains(requestedService);
-        System.out.println("Should filter for service ["+requestedService+"]: "+result);
+        logger.debug("Should filter for service ["+requestedService+"]: "+result);
         return result;
     }
 
@@ -47,7 +47,7 @@ public class AccessCheckFilter extends ZuulFilter {
     public Object run() {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest request = requestContext.getRequest();
-        System.out.println(request.getRemoteAddr());
+        logger.debug(request.getRemoteAddr());
         if (isNotAllowed(request)) {
             try {
                 requestContext.getResponse().sendError(500, "Denied!!!");
@@ -77,7 +77,7 @@ public class AccessCheckFilter extends ZuulFilter {
 
         final String finalRemoteAddr = remoteAddr;
 
-        System.out.println("Checking against address: " + remoteAddr + " and service: " + requestedService);
+        logger.debug("Checking against address: " + remoteAddr + " and service: " + requestedService);
         if (requestedService.isEmpty()) {
             requestedService = "/";
         }
