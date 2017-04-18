@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by Daniil on 03.05.2016.
@@ -48,7 +49,7 @@ public class RestValidator {
         ValidationResult result = new ValidationResult();
         ContainerMessage containerMessage;
         try {
-            String tempFilePath = storage.storeTemporary(file.getInputStream(), file.getName());
+            String tempFilePath = storage.storeTemporary(file.getInputStream(), UUID.randomUUID().toString());
             logger.info("Validating file received via REST call and stored as " + tempFilePath);
 
             containerMessage = new ContainerMessage("REST /validate", tempFilePath, endpoint);
