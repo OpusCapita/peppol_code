@@ -18,7 +18,7 @@ function setActions(file, status) {
 function setStatus($scope, status) {
     if (status === "sent") {
         $scope.label = 'label-success';
-        var direction = ($scope.msg.direction != undefined) ? $scope.msg.direction : $scope.direction;
+        var direction = ($scope.msg != undefined && $scope.msg.direction != undefined) ? $scope.msg.direction : $scope.direction;
         if (direction == 'OUT') {
             $scope.status = 'delivered';
         }
