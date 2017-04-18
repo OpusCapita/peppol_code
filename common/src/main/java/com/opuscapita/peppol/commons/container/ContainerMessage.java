@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.container;
 
 import com.google.gson.Gson;
+import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -136,6 +137,14 @@ public class ContainerMessage implements Serializable {
             return processingInfo.getRoute().pop();
         }
         return null;
+    }
+
+    public void addError(@NotNull DocumentError error) {
+        documentInfo.getErrors().add(error);
+    }
+
+    public void addError(@NotNull String message) {
+        addError(new DocumentError(processingInfo.getCurrentEndpoint(), message));
     }
 
 }

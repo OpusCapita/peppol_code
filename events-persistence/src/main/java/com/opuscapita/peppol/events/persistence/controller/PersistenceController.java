@@ -4,6 +4,8 @@ package com.opuscapita.peppol.events.persistence.controller;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.*;
 import com.opuscapita.peppol.events.persistence.model.*;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.ConnectException;
 import java.sql.Date;
 import java.text.ParseException;
@@ -67,7 +71,7 @@ public class PersistenceController {
     @Retryable(include = ConnectException.class, maxAttempts = 5, backoff = @Backoff(10000L))
     public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
         logger.info("About to process peppol event " + peppolEvent);
-        if (peppolEvent.getProcessType() == ProcessType.IN_INBOUND ||
+        if (/*peppolEvent.getProcessType() == ProcessType.IN_INBOUND ||*/
                 peppolEvent.getProcessType() == ProcessType.OUT_FILE_TO_MQ ||
                 peppolEvent.getProcessType() == ProcessType.REST) {
             // some events cannot be processed
@@ -112,6 +116,7 @@ public class PersistenceController {
                 addReprocessInfo(fileInfo);
                 break;
             case IN_IN:
+            case IN_INBOUND:
             case OUT_IN:
             case IN_VALIDATION:
             case OUT_VALIDATION:
@@ -169,7 +174,7 @@ public class PersistenceController {
     private void addErrorFileInfo(FileInfo fileInfo, PeppolEvent peppolEvent, boolean invalid) {
         FailedFileInfo failedFileInfo = new FailedFileInfo();
         failedFileInfo.setFailedFile(fileInfo);
-        failedFileInfo.setErrorFilePath(findErrorFilePath(peppolEvent.getFileName(), invalid));
+        failedFileInfo.setErrorFilePath(findErrorFilePath(peppolEvent, invalid));
         failedFileInfo.setInvalid(invalid);
         String errorMessage = peppolEvent.getErrorMessage();
         if (errorMessage.length() > 1000) {
@@ -183,17 +188,32 @@ public class PersistenceController {
         fileInfo.getFailedInfo().add(failedFileInfo);
     }
 
-    private String findErrorFilePath(String fileName, boolean invalid) {
+    private String findErrorFilePath(PeppolEvent event, boolean invalid) {
+        String baseName = FilenameUtils.getBaseName(event.getFileName());
+
         String result;
         if (invalid) {
-            result = invalidDirPath + File.separator + fileName.substring(0, fileName.length() - 3) + "txt";
+            result = invalidDirPath + File.separator + baseName + ".txt";
         } else {
-            result = errorDirPath + File.separator + fileName.substring(0, fileName.length() - 3) + "txt";
+            result = errorDirPath + File.separator + baseName + ".txt";
         }
-        if (result.length() > 128) {
-            return ""; // TODO this is a hack for the new version, there is no TXT file in it
+
+        // this should provide backward compatibility
+        if (new File(result).exists()) {
+            return result;
         }
-        return result;
+
+        // for the new version - write out the error message to file
+        String message = event.getErrorMessage();
+        if (StringUtils.isNotBlank(message)) {
+            try (OutputStream outputStream = new FileOutputStream(result)) {
+                outputStream.write(message.getBytes());
+                return result;
+            } catch (Exception e) {
+                logger.error("Failed to store error message in file: ", e);
+            }
+        }
+        return "";
     }
 
     private void addSentInfo(FileInfo fileInfo, PeppolEvent peppolEvent) {

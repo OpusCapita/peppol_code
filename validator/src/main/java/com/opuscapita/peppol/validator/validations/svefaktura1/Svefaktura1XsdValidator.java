@@ -1,16 +1,11 @@
 package com.opuscapita.peppol.validator.validations.svefaktura1;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.XsdValidator;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by bambr on 16.3.10.
@@ -25,27 +20,19 @@ public class Svefaktura1XsdValidator implements XsdValidator {
     }
 
     @Override
-    public List<ValidationError> performXsdValidation(@NotNull ContainerMessage containerMessage, @NotNull Document dom) {
+    public void performXsdValidation(@NotNull ContainerMessage cm, @NotNull Document dom) {
         try {
-            validateAgainstXsd(containerMessage, svefaktura1ValidatorConfig.getSvefaktura1XsdPath());
+            validateAgainstXsd(cm, svefaktura1ValidatorConfig.getSvefaktura1XsdPath());
         } catch (Exception e) {
-            return new ArrayList<ValidationError>() {{
-                add(new ValidationError("XSD validation failure").withTest("XSD validation").withText(e.getMessage()));
-            }};
-
+            cm.addError("XSD validation failure: " + e.getMessage());
         }
-        return Collections.emptyList();
     }
 
-    List<ValidationError> performXsdValidation(byte[] data) {
+    void performXsdValidation(@NotNull ContainerMessage cm, @NotNull byte[] data) {
         try {
             validateAgainstXsd(data, svefaktura1ValidatorConfig.getSvefaktura1XsdPath());
         } catch (Exception e) {
-            return new ArrayList<ValidationError>() {{
-                add(new ValidationError("XSD validation failure").withTest("XSD validation").withText(e.getMessage()));
-            }};
-
+            cm.addError("XSD validation failure: " + e.getMessage());
         }
-        return Collections.emptyList();
     }
 }

@@ -5,8 +5,6 @@ import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentContentUtils;
 import com.opuscapita.peppol.commons.container.document.DocumentUtils;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
-import com.opuscapita.peppol.commons.validation.ValidationError;
-import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.validator.validations.common.SbdhValidator;
 import com.opuscapita.peppol.validator.validations.common.ValidatorFactory;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +17,6 @@ import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.util.List;
 
 /**
  * Created by bambr on 16.5.8.
@@ -39,7 +36,8 @@ public class ValidationController {
         this.validatorFactory = validatorFactory;
     }
 
-    public ValidationResult validate(@NotNull ContainerMessage containerMessage) {
+    @NotNull
+    public ContainerMessage validate(@NotNull ContainerMessage containerMessage) {
         if (containerMessage.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document is null for " + containerMessage.getFileName());
         }
@@ -47,7 +45,7 @@ public class ValidationController {
         Archetype archetype = containerMessage.getDocumentInfo().getArchetype();
         String customizationId = containerMessage.getDocumentInfo().getCustomizationId();
         if (archetype == Archetype.EHF || archetype == Archetype.PEPPOL_BIS) {
-            //Detecting sub-types, like AT or SI
+            // detecting sub-types, like AT or SI
             if (customizationId.contains("erechnung")) {
                 archetype = Archetype.AT;
             } else if (customizationId.contains("simplerinvoicing")) {
@@ -60,35 +58,32 @@ public class ValidationController {
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
-    private ValidationResult performValidation(@NotNull ContainerMessage containerMessage, @NotNull Archetype archetype) {
+    private ContainerMessage performValidation(@NotNull ContainerMessage cm, @NotNull Archetype archetype) {
         BasicValidator validator;
         try {
             validator = validatorFactory.getValidatorByArchetype(archetype);
         } catch (Exception e) {
             String validatorFetchingError = e.getMessage();
-            throw new IllegalArgumentException("No validator defined for archetype " + archetype + ", error: " + validatorFetchingError);
+            throw new IllegalArgumentException(
+                    "No validator defined for archetype " + archetype + ", error: " + validatorFetchingError);
         }
-
-        ValidationResult result = new ValidationResult();
-        result.setPassed(false);
 
         byte[] data;
         Document dom;
         try {
-            dom = DocumentUtils.getDocument(containerMessage);
-            data = DocumentContentUtils.getDocumentBytes(getRootDocument(containerMessage, dom));
+            dom = DocumentUtils.getDocument(cm);
+            data = DocumentContentUtils.getDocumentBytes(getRootDocument(cm, dom));
         } catch (Exception e) {
             throw new IllegalArgumentException("Validation failed during XML transformation", e);
         }
 
-        List<ValidationError> sbdhValidationErrors = sbdhValidator.performXsdValidation(containerMessage, dom);
-        ValidationResult validatorResult = validator.validate(data);
-        result.setPassed(validatorResult.isPassed() && sbdhValidationErrors.size() == 0);
-        if (!result.isPassed()) {
-            sbdhValidationErrors.forEach(result::addError);
-            validatorResult.getErrors().forEach(result::addError);
+        sbdhValidator.performXsdValidation(cm, dom);
+        validator.validate(cm, data);
+
+        if (!cm.getDocumentInfo().getErrors().isEmpty()) {
+            cm.getDocumentInfo().setArchetype(Archetype.INVALID);
         }
-        return result;
+        return cm;
     }
 
     @SuppressWarnings("ConstantConditions")

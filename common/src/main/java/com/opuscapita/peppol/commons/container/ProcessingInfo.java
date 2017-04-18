@@ -2,7 +2,6 @@ package com.opuscapita.peppol.commons.container;
 
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.Route;
-import com.opuscapita.peppol.commons.validation.ValidationResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +18,6 @@ public class ProcessingInfo implements Serializable {
     private String sourceMetadata;
     private Route route;
     private String transactionId;
-    private ValidationResult validationResult;
     private String correlationId;
     private Endpoint currentEndpoint;
     private String currentStatus;
@@ -39,7 +37,7 @@ public class ProcessingInfo implements Serializable {
         return route;
     }
 
-    public ProcessingInfo setRoute(@NotNull Route route) {
+    public ProcessingInfo setRoute(@Nullable Route route) {
         this.route = route;
         return this;
     }
@@ -56,18 +54,19 @@ public class ProcessingInfo implements Serializable {
         return correlationId;
     }
 
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
+    }
+
     public String getCurrentStatus() {
         return currentStatus;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ProcessingInfo setCurrentStatus(@NotNull Endpoint endpoint, @NotNull String status) {
         this.currentStatus = status;
         this.currentEndpoint = endpoint;
         return this;
-    }
-
-    public void setValidationResult(@NotNull ValidationResult validationResult) {
-        this.validationResult = validationResult;
     }
 
     @Nullable
@@ -85,6 +84,9 @@ public class ProcessingInfo implements Serializable {
 
     public void setTransactionId(@NotNull String transactionId) {
         this.transactionId = transactionId;
+        if (this.correlationId == null) {
+            setCorrelationId(transactionId);
+        }
     }
 
     @NotNull
@@ -92,7 +94,12 @@ public class ProcessingInfo implements Serializable {
         return sourceMetadata;
     }
 
+    @SuppressWarnings("unused")
     public void setSourceMetadata(@NotNull String sourceMetadata) {
         this.sourceMetadata = sourceMetadata;
+    }
+
+    public Endpoint getCurrentEndpoint() {
+        return currentEndpoint;
     }
 }
