@@ -48,11 +48,11 @@ public class RestValidator {
         ValidationResult result = new ValidationResult();
         ContainerMessage containerMessage;
         try {
-            String fileId = storage.storeTemporary(file.getInputStream(), file.getName());
-            logger.info("Validating file received via REST call and stored as " + fileId);
+            String tempFilePath = storage.storeTemporary(file.getInputStream(), file.getName());
+            logger.info("Validating file received via REST call and stored as " + tempFilePath);
 
-            containerMessage = new ContainerMessage("REST /validate", fileId, endpoint);
-            containerMessage.setDocumentInfo(documentLoader.load(fileId, endpoint));
+            containerMessage = new ContainerMessage("REST /validate", tempFilePath, endpoint);
+            containerMessage.setDocumentInfo(documentLoader.load(tempFilePath, endpoint));
             containerMessage = validationController.validate(containerMessage);
 
             result = ValidationResult.fromContainerMessage(containerMessage);
