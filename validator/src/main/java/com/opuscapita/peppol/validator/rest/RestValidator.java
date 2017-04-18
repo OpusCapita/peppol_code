@@ -15,7 +15,12 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.FileAttribute;
 
 /**
  * Created by Daniil on 03.05.2016.
@@ -41,8 +46,10 @@ public class RestValidator {
         ContainerMessage containerMessage;
         try {
             Endpoint endpoint = new Endpoint("validator_rest", ProcessType.REST);
-            containerMessage = new ContainerMessage("REST /validate", file.getName(), endpoint);
-            containerMessage.setDocumentInfo(documentLoader.load(file.getInputStream(), file.getName(), endpoint));
+            File tmpFile = File.createTempFile("vld", ".tmp");
+            file.transferTo(tmpFile);
+            containerMessage = new ContainerMessage("REST /validate", tmpFile.getAbsolutePath(), endpoint);
+            containerMessage.setDocumentInfo(documentLoader.load(file.getInputStream(), tmpFile.getAbsolutePath(), endpoint));
             validationResult = validationController.validate(containerMessage);
             logger.info("Validation performed normally with result: " + validationResult.isPassed());
         } catch (IOException e) {
