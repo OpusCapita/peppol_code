@@ -4,11 +4,15 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
+import com.opuscapita.peppol.validator.util.MultiPartHelper;
 import com.opuscapita.peppol.validator.validations.ValidationController;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Controller;
@@ -26,17 +30,21 @@ import java.util.ArrayList;
  */
 @Controller
 public class IndexController {
+    private final static Logger logger = LoggerFactory.getLogger(IndexController.class);
     private final ValidationController validationController;
     private final DocumentLoader documentLoader;
     private final ServerProperties serverProperties;
+    private final Endpoint endpoint = new Endpoint("validator_web", ProcessType.WEB);
+    private final Storage storage;
 
     @Autowired
     public IndexController(@NotNull ValidationController validationController, @NotNull DocumentLoader documentLoader,
-                           @NotNull ServerProperties serverProperties) {
-        System.out.println("IndexController created.");
+                           @NotNull ServerProperties serverProperties, @NotNull Storage storage) {
+        logger.debug("IndexController created.");
         this.validationController = validationController;
         this.documentLoader = documentLoader;
         this.serverProperties = serverProperties;
+        this.storage = storage;
     }
 
 
@@ -59,20 +67,20 @@ public class IndexController {
 
     @PostMapping("/")
     public ModelAndView validate(@RequestParam(name = "datafile") MultipartFile dataFile, HttpServletRequest request) {
-        System.out.println("Got: " + dataFile.getOriginalFilename() + " as " + dataFile.getName() + " [" + dataFile.getSize() + "]");
+        logger.debug("Got: " + dataFile.getOriginalFilename() + " as " + dataFile.getName() + " [" + dataFile.getSize() + "]");
 
         ModelAndView result = new ModelAndView("result");
         result.addObject("root", getServiceName(request));
         ContainerMessage containerMessage;
         try {
-            containerMessage = loadContainerMessageFromMultipartFile(dataFile);
+            containerMessage = MultiPartHelper.createContainerMessageFromMultipartFile(documentLoader, endpoint, storage, dataFile, "WEB", logger);//loadContainerMessageFromMultipartFile(dataFile);
             containerMessage = validationController.validate(containerMessage);
             ValidationResult validationResult = ValidationResult.fromContainerMessage(containerMessage);
 
-            System.out.println("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
-            System.out.println(containerMessage.getDocumentInfo().getProfileId());
-            System.out.println(containerMessage.getDocumentInfo().getCustomizationId());
-            validationResult.getErrors().forEach(error -> System.out.println(error.toString()));
+            logger.debug("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());
+            logger.debug(containerMessage.getDocumentInfo().getProfileId());
+            logger.debug(containerMessage.getDocumentInfo().getCustomizationId());
+            validationResult.getErrors().forEach(error -> logger.debug(error.toString()));
             result.addObject("status", validationResult.isPassed());
             result.addObject("errors", validationResult.getErrors());
         } catch (Exception e) {
@@ -83,14 +91,6 @@ public class IndexController {
                 add(exceptionalError);
             }});
         }
-        return result;
-    }
-
-    @NotNull
-    private ContainerMessage loadContainerMessageFromMultipartFile(MultipartFile dataFile) throws Exception {
-        Endpoint endpoint = new Endpoint("validator_rest", ProcessType.REST);
-        ContainerMessage result = new ContainerMessage(dataFile.getName(), dataFile.getName(), endpoint);
-        result.setDocumentInfo(documentLoader.load(dataFile.getInputStream(), dataFile.getName(), endpoint));
         return result;
     }
 }
