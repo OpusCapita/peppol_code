@@ -28,7 +28,7 @@ public enum ProcessType {
     OUT_FILE_TO_MQ, OUT_PREPROCESS, OUT_VALIDATION, OUT_OUTBOUND,
     IN_INBOUND, IN_PREPROCESS, IN_VALIDATION, IN_MQ_TO_FILE,
     IN_REPROCESS, REST,
-    IN_TEST, OUT_TEST, TEST, IN_ROUTING, OUT_ROUTING;
+    IN_TEST, OUT_TEST, TEST, IN_ROUTING, OUT_ROUTING, WEB;
 
     /**
      * @return Returns true if this transport type belongs to the inbound flow
