@@ -200,6 +200,7 @@ public class PersistenceController {
 
         // this should provide backward compatibility
         if (new File(result).exists()) {
+            logger.info("PersistenceController: error file path set to: "+ result);
             return result;
         }
 
@@ -208,6 +209,7 @@ public class PersistenceController {
         if (StringUtils.isNotBlank(message)) {
             try (OutputStream outputStream = new FileOutputStream(result)) {
                 outputStream.write(message.getBytes());
+                logger.info("PersistenceController: error file path set to: "+ result);
                 return result;
             } catch (Exception e) {
                 logger.error("Failed to store error message in file: ", e);
