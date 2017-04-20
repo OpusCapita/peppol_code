@@ -109,7 +109,9 @@ public class PersistenceController {
 
     private FileInfo setFileInfoStatus(FileInfo fileInfo, PeppolEvent peppolEvent, Message message) {
         boolean validationError = true;
-        message.setStatus(MessageStatus.processing);
+        if(message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.reprocessed && message.getStatus() != MessageStatus.resolved) {
+            message.setStatus(MessageStatus.processing);
+        }
         switch (peppolEvent.getProcessType()) {
             case OUT_REPROCESS:
             case IN_REPROCESS:
@@ -153,7 +155,9 @@ public class PersistenceController {
             if (peppolEvent.getProcessType() == ProcessType.OUT_PEPPOL || peppolEvent.getProcessType() == ProcessType.OUT_OUTBOUND) {
                 message.setStatus(MessageStatus.reprocessed);
             } else {
-                message.setStatus(validationError ? MessageStatus.invalid : MessageStatus.failed);
+                if(message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.reprocessed && message.getStatus() != MessageStatus.resolved) {
+                    message.setStatus(validationError ? MessageStatus.invalid : MessageStatus.failed);
+                }
             }
         }
 
