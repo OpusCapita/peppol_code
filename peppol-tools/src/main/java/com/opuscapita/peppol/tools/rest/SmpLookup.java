@@ -23,8 +23,8 @@ public class SmpLookup {
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ResponseBody
-    String lookupParticipant(String participantId) throws SMPClientException {
-        String result = "";
+    SmpLookupResult lookupParticipant(String participantId) throws SMPClientException {
+        SmpLookupResult result = null;
 
         // The PEPPOL participant identifier
         final PeppolParticipantIdentifier aPI_AT_Test = PeppolParticipantIdentifier.createWithDefaultScheme(/*"9908:971032081"*/ participantId);
@@ -47,7 +47,7 @@ public class SmpLookup {
                 endpoint.getEndpointReference().writeTo(domResult);
                 NodeList childNodes = domResult.getNode().getChildNodes().item(0).getChildNodes();
                 String address = childNodes.item(0).getTextContent();
-                result = endpoint.getServiceDescription() + "###" + address;
+                result = new SmpLookupResult(endpoint.getServiceDescription(), address);
             }
         }
 
