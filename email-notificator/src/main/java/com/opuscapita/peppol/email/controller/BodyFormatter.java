@@ -22,11 +22,10 @@ public class BodyFormatter {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Container message has no document set");
         }
-
-        return formatDocument(cm) + formatValidationErrors(cm);
+        return formatDocument(cm) + formatErrors(cm);
     }
 
-    private String formatValidationErrors(ContainerMessage cm) {
+    private String formatErrors(ContainerMessage cm) {
         StringBuilder result = new StringBuilder();
         if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getErrors().size() > 0) {
             if (cm.getDocumentInfo().getErrors().size() == 1) {

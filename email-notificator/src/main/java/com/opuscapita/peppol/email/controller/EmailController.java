@@ -93,19 +93,32 @@ public class EmailController {
             throw new IllegalStateException(msg);
         }
 
+        if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) {
+            throw new IllegalArgumentException("Document received by email-notificator has no errors: " + cm.getFileName());
+        }
+
         // let's create 3 files per message: list of recipients, subjects in one line, bodies
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_TO)))) {
             printWriter.print(emails);
+            storeDocument(cm, fileName);
+        } catch (Exception e) {
+            logger.error("Failed to store e-mail files: ", e);
+            deleteSilently(fileName + EXT_TO);
+            deleteSilently(fileName + EXT_BODY);
+            deleteSilently(fileName + EXT_SUBJECT);
         }
+    }
 
-        storeDocument(cm, fileName);
+    // try to delete files if possible, ignores all exceptions
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void deleteSilently(@NotNull String fileName) {
+        try {
+            new File(fileName).delete();
+        } catch (Exception ignored) {}
     }
 
     @SuppressWarnings("ConstantConditions")
     private void storeDocument(ContainerMessage cm, String fileName) throws IOException {
-        if ((cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) && cm.getProcessingInfo().getProcessingException() == null) {
-            throw new IllegalArgumentException("Document received by email-notificator has no errors: " + cm.getFileName());
-        }
         storeSubject("Validation errors in document", fileName);
 
         File body = new File(fileName + EXT_BODY);
@@ -121,6 +134,7 @@ public class EmailController {
         logger.info("Message about file " + cm.getFileName() + " stored");
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void storeSubject(String subject, String fileName) throws IOException {
         if (new File(fileName + EXT_SUBJECT).exists()) {
             subject = "\n" + subject;

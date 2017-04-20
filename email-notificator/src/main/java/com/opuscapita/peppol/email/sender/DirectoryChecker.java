@@ -107,7 +107,8 @@ public class DirectoryChecker {
                 logger.info("Deleted processed files related to " + baseName);
             } catch (Exception e) {
                 logger.error("Failed to delete e-mail files about " + baseName);
-                errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to delete e-mail files about " + baseName, baseName, baseName + EXT_TO);
+                errorHandler.reportWithoutContainerMessage(
+                        customerId, e, "Failed to delete e-mail files about " + baseName, baseName, baseName + EXT_TO);
             }
         } else {
             try {
@@ -118,7 +119,8 @@ public class DirectoryChecker {
                 logger.info("Files for " + baseName + " moved to directory " + destination);
             } catch (Exception e) {
                 logger.error("Failed to move e-mails to " + directory, e);
-                errorHandler.reportWithoutContainerMessage(baseName, e, "Failed to move e-mails to " + directory, baseName, baseName + EXT_TO);
+                errorHandler.reportWithoutContainerMessage(
+                        baseName, e, "Failed to move e-mails to " + directory, baseName, baseName + EXT_TO);
             }
         }
     }
