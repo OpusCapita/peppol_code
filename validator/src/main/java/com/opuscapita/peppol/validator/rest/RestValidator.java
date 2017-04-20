@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
+import com.opuscapita.peppol.validator.util.MultiPartHelper;
 import com.opuscapita.peppol.validator.validations.ValidationController;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * Created by Daniil on 03.05.2016.
@@ -49,11 +49,7 @@ public class RestValidator {
         ValidationResult result = new ValidationResult();
         ContainerMessage containerMessage;
         try {
-            String tempFilePath = storage.storeTemporary(file.getInputStream(), UUID.randomUUID().toString());
-            logger.info("Validating file received via REST call and stored as " + tempFilePath);
-
-            containerMessage = new ContainerMessage("REST /validate", tempFilePath, endpoint);
-            containerMessage.setDocumentInfo(documentLoader.load(tempFilePath, endpoint));
+            containerMessage = MultiPartHelper.createContainerMessageFromMultipartFile(documentLoader, endpoint, storage, file, "REST", logger);
             containerMessage = validationController.validate(containerMessage);
 
             result = ValidationResult.fromContainerMessage(containerMessage);
@@ -72,4 +68,5 @@ public class RestValidator {
 
         return result;
     }
+
 }
