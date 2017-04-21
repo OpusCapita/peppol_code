@@ -22,7 +22,7 @@
 - name: update test results
   lineinfile:
     create: yes
-    dest: /home/berzima1/git/peppol2.0/system-tests/reports/spike-outbound-report.txt
+    dest: "{{report_path}}"
     state: present
     line: 'Filename {{counter}}: {{file}}'
 
