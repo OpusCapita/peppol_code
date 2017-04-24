@@ -77,7 +77,9 @@ public class DocumentLoaderTest {
                 "/valid/ehf.xml",
                 "/valid/valid_sbdh_2.1.xml",
                 "/valid/ehf_2.0_bii4_no.xml",
-                "/valid/ehf_2.0_bii5_no.xml"
+                "/valid/ehf_2.0_bii5_no.xml",
+                "/valid/D.data_mikucto1_OCRITM0231473.xml",
+                "/valid/D.data_mikucto1_OCRITM0231473 - no-SBDH.xml"
         );
         checkTypes(list, Archetype.EHF);
 
