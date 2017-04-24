@@ -155,7 +155,7 @@ public class PersistenceController {
             if (peppolEvent.getProcessType() == ProcessType.OUT_PEPPOL || peppolEvent.getProcessType() == ProcessType.OUT_OUTBOUND) {
                 message.setStatus(MessageStatus.reprocessed);
             } else {
-                if(message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.reprocessed && message.getStatus() != MessageStatus.resolved) {
+                if(message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.resolved) {
                     message.setStatus(validationError ? MessageStatus.invalid : MessageStatus.failed);
                 }
             }
