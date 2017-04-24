@@ -70,32 +70,50 @@ public class DirectoryChecker {
             if (next.getName().endsWith(EXT_TO)) {
                 String baseName = FilenameUtils.removeExtension(next.getAbsolutePath());
                 String customerId = FilenameUtils.getBaseName(baseName);
-                logger.info("Sending an e-mail generated from: " + baseName);
+                if (filesAvailable(baseName)) {
 
-                String to, subject;
-                List<String> body;
-                try {
-                    to = FileUtils.readFileToString(next, Charset.defaultCharset());
-                    List<String> subjects = FileUtils.readLines(new File(baseName + EXT_SUBJECT), Charset.defaultCharset());
-                    body = FileUtils.readLines(new File(baseName + EXT_BODY), Charset.defaultCharset());
-                    subject = normalizeSubjects(subjects);
-                } catch (Exception e) {
-                    logger.error("Failed to prepare e-mail message", e);
-                    errorHandler.reportWithoutContainerMessage(baseName, e, "Failed to prepare e-mail message", baseName, next.getName());
-                    return;
-                }
+                    logger.info("Sending an e-mail generated from: " + baseName);
+                    String to, subject;
+                    List<String> body;
+                    try {
+                        to = FileUtils.readFileToString(next, Charset.defaultCharset());
+                        List<String> subjects = FileUtils.readLines(new File(baseName + EXT_SUBJECT), Charset.defaultCharset());
+                        body = FileUtils.readLines(new File(baseName + EXT_BODY), Charset.defaultCharset());
+                        subject = normalizeSubjects(subjects);
+                    } catch (Exception e) {
+                        logger.error("Failed to prepare e-mail message", e);
+                        errorHandler.reportWithoutContainerMessage(baseName, e, "Failed to prepare e-mail message", baseName, next.getName());
+                        return;
+                    }
 
-                try {
-                    emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
-                    logger.info("E-mail " + baseName + " successfully sent");
-                    backupOrDelete(baseName, sent, customerId);
-                } catch (Exception e) {
-                    logger.error("Failed to send an e-mail to " + to, e);
-                    errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to send an e-mail to " + to, baseName, next.getName());
-                    backupOrDelete(baseName, failed, customerId);
+                    try {
+                        emailSender.sendMessage(to, subject, StringUtils.join(body, "\n"));
+                        logger.info("E-mail " + baseName + " successfully sent");
+                        backupOrDelete(baseName, sent, customerId);
+                    } catch (Exception e) {
+                        logger.error("Failed to send an e-mail to " + to, e);
+                        errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to send an e-mail to " + to, baseName, next.getName());
+                        backupOrDelete(baseName, failed, customerId);
+                    }
                 }
             }
         }
+    }
+
+    private boolean filesAvailable(@NotNull String baseName) {
+        if (!(new File(baseName + EXT_TO).canWrite())) {
+            logger.error("File " + baseName + EXT_TO + " is not accessible, cannot send message");
+            return false;
+        }
+        if (!(new File(baseName + EXT_SUBJECT).canWrite())) {
+            logger.error("File " + baseName + EXT_SUBJECT + " is not accessible, cannot send message");
+            return false;
+        }
+        if (!(new File(baseName + EXT_BODY).canWrite())) {
+            logger.error("File " + baseName + EXT_BODY + " is not accessible, cannot send message");
+            return false;
+        }
+        return true;
     }
 
     void backupOrDelete(@NotNull String baseName, @NotNull String directory, @NotNull String customerId) {
