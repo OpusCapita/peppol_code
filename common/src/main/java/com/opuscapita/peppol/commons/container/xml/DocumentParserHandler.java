@@ -112,6 +112,7 @@ public class DocumentParserHandler extends DefaultHandler {
                     }
                 }
             }
+            value = null;
         }
         paths.removeLast();
     }
@@ -214,7 +215,9 @@ public class DocumentParserHandler extends DefaultHandler {
 
         if (best != null) {
             for (Field field : best.fields) {
-                result.with(field.getId(), field.value);
+                if (field.value != null) {
+                    result.with(field.getId(), field.value);
+                }
             }
             addErrorsAndWarnings(result, best);
         }
