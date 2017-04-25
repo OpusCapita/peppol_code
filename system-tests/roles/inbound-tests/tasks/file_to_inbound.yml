@@ -5,7 +5,7 @@
 - set_fact: file="{{file}}"
 - debug: var=file
 - pause:
-    seconds: 10
+    seconds: 5
 - name: find transmissionId
   shell: echo "{{inbound_output.stdout_lines[-5:]}}" |grep -oh 'transmissionId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
   register: transmissionId

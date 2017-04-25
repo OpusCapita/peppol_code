@@ -3,7 +3,7 @@
 
 - include: file_to_inbound.yml
 - pause:
-    seconds: 20
+    seconds: 3
 
 - include: preprocessing_assert.yml
 
@@ -14,8 +14,8 @@
     dest: "{{report_path}}/inbound-report.txt"
     state: present
     regexp: "^Filename {{counter}}: {{file}} {{transmissionId}}"
-    line: "Filename {{counter}}: {{file}} {{transmissionId}} here was assert"
-#    line: "Filename {{counter}}: {{file}} {{transmissionId}} {{preprocessing_result}}"
+#    line: "Filename {{counter}}: {{file}} {{transmissionId}} here was assert"
+    line: "Filename {{counter}}: {{file}} {{transmissionId}} {{preprocessing_result}}"
 #report update END -----------------------
 
 #- include: assert.yml
