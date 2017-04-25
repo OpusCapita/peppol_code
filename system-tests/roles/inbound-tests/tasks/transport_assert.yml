@@ -9,9 +9,14 @@
   register: xibLog
 
 - name: transmissionID '{{ transmissionId }}' is found in transports logs
+  ignore_errors: yes
   assert:
     that:
       - ("transmissionId in a2aLog.stdout") or ("transmissionId in xibLog.stdout")
-    msg: "tranmissionId '{{ transmissionId }}' should be found in transports logs for file '{{ file }}'"
+    msg: "Failed"
+  register: result
+
+- set_fact: transport_result="transport={{result.msg}}"
+- debug: var=transport_result
 ...
 

@@ -1,6 +1,6 @@
 ---
 - name: Show log, search for transmissionID "{{ transmissionId }}"
-  shell: docker logs validator
+  shell: docker logs preprocessing
   register: log
 
 - name: transmissionID "{{ transmissionId }}" is found in preprocessing log 
