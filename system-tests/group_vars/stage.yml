@@ -1,3 +1,5 @@
 ---
-report_path: /home/elpp/berzima1/reports/spike-outbound-report.txt
+report_path: /home/elpp/berzima1/reports
+transport_from_a2a_path: /peppol-a2a-nfs/out/test/data
+sudo: no
 ...

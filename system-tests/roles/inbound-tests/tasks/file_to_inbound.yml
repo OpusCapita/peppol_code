@@ -11,4 +11,19 @@
   register: transmissionId
 - set_fact: transmissionId="{{ transmissionId.stdout}}"
 - debug: var=transmissionId
+
+#report START ------:
+- set_fact: counter="{{counter| int +1 }}"
+  register: counter
+
+- debug: var=counter
+
+- name: update test results
+  delegate_to: localhost
+  lineinfile:
+    create: yes
+    dest: "{{report_path}}/inbound-report.txt"
+    state: present
+    line: 'Filename {{counter}}: {{file}} {{transmissionId}}'
+#report END -------
 ...

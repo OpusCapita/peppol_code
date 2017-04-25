@@ -17,7 +17,7 @@
   delegate_to: localhost  
   lineinfile:
     create: yes
-    dest: "{{report_path}}"
+    dest: "{{report_path}}/spike-test-inbound.txt"
     state: present
     line: 'Filename {{counter}}: {{file}}'
 

@@ -1,5 +1,5 @@
 ---
-- include: set-up.yml
+#- include: set-up.yml
 - name: Stop transport
   shell: docker stop transport-from-a2a
 - include: file_list.yml

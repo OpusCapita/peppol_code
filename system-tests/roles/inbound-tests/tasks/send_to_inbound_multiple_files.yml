@@ -5,14 +5,24 @@
 - pause:
     seconds: 20
 
-- include: assert.yml
-  vars: 
-    module_name: preprocessing
-- include: assert.yml
-  vars:
-    module_name: internal-routing
-- include: assert.yml
-  vars:
-    module_name: validator
-- include: transport_assert.yml
+- include: preprocessing_assert.yml
+
+#report update START ---------------------
+- name: update test results
+  lineinfile:
+    create: yes
+    dest: "{{report_path}}/inbound-report.txt"
+    state: present
+    regexp: "^Filename {{counter}}: {{file}} {{transmissionId}}"
+    line: "Filename {{counter}}: {{file}} {{transmissionId}} here was assert"
+#    line: "Filename {{counter}}: {{file}} {{transmissionId}} {{preprocessing_result}}"
+#report update END -----------------------
+
+#- include: assert.yml
+#  vars:
+#    module_name: internal-routing
+#- include: assert.yml
+#  vars:
+#    module_name: validator
+#- include: transport_assert.yml
 ...
