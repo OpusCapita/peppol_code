@@ -1,19 +1,17 @@
 ---
 - include: transport_assert.yml
-- include: assert.yml
-  vars:
-    module_name: preprocessing
-  tags: preprocessing
-- include: assert.yml
-  vars:
-    module_name: internal-routing
-  tags: internal-routing
-- include: assert.yml
-  vars:
-    module_name: validator
-  tags: validator
-- include: assert.yml
-  vars:
-    module_name: outbound
-  tags: outbound
+- include: preprocessing_assert.yml
+- include: internal-routing_assert.yml
+- include: validator_assert.yml
+- include: outbound_assert.yml
+
+#report update START ---------------------
+- name: update test results
+  lineinfile:
+    create: no
+    dest: "{{report_path}}/outbound-valid-tests{{ansible_date_time.iso8601_basic}}.txt"
+    state: present
+    regexp: "^{{counter}}|{{file}}"
+    line: "{{counter}}|{{file}}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
+#report update END -----------------------
 ...

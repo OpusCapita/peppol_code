@@ -17,14 +17,17 @@
 
 - set_fact: counter="{{counter| int +1 }}"
   register: counter
-
 - debug: var=counter
 
 - name: update test results
   lineinfile:
     create: yes
-    dest: "{{report_path}}/outbound-valid-tests.txt"
+    dest: "{{report_path}}/outbound-valid-tests{{ansible_date_time.iso8601_basic}}.txt"
     state: present
-    line: 'Filename {{counter}}: {{file}}'
+    line: '{{counter}}|{{file}}'
 
+- pause:
+    seconds: 130
+
+- include: log_checker.yml
 ...

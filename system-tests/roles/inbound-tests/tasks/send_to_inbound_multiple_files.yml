@@ -14,7 +14,7 @@
 - name: update test results
   lineinfile:
     create: no
-    dest: "{{report_path}}/inbound-report.txt"
+    dest: "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
     regexp: "^{{counter}}|{{file}}|{{transmissionId}}"
     line: "{{counter}}|{{file}}|{{transmissionId}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{transport_result}}"

@@ -22,7 +22,7 @@
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/inbound-report.txt"
+    dest: "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
     line: 'Filename {{counter}}: {{file}} {{transmissionId}}'
 #report END -------

@@ -1,0 +1,16 @@
+---
+- name: Show outbound log, search for fileName "{{ fileName }}"
+  shell: docker logs outbound
+  register: log
+
+- name: fileName "{{ fileName }}" is found in outbound log 
+  ignore_errors: no
+  assert:
+    that:
+      - "fileName in log.stdout"
+    msg: "Failed"
+  register: result
+
+- set_fact: outbound_result="outbound={{result.msg}}"
+- debug: var=outbound_result
+...

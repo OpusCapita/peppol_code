@@ -1,0 +1,16 @@
+---
+- name: Show validator log, search for transmissionID "{{ transmissionId }}"
+  shell: docker logs validator
+  register: log
+
+- name: transmissionID "{{ transmissionId }}" is found in validator log 
+  ignore_errors: no
+  assert:
+    that:
+      - "transmissionId in log.stdout"
+    msg: "Failed"
+  register: result
+
+- set_fact: validator_result="validator={{result.msg}}"
+- debug: var=validator_result
+...

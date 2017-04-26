@@ -6,10 +6,10 @@
   vars:
     file: "{{item}}"
   with_fileglob:
-#    - "{{test_data_path}}/validation_test_suite/valid/*"
-#    - "{{test_data_path}}/svefaktura_1.0/valid/*"
-#    - "{{test_data_path}}/EHF/EHF_2.0.7/Valid/*"
-    - "{{test_data_path}}/performance-tests-materials/performance-test-2/*"
-    - "{{test_data_path}}/custom_materials/SBDH-bis5_document-svefaktura1/*"
+    - "{{test_data_path}}/validation_test_suite/valid/*"
+    - "{{test_data_path}}/svefaktura_1.0/valid/*"
+    - "{{test_data_path}}/EHF/EHF_2.0.7/Valid/*"
+#    - "{{test_data_path}}/performance-tests-materials/performance-test-10/*"
+#    - "{{test_data_path}}/custom_materials/SBDH-bis5_document-svefaktura1/*"
 ...
 

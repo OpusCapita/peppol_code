@@ -1,9 +1,9 @@
 ---
 - name: Copy file to outbound from-a2a dir
-  become: no
+  become: "{{sudo}}"
   copy:
     src: "{{file}}"
-    dest: /peppol-a2a-nfs/out/test/data
+    dest: "{{transport_from_a2a_path}}"
 
 - set_fact: file="{{file}}"
 - debug: var=file

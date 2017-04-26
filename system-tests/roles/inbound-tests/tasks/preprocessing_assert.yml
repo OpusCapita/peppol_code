@@ -4,7 +4,7 @@
   register: log
 
 - name: transmissionID "{{ transmissionId }}" is found in preprocessing log 
-  ignore_errors: yes
+  ignore_errors: no
   assert:
     that:
       - "transmissionId in log.stdout"
