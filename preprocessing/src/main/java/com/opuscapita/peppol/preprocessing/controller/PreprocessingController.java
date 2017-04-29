@@ -2,7 +2,6 @@ package com.opuscapita.peppol.preprocessing.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
-import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
@@ -49,39 +48,31 @@ public class PreprocessingController {
             throw new IllegalArgumentException("File name is empty in received message");
         }
 
-        try {
-            logger.info("Parsing file: " + cm.getFileName());
-            DocumentInfo document;
-            Endpoint endpoint;
-            if (cm.isInbound()) {
-                endpoint = new Endpoint(componentName, ProcessType.IN_PREPROCESS);
-            } else {
-                endpoint = new Endpoint(componentName, ProcessType.OUT_PREPROCESS);
-            }
-            document = documentLoader.load(cm.getFileName(), endpoint);
-            /*TODO: remove temp code*/
-            if(endpoint.getType().equals(ProcessType.IN_PREPROCESS)){
-                logger.warn("******pre processing bug hunt");
-                logger.warn("******DocumentInfo == null: " + (document == null));
-                logger.warn("******Initial filename: " + cm.getFileName());
-            }
-            String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
-            logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
-            cm.setDocumentInfo(document).setFileName(longTerm);
-            logger.warn("******cm.getDocumentInfo(): " + cm.getDocumentInfo()); //todo remove
-            logger.warn("******endpoint: " + endpoint);
-            cm.setStatus(endpoint, "parsed");
-
-            return cm;
-        } catch (Exception e) {
-            logger.warn("Failed to process file: " + e.getMessage());
-            if (cm.getProcessingInfo() == null) {
-                cm.setProcessingInfo(new ProcessingInfo(new Endpoint(componentName, ProcessType.IN_PREPROCESS),
-                        "Preprocessing failed"));
-            }
-            cm.getProcessingInfo().setProcessingException(e);
-            return cm;
+        logger.info("Parsing file: " + cm.getFileName());
+        DocumentInfo document;
+        Endpoint endpoint;
+        if (cm.isInbound()) {
+            endpoint = new Endpoint(componentName, ProcessType.IN_PREPROCESS);
+        } else {
+            endpoint = new Endpoint(componentName, ProcessType.OUT_PREPROCESS);
         }
+
+        document = documentLoader.load(cm.getFileName(), endpoint);
+        /*TODO: remove temp code*/
+        if(endpoint.getType().equals(ProcessType.IN_PREPROCESS)){
+            logger.warn("******pre processing bug hunt");
+            logger.warn("******DocumentInfo == null: " + (document == null));
+            logger.warn("******Initial filename: " + cm.getFileName());
+        }
+        String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
+        logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
+        cm.setDocumentInfo(document).setFileName(longTerm);
+        logger.warn("******cm.getDocumentInfo(): " + cm.getDocumentInfo()); //todo remove
+        logger.warn("******endpoint: " + endpoint);
+
+        cm.setStatus(endpoint, "parsed");
+
+        return cm;
     }
 
 }

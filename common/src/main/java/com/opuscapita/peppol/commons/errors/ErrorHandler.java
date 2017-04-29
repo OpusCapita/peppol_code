@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 /**
  * Created by Daniil on 19.07.2016.
- * <p>
  * TODO separate between our errors that should be handled by DTP and service desk related stuff
  */
 @Component
@@ -139,6 +138,17 @@ public class ErrorHandler {
             detailedDescription += "\nLast processing status: " + cm.getProcessingInfo().getCurrentStatus();
         }
 
+        Exception processingException = null;
+        if (cm.getProcessingInfo() != null) {
+            processingException = cm.getProcessingInfo().getProcessingException();
+            if (processingException != null) {
+                String message = exceptionMessageToString(processingException);
+                if (StringUtils.isNotBlank(message)) {
+                    detailedDescription += "\nProcessing exception message: " + message;
+                }
+            }
+        }
+
         String exceptionMessage = exceptionMessageToString(e);
         if (exceptionMessage != null) {
             detailedDescription += "\nPlatform exception message: " + exceptionMessage;
@@ -149,6 +159,9 @@ public class ErrorHandler {
 
         if (e != null) {
             detailedDescription += "\n\nPlatform exception: " + ExceptionUtils.getStackTrace(e) + "\n";
+        }
+        if (processingException != null) {
+            detailedDescription += "\n\nProcessing exception: " + ExceptionUtils.getStackTrace(processingException);
         }
 
         createTicket(shortDescription, detailedDescription, cm.getCorrelationId() + cm.getProcessingInfo().getCurrentStatus(),
