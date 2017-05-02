@@ -87,8 +87,7 @@ node {
             }
         }
         catch (e) {
-            echo 'Unit tests failed for some reason'
-            throw
+            error 'Unit tests failed for some reason'
         }
         finally {
             junit '*/build/test-results/*.xml'
