@@ -1,6 +1,6 @@
 server.port=8085
 spring.application.name=validator
-spring.rabbitmq.host=192.168.1.103
+spring.rabbitmq.host=192.168.1.104
 spring.rabbitmq.port=5672
 spring.rabbitmq.username=woot
 spring.rabbitmq.password=woot
@@ -32,3 +32,4 @@ peppol.validation.artifacts.difi.path=/opt/projects/peppol2.0/validator/src/test
 peppol.validation.artifacts.si.path=/opt/projects/peppol2.0/validator/src/test/resources/simpler_invoicing_artifacts/
 peppol.validation.artifacts.at.path=/opt/projects/peppol2.0/validator/src/test/resources/austrian_artifacts/
 peppol.validator.sbdh.xsd=/opt/projects/peppol2.0/validator/src/test/resources/sbdh_artifacts/StandardBusinessDocumentHeader.xsd
+eureka.client.enabled=false

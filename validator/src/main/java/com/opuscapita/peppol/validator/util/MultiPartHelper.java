@@ -22,6 +22,7 @@ public class MultiPartHelper {
 
         containerMessage = new ContainerMessage(origin + " /validate", tempFilePath, endpoint);
         containerMessage.setDocumentInfo(documentLoader.load(tempFilePath, endpoint));
+        containerMessage.getProcessingInfo().setCurrentStatus(endpoint, origin + " validation");
         return containerMessage;
     }
 }

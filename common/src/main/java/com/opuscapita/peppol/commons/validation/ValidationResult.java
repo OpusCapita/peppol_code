@@ -51,6 +51,10 @@ public class ValidationResult implements Serializable {
         return errors;
     }
 
+    public List<DocumentWarning> getWarnings() {
+        return warnings;
+    }
+
     /**
      * Returns all errors in a single line.
      *
