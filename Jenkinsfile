@@ -74,7 +74,7 @@ node {
 
     stage('Build') {
         dir('src') {
-            sh 'bash gradlew clean build'
+            sh 'bash gradlew clean assemble'
             assemble(test_modules)
         }
     }
