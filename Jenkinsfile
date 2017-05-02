@@ -83,6 +83,7 @@ node {
         dir('src') {
             sh 'bash gradlew check'
             check(test_modules)
+            junit '*/build/test-results/*.xml'
         }
     }
 
