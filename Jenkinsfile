@@ -80,9 +80,17 @@ node {
     }
 
     stage('Unit Test') {
-        dir('src') {
-            sh 'bash gradlew check'
-            check(test_modules)
+        try {
+            dir('src') {
+                sh 'bash gradlew check'
+                check(test_modules)
+            }
+        }
+        catch (e) {
+            echo 'Unit tests failed for some reason'
+            throw
+        }
+        finally {
             junit '*/build/test-results/*.xml'
         }
     }
