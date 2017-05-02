@@ -87,10 +87,11 @@ node {
             }
         }
         catch (e) {
+            junit 'src/*/build/test-results/*.xml'
             error 'Unit tests failed for some reason'
         }
         finally {
-            junit '*/build/test-results/*.xml'
+            junit 'src/*/build/test-results/*.xml'
         }
     }
 
