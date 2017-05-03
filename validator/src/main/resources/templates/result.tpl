@@ -12,10 +12,18 @@ layout 'layouts/main.tpl',
                         div() {
                             span('Validation errors:'+errors.size())
                             for(Object error: errors) {
-                                div(style: 'font-color: red;', error.title)
-                                div(error.details)
+                                div(style: 'font-color: red;', error.source)
+                                div(error.message)
                                 hr('')
                             }
+                        }
+                    }
+                    div() {
+                        span('Validation warnings:'+warnings.size())
+                        for(Object warning: warnings) {
+                            div(style: 'font-color: brown;', warning.source)
+                            div(warning.message)
+                            hr('')
                         }
                     }
     }

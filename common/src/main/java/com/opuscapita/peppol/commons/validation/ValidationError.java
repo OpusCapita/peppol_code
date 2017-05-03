@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.validation;
 
 import com.opuscapita.peppol.commons.container.document.DocumentError;
+import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import org.jetbrains.annotations.NotNull;
 
@@ -85,6 +86,11 @@ public class ValidationError implements Serializable {
     @NotNull
     public DocumentError toDocumentError(@NotNull Endpoint source) {
         return new DocumentError(source, this.toString());
+    }
+
+    @NotNull
+    public DocumentWarning toDocumentWarning(@NotNull Endpoint source) {
+        return new DocumentWarning(source, this.toString());
     }
 
     @Override

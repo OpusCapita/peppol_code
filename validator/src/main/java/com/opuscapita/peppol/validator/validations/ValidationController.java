@@ -43,6 +43,9 @@ public class ValidationController {
         }
 
         Archetype archetype = containerMessage.getDocumentInfo().getArchetype();
+        if (archetype == Archetype.INVALID) {
+            return containerMessage;
+        }
         String customizationId = containerMessage.getDocumentInfo().getCustomizationId();
         if (archetype == Archetype.EHF || archetype == Archetype.PEPPOL_BIS) {
             // detecting sub-types, like AT or SI

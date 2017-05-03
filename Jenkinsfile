@@ -74,15 +74,24 @@ node {
 
     stage('Build') {
         dir('src') {
-            sh 'bash gradlew clean build'
+            sh 'bash gradlew clean assemble'
             assemble(test_modules)
         }
     }
 
     stage('Unit Test') {
-        dir('src') {
-            sh 'bash gradlew check'
-            check(test_modules)
+        try {
+            dir('src') {
+                sh 'bash gradlew check'
+                check(test_modules)
+            }
+        }
+        catch (e) {
+            junit 'src/*/build/test-results/*.xml'
+            error 'Unit tests failed for some reason'
+        }
+        finally {
+            junit 'src/*/build/test-results/*.xml'
         }
     }
 

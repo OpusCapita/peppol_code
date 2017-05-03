@@ -134,6 +134,10 @@ public class PeppolValidatorApplication {
 
                 if (cm.getDocumentInfo().getArchetype() == Archetype.INVALID || !cm.getDocumentInfo().getErrors().isEmpty()) {
                     messageQueue.convertAndSend(errorQueue, cm);
+
+                    cm.getDocumentInfo().getRecipientId();
+                    cm.getDocumentInfo().getSenderId();
+                    logger.info("");
                     logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
                     return;
                 }

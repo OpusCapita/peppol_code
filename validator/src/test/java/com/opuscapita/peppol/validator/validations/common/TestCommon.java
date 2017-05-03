@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 public class TestCommon {
     protected void runTestsOnDocumentProfile(String documentProfile, Consumer<? super File> consumer) {
         File resourceDir = new File(this.getClass().getResource("/test_data/" + documentProfile + "_files").getFile());
-        String[] dataFiles = resourceDir.list((dir, name) -> name.toLowerCase().endsWith("templates"));
+        String[] dataFiles = resourceDir.list((dir, name) -> name.toLowerCase().endsWith("xml"));
         Arrays.stream(dataFiles).map(fileName -> {
             System.out.println(resourceDir + File.separator + fileName);
             return new File(resourceDir, fileName);
@@ -26,8 +26,9 @@ public class TestCommon {
     @Nullable
     protected ContainerMessage createContainerMessageFromFile(DocumentLoader documentLoader, File file) throws Exception {
         Endpoint endpoint = new Endpoint("test", ProcessType.TEST);
-        ContainerMessage containerMessage = new ContainerMessage("test", file.getName(), endpoint);
+        ContainerMessage containerMessage = new ContainerMessage("test", file.getAbsolutePath(), endpoint);
         containerMessage.setDocumentInfo(documentLoader.load(file, endpoint));
+        containerMessage.getProcessingInfo().setCurrentStatus(endpoint, "unit testing");
         return containerMessage;
     }
 }

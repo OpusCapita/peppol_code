@@ -2,6 +2,7 @@ package com.opuscapita.peppol.validator.validations.svefaktura1;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
+import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import org.jetbrains.annotations.NotNull;
@@ -124,7 +125,9 @@ public class Svefaktura1Validator implements BasicValidator {
                     }
                 }
                 if (attribute.getNodeName().equals("flag") && attribute.getNodeValue().equals("warning")) {
-                    logger.info("Validation warning: " + extractAssertMessage(failedAssert));
+                    String warningMessage = extractAssertMessage(failedAssert);
+                    cm.addWarning(new DocumentWarning(cm.getProcessingInfo().getCurrentEndpoint(), warningMessage));
+                    logger.info("Validation warning: " + warningMessage);
                 }
             }
             if (hasErrors) {

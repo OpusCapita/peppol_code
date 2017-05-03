@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.sleuth.annotation.NewSpan;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,7 @@ public class RestValidator {
 
     @RequestMapping(value = "/validate", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @NewSpan(value = "rest validation")
     public ValidationResult validate(@RequestParam("file") MultipartFile file, @RequestParam(name = "test", required = false, defaultValue = "false") boolean useTestArtifacts) {
         if (StringUtils.isNotBlank(file.getOriginalFilename())) {
             logger.info("About to validate custom file: " + file.getOriginalFilename());

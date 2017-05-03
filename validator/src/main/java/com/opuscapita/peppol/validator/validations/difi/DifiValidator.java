@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by Daniil on 03.05.2016.
@@ -48,18 +51,25 @@ public class DifiValidator implements BasicValidator {
     @SuppressWarnings("ConstantConditions")
     private void parseErrors(Report report, ContainerMessage cm) {
         for (SectionType section : report.getSection()) {
-            if (section.getFlag() == FlagType.ERROR || section.getFlag() == FlagType.FATAL) {
-                for (AssertionType assertion : section.getAssertion()) {
-                    if (assertion.getFlag() == FlagType.ERROR || assertion.getFlag() == FlagType.FATAL) {
-                        ValidationError error = new ValidationError();
-                        error.withTitle(section.getTitle());
-                        error.withIdentifier(assertion.getIdentifier());
-                        error.withLocation(assertion.getLocation());
-                        error.withFlag(assertion.getFlag().value());
-                        error.withText(assertion.getText());
-                        error.withTest(assertion.getTest());
-                        cm.addError(error.toDocumentError(cm.getProcessingInfo().getCurrentEndpoint()));
-                    }
+            parseValidationResultSection(cm, section, error -> cm.addError(error.toDocumentError(cm.getProcessingInfo().getCurrentEndpoint())), FlagType.ERROR, FlagType.FATAL);
+            parseValidationResultSection(cm, section, error -> cm.addWarning(error.toDocumentWarning(cm.getProcessingInfo().getCurrentEndpoint())), FlagType.WARNING);
+        }
+    }
+
+    protected void parseValidationResultSection(ContainerMessage cm, SectionType section, Consumer<ValidationError> extractedDataConsumer, FlagType... flagTypes) {
+        List<FlagType> flagTypesToParseFor = Arrays.asList(flagTypes);
+        if (flagTypesToParseFor.contains(section.getFlag())/*section.getFlag() == FlagType.ERROR || section.getFlag() == FlagType.FATAL*/) {
+            for (AssertionType assertion : section.getAssertion()) {
+                if (flagTypesToParseFor.contains(assertion.getFlag())/*assertion.getFlag() == FlagType.ERROR || assertion.getFlag() == FlagType.FATAL*/) {
+                    ValidationError error = new ValidationError();
+                    error.withTitle(section.getTitle());
+                    error.withIdentifier(assertion.getIdentifier());
+                    error.withLocation(assertion.getLocation());
+                    error.withFlag(assertion.getFlag().value());
+                    error.withText(assertion.getText());
+                    error.withTest(assertion.getTest());
+                    extractedDataConsumer.accept(error);
+                    /*cm.addError(error.toDocumentError(cm.getProcessingInfo().getCurrentEndpoint()));*/
                 }
             }
         }
