@@ -4,4 +4,5 @@
     - inbound-invalid-tests
   vars:
     test_data_path: /test-materials
+    counter: 0
 ...

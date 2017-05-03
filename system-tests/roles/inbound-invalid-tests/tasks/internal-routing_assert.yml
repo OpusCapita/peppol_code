@@ -1,0 +1,16 @@
+---
+- name: Show internal-routing log, search for transmissionID "{{ transmissionId }}"
+  shell: docker logs internal-routing
+  register: log
+
+- name: Assert if transmissionID "{{ transmissionId }}" is found in internal-routing log 
+  ignore_errors: no
+  assert:
+    that:
+      - "transmissionId in log.stdout"
+    msg: "Failed"
+  register: result
+
+- set_fact: internal_routing_result="internal-routing={{result.msg}}"
+- debug: var=internal_routing_result
+...

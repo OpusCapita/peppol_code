@@ -1,0 +1,16 @@
+---
+- name: Show email-notificator log, search for transmissionID "{{ transmissionId }}"
+  shell: docker logs email-notificator
+  register: log
+
+- name: Assert if transmissionID "{{ transmissionId }}" is found in email-notificator log 
+  ignore_errors: no
+  assert:
+    that:
+      - "transmissionId in log.stdout"
+    msg: "Failed"
+  register: result
+
+- set_fact: email_notificator_result="Preprocessing={{result.msg}}"
+- debug: var=email_notificator_result
+...
