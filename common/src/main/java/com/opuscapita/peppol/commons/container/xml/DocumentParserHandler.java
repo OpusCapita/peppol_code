@@ -88,8 +88,8 @@ public class DocumentParserHandler extends DefaultHandler {
                             if (field.value != null && !value.equals(field.value)) {
                                 if (field.getId().equals("sender_id") || field.getId().equals("recipient_id")) {
                                     if (!new ParticipantId(field.value).equals(new ParticipantId(value))) {
-                                        template.addError("Value of participant ID " + field.getId() + " overwritten: " +
-                                                field.value + " <> " + value);
+                                        template.addError("Value of participant ID " + field.getId() + " differs in the document: " +
+                                                field.value + " and " + value);
                                     }
                                 } else {
                                     template.addError("There are different values for the field " + field.getId() + " in the document: "
