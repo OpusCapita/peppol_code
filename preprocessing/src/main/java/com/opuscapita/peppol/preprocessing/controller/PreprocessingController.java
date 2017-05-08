@@ -58,18 +58,10 @@ public class PreprocessingController {
         }
 
         document = documentLoader.load(cm.getFileName(), endpoint);
-        /*TODO: remove temp code*/
-        if(endpoint.getType().equals(ProcessType.IN_PREPROCESS)){
-            logger.warn("******pre processing bug hunt");
-            logger.warn("******DocumentInfo == null: " + (document == null));
-            logger.warn("******Initial filename: " + cm.getFileName());
-        }
+
         String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
         logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
         cm.setDocumentInfo(document).setFileName(longTerm);
-        logger.warn("******cm.getDocumentInfo(): " + cm.getDocumentInfo()); //todo remove
-        logger.warn("******endpoint: " + endpoint);
-
         cm.setStatus(endpoint, "parsed");
 
         return cm;
