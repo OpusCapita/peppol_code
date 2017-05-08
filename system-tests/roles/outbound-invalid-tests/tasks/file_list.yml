@@ -7,9 +7,9 @@
     file: "{{item}}"
   with_fileglob:
     - "{{test_data_path}}/validation_test_suite/invalid/*"
-    - "{{test_data_path}}/svefaktura_1.0/SBDH_wrapped_examples/Invalid/*"
-    - "{{test_data_path}}/EHF/EHF_2.0.7/Invalid/*"
-    - "{{test_data_path}}/svefaktura_1.0/invalid/*"
-    - "{{test_data_path}}/Austrian_documents/invalid/*"
-    - "{{test_data_path}}/Netherlands_documents/invalid/*"
+#    - "{{test_data_path}}/svefaktura_1.0/SBDH_wrapped_examples/Invalid/*"
+#    - "{{test_data_path}}/EHF/EHF_2.0.7/Invalid/*"
+#    - "{{test_data_path}}/svefaktura_1.0/invalid/*"
+#    - "{{test_data_path}}/Austrian_documents/invalid/*"
+#    - "{{test_data_path}}/Netherlands_documents/invalid/*"
 ...

@@ -8,7 +8,7 @@
   shell: docker logs transport-from-xib
   register: xibLog
 
-- name: transmissionid "{{ transmissionId }}" is found in transports logs
+- name: transmissionid "{{ fileName }}" is found in transports logs
   assert:
     that:
       - ("transmissionId in a2aLog.stdout") or ("transmissionId in xibLog.stdout")

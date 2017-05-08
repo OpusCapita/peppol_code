@@ -54,7 +54,6 @@ public class MessageQueueToFileApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Storing incoming message: " + cm.getFileName());
                 controller.storeMessage(cm);
-                logger.warn("***** cm.getDocumentInfo() == null:" + (cm.getDocumentInfo() == null));
                 cm.setStatus(new Endpoint(componentName, ProcessType.IN_MQ_TO_FILE), "delivered");
             }
         };

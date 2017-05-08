@@ -1,6 +1,8 @@
 FROM d-l-tools.ocnet.local:443/openjdk:8-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
+ENV no_proxy configuration-server
+
 VOLUME "/etc/peppol2.0/mq-to-file"
 ENV TRANSPORT_HOME "/opt/local/services/peppol2.0/mq-to-file"
 ENV TRANSPORT_CONFIG "/etc/peppol2.0/mq-to-file"
@@ -11,10 +13,11 @@ RUN set -x \
     && chown -R peppol "${TRANSPORT_HOME}" "${TRANSPORT_CONFIG}" \
     && ln -s "${TRANSPORT_CONFIG}/" "${TRANSPORT_HOME}/config"
 
-USER peppol
+ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
 
+USER peppol
 WORKDIR "${TRANSPORT_HOME}"
+
 ADD ["build/libs/mq-to-file.jar", "mq-to-file.jar"]
 
-CMD java $JAVA_OPTS -jar mq-to-file.jar
-
+ENTRYPOINT ["/docker-entrypoint.sh"]

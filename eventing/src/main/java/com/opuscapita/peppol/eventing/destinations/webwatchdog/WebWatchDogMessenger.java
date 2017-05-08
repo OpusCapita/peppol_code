@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.eventing.destinations.WebWatchDog;
+package com.opuscapita.peppol.eventing.destinations.webwatchdog;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,7 +32,7 @@ public class WebWatchDogMessenger {
         String fileNamePrefix = webWatchDogConfig.getPrefix();
         String loggerId = Arrays.asList(fileName.split("\\.")).get(0);
         String statusFileName = fileNamePrefix + loggerId;
-        String content = loggerId+";"+status+";"+ System.currentTimeMillis();
+        String content = loggerId + ";" + status + ";" + System.currentTimeMillis();
         File statusFile = new File(webWatchDogConfig.getFolder(), statusFileName);
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(statusFile));
         bufferedWriter.write(content);

@@ -60,12 +60,14 @@ public class PreprocessingApp {
                                         @NotNull PreprocessingController controller, @NotNull MessageQueue messageQueue,
                                         @NotNull Gson gson) {
         return new AbstractQueueListener(errorHandler, reporter, gson) {
+            @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Message received, file id: " + cm.getFileName());
                 cm = controller.process(cm);
 
                 if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+                    cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file");
                     messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Invalid message sent to " + errorQueue + " queue");
                 } else {

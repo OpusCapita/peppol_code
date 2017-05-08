@@ -1,0 +1,17 @@
+---
+- name: Show preprocessing log, search for transmissionID "{{ transmissionId }}"
+  shell: docker logs preprocessing
+  register: log
+
+- name: Assert if transmissionID "{{ transmissionId }}" is found in preprocessing log 
+  ignore_errors: no
+  assert:
+    that:
+      - "transmissionId in log.stdout"
+    msg: "Failed"
+#    msg: "tranmissionId '{{ transmissionId }}' should be found in preprocessing for file '{{ file }}'"
+  register: result
+
+- set_fact: preprocessing_result="preprocessing={{result.msg}}"
+- debug: var=preprocessing_result
+...

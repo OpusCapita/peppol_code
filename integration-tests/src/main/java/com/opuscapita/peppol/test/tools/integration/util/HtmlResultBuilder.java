@@ -80,7 +80,7 @@ public class HtmlResultBuilder implements ResultBuilder{
         data.put("successful_tests", passedTests.size());
         data.put("failed_tests", failedTests.size());
         data.put("percentage", Double.valueOf(((double) passedTests.size()/ (double) allTests.size()) * 100.0));
-        data.put("comment", "smoke test checks");
+        data.put("comment", "integration test checks");
         data.put("item", new Object());
 
         List<Object> failures = buildCheckSection(failedTests);

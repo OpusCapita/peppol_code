@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.eventing.destinations.WebWatchDog;
+package com.opuscapita.peppol.eventing.destinations.webwatchdog;
 
 /**
  * Created by KALNIDA1 on 2016.07.06..

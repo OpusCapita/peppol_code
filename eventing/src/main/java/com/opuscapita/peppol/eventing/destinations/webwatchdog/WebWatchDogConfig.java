@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.eventing.destinations.WebWatchDog;
+package com.opuscapita.peppol.eventing.destinations.webwatchdog;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -23,12 +23,12 @@ public class WebWatchDogConfig {
         return folder;
     }
 
-    public String getPrefix() {
-        return prefix;
-    }
-
     public void setFolder(String folder) {
         this.folder = folder;
+    }
+
+    public String getPrefix() {
+        return prefix;
     }
 
     public void setPrefix(String prefix) {

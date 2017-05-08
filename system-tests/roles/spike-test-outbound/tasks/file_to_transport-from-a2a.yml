@@ -4,7 +4,7 @@
   copy:
     remote_src: True
     src: "{{file}}"
-    dest: /peppol-a2a-nfs/out/test/data
+    dest: "{{transport_from_a2a_path}}" 
 - set_fact: file="{{file}}"
 - debug: var=file
 
@@ -22,7 +22,7 @@
 - name: update test results
   lineinfile:
     create: yes
-    dest: /home/berzima1/git/peppol2.0/system-tests/reports/spike-outbound-report.txt
+    dest: "{{report_path}}/spike-test-outbound.txt"
     state: present
     line: 'Filename {{counter}}: {{file}}'
 

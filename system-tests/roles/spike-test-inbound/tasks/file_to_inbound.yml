@@ -14,9 +14,10 @@
 - debug: var=counter
 
 - name: update test results
+  delegate_to: localhost  
   lineinfile:
     create: yes
-    dest: /home/berzima1/git/peppol2.0/system-tests/reports/spike-report.txt
+    dest: "{{report_path}}/spike-test-inbound.txt"
     state: present
     line: 'Filename {{counter}}: {{file}}'
 

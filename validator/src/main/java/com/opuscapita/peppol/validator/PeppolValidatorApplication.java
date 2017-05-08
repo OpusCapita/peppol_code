@@ -133,7 +133,9 @@ public class PeppolValidatorApplication {
                 cm = controller.validate(cm);
 
                 if (cm.getDocumentInfo().getArchetype() == Archetype.INVALID || !cm.getDocumentInfo().getErrors().isEmpty()) {
+                    cm.getProcessingInfo().setCurrentStatus(endpoint, "validation failed");
                     messageQueue.convertAndSend(errorQueue, cm);
+
                     logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
                     return;
                 }
