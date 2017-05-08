@@ -92,7 +92,8 @@ public class DocumentParserHandler extends DefaultHandler {
                                                 field.value + " <> " + value);
                                     }
                                 } else {
-                                    template.addError("Value of field " + field.getId() + " overwritten: " + field.value + " <> " + value);
+                                    template.addError("There are different values for the field " + field.getId() + " in the document: "
+                                            + field.value + " and " + value);
                                 }
                             } else {
                                 if (field.getMask() != null && !value.matches(field.getMask())) {
