@@ -91,84 +91,86 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    dir('src') {
-                        sh 'bash gradlew clean assemble'
-                        assemble(test_modules)
-                    }
+                dir('src') {
+                    sh 'bash gradlew clean assemble'
+                    assemble(test_modules)
                 }
             }
         }
 
         stage('Unit Test') {
             steps {
-                script {
-                    try {
-                        dir('src') {
-                            sh 'bash gradlew check'
-                            check(test_modules)
-                        }
-                    }
-                    catch (e) {
-                        junit 'src/*/build/test-results/*.xml'
-                        error 'Unit tests failed for some reason'
-                    }
-                    finally {
-                        junit 'src/*/build/test-results/*.xml'
-                    }
+                dir('src') {
+                    sh 'bash gradlew check'
+                    check(test_modules)
+                }                
+            }
+            post {
+                always {
+                    junit 'src/*/build/test-results/*.xml'
+                }
+                failure {
+                    error 'Unit tests failed for some reason'
                 }
             }
         }
         
         stage('Package') {
             steps {
-                script {
-                    dir('src') {
-                        dockerBuild(modules + test_modules, tag)
-                    }
+                dir('src') {
+                    dockerBuild(modules + test_modules, tag)
                 }
             }
         }
         
         stage('Release') {
             steps {
+                milestone 1
+                dockerPush(modules + test_modules, ['latest', releaseVersion])
                 script {
-                    milestone label: 'publishing'
                     dir('src') {
                         // automatic versions trigger a new build repeatedly, disabled for now
                         //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
-                    }
-                    def tags = ['latest', releaseVersion]
-                    dockerPush(modules + test_modules, tags)
+                    }                    
                 }
             }
         }
 
         stage('Deploy Stage') {
             steps {
-                script {
-                    milestone label: 'staging'
-                    dir('infra/ap2/ansible') {
-                        ansiblePlaybook(
-                            'peppol-components.yml', 'stage.hosts', 'ansible-sudo',
-                            this.&handleFailedStageDeployment
-                        )
-                    }
+                milestone 2
+                dir('infra/ap2/ansible') {
+                    ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo')
                 }
+            }
+            post {
+                failure {
+                    failBuild(
+                        "${recipients.ops}, ${recipients.devops}, ${infra_author}, ${code_author}",
+                        'Deployment to stage environment has failed. Check the log for details.'
+                    )                
+                }            
             }
         }
         
         stage('Smoke Test') {
             steps {
-                script {
-                    milestone label: 'testing'
-                    dir('infra/ap2/ansible') {
-                        ansiblePlaybook(
-                            'smoke-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            this.&handleFailedSmokeTests
-                        )
-                        archiveArtifacts artifacts: 'test/smoke-tests-results.html'
-                    }
+                milestone 3
+                dir('infra/ap2/ansible') {
+                    ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
+                    
+                }
+
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'test/smoke-tests-results.html'
+                }
+                failure {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Smoke tests have failed. Check the log for details.'
+                    )                
                 }
             }
         }
@@ -179,10 +181,7 @@ pipeline {
                 script {
                     /*
                     dir('infra/ap2/ansible') {
-                        ansiblePlaybook(
-                            'integration-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            this.&handleFailedIntegrationTests
-                        )
+                        ansiblePlaybook('integration-tests.yml', 'stage.hosts', 'ansible-sudo')
                         archiveArtifacts artifacts: 'test/integration-tests-results.html'
                     }
                     */
@@ -190,6 +189,11 @@ pipeline {
             }
         }
         
+    }
+    post {
+        failure {
+            emailNotify('', 'Unexpected error has occured. Check the log for details.')
+        }
     }
 }
 
@@ -247,38 +251,9 @@ def dockerPush(modules, tags) {
     }
 }
 
-/**
- * Handlers
- */
-
-def handleFailedStageDeployment() {
-    failBuild(
-        "${recipients.ops}, ${recipients.devops}, ${infra_author}, ${code_author}",
-        'Deployment to stage environment has failed. Check the log for details.'
-    )
-}
-
-def handleFailedSmokeTests() {
-    archiveArtifacts artifacts: 'test/smoke-tests-results.html'
-    failBuild(
-        "${recipients.testers}, ${infra_author}, ${code_author}",
-        'Smoke tests have failed. Check the log for details.'
-    )
-}
-
-def handleFailedIntegrationTests() {
-    archiveArtifacts artifacts: 'test/integration-tests-results.html'
-    failBuild(
-        "${recipients.testers}, ${infra_author}, ${code_author}",
-        'Integration tests have failed. Check the log for details.'
-    )
-}
-
-/**/
 
 // execute ansible playbook on hosts using the credentials provided
-def ansiblePlaybook(playbook, hosts, credentials, Closure onError={}, Closure onSuccess={}) {
-    def result = 0
+def ansiblePlaybook(playbook, hosts, credentials) {
     def ansible_credentials = [[
         $class: 'UsernamePasswordMultiBinding',
         credentialsId: credentials,
@@ -287,18 +262,12 @@ def ansiblePlaybook(playbook, hosts, credentials, Closure onError={}, Closure on
     ]]
 
     withCredentials(ansible_credentials) {
-        result = sh returnStatus: true, script: """
+        sh script: """
             ansible-playbook -i '${hosts}' '${playbook}' \
             --user='${ANSIBLE_USERNAME}' \
             --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}'
         """
     }
-
-    if (result != 0) {
-        onError()
-    }
-
-    onSuccess()
 }
 
 
