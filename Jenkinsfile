@@ -334,8 +334,7 @@ Please go to ${BUILD_URL} and fix the build!
 Build status: ${currentBuild.result}
 Build URL: ${BUILD_URL}
 Project: ${JOB_NAME}
-Date of build: ${currentBuild.startTimeInMillis}
-Build duration: ${currentBuild.duration}
+Build duration: ${currentBuild.durationString}
 
 CHANGE SET
 ${changes}
