@@ -48,100 +48,137 @@ infra_author = ""
 
 def properties      // additional properties loaded from file
 
-node {
-    stage('Checkout') {
-        dir('src') {
-            // get latest version of code
-            git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
-            code_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    dir('src') {
+                        // get latest version of code
+                        git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
+                        code_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
 
-            // load additional properties
-            properties = loadProperties('gradle.properties')
-            releaseVersion = properties.version
-            tag = "${releaseVersion}-${env.BUILD_NUMBER}"
-        }
-        dir('infra') {
-            // get latest version of infrastructure
-            git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
-            infra_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
+                        // load additional properties
+                        properties = loadProperties('gradle.properties')
+                        releaseVersion = properties.version
+                        tag = "${releaseVersion}-${env.BUILD_NUMBER}"
+                    }
+                    dir('infra') {
+                        // get latest version of infrastructure
+                        git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
+                        infra_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
 
-            // install additional roles
-            dir('ap2/ansible') {
-                sh 'make requirements'
+                        // install additional roles
+                        dir('ap2/ansible') {
+                            sh 'make requirements'
+                        }
+                    }                        
+                }
             }
         }
-    }
 
-    stage('Build') {
-        dir('src') {
-            sh 'bash gradlew clean assemble'
-            assemble(test_modules)
-        }
-    }
-
-    stage('Unit Test') {
-        try {
-            dir('src') {
-                sh 'bash gradlew check'
-                check(test_modules)
+        stage('Build') {
+            steps {
+                script {
+                    dir('src') {
+                        sh 'bash gradlew clean assemble'
+                        assemble(test_modules)
+                    }
+                }
             }
         }
-        catch (e) {
-            junit 'src/*/build/test-results/*.xml'
-            error 'Unit tests failed for some reason'
-        }
-        finally {
-            junit 'src/*/build/test-results/*.xml'
-        }
-    }
 
-    stage('Package') {
-        dir('src') {
-            dockerBuild(modules + test_modules, tag)
+        stage('Unit Test') {
+            steps {
+                script {
+                    try {
+                        dir('src') {
+                            sh 'bash gradlew check'
+                            check(test_modules)
+                        }
+                    }
+                    catch (e) {
+                        junit 'src/*/build/test-results/*.xml'
+                        error 'Unit tests failed for some reason'
+                    }
+                    finally {
+                        junit 'src/*/build/test-results/*.xml'
+                    }
+                }
+            }
         }
-    }
+        
+        stage('Package') {
+            steps {
+                script {
+                    dir('src') {
+                        dockerBuild(modules + test_modules, tag)
+                    }
+                }
+            }
+        }
+        
+        stage('Release') {
+            steps {
+                script {
+                    milestone label: 'publishing'
+                    dir('src') {
+                        // automatic versions trigger a new build repeatedly, disabled for now
+                        //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
+                    }
+                    def tags = ['latest', releaseVersion]
+                    dockerPush(modules + test_modules, tags)
+                }
+            }
+        }
 
-    milestone label: 'publishing'
-    stage('Release') {
-        dir('src') {
-            // automatic versions trigger a new build repeatedly, disabled for now
-            //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
+        stage('Deploy Stage') {
+            steps {
+                script {
+                    milestone label: 'staging'
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook(
+                            'peppol-components.yml', 'stage.hosts', 'ansible-sudo',
+                            this.&handleFailedStageDeployment
+                        )
+                    }
+                }
+            }
         }
-        def tags = ['latest', releaseVersion]
-        dockerPush(modules + test_modules, tags)
-    }
+        
+        stage('Smoke Test') {
+            steps {
+                script {
+                    milestone label: 'testing'
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook(
+                            'smoke-tests.yml', 'stage.hosts', 'ansible-sudo',
+                            this.&handleFailedSmokeTests
+                        )
+                        archiveArtifacts artifacts: 'test/smoke-tests-results.html'
+                    }
+                }
+            }
+        }
 
-    milestone label: 'staging'
-    stage('Deploy Stage') {
-        dir('infra/ap2/ansible') {
-            ansiblePlaybook(
-                'peppol-components.yml', 'stage.hosts', 'ansible-sudo',
-                this.&handleFailedStageDeployment
-            )
+        stage('Integration Test') {
+            steps {
+                script {
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook(
+                            'integration-tests.yml', 'stage.hosts', 'ansible-sudo',
+                            this.&handleFailedIntegrationTests
+                        )
+                        archiveArtifacts artifacts: 'test/integration-tests-results.html'
+                    }
+                }
+            }
         }
+        
     }
-
-    milestone label: 'testing'
-    stage('Smoke Test') {
-        dir('infra/ap2/ansible') {
-            ansiblePlaybook(
-                'smoke-tests.yml', 'stage.hosts', 'ansible-sudo',
-                this.&handleFailedSmokeTests
-            )
-            archiveArtifacts artifacts: 'test/smoke-tests-results.html'
-        }
-    }
-
-    /* stage('Integration Test') {
-        dir('infra/ap2/ansible') {
-            ansiblePlaybook(
-                'integration-tests.yml', 'stage.hosts', 'ansible-sudo',
-                this.&handleFailedIntegrationTests
-            )
-            archiveArtifacts artifacts: 'test/integration-tests-results.html'
-        }
-    }*/
 }
+
 
 
 /**
@@ -307,4 +344,3 @@ def failBuild(String email_recipients, String message) {
     emailNotify(email_recipients, message)
     error message
 }
-
