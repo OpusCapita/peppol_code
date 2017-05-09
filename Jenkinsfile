@@ -157,14 +157,12 @@ pipeline {
             steps {
                 milestone 3
                 dir('infra/ap2/ansible') {
-                    ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
-                    
+                    ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')                    
                 }
-
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'test/smoke-tests-results.html'
+                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
                 }
                 failure {
                     failBuild(
