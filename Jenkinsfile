@@ -50,13 +50,31 @@ def properties      // additional properties loaded from file
 
 pipeline {
     agent any
+    options { 
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        skipDefaultCheckout()
+    }
+    triggers { pollSCM('H/5 * * * *') }
     stages {
         stage('Checkout') {
             steps {
+                dir('src') {
+                    // get latest version of code
+                    git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
+                }
+                dir('infra') {
+                    // get latest version of infrastructure
+                    git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
+
+                    // install additional roles
+                    dir('ap2/ansible') {
+                        sh 'make requirements'
+                    }
+                }                        
+                
                 script {
                     dir('src') {
-                        // get latest version of code
-                        git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
                         code_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
 
                         // load additional properties
@@ -65,14 +83,7 @@ pipeline {
                         tag = "${releaseVersion}-${env.BUILD_NUMBER}"
                     }
                     dir('infra') {
-                        // get latest version of infrastructure
-                        git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
                         infra_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
-
-                        // install additional roles
-                        dir('ap2/ansible') {
-                            sh 'make requirements'
-                        }
                     }                        
                 }
             }
@@ -164,7 +175,9 @@ pipeline {
 
         stage('Integration Test') {
             steps {
+                echo "Coming soon.."
                 script {
+                    /*
                     dir('infra/ap2/ansible') {
                         ansiblePlaybook(
                             'integration-tests.yml', 'stage.hosts', 'ansible-sudo',
@@ -172,6 +185,7 @@ pipeline {
                         )
                         archiveArtifacts artifacts: 'test/integration-tests-results.html'
                     }
+                    */
                 }
             }
         }
