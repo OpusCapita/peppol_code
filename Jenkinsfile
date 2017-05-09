@@ -187,6 +187,29 @@ pipeline {
             }
         }
         
+        stage('System Tests') {
+            steps {
+                dir('src/system-tests') {
+                    dir('reports') { deleteDir() }
+                    ansiblePlaybook(
+                        'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
+                        'report_path=$PWD/reports/'
+                    )                    
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
+                }
+                failure {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'System tests have failed. Check the log for details.'
+                    )                
+                }
+            }
+        }
+        
     }
     post {
         failure {
@@ -251,7 +274,7 @@ def dockerPush(modules, tags) {
 
 
 // execute ansible playbook on hosts using the credentials provided
-def ansiblePlaybook(playbook, hosts, credentials) {
+def ansiblePlaybook(playbook, hosts, credentials, extraVars='') {
     def ansible_credentials = [[
         $class: 'UsernamePasswordMultiBinding',
         credentialsId: credentials,
@@ -263,7 +286,7 @@ def ansiblePlaybook(playbook, hosts, credentials) {
         sh script: """
             ansible-playbook -i '${hosts}' '${playbook}' \
             --user='${ANSIBLE_USERNAME}' \
-            --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD}'
+            --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} ${extraVars}'
         """
     }
 }
