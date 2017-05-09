@@ -386,7 +386,7 @@ peppol:
             paths:
             - "$ROOT/CustomizationID"
             mandatory: true
-            mask: ".*extended:urn:www.difi.no:ehf.*"
+            mask: ".*extended:urn:www.difi.no:ehf:katalog.*"
 
         - name: EHF.Catalogue
           root: Catalogue
@@ -438,7 +438,7 @@ peppol:
             paths:
             - "$ROOT/CustomizationID"
             mandatory: true
-            mask: ".*extended:urn:www.difi.no:ehf.*"
+            mask: ".*extended:urn:www.difi.no:ehf:katalog.*"
 
         - name: PEPPOL_BIS.CreditNote
           root: "$SBD/CreditNote"
@@ -620,6 +620,109 @@ peppol:
             mandatory: true
             mask: "(?!.*extended:urn:www.difi.no:ehf.*).*"
 
+        - name: PEPPOL_BIS.Catalogue
+          root: "$SBD/Catalogue"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/SellerSupplierParty/Party/EndpointID"
+            - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/ReceiverParty/EndpointID"
+            - "$ROOT/ReceiverParty/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/ReceiverParty/PartyName/Name"
+            mandatory: true
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(01|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: "(?!.*:extended:urn:www.peppol.eu:bis:peppol1a.*).*"
+
+        - name: PEPPOL_BIS.Catalogue
+          root: Catalogue
+          fields:
+          - id: sender_id
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/EndpointID"
+            - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$ROOT/ReceiverParty/EndpointID"
+            - "$ROOT/ReceiverParty/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/ReceiverParty/PartyName/Name"
+            mandatory: true
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(01|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: "(?!.*:extended:urn:www.peppol.eu:bis:peppol1a.*).*"
 snc:
   enabled: true
   rest:
