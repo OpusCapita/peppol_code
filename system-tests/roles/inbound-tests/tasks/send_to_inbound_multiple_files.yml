@@ -12,6 +12,7 @@
 
 #report update START ---------------------
 - name: update test results
+  delegate_to: localhost
   lineinfile:
     create: no
     dest: "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.txt"
