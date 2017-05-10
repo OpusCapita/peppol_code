@@ -440,6 +440,102 @@ peppol:
             mandatory: true
             mask: ".*extended:urn:www.difi.no:ehf:katalog.*"
 
+        - name: EHF.CatalogueResponse
+          root: "$SBD/Catalogue"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/SenderParty/EndpointID"
+            - "$ROOT/SenderParty/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/ReceiverParty/EndpointID"
+            - "$ROOT/ReceiverParty/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/SenderParty/PartyName/Name"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/ReceiverParty/PartyName/Name"
+            mandatory: true
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(01|05|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf:katalogbekreftelse.*"
+
+        - name: EHF.CatalogueResponse
+          root: "$SBD/Catalogue"
+          fields:
+          - id: sender_id
+            paths:
+            - "$ROOT/SenderParty/EndpointID"
+            - "$ROOT/SenderParty/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$ROOT/ReceiverParty/EndpointID"
+            - "$ROOT/ReceiverParty/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/SenderParty/PartyName/Name"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/ReceiverParty/PartyName/Name"
+            mandatory: true
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(01|05|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf:katalogbekreftelse.*"
+
         - name: PEPPOL_BIS.CreditNote
           root: "$SBD/CreditNote"
           fields:
