@@ -1,6 +1,7 @@
 ---
 - name: git clone and pull test-materials from nocontrol repo
   git:
+    delegate_to: localhost
     repo: http://nocontrol.itella.net/gitbucket/git/Peppol/test-materials.git
     dest: "{{test_data_path}}"
 ...
