@@ -328,6 +328,119 @@ peppol:
             mandatory: true
             mask: ".*extended:urn:www.difi.no:ehf.*"
 
+        - name: EHF.Order
+          root: "$SBD/Order"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/BuyerCustomerParty/Party/EndpointID"
+            - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/SellerSupplierParty/Party/EndpointID"
+            - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(2|03|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf.ordr*"
+
+        - name: EHF.Order
+          root: Order
+          fields:
+          - id: sender_id
+            paths:
+            - "$ROOT/BuyerCustomerParty/Party/EndpointID"
+            - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/EndpointID"
+            - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(2|03|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf.ordr*"
+
         - name: EHF.Catalogue
           root: "$SBD/Catalogue"
           fields:
