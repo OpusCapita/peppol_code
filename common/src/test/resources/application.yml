@@ -553,6 +553,118 @@ peppol:
             mandatory: true
             mask: ".*extended:urn:www.difi.no:ehf.ordrebekreftelse*"
 
+        - name: EHF.DespatchAdvice
+          root: "$SBD/DespatchAdvice"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/DespatchSupplierParty/Party/EndpointID"
+            - "$ROOT/DespatchSupplierParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/DeliveryCustomerParty/Party/EndpointID"
+            - "$ROOT/DeliveryCustomerParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: false
+          - id: recipient_name
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: false
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(30|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf.pakkseddel*"
+
+        - name: EHF.DespatchAdvice
+          root: DespatchAdvice
+          fields:
+          - id: sender_id
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/EndpointID"
+            - "$ROOT/DespatchSupplierParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$ROOT/DeliveryCustomerParty/Party/EndpointID"
+            - "$ROOT/DeliveryCustomerParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: false
+          - id: recipient_name
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: false
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(30|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf.pakkseddel*"
+
         - name: EHF.Catalogue
           root: "$SBD/Catalogue"
           fields:
@@ -1052,6 +1164,118 @@ peppol:
             - "$ROOT/CustomizationID"
             mandatory: true
             mask: "(?!.*:extended:urn:www.peppol.eu:bis:peppol.*).*"
+
+        - name: PEPPOL_BIS.DespatchAdvice
+          root: "$SBD/DespatchAdvice"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/DespatchSupplierParty/Party/EndpointID"
+            - "$ROOT/DespatchSupplierParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/DeliveryCustomerParty/Party/EndpointID"
+            - "$ROOT/DeliveryCustomerParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: false
+          - id: recipient_name
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: false
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(30|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: "(?!.*:extended:urn:www.peppol.eu:bis:peppol30a.*).*"
+
+        - name: PEPPOL_BIS.DespatchAdvice
+          root: DespatchAdvice
+          fields:
+          - id: sender_id
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/EndpointID"
+            - "$ROOT/DespatchSupplierParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$ROOT/DeliveryCustomerParty/Party/EndpointID"
+            - "$ROOT/DeliveryCustomerParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/DespatchSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: false
+          - id: recipient_name
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: false
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(30|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: "(?!.*:extended:urn:www.peppol.eu:bis:peppol30a.*).*"
 
         - name: PEPPOL_BIS.Catalogue
           root: "$SBD/Catalogue"
