@@ -363,7 +363,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -371,7 +371,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: svefaktura_id
             paths:
             - "$SBDH/DocumentIdentification/Standard"
@@ -420,7 +420,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -428,8 +428,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
-            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+            mandatory: false
           - id: profile_id
             paths:
             - "$ROOT/ProfileID"
@@ -476,7 +475,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -484,7 +483,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: svefaktura_id
             paths:
             - "$SBDH/DocumentIdentification/Standard"
@@ -533,7 +532,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -541,7 +540,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: profile_id
             paths:
             - "$ROOT/ProfileID"
@@ -700,7 +699,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -708,7 +707,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: svefaktura_id
             paths:
             - "$SBDH/DocumentIdentification/Standard"
@@ -757,7 +756,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -765,7 +764,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: profile_id
             paths:
             - "$ROOT/ProfileID"
@@ -908,7 +907,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
@@ -916,7 +915,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: svefaktura_id
             paths:
             - "$SBDH/DocumentIdentification/Standard"
@@ -1088,7 +1087,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -1096,7 +1095,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: svefaktura_id
             paths:
             - "$SBDH/DocumentIdentification/Standard"
@@ -1145,7 +1144,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -1153,7 +1152,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: profile_id
             paths:
             - "$ROOT/ProfileID"
@@ -1200,7 +1199,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -1208,7 +1207,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: svefaktura_id
             paths:
             - "$SBDH/DocumentIdentification/Standard"
@@ -1257,7 +1256,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -1265,7 +1264,7 @@ peppol:
           - id: recipient_country_code
             paths:
             - "$ROOT/BuyerCustomerParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: profile_id
             paths:
             - "$ROOT/ProfileID"
@@ -1424,7 +1423,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/ReceiverParty/PartyName/Name"
@@ -1477,7 +1476,7 @@ peppol:
           - id: sender_country_code
             paths:
             - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
-            mandatory: true
+            mandatory: false
           - id: recipient_name
             paths:
             - "$ROOT/ReceiverParty/PartyName/Name"
