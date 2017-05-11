@@ -1,4 +1,4 @@
 ---
-- include: set-up.yml
+#- include: set-up.yml
 - include: file_list.yml
 ...

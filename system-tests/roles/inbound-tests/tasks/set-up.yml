@@ -1,7 +1,14 @@
 ---
+- name: create dir for test materials
+  become: yes
+  file:
+    path: "{{test_data_path}}"
+    state: directory
+    mode: 0750
+#    owner: "{{ansible_user_id}}"
+
 - name: git clone and pull test-materials from nocontrol repo
   git:
-    delegate_to: localhost
     repo: http://nocontrol.itella.net/gitbucket/git/Peppol/test-materials.git
     dest: "{{test_data_path}}"
 ...
