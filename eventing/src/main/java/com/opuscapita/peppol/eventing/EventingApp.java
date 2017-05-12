@@ -3,14 +3,18 @@ package com.opuscapita.peppol.eventing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.eventing.destinations.EventPersistenceReporter;
+import com.opuscapita.peppol.eventing.destinations.WebWatchDogReporterReporter;
+import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogMessenger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,9 +30,10 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing"})
 @EnableDiscoveryClient
 public class EventingApp {
+    @Autowired
+    WebWatchDogReporterReporter webWatchDogReporterReporter;
     @Value("${peppol.eventing.queue.in.name}")
     private String queueIn;
-
     @Value("${peppol.component.name}")
     private String componentName;
 
@@ -67,6 +72,7 @@ public class EventingApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 // add other handlers here, e.g. NTT
                 eventPersistenceReporter.process(cm);
+                webWatchDogReporterReporter.process(cm);
             }
         };
     }
