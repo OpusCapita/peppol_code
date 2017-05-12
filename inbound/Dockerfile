@@ -1,4 +1,4 @@
-FROM d-l-tools.ocnet.local:443/oxalis:3.2.0
+FROM d-l-tools.ocnet.local:443/oxalis:4.0.0-RC1
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 VOLUME "/etc/peppol2.0/inbound"
