@@ -31,7 +31,8 @@ public class ModuleConfigurationCheck extends Check {
     @Override
     public CheckResult run() {
         boolean result;
-        String errorMsg = "";
+        String oneModuleError = "";
+        String fullError = "";
         String details = "";
 
         try{
@@ -52,15 +53,17 @@ public class ModuleConfigurationCheck extends Check {
                     String configurationFile = Paths.get(remoteConfigFile.getFile()).getFileName().toString();
                     configuration.add(configurationFile);
                 }
-                errorMsg = testConfiguration(configuration, getExpectedConfigurationForModule(module));
+                oneModuleError = testConfiguration(configuration, getExpectedConfigurationForModule(module));
+                if(!oneModuleError.isEmpty())
+                    fullError += module + " failed: " + oneModuleError + " ";
             }
         }
         catch (Exception ex){
             ex.printStackTrace();
             return new CheckResult(name, false, "Configuration check failed " + ex, rawConfig);
         }
-        result = errorMsg.isEmpty() ? true : false;
-        details = errorMsg.isEmpty() ? "Configuration check successful" : errorMsg;
+        result = fullError.isEmpty() ? true : false;
+        details = oneModuleError.isEmpty() ? "Configuration check successful" : oneModuleError;
         return new CheckResult(name, result, details, rawConfig);
     }
 
@@ -68,13 +71,14 @@ public class ModuleConfigurationCheck extends Check {
     private String testConfiguration(Set<String> configuration, Set<String> expectedConfiguration) {
         if (configuration.size() != expectedConfiguration.size())
             return "Module configuration size doesn't match, expected: " + expectedConfiguration.size() + " real: "+ configuration.size();
-        return configuration.containsAll(expectedConfiguration) ? "" : "Module configuration doesn't match! check module-names !";
+        return configuration.containsAll(expectedConfiguration) ? "" : "Module configuration doesn't match!";
     }
 
     private Set<String> getExpectedConfigurationForModule(String module) {
         return new HashSet<>(
                 Arrays.asList("application.yml",
                         "application-" + profile + ".yml",
-                        module + "-" + profile + ".yml"));
+                        module + "-" + profile + ".yml",
+                        "application-document_types.yml"));
     }
 }
