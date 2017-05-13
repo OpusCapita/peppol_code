@@ -30,7 +30,9 @@ public class ModuleConfigurationCheck extends Check {
 
     @Override
     public CheckResult run() {
-        boolean result = true;
+        boolean result;
+        String errorMsg = "";
+        String details = "";
 
         try{
             host = rawConfig.get("host").replaceAll("/$","");
@@ -50,24 +52,23 @@ public class ModuleConfigurationCheck extends Check {
                     String configurationFile = Paths.get(remoteConfigFile.getFile()).getFileName().toString();
                     configuration.add(configurationFile);
                 }
-
-                if(!testConfiguration(configuration, getExpectedConfigurationForModule(module)))
-                    result = false;
+                errorMsg = testConfiguration(configuration, getExpectedConfigurationForModule(module));
             }
         }
         catch (Exception ex){
             ex.printStackTrace();
             return new CheckResult(name, false, "Configuration check failed " + ex, rawConfig);
         }
-
-        return new CheckResult(name, result, "Configuration check successful", rawConfig);
+        result = errorMsg.isEmpty() ? true : false;
+        details = errorMsg.isEmpty() ? "Configuration check successful" : errorMsg;
+        return new CheckResult(name, result, details, rawConfig);
     }
 
     //comparing expected configuration files and the actual files found on server
-    private boolean testConfiguration(Set<String> configuration, Set<String> expectedConfiguration) {
+    private String testConfiguration(Set<String> configuration, Set<String> expectedConfiguration) {
         if (configuration.size() != expectedConfiguration.size())
-            return false;
-        return configuration.containsAll(expectedConfiguration);
+            return "Module configuration size doesn't match, expected: " + expectedConfiguration.size() + " real: "+ configuration.size();
+        return configuration.containsAll(expectedConfiguration) ? "" : "Module configuration doesn't match! check module-names !";
     }
 
     private Set<String> getExpectedConfigurationForModule(String module) {
