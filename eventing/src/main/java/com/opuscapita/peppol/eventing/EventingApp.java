@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Sergejs.Roze
  */
-@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing"})
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing", "com.opuscapita.peppol.eventing.destinations.webwatchdog"})
 @EnableDiscoveryClient
 public class EventingApp {
     @Autowired
