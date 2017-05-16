@@ -1,11 +1,8 @@
 package com.opuscapita.peppol.eventing.destinations.webwatchdog;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 /**
  * Created by Daniil on 05.07.2016.
  */
-@ConfigurationProperties(prefix = "wwd")
 public class WebWatchDogConfig {
 
     private String folder;

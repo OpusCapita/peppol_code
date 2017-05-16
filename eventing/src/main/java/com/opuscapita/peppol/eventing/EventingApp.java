@@ -8,6 +8,7 @@ import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.eventing.destinations.EventPersistenceReporter;
 import com.opuscapita.peppol.eventing.destinations.WebWatchDogReporterReporter;
+import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogConfig;
 import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogMessenger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,8 +38,19 @@ public class EventingApp {
     @Value("${peppol.component.name}")
     private String componentName;
 
+    @Value("${wwd.folder}")
+    private String webWatchDogFolder;
+
+    @Value("${wwd.prefix}")
+    private String webWatchDogPrefix;
+
     public static void main(String[] args) {
         SpringApplication.run(EventingApp.class, args);
+    }
+
+    @Bean
+    WebWatchDogConfig webWatchDogConfig() {
+        return new WebWatchDogConfig(webWatchDogFolder, webWatchDogPrefix);
     }
 
     @SuppressWarnings("Duplicates")
