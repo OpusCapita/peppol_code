@@ -31,27 +31,33 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing", "com.opuscapita.peppol.eventing.destinations.webwatchdog"})
 @EnableDiscoveryClient
 public class EventingApp {
+/*
     @Autowired
     WebWatchDogReporterReporter webWatchDogReporterReporter;
+*/
     @Value("${peppol.eventing.queue.in.name}")
     private String queueIn;
     @Value("${peppol.component.name}")
     private String componentName;
 
+/*
     @Value("${wwd.folder}")
     private String webWatchDogFolder;
 
     @Value("${wwd.prefix}")
     private String webWatchDogPrefix;
+*/
 
     public static void main(String[] args) {
         SpringApplication.run(EventingApp.class, args);
     }
 
+/*
     @Bean
     WebWatchDogConfig webWatchDogConfig() {
         return new WebWatchDogConfig(webWatchDogFolder, webWatchDogPrefix);
     }
+*/
 
     @SuppressWarnings("Duplicates")
     @Bean
@@ -84,7 +90,7 @@ public class EventingApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 // add other handlers here, e.g. NTT
                 eventPersistenceReporter.process(cm);
-                webWatchDogReporterReporter.process(cm);
+                //webWatchDogReporterReporter.process(cm);
             }
         };
     }
