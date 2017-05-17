@@ -9,7 +9,7 @@
   register: xibLog
 
 - name: transmissionID '{{ transmissionId }}' is found in transports logs
-  ignore_errors: no
+  ignore_errors: yes
   assert:
     that:
       - ("transmissionId in a2aLog.stdout") or ("transmissionId in xibLog.stdout")
