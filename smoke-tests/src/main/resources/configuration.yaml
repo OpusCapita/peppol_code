@@ -49,3 +49,4 @@ tests:
        host: http://localhost:441
        module-names: events-persistence transport
        profile: development
+       expected-configurations: application.yml application-document_types.yml

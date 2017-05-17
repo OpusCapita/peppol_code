@@ -11,17 +11,15 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by bambr on 16.20.10.
  */
 public class ModuleConfigurationCheck extends Check {
 
-    String profile, host;
+    private String profile, host;
+    private String[] configurableConfiguration;
 
     public ModuleConfigurationCheck(String moduleName, Map<String, String> params) {
         super(moduleName,params);
@@ -39,6 +37,7 @@ public class ModuleConfigurationCheck extends Check {
             host = rawConfig.get("host").replaceAll("/$","");
             profile = rawConfig.get("profile");
             String[] modules = rawConfig.get("module-names").trim().split(" ");
+            configurableConfiguration = rawConfig.get("expected-configurations").trim().split(" ");
 
             for (String module : modules){
                 URL url = new URL(host + "/" + module + "/" + profile);
@@ -68,17 +67,16 @@ public class ModuleConfigurationCheck extends Check {
     }
 
     //comparing expected configuration files and the actual files found on server
-    private String testConfiguration(Set<String> configuration, Set<String> expectedConfiguration) {
+    private String testConfiguration(Set<String> configuration, List<String> expectedConfiguration) {
         if (configuration.size() != expectedConfiguration.size())
             return "Module configuration size doesn't match, expected: " + expectedConfiguration.size() + " real: "+ configuration.size();
         return configuration.containsAll(expectedConfiguration) ? "" : "Module configuration doesn't match!";
     }
 
-    private Set<String> getExpectedConfigurationForModule(String module) {
-        return new HashSet<>(
-                Arrays.asList("application.yml",
-                        "application-" + profile + ".yml",
-                        module + "-" + profile + ".yml",
-                        "application-document_types.yml"));
+    private List<String> getExpectedConfigurationForModule(String module) {
+        List<String> moduleExpectedConfiguration = Arrays.asList(configurableConfiguration);
+        moduleExpectedConfiguration.add("application-" + profile + ".yml");
+        moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
+        return  moduleExpectedConfiguration;
     }
 }
