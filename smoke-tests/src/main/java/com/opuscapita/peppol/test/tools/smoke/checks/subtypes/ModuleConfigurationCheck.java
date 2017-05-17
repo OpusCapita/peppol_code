@@ -74,7 +74,7 @@ public class ModuleConfigurationCheck extends Check {
     }
 
     private List<String> getExpectedConfigurationForModule(String module) {
-        List<String> moduleExpectedConfiguration = Arrays.asList(configurableConfiguration);
+        List<String> moduleExpectedConfiguration = new ArrayList<>(Arrays.asList(configurableConfiguration));
         moduleExpectedConfiguration.add("application-" + profile + ".yml");
         moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
         return  moduleExpectedConfiguration;
