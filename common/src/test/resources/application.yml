@@ -161,7 +161,7 @@ peppol:
             paths:
             - "$SBDH/Receiver/Identifier"
             - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
             mandatory: true
           - id: version_id
             paths:
@@ -221,7 +221,7 @@ peppol:
             paths:
             - "$SBDH/Receiver/Identifier"
             - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
             mandatory: true
           - id: version_id
             paths:
@@ -885,7 +885,7 @@ peppol:
             paths:
             - "$SBDH/Receiver/Identifier"
             - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
             mandatory: true
           - id: version_id
             paths:
