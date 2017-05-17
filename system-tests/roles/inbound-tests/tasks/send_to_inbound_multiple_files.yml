@@ -25,8 +25,13 @@
   shell: less "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.txt"
   register: report
 
+- debug: 
+    var: report
+
 - name: check if any assert has failed up until now
   fail: msg="system test failed"
-  when: "'Failed' in report.stdout"
+  when: 
+    - "'Failed' in report.stdout"
+    - "report.stdout==''"
 
 ...
