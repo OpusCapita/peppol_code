@@ -21,6 +21,8 @@
     line: "{{counter}}|{{file}}|{{transmissionId}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{transport_result}}"
 #report update END -----------------------
 
+- debug: 
+    var: report_path
 - name: register report
   shell: less "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.txt"
   register: report
@@ -32,6 +34,5 @@
   fail: msg="system test failed"
   when: 
     - "'Failed' in report.stdout"
-    - "report.stdout==''"
 
 ...
