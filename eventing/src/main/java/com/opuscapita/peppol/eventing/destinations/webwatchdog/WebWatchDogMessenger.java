@@ -13,7 +13,7 @@ import java.util.Arrays;
 /**
  * Created by Daniil on 05.07.2016.
  */
-//@Component
+@Component
 public class WebWatchDogMessenger {
     WebWatchDogConfig webWatchDogConfig;
 
