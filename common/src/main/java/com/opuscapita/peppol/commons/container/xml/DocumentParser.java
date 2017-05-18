@@ -33,8 +33,8 @@ public class DocumentParser {
     @NotNull
     public DocumentInfo parse(@NotNull InputStream inputStream, @NotNull String fileName, @NotNull Endpoint endpoint) throws Exception {
         logger.warn("DocumentParserHandler created!");
+        logger.warn("templates.getCount() -> " + templates.getCount());
         DocumentParserHandler handler = new DocumentParserHandler(fileName, templates, endpoint);
-
         try {
             saxParser.parse(inputStream, handler);
         } catch (Exception e) {

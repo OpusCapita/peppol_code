@@ -41,6 +41,7 @@ public class MqProducer implements Producer {
     private String sourceDirectory;
     private String destinationQueue;
 
+    //TODO change JsonDocumentTemplates parser ->  Document templates
     public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String endpoint, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
         this.mqSettings = mqSettings;
         this.sourceDirectory = sourceDirectory;

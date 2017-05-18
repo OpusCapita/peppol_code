@@ -22,4 +22,8 @@ public class DocumentTemplates {
     public void setTemplates(@NotNull List<DocumentTemplate> templates) {
         this.templates = templates;
     }
+
+    public int getCount(){
+        return templates.size();
+    }
 }

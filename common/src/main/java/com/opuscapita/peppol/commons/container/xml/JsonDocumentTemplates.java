@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * @author Sergejs.Roze
  */
+@Deprecated
 public class JsonDocumentTemplates extends DocumentTemplates {
     private final static Logger logger = LoggerFactory.getLogger(JsonDocumentTemplates.class);
 
