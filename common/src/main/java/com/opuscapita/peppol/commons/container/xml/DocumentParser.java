@@ -32,6 +32,7 @@ public class DocumentParser {
 
     @NotNull
     public DocumentInfo parse(@NotNull InputStream inputStream, @NotNull String fileName, @NotNull Endpoint endpoint) throws Exception {
+        logger.warn("DocumentParserHandler created!");
         DocumentParserHandler handler = new DocumentParserHandler(fileName, templates, endpoint);
 
         try {
