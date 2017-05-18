@@ -5,13 +5,15 @@ VOLUME "/etc/peppol2.0/eventing"
 ENV EVENTING_HOME "/opt/local/services/peppol2.0/eventing"
 ENV EVENTING_CONFIG "/etc/peppol2.0/eventing"
 
-RUN \
-    mkdir -p "${EVENTING_HOME}" && \
-    mkdir -p "${EVENTING_CONFIG}" && \
-    ln -s "${EVENTING_CONFIG}/" "${EVENTING_HOME}/config"
+USER root
+RUN set -x \
+    && mkdir -p "${EVENTING_HOME}" "${EVENTING_CONFIG}" \
+    && chown -R peppol "${EVENTING_HOME}" "${EVENTING_CONFIG}" \
+    && ln -s "${EVENTING_CONFIG}/" "${EVENTING_HOME}/config"
 
+USER peppol
 WORKDIR "${EVENTING_HOME}"
+
 ADD ["build/libs/eventing.jar", "eventing.jar"]
 
 CMD java $JAVA_OPTS -jar eventing.jar
-
