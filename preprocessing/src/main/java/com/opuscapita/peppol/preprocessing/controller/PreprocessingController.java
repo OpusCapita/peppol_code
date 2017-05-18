@@ -48,7 +48,7 @@ public class PreprocessingController {
             throw new IllegalArgumentException("File name is empty in received message");
         }
 
-        logger.info("Parsing file: " + cm.getFileName());
+        logger.info("Processing file: " + cm.getFileName());
         DocumentInfo document;
         Endpoint endpoint;
         if (cm.isInbound()) {
