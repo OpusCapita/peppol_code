@@ -128,10 +128,12 @@ public class DocumentParserHandler extends DefaultHandler {
         if (templates.size() == 0) {
             return noResult(null);
         }
-
+        logger.info("templates.size() -> " + templates.size()); //TODO remove
         // remove all templates without matched root
         Template best = templates.stream().max(Comparator.comparingInt(t -> t.matchedCount)).orElse(null);
+        logger.info("best template != null -> " + (best != null));
         templates.removeIf(template -> ":".equals(template.rootNameSpace));
+        logger.info("templates.size() -> " + templates.size());
         if (templates.size() == 0) {
             return noResult(best);
         }
@@ -164,6 +166,7 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     private DocumentInfo oneResult(Template template) {
+        logger.info("private DocumentInfo oneResult called !"); //TODO remove
         DocumentInfo result = new DocumentInfo();
         result.setRootNodeName(template.originalRoot);
         result.setRootNameSpace(template.rootNameSpace);
