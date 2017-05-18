@@ -1,4 +1,6 @@
 ---
+#sending file to outbound, then doing asserts for each module
+
 - name: Copy file to outbound from-a2a dir
   become: "{{sudo}}"
   copy:
@@ -15,16 +17,21 @@
 - set_fact: fileName="{{fileName.stdout}}"
 - debug: var=fileName
 
+
+#report START ------:
 - set_fact: counter="{{counter| int +1 }}"
   register: counter
+
 - debug: var=counter
 
 - name: update test results
+  delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/outbound-valid-tests{{ansible_date_time.iso8601_basic}}.txt"
+    dest: "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
-    line: '{{counter}}|{{file}}'
+    line: '{{counter}}|{{file}}|{{fileName}}'
+#report END -------
 
 - pause:
     seconds: 130

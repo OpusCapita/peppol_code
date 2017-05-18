@@ -1,4 +1,6 @@
 ---
+# doing asserts for each module #
+
 - include: transport_assert.yml
 - include: preprocessing_assert.yml
 - include: internal-routing_assert.yml
@@ -7,11 +9,28 @@
 
 #report update START ---------------------
 - name: update test results
+  delegate_to: localhost
   lineinfile:
     create: no
-    dest: "{{report_path}}/outbound-valid-tests{{ansible_date_time.iso8601_basic}}.txt"
+    dest: "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
-    regexp: "^{{counter}}|{{file}}"
-    line: "{{counter}}|{{file}}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
+    regexp: "^{{counter}}|{{file}}|{{fileName}}"
+    line: "{{counter}}|{{file}}|{{fileName}}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
 #report update END -----------------------
+
+#checking for failures in report- test has to fail if any asseert has failed #
+- debug:
+    var: report_path
+- name: register report
+  delegate_to: localhost
+  shell: cat "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.txt"
+  register: report
+
+- debug:
+    var: report
+
+- name: check if any assert has failed up until now
+  fail: msg="system test failed"
+  when:
+    - "'Failed' in report.stdout"
 ...

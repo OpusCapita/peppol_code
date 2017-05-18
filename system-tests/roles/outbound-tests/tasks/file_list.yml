@@ -1,10 +1,15 @@
 ---
+#File_list.yml#
+#This is where all the test materials are taken from #
+
 - include: file_to_transport-from-a2a.yml
   vars: 
     file: "{{item}}"
-  with_fileglob:
-    - "{{test_data_path}}/validation_test_suite/valid/*"
-    - "{{test_data_path}}/svefaktura_1.0/SBDH_wrapped_examples/Valid/*"
-    - "{{test_data_path}}/EHF/EHF_2.0.7/Valid/*"
-#    - "{{test_data_path}}/performance-tests-materials/performance-test-10/*"
+  with_items:
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_OC.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_creditnote.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/peppol-bis.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml"
 ...
