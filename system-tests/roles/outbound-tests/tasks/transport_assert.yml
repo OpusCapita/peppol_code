@@ -9,7 +9,7 @@
   register: xibLog
 
 - name: fileName '{{ fileName }}' is found in transports logs
-  ignore_errors: no
+  ignore_errors: yes
   assert:
     that:
       - ("fileName in a2aLog.stdout") or ("fileName in xibLog.stdout")
