@@ -24,7 +24,8 @@
 - debug: 
     var: report_path
 - name: register report
-  shell: less "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.txt"
+  delegate_to: localhost
+  shell: cat "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.txt"
   register: report
 
 - debug: 
