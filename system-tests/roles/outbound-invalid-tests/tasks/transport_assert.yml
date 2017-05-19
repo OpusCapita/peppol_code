@@ -8,10 +8,16 @@
   shell: docker logs transport-from-xib
   register: xibLog
 
-- name: transmissionid "{{ fileName }}" is found in transports logs
+- name: fileName '{{ fileName }}' is found in transports logs
+  ignore_errors: yes
   assert:
     that:
-      - ("transmissionId in a2aLog.stdout") or ("transmissionId in xibLog.stdout")
-    msg: "tranmissionId should be found in transports logs for file '{{ file }}'"
+      - ("fileName in a2aLog.stdout") or ("fileName in xibLog.stdout")
+    msg: "Failed"
+  register: result
+
+- set_fact: transport_result="transport={{result.msg}}"
+- debug: var=transport_result
+
 ...
 
