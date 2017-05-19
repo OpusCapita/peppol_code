@@ -4,13 +4,13 @@
   register: log
 
 - name: Assert if transmissionID "{{ transmissionId }}" is found in email-notificator log 
-  ignore_errors: no
+  ignore_errors: yes
   assert:
     that:
       - "transmissionId in log.stdout"
     msg: "Failed"
   register: result
 
-- set_fact: email_notificator_result="Preprocessing={{result.msg}}"
+- set_fact: email_notificator_result="email-notificator={{result.msg}}"
 - debug: var=email_notificator_result
 ...
