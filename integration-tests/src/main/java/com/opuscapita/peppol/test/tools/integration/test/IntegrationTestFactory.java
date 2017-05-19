@@ -8,6 +8,8 @@ import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.subscribers.SubscriberFactory;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,10 +20,14 @@ import java.util.stream.Collectors;
 /**
  * Created by gamanse1 on 2016.11.16..
  */
+@Component
 public class IntegrationTestFactory {
     private final static Logger logger = LogManager.getLogger(IntegrationTestFactory.class);
+    @Autowired private ProducerFactory producerFactory;
+    @Autowired private SubscriberFactory subscriberFactory;
+    @Autowired private ConsumerFactory consumerFactory;
 
-    public static IntegrationTest createTest(String moduleName, Map<String, ?> moduleSettings, Map<String, Object> genericConfiguration) {
+    public IntegrationTest createTest(String moduleName, Map<String, ?> moduleSettings, Map<String, Object> genericConfiguration) {
         if (moduleName == null || moduleName.isEmpty()) {
             logger.error("module name not specified!");
             return null;
@@ -43,18 +49,18 @@ public class IntegrationTestFactory {
         return new IntegrationTest(moduleName, producers, subscribers, new ArrayList<>(consumers.values()));
     }
 
-    private static List<Subscriber> createSubscribers(Map<String, Object> genericConfiguration, List<Map<String, ?>> subscribersConfiguration, Map<String, Consumer> consumers) {
-        return subscribersConfiguration.stream().map(subscriber -> SubscriberFactory.createSubscriber(subscriber.entrySet().iterator().next(), genericConfiguration, consumers)).collect(Collectors.toList());
+    private List<Subscriber> createSubscribers(Map<String, Object> genericConfiguration, List<Map<String, ?>> subscribersConfiguration, Map<String, Consumer> consumers) {
+        return subscribersConfiguration.stream().map(subscriber -> subscriberFactory.createSubscriber(subscriber.entrySet().iterator().next(), genericConfiguration, consumers)).collect(Collectors.toList());
     }
 
-    private static List<Producer> createProducers(Map<String, Object> genericConfiguration, Map<String, ?> producersConfiguration) {
-        return producersConfiguration.entrySet().stream().map(entry -> ProducerFactory.createProducer(entry, genericConfiguration)).collect(Collectors.toList());
+    private List<Producer> createProducers(Map<String, Object> genericConfiguration, Map<String, ?> producersConfiguration) {
+        return producersConfiguration.entrySet().stream().map(entry -> producerFactory.createProducer(entry, genericConfiguration)).collect(Collectors.toList());
     }
 
-    private static Map<String, Consumer> createConsumers(Map<String, Object> genericConfiguration, List<Map<String,?>> consumersConfiguration){
+    private Map<String, Consumer> createConsumers(Map<String, Object> genericConfiguration, List<Map<String,?>> consumersConfiguration){
          Map<String, Consumer> consumers = new HashMap<>();
         for (Map<String, ?> consumerConfig : consumersConfiguration) {
-            Consumer consumer = ConsumerFactory.createConsumer(consumerConfig.entrySet().iterator().next(), genericConfiguration);
+            Consumer consumer = consumerFactory.createConsumer(consumerConfig.entrySet().iterator().next(), genericConfiguration);
             consumers.put(consumer.getId(),consumer);
         }
         return consumers;

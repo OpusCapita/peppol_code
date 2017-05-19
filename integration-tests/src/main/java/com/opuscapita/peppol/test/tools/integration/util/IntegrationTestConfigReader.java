@@ -6,6 +6,8 @@ import com.opuscapita.peppol.test.tools.integration.test.IntegrationTest;
 import com.opuscapita.peppol.test.tools.integration.test.IntegrationTestFactory;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -17,19 +19,16 @@ import java.util.Map;
 /**
  * Created by gamanse1 on 2016.11.14..
  */
+@Component
 public class IntegrationTestConfigReader {
+@Autowired private IntegrationTestFactory integrationTestFactory;
 
     private final static Logger logger = LogManager.getLogger(IntegrationTestConfigReader.class);
-    private final MessageQueue mq;
     private String configFile;
     private Map<String, Object> genericConfiguration = new HashMap<>();
 
-    public IntegrationTestConfigReader(String configFile, MessageQueue staticMq) {
-        this.configFile = configFile;
-        this.mq = staticMq;
-    }
+    public IntegrationTestConfig initConfig(String configFile, MessageQueue mq) {
 
-    public IntegrationTestConfig initConfig() {
         Yaml yaml = new Yaml();
         logger.info("IntegrationTestConfigReader: config loaded: " + configFile);
         IntegrationTestConfig testConfig = new IntegrationTestConfig();
@@ -38,13 +37,13 @@ public class IntegrationTestConfigReader {
                     .load(new FileInputStream(new File(configFile)));
             Map<String, Object> configuration = (Map<String, Object>) yamlParser.get("configurations");
             Map<String, Object> modules = (Map<String, Object>) yamlParser.get("tests");
-            loadConfiguration(configuration);
+            loadConfiguration(configuration, mq);
 
             for(Map.Entry<String,Object> module : modules.entrySet()){
                 String moduleName = module.getKey();
                 Map<String,?> moduleConfig = (Map<String, ?>) module.getValue();
 
-                IntegrationTest test = IntegrationTestFactory.createTest(moduleName, moduleConfig, genericConfiguration);
+                IntegrationTest test = integrationTestFactory.createTest(moduleName, moduleConfig, genericConfiguration);
                 testConfig.addTest(test);
             }
         }
@@ -55,7 +54,7 @@ public class IntegrationTestConfigReader {
         return testConfig;
     }
 
-    private void loadConfiguration(Map<String, Object> configuration) {
+    private void loadConfiguration(Map<String, Object> configuration, MessageQueue mq) {
         Map<String, String> databases = (Map<String, String>) configuration.get("databases");
         Map<String, String> queues = (Map<String, String>) configuration.get("queues");
         genericConfiguration.putAll(databases);
