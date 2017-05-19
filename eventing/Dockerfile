@@ -11,9 +11,11 @@ RUN set -x \
     && chown -R peppol "${EVENTING_HOME}" "${EVENTING_CONFIG}" \
     && ln -s "${EVENTING_CONFIG}/" "${EVENTING_HOME}/config"
 
+ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
+
 USER peppol
 WORKDIR "${EVENTING_HOME}"
 
 ADD ["build/libs/eventing.jar", "eventing.jar"]
 
-CMD java $JAVA_OPTS -jar eventing.jar
+ENTRYPOINT ["/docker-entrypoint.sh", "-jar", "eventing.jar"]

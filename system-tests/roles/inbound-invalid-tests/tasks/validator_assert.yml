@@ -4,7 +4,7 @@
   register: log
 
 - name: Assert if transmissionID "{{ transmissionId }}" is found in validator log 
-  ignore_errors: no
+  ignore_errors: yes
   assert:
     that:
       - "transmissionId in log.stdout"

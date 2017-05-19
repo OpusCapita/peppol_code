@@ -1,19 +1,38 @@
 ---
+# doing asserts for each module #
+
 - include: transport_assert.yml
-- include: assert.yml
-  vars:
-    module_name: preprocessing
-  tags: preprocessing
-- include: assert.yml
-  vars:
-    module_name: internal-routing
-  tags: internal-routing
-- include: assert.yml
-  vars:
-    module_name: validator
-  tags: validator
-- include: assert.yml
-  vars:
-    module_name: email-notificator
-  tags: outbound
+- include: preprocessing_assert.yml
+- include: email_notificator_assert.yml
+#- include: internal-routing_assert.yml
+#- include: validator_assert.yml
+
+#report update START ---------------------
+- name: update test results
+  delegate_to: localhost
+  lineinfile:
+    create: no
+    dest: "{{report_path}}/outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.txt"
+    state: present
+    regexp: "^{{counter}}|{{file}}|{{fileName}}"
+    line: "{{counter}}|{{file}}|{{fileName}}|{{transport_result}}|{{preprocessing_result}}|{{email_notificator_result}}"
+#    line: "{{counter}}|{{file}}|{{fileName}}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
+#report update END -----------------------
+
+#checking for failures in report- test has to fail if any asseert has failed #
+- debug:
+    var: report_path
+- name: register report
+  delegate_to: localhost
+  shell: cat "{{report_path}}/outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.txt"
+  register: report
+
+- debug:
+    var: report
+
+- name: check if any assert has failed up until now
+  fail: msg="system test failed"
+  when:
+    - "'Failed' in report.stdout"
+
 ...

@@ -1,7 +1,4 @@
 ---
 #- include: set-up.yml
 - include: file_list.yml
-- pause:
-    minutes: 3
-- include: log_checker.yml
 ...
