@@ -90,7 +90,7 @@ public class EventingApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 // add other handlers here, e.g. NTT
                 eventPersistenceReporter.process(cm);
-                //webWatchDogReporterReporter.process(cm);
+                webWatchDogReporterReporter.process(cm);
             }
         };
     }
