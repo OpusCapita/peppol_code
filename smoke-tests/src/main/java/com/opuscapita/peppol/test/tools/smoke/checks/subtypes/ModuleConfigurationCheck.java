@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.opuscapita.peppol.test.tools.smoke.checks.Check;
 import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
+import com.sun.deploy.util.StringUtils;
 
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -29,7 +30,7 @@ public class ModuleConfigurationCheck extends Check {
     @Override
     public CheckResult run() {
         boolean result;
-        String oneModuleError = "";
+        Optional<String> oneModuleError;
         String fullError = "";
         String details = "";
 
@@ -53,8 +54,8 @@ public class ModuleConfigurationCheck extends Check {
                     configuration.add(configurationFile);
                 }
                 oneModuleError = testConfiguration(configuration, getExpectedConfigurationForModule(module));
-                if(!oneModuleError.isEmpty())
-                    fullError += module + " failed: " + oneModuleError + " ";
+                if(oneModuleError.isPresent())
+                    fullError += module.toUpperCase() + " Check failed: " + oneModuleError.get() + " ";
             }
         }
         catch (Exception ex){
@@ -62,15 +63,17 @@ public class ModuleConfigurationCheck extends Check {
             return new CheckResult(name, false, "Configuration check failed " + ex, rawConfig);
         }
         result = fullError.isEmpty() ? true : false;
-        details = oneModuleError.isEmpty() ? "Configuration check successful" : oneModuleError;
+        details = fullError.isEmpty() ? "Configuration check successful" : fullError;
         return new CheckResult(name, result, details, rawConfig);
     }
 
     //comparing expected configuration files and the actual files found on server
-    private String testConfiguration(Set<String> configuration, List<String> expectedConfiguration) {
-        if (configuration.size() != expectedConfiguration.size())
-            return "Module configuration size doesn't match, expected: " + expectedConfiguration.size() + " real: "+ configuration.size();
-        return configuration.containsAll(expectedConfiguration) ? "" : "Module configuration doesn't match!";
+    private Optional<String> testConfiguration(Set<String> configuration, List<String> expectedConfiguration) {
+        Optional<String> error = Optional.empty();
+        if (configuration.size() != expectedConfiguration.size() || !configuration.containsAll(expectedConfiguration))
+            error = Optional.of("Module configuration doesn't match, expected: [" + StringUtils.join(expectedConfiguration, ", ")  +
+                    "] received configuration: [" + StringUtils.join(configuration, ", ") + "]");
+        return error;
     }
 
     private List<String> getExpectedConfigurationForModule(String module) {
