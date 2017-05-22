@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.opuscapita.peppol.test.tools.smoke.checks.Check;
 import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
-import com.sun.deploy.util.StringUtils;
+import com.opuscapita.peppol.test.tools.smoke.util.StringJoinUtils;
 
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -71,8 +71,8 @@ public class ModuleConfigurationCheck extends Check {
     private Optional<String> testConfiguration(Set<String> configuration, List<String> expectedConfiguration) {
         Optional<String> error = Optional.empty();
         if (configuration.size() != expectedConfiguration.size() || !configuration.containsAll(expectedConfiguration))
-            error = Optional.of("Module configuration doesn't match, expected: [" + StringUtils.join(expectedConfiguration, ", ")  +
-                    "] received configuration: [" + StringUtils.join(configuration, ", ") + "]");
+            error = Optional.of("Module configuration doesn't match, expected: [" + StringJoinUtils.join(expectedConfiguration, ", ")  +
+                    "] received configuration: [" + StringJoinUtils.join(configuration, ", ") + "]");
         return error;
     }
 
