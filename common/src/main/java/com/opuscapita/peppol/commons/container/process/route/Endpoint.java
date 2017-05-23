@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class Endpoint implements Serializable {
+    private static final long serialVersionUID = -3805355254135733535L;
 
     private final String name;
     private final ProcessType type;

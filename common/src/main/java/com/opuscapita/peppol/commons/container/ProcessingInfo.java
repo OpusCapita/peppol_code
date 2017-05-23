@@ -14,6 +14,8 @@ import java.io.Serializable;
  */
 @SuppressWarnings("WeakerAccess")
 public class ProcessingInfo implements Serializable {
+    private static final long serialVersionUID = -556566093311452294L;
+
     private final Endpoint source;
     private String sourceMetadata;
     private Route route;
