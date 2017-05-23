@@ -9,6 +9,8 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class DocumentWarning implements Serializable {
+    private static final long serialVersionUID = 4551706414937672793L;
+
     private final Endpoint source;
     private final String message;
 

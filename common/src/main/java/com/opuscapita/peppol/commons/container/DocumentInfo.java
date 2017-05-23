@@ -17,6 +17,8 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public class DocumentInfo implements Serializable {
+    private static final long serialVersionUID = 8462853143385799024L;
+
     public static final String UNKNOWN_RECIPIENT = "";
     public static final String UNKNOWN_SENDER = "";
     public static final String UNKNOWN_VERSION_ID = "";
@@ -30,6 +32,7 @@ public class DocumentInfo implements Serializable {
     public static final String UNKNOWN_PROFILE_ID = "";
     public static final String UNKNOWN_CUSTOMIZATION_ID = "";
     public static final String UNKNOWN_DOCUMENT_TYPE = "";
+
     private final List<DocumentError> errors = new ArrayList<>();
     private final List<DocumentWarning> warnings = new ArrayList<>();
     private String senderId = UNKNOWN_SENDER;

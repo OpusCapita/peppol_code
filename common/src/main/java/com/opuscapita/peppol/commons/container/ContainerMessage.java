@@ -18,6 +18,8 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class ContainerMessage implements Serializable {
+    private static final long serialVersionUID = -7283779459299141635L;
+
     private ProcessingInfo processingInfo;
     private String fileName;
     private DocumentInfo documentInfo;
