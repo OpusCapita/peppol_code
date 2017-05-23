@@ -192,7 +192,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx|xy):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -256,7 +256,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(04|xy|05|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -312,7 +312,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xy|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -693,11 +693,11 @@ peppol:
               mandatory: false
             - id: recipient_name
               paths:
-              - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
-              mandatory: true
+              - "$ROOT/ReceiverParty/Party/PartyName/Name"
+              mandatory: false
             - id: recipient_country_code
               paths:
-              - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              - "$ROOT/ReceiverParty/Party/PostalAddress/Country/IdentificationCode"
               mandatory: false
             - id: svefaktura_id
               paths:
@@ -708,7 +708,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(01|05|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(01|05|xy|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -750,17 +750,17 @@ peppol:
               mandatory: false
             - id: recipient_name
               paths:
-              - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
-              mandatory: true
+              - "$ROOT/ReceiverParty/Party/PartyName/Name"
+              mandatory: false
             - id: recipient_country_code
               paths:
-              - "$ROOT/SellerSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              - "$ROOT/ReceiverParty/Party/PostalAddress/Country/IdentificationCode"
               mandatory: false
             - id: profile_id
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(01|05|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(01|05|xy|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -980,7 +980,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xy|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -1036,7 +1036,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xy|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -1418,7 +1418,7 @@ peppol:
             - id: recipient_name
               paths:
               - "$ROOT/ReceiverParty/PartyName/Name"
-              mandatory: true
+              mandatory: false
             - id: svefaktura_id
               paths:
               - "$SBDH/DocumentIdentification/Standard"
@@ -1428,7 +1428,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(01|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(01|xy|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -1471,12 +1471,12 @@ peppol:
             - id: recipient_name
               paths:
               - "$ROOT/ReceiverParty/PartyName/Name"
-              mandatory: true
+              mandatory: false
             - id: profile_id
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(01|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(01|xy|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
