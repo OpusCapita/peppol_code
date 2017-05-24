@@ -1,0 +1,16 @@
+---
+- name: Show validator log, search for fileName "{{ fileName }}"
+  shell: docker logs validator
+  register: log
+
+- name: fileName "{{ fileName }}" is found in validator log 
+  ignore_errors: yes
+  assert:
+    that:
+      - "fileName in log.stdout"
+    msg: "Failed"
+  register: result
+
+- set_fact: validator_result="validator={{result.msg}}"
+- debug: var=validator_result
+...

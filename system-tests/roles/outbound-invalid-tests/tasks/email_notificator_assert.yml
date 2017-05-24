@@ -1,0 +1,16 @@
+---
+- name: Show email-notificator log, search for fileName "{{ fileName }}"
+  shell: docker logs email-notificator
+  register: log
+
+- name: Assert if fileName "{{ fileName }}" is found in email-notificator log 
+  ignore_errors: yes
+  assert:
+    that:
+      - "fileName in log.stdout"
+    msg: "Failed"
+  register: result
+
+- set_fact: email_notificator_result="email-notificator={{result.msg}}"
+- debug: var=email_notificator_result
+...

@@ -1,0 +1,16 @@
+---
+- name: Show log, search for fileName "{{ fileName }}"
+  shell: docker logs internal-routing
+  register: log
+
+- name: fileName "{{ fileName }}" is found in internal-routing log 
+  ignore_errors: yes
+  assert:
+    that:
+      - "fileName in log.stdout"
+    msg: "Failed"
+  register: result
+
+- set_fact: internal_routing_result="internal-routing={{result.msg}}"
+- debug: var=internal_routing_result
+...

@@ -1,0 +1,16 @@
+---
+- name: Show preprocessing log, search for fileName "{{fileName}}"
+  shell: docker logs preprocessing
+  register: log
+
+- name: Assert if fileName "{{fileName}}" is found in preprocessing log 
+  ignore_errors: yes
+  assert:
+    that:
+      - "fileName in log.stdout"
+    msg: "Failed"
+  register: result
+
+- set_fact: preprocessing_result="Preprocessing={{result.msg}}"
+- debug: var=preprocessing_result
+...
