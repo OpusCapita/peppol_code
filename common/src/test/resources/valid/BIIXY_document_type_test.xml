@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+	<StandardBusinessDocumentHeader>
+		<HeaderVersion>1.0</HeaderVersion>
+		<Sender>
+			<Identifier Authority="iso6523-actorid-upis">9908:914113172</Identifier>
+		</Sender>
+		<Receiver>
+			<Identifier Authority="iso6523-actorid-upis">9908:884205662</Identifier>
+		</Receiver>
+		<DocumentIdentification>
+			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
+			<TypeVersion>2.1</TypeVersion>
+			<InstanceIdentifier>5ba9b74c-292d-4382-996e-04ada2f8eb4e</InstanceIdentifier>
+			<Type>Invoice</Type>
+			<CreationDateAndTime>2017-04-26T09:58:51.895Z</CreationDateAndTime>
+		</DocumentIdentification>
+		<BusinessScope>
+			<Scope>
+				<Type>DOCUMENTID</Type>
+				<InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1</InstanceIdentifier>
+			</Scope>
+			<Scope>
+				<Type>PROCESSID</Type>
+				<InstanceIdentifier>urn:www.cenbii.eu:profile:bii05:ver2.0</InstanceIdentifier>
+			</Scope>
+		</BusinessScope>
+	</StandardBusinessDocumentHeader>
+	<ns:Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:oasis:names:specification:ubl:schema:xsd:CoreComponentParameters-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:ns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:stat="urn:oasis:names:specification:ubl:schema:xsd:DocumentStatusCode-1.0" xmlns:udt="urn:un:unece:uncefact:data:draft:UnqualifiedDataTypesSchemaModule:2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.cenbii.eu:profile.eu:biixy:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</cbc:CustomizationID>
+		<cbc:ProfileID>urn:www.cenbii.eu:profile:biixy:ver2.0</cbc:ProfileID>
+		<cbc:ID>0305267601</cbc:ID>
+		<cbc:CopyIndicator>false</cbc:CopyIndicator>
+		<cbc:IssueDate>2017-04-26</cbc:IssueDate>
+		<cbc:IssueTime>11:57:14</cbc:IssueTime>
+		<cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
+		<cbc:DocumentCurrencyCode listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
+		<cbc:AccountingCost>4500515226</cbc:AccountingCost>
+		<cac:OrderReference>
+			<cbc:ID>4500515226</cbc:ID>
+		</cac:OrderReference>
+		<cac:DespatchDocumentReference>
+			<cbc:ID>0155911055</cbc:ID>
+			<cbc:IssueDate>2017-04-06</cbc:IssueDate>
+		</cac:DespatchDocumentReference>
+		<cac:AccountingSupplierParty>
+			<cbc:CustomerAssignedAccountID>214</cbc:CustomerAssignedAccountID>
+			<cac:Party>
+				<cbc:EndpointID schemeID="NO:ORGNR">914113172</cbc:EndpointID>
+				<cac:PartyIdentification>
+					<cbc:ID schemeID="ZZZ">214</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>B. Braun Medical A/S</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>Kjaernasveien 13 B</cbc:StreetName>
+					<cbc:CityName>Vestskogen</cbc:CityName>
+					<cbc:PostalZone>3142</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:PostalAddress>
+				<cac:PartyTaxScheme>
+					<cbc:CompanyID schemeAgencyID="82" schemeID="NO:VAT">914113172MVA</cbc:CompanyID>
+					<cac:TaxScheme>
+						<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyLegalEntity>
+					<cbc:RegistrationName>B. Braun Medical A/S</cbc:RegistrationName>
+					<cbc:CompanyID schemeAgencyID="82" schemeID="NO:ORGNR">914113172</cbc:CompanyID>
+				</cac:PartyLegalEntity>
+				<cac:Contact>
+					<cbc:ID>BATCH</cbc:ID>
+					<cbc:Name>BATCH</cbc:Name>
+					<cbc:Telephone>033-35-1800</cbc:Telephone>
+					<cbc:Telefax>033-35-1900</cbc:Telefax>
+					<cbc:ElectronicMail>officemail.bbmn@bbraun.com</cbc:ElectronicMail>
+				</cac:Contact>
+				<cac:Person>
+					<cbc:FamilyName>BATCH</cbc:FamilyName>
+				</cac:Person>
+			</cac:Party>
+		</cac:AccountingSupplierParty>
+		<cac:AccountingCustomerParty>
+			<cac:Party>
+				<cbc:EndpointID schemeID="NO:ORGNR">884205662</cbc:EndpointID>
+				<cac:PartyIdentification>
+					<cbc:ID schemeID="ZZZ">0020154309</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>NorEngros Kjosavik AS</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>Kanalveien 5</cbc:StreetName>
+					<cbc:CityName>Stavanger</cbc:CityName>
+					<cbc:PostalZone>4033</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:PostalAddress>
+				<cac:PartyTaxScheme>
+					<cbc:CompanyID schemeAgencyID="82" schemeID="NO:VAT">884205662MVA</cbc:CompanyID>
+					<cac:TaxScheme>
+						<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyLegalEntity>
+					<cbc:RegistrationName>NorEngros Kjosavik AS</cbc:RegistrationName>
+					<cbc:CompanyID schemeAgencyID="82" schemeID="NO:ORGNR">884205662</cbc:CompanyID>
+				</cac:PartyLegalEntity>
+				<cac:Contact>
+					<cbc:ID>0020154309</cbc:ID>
+					<cbc:Name>Maiken Karlsson Pedersen</cbc:Name>
+					<cbc:ElectronicMail>Maiken Karlsson Pedersen</cbc:ElectronicMail>
+				</cac:Contact>
+				<cac:Person>
+					<cbc:FirstName>Maiken</cbc:FirstName>
+					<cbc:FamilyName>Pedersen</cbc:FamilyName>
+					<cbc:MiddleName>Karlsson</cbc:MiddleName>
+				</cac:Person>
+			</cac:Party>
+		</cac:AccountingCustomerParty>
+		<cac:PayeeParty>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="ZZZ">0020324041</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Norengros Kjosavik AS</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Postboks 23</cbc:StreetName>
+				<cbc:CityName>Stavanger</cbc:CityName>
+				<cbc:PostalZone>4064</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+		</cac:PayeeParty>
+		<cac:Delivery>
+			<cbc:ID>0020154309</cbc:ID>
+			<cbc:ActualDeliveryDate>2017-04-06</cbc:ActualDeliveryDate>
+			<cac:DeliveryLocation>
+				<cbc:ID schemeID="GLN">0020154309</cbc:ID>
+				<cac:Address>
+					<cbc:StreetName>Kanalveien 5</cbc:StreetName>
+					<cbc:CityName>Stavanger</cbc:CityName>
+					<cbc:PostalZone>4033</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:Address>
+			</cac:DeliveryLocation>
+		</cac:Delivery>
+		<cac:PaymentMeans>
+			<cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
+			<cbc:PaymentDueDate>2017-05-30</cbc:PaymentDueDate>
+			<cbc:PaymentID>305267601-</cbc:PaymentID>
+			<cac:PayeeFinancialAccount>
+				<cbc:ID schemeID="IBAN">NO3171760549430</cbc:ID>
+				<cac:FinancialInstitutionBranch>
+					<cac:FinancialInstitution>
+						<cbc:ID schemeID="BIC">DNBANOKKTNS</cbc:ID>
+						<cbc:Name>Den norske Bank ASA</cbc:Name>
+					</cac:FinancialInstitution>
+				</cac:FinancialInstitutionBranch>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:PaymentMeans>
+			<cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
+			<cbc:PaymentDueDate>2017-05-30</cbc:PaymentDueDate>
+			<cbc:PaymentID>305267601-</cbc:PaymentID>
+			<cac:PayeeFinancialAccount>
+				<cbc:ID schemeID="BBAN">71760549430</cbc:ID>
+				<cac:FinancialInstitutionBranch>
+					<cac:FinancialInstitution>
+						<cbc:ID schemeID="BIC">7176</cbc:ID>
+						<cbc:Name>Den Norske Bank ASA</cbc:Name>
+					</cac:FinancialInstitution>
+				</cac:FinancialInstitutionBranch>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:PaymentTerms>
+			<cbc:Note languageID="en">Frem til 30.05.2017 netto</cbc:Note>
+		</cac:PaymentTerms>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="NOK">4992.5</cbc:TaxAmount>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="NOK">19970</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="NOK">4992.5</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:LegalMonetaryTotal>
+			<cbc:LineExtensionAmount currencyID="NOK">19970</cbc:LineExtensionAmount>
+			<cbc:TaxExclusiveAmount currencyID="NOK">19970</cbc:TaxExclusiveAmount>
+			<cbc:TaxInclusiveAmount currencyID="NOK">24962.5</cbc:TaxInclusiveAmount>
+			<cbc:PayableAmount currencyID="NOK">24962.5</cbc:PayableAmount>
+		</cac:LegalMonetaryTotal>
+		<cac:InvoiceLine>
+			<cbc:ID>000010</cbc:ID>
+			<cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">2</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount currencyID="NOK">17800</cbc:LineExtensionAmount>
+			<cac:OrderLineReference>
+				<cbc:LineID>000280</cbc:LineID>
+				<cac:OrderReference>
+					<cbc:ID>0102056470</cbc:ID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:TaxTotal>
+				<cbc:TaxAmount currencyID="NOK">4450</cbc:TaxAmount>
+				<cac:TaxSubtotal>
+					<cbc:TaxableAmount currencyID="NOK">17800</cbc:TaxableAmount>
+					<cbc:TaxAmount currencyID="NOK">4450</cbc:TaxAmount>
+					<cac:TaxCategory>
+						<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+						<cbc:Percent>25</cbc:Percent>
+						<cac:TaxScheme>
+							<cbc:ID>VAT</cbc:ID>
+						</cac:TaxScheme>
+					</cac:TaxCategory>
+				</cac:TaxSubtotal>
+			</cac:TaxTotal>
+			<cac:Item>
+				<cbc:Name>NIKI T34 SYRINGEDRIVER</cbc:Name>
+				<cac:SellersItemIdentification>
+					<cbc:ID>VEDEFAR-998311</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ManufacturersItemIdentification>
+					<cbc:ID>VEDEFAR-998311</cbc:ID>
+				</cac:ManufacturersItemIdentification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="NOK">8900</cbc:PriceAmount>
+			</cac:Price>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cbc:ID>000020</cbc:ID>
+			<cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount currencyID="NOK">1490</cbc:LineExtensionAmount>
+			<cac:OrderLineReference>
+				<cbc:LineID>000310</cbc:LineID>
+				<cac:OrderReference>
+					<cbc:ID>0102056470</cbc:ID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:TaxTotal>
+				<cbc:TaxAmount currencyID="NOK">372.5</cbc:TaxAmount>
+				<cac:TaxSubtotal>
+					<cbc:TaxableAmount currencyID="NOK">1490</cbc:TaxableAmount>
+					<cbc:TaxAmount currencyID="NOK">372.5</cbc:TaxAmount>
+					<cac:TaxCategory>
+						<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+						<cbc:Percent>25</cbc:Percent>
+						<cac:TaxScheme>
+							<cbc:ID>VAT</cbc:ID>
+						</cac:TaxScheme>
+					</cac:TaxCategory>
+				</cac:TaxSubtotal>
+			</cac:TaxTotal>
+			<cac:Item>
+				<cbc:Name>WAFFLE MADRASS</cbc:Name>
+				<cac:SellersItemIdentification>
+					<cbc:ID>1004-ELXX-00</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ManufacturersItemIdentification>
+					<cbc:ID>1004-ELXX-00</cbc:ID>
+				</cac:ManufacturersItemIdentification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="NOK">1490</cbc:PriceAmount>
+			</cac:Price>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cbc:ID>000030</cbc:ID>
+			<cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount currencyID="NOK">680</cbc:LineExtensionAmount>
+			<cac:OrderLineReference>
+				<cbc:LineID>000330</cbc:LineID>
+				<cac:OrderReference>
+					<cbc:ID>0102056470</cbc:ID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:TaxTotal>
+				<cbc:TaxAmount currencyID="NOK">170</cbc:TaxAmount>
+				<cac:TaxSubtotal>
+					<cbc:TaxableAmount currencyID="NOK">680</cbc:TaxableAmount>
+					<cbc:TaxAmount currencyID="NOK">170</cbc:TaxAmount>
+					<cac:TaxCategory>
+						<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+						<cbc:Percent>25</cbc:Percent>
+						<cac:TaxScheme>
+							<cbc:ID>VAT</cbc:ID>
+						</cac:TaxScheme>
+					</cac:TaxCategory>
+				</cac:TaxSubtotal>
+			</cac:TaxTotal>
+			<cac:Item>
+				<cbc:Name>INFUSIONS STAND PROVITA NOT ASSEMBLED</cbc:Name>
+				<cac:SellersItemIdentification>
+					<cbc:ID>G101E</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ManufacturersItemIdentification>
+					<cbc:ID>G101E</cbc:ID>
+				</cac:ManufacturersItemIdentification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="NOK">680</cbc:PriceAmount>
+			</cac:Price>
+		</cac:InvoiceLine>
+	</ns:Invoice>
+</StandardBusinessDocument>

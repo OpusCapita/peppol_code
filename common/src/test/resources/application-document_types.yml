@@ -1,7 +1,7 @@
 peppol:
-    common:
-      document_templates:
-        templates:
+  common:
+    document_templates:
+      templates:
           - name: SVEFAKTURA1.Invoice
             root: "$SBD/Invoice"
             fields:
