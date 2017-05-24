@@ -50,7 +50,7 @@ def properties      // additional properties loaded from file
 
 pipeline {
     agent any
-    options { 
+    options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
         skipDefaultCheckout()
@@ -71,8 +71,8 @@ pipeline {
                     dir('ap2/ansible') {
                         sh 'make requirements'
                     }
-                }                        
-                
+                }
+
                 script {
                     dir('src') {
                         code_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
@@ -84,7 +84,7 @@ pipeline {
                     }
                     dir('infra') {
                         infra_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
-                    }                        
+                    }
                 }
             }
         }
@@ -103,7 +103,7 @@ pipeline {
                 dir('src') {
                     sh 'bash gradlew check'
                     check(test_modules)
-                }                
+                }
             }
             post {
                 always {
@@ -114,7 +114,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Package') {
             steps {
                 dir('src') {
@@ -122,7 +122,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Release') {
             steps {
                 milestone 1
@@ -131,7 +131,7 @@ pipeline {
                     dir('src') {
                         // automatic versions trigger a new build repeatedly, disabled for now
                         //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
-                    }                    
+                    }
                 }
             }
         }
@@ -148,16 +148,16 @@ pipeline {
                     failBuild(
                         "${recipients.ops}, ${recipients.devops}, ${infra_author}, ${code_author}",
                         'Deployment to stage environment has failed. Check the log for details.'
-                    )                
-                }            
+                    )
+                }
             }
         }
-        
+
         stage('Smoke Test') {
             steps {
                 milestone 3
                 dir('infra/ap2/ansible') {
-                    ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')                    
+                    ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
                 }
             }
             post {
@@ -168,7 +168,7 @@ pipeline {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
                         'Smoke tests have failed. Check the log for details.'
-                    )                
+                    )
                 }
             }
         }
@@ -186,7 +186,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('System Tests') {
             steps {
                 dir('src/system-tests') {
@@ -194,7 +194,7 @@ pipeline {
                     ansiblePlaybook(
                         'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
                         'report_path=$PWD/reports/'
-                    )                    
+                    )
                 }
             }
             post {
@@ -205,11 +205,37 @@ pipeline {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
                         'System tests have failed. Check the log for details.'
-                    )                
+                    )
                 }
             }
         }
-        
+
+		stage('Acceptance Test') {
+			steps {
+                milestone 4
+                timeout(time: 3, unit: 'DAYS') {
+                    input message: 'Deploy PEPPOL Access Point to production?', ok: 'Sure'
+                }
+			}
+		}
+
+        stage('Deploy Production') {
+            steps {
+                milestone 5
+                dir('infra/ap2/ansible') {
+                    ansiblePlaybook('peppol-components.yml', 'production.hosts', 'ansible-sudo')
+                }
+            }
+            post {
+                failure {
+                    failBuild(
+                        "${recipients.devops}",
+                        'Deployment to PROD environment has failed. Check the log for details immediately!'
+                    )
+                }
+            }
+        }
+
     }
     post {
         failure {
