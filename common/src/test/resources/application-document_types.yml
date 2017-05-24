@@ -146,13 +146,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/AccountingSupplierParty/EndpointID"
-              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: version_id
               paths:
@@ -206,13 +204,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/AccountingSupplierParty/Party/EndpointID"
-              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: version_id
               paths:
@@ -256,7 +252,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(04|xy|05|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx|xy):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -269,12 +265,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/AccountingSupplierParty/Party/EndpointID"
-              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: version_id
               paths:
@@ -326,13 +320,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/BuyerCustomerParty/Party/EndpointID"
-              - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -385,12 +377,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/BuyerCustomerParty/Party/EndpointID"
-              - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -438,13 +428,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/BuyerCustomerParty/Party/EndpointID"
-              - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -497,12 +485,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/BuyerCustomerParty/Party/EndpointID"
-              - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -550,13 +536,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/DespatchSupplierParty/Party/EndpointID"
-              - "$ROOT/DespatchSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/DeliveryCustomerParty/Party/EndpointID"
-              - "$ROOT/DeliveryCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -609,12 +593,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/DespatchSupplierParty/Party/EndpointID"
-              - "$ROOT/DespatchSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/DeliveryCustomerParty/Party/EndpointID"
-              - "$ROOT/DeliveryCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -662,13 +644,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/ReceiverParty/EndpointID"
-              - "$ROOT/ReceiverParty/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -721,12 +701,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyLegalEntity/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/ReceiverParty/EndpointID"
-              - "$ROOT/ReceiverParty/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -774,13 +752,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/SenderParty/EndpointID"
-              - "$ROOT/SenderParty/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/ReceiverParty/EndpointID"
-              - "$ROOT/ReceiverParty/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -825,12 +801,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/SenderParty/EndpointID"
-              - "$ROOT/SenderParty/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/ReceiverParty/EndpointID"
-              - "$ROOT/ReceiverParty/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -870,13 +844,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/AccountingSupplierParty/EndpointID"
-              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: version_id
               paths:
@@ -930,13 +902,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/AccountingSupplierParty/Party/EndpointID"
-              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: version_id
               paths:
@@ -993,12 +963,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/AccountingSupplierParty/Party/EndpointID"
-              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/AccountingCustomerParty/Party/EndpointID"
-              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: version_id
               paths:
@@ -1050,13 +1018,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/BuyerCustomerParty/Party/EndpointID"
-              - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1109,12 +1075,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/BuyerCustomerParty/Party/EndpointID"
-              - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1162,13 +1126,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/BuyerCustomerParty/Party/EndpointID"
-              - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1221,12 +1183,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/BuyerCustomerParty/Party/EndpointID"
-              - "$ROOT/BuyerCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1274,13 +1234,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/DespatchSupplierParty/Party/EndpointID"
-              - "$ROOT/DespatchSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/DeliveryCustomerParty/Party/EndpointID"
-              - "$ROOT/DeliveryCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1333,12 +1291,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/DespatchSupplierParty/Party/EndpointID"
-              - "$ROOT/DespatchSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/DeliveryCustomerParty/Party/EndpointID"
-              - "$ROOT/DeliveryCustomerParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1386,13 +1342,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/ReceiverParty/EndpointID"
-              - "$ROOT/ReceiverParty/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1441,12 +1395,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/SellerSupplierParty/Party/EndpointID"
-              - "$ROOT/SellerSupplierParty/Party/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/ReceiverParty/EndpointID"
-              - "$ROOT/ReceiverParty/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1490,13 +1442,11 @@ peppol:
               paths:
               - "$SBDH/Sender/Identifier"
               - "$ROOT/SenderParty/EndpointID"
-              - "$ROOT/SenderParty/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$SBDH/Receiver/Identifier"
               - "$ROOT/ReceiverParty/EndpointID"
-              - "$ROOT/ReceiverParty/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
@@ -1541,12 +1491,10 @@ peppol:
             - id: sender_id
               paths:
               - "$ROOT/SenderParty/EndpointID"
-              - "$ROOT/SenderParty/PartyIdentification/ID"
               mandatory: true
             - id: recipient_id
               paths:
               - "$ROOT/ReceiverParty/EndpointID"
-              - "$ROOT/ReceiverParty/PartyIdentification/ID"
               mandatory: true
             - id: version_id
               paths:
