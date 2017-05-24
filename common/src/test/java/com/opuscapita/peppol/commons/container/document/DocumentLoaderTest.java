@@ -51,7 +51,7 @@ public class DocumentLoaderTest {
                 "/invalid/austria_files/invalids3.xml",
                 "/invalid/austria_files/invalids4.xml",
                 "/invalid/austria_files/invalids5.xml",
-                "/invalid/simpler_invoicing_files/SI-inv-v1.1.3-Valid-version.xml.no.sbdh.sad.smiley",
+               // "/invalid/simpler_invoicing_files/SI-inv-v1.1.3-Valid-version.xml.no.sbdh.sad.smiley",
                 "/invalid/simpler_invoicing_files/invalids1.xml",
                 "/invalid/simpler_invoicing_files/invalids2.xml",
                 "/invalid/simpler_invoicing_files/invalids3.xml",
