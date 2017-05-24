@@ -145,7 +145,7 @@ peppol:
             - id: sender_id
               paths:
               - "$SBDH/Sender/Identifier"
-              - "$ROOT/AccountingSupplierParty/EndpointID"
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
               mandatory: true
             - id: recipient_id
               paths:
@@ -643,7 +643,7 @@ peppol:
             - id: sender_id
               paths:
               - "$SBDH/Sender/Identifier"
-              - "$ROOT/SellerSupplierParty/Party/EndpointID"
+              - "$ROOT/ProviderParty/EndpointID"
               mandatory: true
             - id: recipient_id
               paths:
@@ -700,7 +700,7 @@ peppol:
             fields:
             - id: sender_id
               paths:
-              - "$ROOT/SellerSupplierParty/Party/EndpointID"
+              - "$ROOT/ProviderParty/EndpointID"
               mandatory: true
             - id: recipient_id
               paths:
@@ -843,7 +843,7 @@ peppol:
             - id: sender_id
               paths:
               - "$SBDH/Sender/Identifier"
-              - "$ROOT/AccountingSupplierParty/EndpointID"
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
               mandatory: true
             - id: recipient_id
               paths:
@@ -1341,7 +1341,7 @@ peppol:
             - id: sender_id
               paths:
               - "$SBDH/Sender/Identifier"
-              - "$ROOT/SellerSupplierParty/Party/EndpointID"
+              - "$ROOT/ProviderParty/EndpointID"
               mandatory: true
             - id: recipient_id
               paths:
@@ -1394,7 +1394,7 @@ peppol:
             fields:
             - id: sender_id
               paths:
-              - "$ROOT/SellerSupplierParty/Party/EndpointID"
+              - "$ROOT/ProviderParty/EndpointID"
               mandatory: true
             - id: recipient_id
               paths:
