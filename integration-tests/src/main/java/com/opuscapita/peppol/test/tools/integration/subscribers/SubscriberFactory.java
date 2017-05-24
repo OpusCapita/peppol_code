@@ -10,6 +10,7 @@ import com.opuscapita.peppol.test.tools.integration.util.MqListener;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,11 @@ import java.util.Map;
 /**
  * Created by gamanse1 on 2016.11.16..
  */
+@Component
 public class SubscriberFactory {
     private final static Logger logger = LogManager.getLogger(SubscriberFactory.class);
-    public static Subscriber createSubscriber(Map.Entry<String, ?> subscriberConfig, Map<String, Object> genericConfiguration, Map<String, Consumer> existingConsumers) {
+
+    public Subscriber createSubscriber(Map.Entry<String, ?> subscriberConfig, Map<String, Object> genericConfiguration, Map<String, Consumer> existingConsumers) {
         String name = subscriberConfig.getKey().toLowerCase();
         Map<String, Object> properties = (Map<String, Object>) subscriberConfig.getValue();
         String[] consumerIds = properties.get("consumers") == null? ArrayUtils.EMPTY_STRING_ARRAY : (String.valueOf(properties.get("consumers"))).split(" ");

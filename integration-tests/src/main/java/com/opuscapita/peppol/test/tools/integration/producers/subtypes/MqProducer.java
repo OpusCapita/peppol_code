@@ -15,6 +15,9 @@ import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
@@ -30,9 +33,11 @@ import java.util.Properties;
  * Created by gamanse1 on 2016.11.14..
  */
 @SuppressWarnings("Duplicates")
+@Component
+@Scope("prototype")
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
-    private final String endpoint;
+    private String endpoint;
     DocumentLoader documentLoader;
     MessageQueue mq;
     private String dbConnection = null;
@@ -40,8 +45,12 @@ public class MqProducer implements Producer {
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
+    @Autowired
+    private DocumentTemplates templates;
 
-    //TODO change JsonDocumentTemplates parser ->  Document templates
+    public MqProducer() {
+    }
+
     public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String endpoint, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
         this.mqSettings = mqSettings;
         this.sourceDirectory = sourceDirectory;
@@ -50,17 +59,6 @@ public class MqProducer implements Producer {
         this.dbConnection = dbConnection;
         this.dbPreprocessQuery = dbPreprocessQuery;
         this.mq = mq;
-
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        DocumentTemplates templates = new JsonDocumentTemplates(null, new Gson());
-        DocumentParser dp;
-        try {
-            dp = new DocumentParser(factory.newSAXParser(), templates);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to initialize DocumentLoader", e);
-        }
-        documentLoader = new DocumentLoader(dp);
     }
 
     /*
@@ -70,6 +68,16 @@ public class MqProducer implements Producer {
     * */
     @Override
     public void run() {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentParser dp;
+        try {
+            dp = new DocumentParser(factory.newSAXParser(), templates);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialize DocumentLoader", e);
+        }
+        documentLoader = new DocumentLoader(dp);
+
         Connection connection = null;
         Channel channel = null;
         File directory = null;
@@ -95,13 +103,7 @@ public class MqProducer implements Producer {
         try {
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(), new Endpoint("integration-tests", ProcessType.TEST))
-                            .setDocumentInfo(documentLoader.load(file, new Endpoint("outbound", ProcessType.TEST)));
-                    cm.setStatus(new Endpoint("outbound", ProcessType.TEST), file.getName());
-                    Route route = new Route();
-                    List<String> endpoints = Arrays.asList(endpoint); //new queue for integration tests
-                    route.setEndpoints(endpoints);
-                    cm.getProcessingInfo().setRoute(route);
+                    ContainerMessage cm = createContainerMessageFromFile(file);
                     logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue + " -> " + endpoint);
                     mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
                     //channel.basicPublish("", destinationQueue, null, cm);
@@ -139,5 +141,17 @@ public class MqProducer implements Producer {
 
     private boolean dbPreprocessNeeded() {
         return (dbConnection != null && !dbConnection.isEmpty() && dbPreprocessQuery != null && !dbPreprocessQuery.isEmpty());
+    }
+
+    private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
+        ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(),
+                new Endpoint("integration-tests", ProcessType.TEST))
+                .setDocumentInfo(documentLoader.load(file, new Endpoint("outbound", ProcessType.TEST)));
+        cm.setStatus(new Endpoint("outbound", ProcessType.TEST), file.getName());
+        List<String> endpoints = Arrays.asList(endpoint); //new queue for integration tests
+        Route route = new Route();
+        route.setEndpoints(endpoints);
+        cm.getProcessingInfo().setRoute(route);
+        return cm;
     }
 }

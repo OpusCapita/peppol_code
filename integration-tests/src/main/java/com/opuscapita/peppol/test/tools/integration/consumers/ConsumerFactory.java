@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.test.tools.integration.consumers;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.subtypes.*;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,10 @@ import java.util.Map;
 /**
  * Created by gamanse1 on 2016.11.16..
  */
+@Component
 public class ConsumerFactory {
 
-    public static Consumer createConsumer(Map.Entry<String, ?> consumerConfig, Map<String, Object> genericConfiguration) {
+    public Consumer createConsumer(Map.Entry<String, ?> consumerConfig, Map<String, Object> genericConfiguration) {
         String name = consumerConfig.getKey().toLowerCase();
         Map<String ,Object> properties = (Map<String, Object>) consumerConfig.getValue();
         String id = String.valueOf(properties.get("id"));

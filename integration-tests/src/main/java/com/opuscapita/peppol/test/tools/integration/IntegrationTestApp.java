@@ -18,6 +18,7 @@ import org.springframework.amqp.rabbit.listener.AbstractRabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +38,7 @@ import java.util.concurrent.TimeoutException;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.test.tools.integration"})
-public class IntegrationTestApp implements RabbitListenerConfigurer {
+public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLineRunner {
     private final static Logger logger = LogManager.getLogger(IntegrationTestApp.class);
     static String configFile;
     static String testResultFileName;
@@ -56,6 +57,9 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
     @Autowired
     private IntegrationTestProperties props;
 
+    @Autowired
+    private IntegrationTestConfigReader configReader;
+
     @PostConstruct
     public void init() {
         staticMq = mq;
@@ -63,8 +67,11 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
 
     public static void main(String[] args) {
         logger.info("IntegrationTestApp : Starting!");
-        SpringApplication.run(IntegrationTestApp.class);
+        SpringApplication.run(IntegrationTestApp.class, args);
+    }
 
+    @Override
+    public void run(String... args) throws Exception {
         if (args.length < 4 || args[0] == null || args[0].isEmpty()) {
             logger.error("Not all command line arguments specified!");
             logger.error("Required arguments are: configFile, testResultFileName, templateDir, tempDir");
@@ -83,8 +90,8 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         if (new File(configFile).isDirectory())
             configFile = configFile + "\\configuration.yaml";
 
-        IntegrationTestConfig config = new IntegrationTestConfigReader(configFile, staticMq).initConfig();
-        List<TestResult> testResults = config.runTests();
+
+        List<TestResult> testResults = runTests(configFile, staticMq);
         new LoggingResultBuilder().processResult(testResults); //outputs the result to console
         new HtmlResultBuilder(testResultFileName,templateDir).processResult(testResults); //test result for jenkins
 
@@ -99,6 +106,11 @@ public class IntegrationTestApp implements RabbitListenerConfigurer {
         }
         logger.info("IntegrationTestApp : Ended!");
         System.exit(0);
+    }
+
+    private List<TestResult> runTests(String configFile, MessageQueue staticMq) {
+        IntegrationTestConfig config = configReader.initConfig(configFile, staticMq);
+        return config.runTests();
     }
 
     public static void registerMqListener(MqListener listener){

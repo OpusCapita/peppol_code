@@ -9,6 +9,8 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class DocumentError implements Serializable {
+    private static final long serialVersionUID = 1522769757163697306L;
+
     private final Endpoint source;
     private final String message;
 

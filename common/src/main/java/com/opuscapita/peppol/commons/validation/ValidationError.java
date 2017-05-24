@@ -12,6 +12,8 @@ import java.io.Serializable;
  */
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public class ValidationError implements Serializable {
+    private static final long serialVersionUID = -5071816172421440591L;
+
     private String title;
     private String identifier;
     private String location;

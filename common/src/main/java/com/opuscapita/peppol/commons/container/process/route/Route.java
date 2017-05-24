@@ -14,6 +14,8 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class Route implements Serializable {
+    private static final long serialVersionUID = -9123055794300438132L;
+
     private List<String> endpoints = new ArrayList<>();
     private String description;
     private String mask;
@@ -50,13 +52,13 @@ public class Route implements Serializable {
 
     @Override
     public String toString() {
-        String result = description;
+        StringBuilder result = new StringBuilder(description);
         if (mask != null) {
-            result += " (" + mask + ") ";
+            result.append(" (").append(mask).append(") ");
         }
-        result += "[ " + source + " ";
+        result.append("[ ").append(source).append(" ");
         for (String endpoint : endpoints) {
-            result += endpoint + " ";
+            result.append(endpoint).append(" ");
         }
         return result + "]";
     }

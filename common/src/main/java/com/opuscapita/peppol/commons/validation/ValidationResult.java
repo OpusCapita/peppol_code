@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
  * Created by Daniil on 03.05.2016.
  */
 public class ValidationResult implements Serializable {
+    private static final long serialVersionUID = 7905183684035939619L;
+
     private List<DocumentError> errors = new ArrayList<>();
     private List<DocumentWarning> warnings = new ArrayList<>();
 
