@@ -3,7 +3,7 @@
 
 - include: file_to_inbound.yml
 - pause:
-    seconds: 3
+    seconds: 10
 
 - include: preprocessing_assert.yml
 - include: internal-routing_assert.yml
