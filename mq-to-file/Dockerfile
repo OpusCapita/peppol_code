@@ -21,3 +21,4 @@ WORKDIR "${TRANSPORT_HOME}"
 ADD ["build/libs/mq-to-file.jar", "mq-to-file.jar"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["-jar", "mq-to-file.jar"]
