@@ -3,7 +3,6 @@ LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV SERVICE_DISCOVERY_HOME "/opt/local/services/peppol/service-discovery"
 ENV SERVICE_DISCOVERY_CONFIG "/peppol/config/service-discovery"
-VOLUME "/peppol/config/service-discovery"
 
 RUN set -x \
     && mkdir -p "${SERVICE_DISCOVERY_HOME}" \
