@@ -1,14 +1,10 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.process.route.Route;
-import com.opuscapita.peppol.commons.container.xml.DocumentParser;
-import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
-import com.opuscapita.peppol.commons.container.xml.JsonDocumentTemplates;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
@@ -24,7 +20,7 @@ import java.io.File;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -38,15 +34,16 @@ import java.util.Properties;
 public class MqProducer implements Producer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
     private String endpoint;
-    DocumentLoader documentLoader;
-    MessageQueue mq;
+    private MessageQueue mq;
     private String dbConnection = null;
     private String dbPreprocessQuery = null;
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
+
+    @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
-    private DocumentTemplates templates;
+    private DocumentLoader documentLoader;
 
     public MqProducer() {
     }
@@ -66,21 +63,15 @@ public class MqProducer implements Producer {
     * Check if DB preprocess specified -> Try to connect and run preprocess querry -> exit if fails
     * Check if able to connect to MQ -> exit if no
     * */
+    @SuppressWarnings({"ConstantConditions", "finally"})
     @Override
     public void run() {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
-        DocumentParser dp;
-        try {
-            dp = new DocumentParser(factory.newSAXParser(), templates);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to initialize DocumentLoader", e);
-        }
-        documentLoader = new DocumentLoader(dp);
 
         Connection connection = null;
         Channel channel = null;
-        File directory = null;
+        File directory;
         try {
             directory = new File(sourceDirectory);
             if (!directory.isDirectory()) {
@@ -120,7 +111,6 @@ public class MqProducer implements Producer {
                     channel.close();
             } catch (Exception ignore) {
             }
-            return;
         }
     }
 
@@ -143,12 +133,13 @@ public class MqProducer implements Producer {
         return (dbConnection != null && !dbConnection.isEmpty() && dbPreprocessQuery != null && !dbPreprocessQuery.isEmpty());
     }
 
+    @SuppressWarnings("ConstantConditions")
     private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
         ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(),
                 new Endpoint("integration-tests", ProcessType.TEST))
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("outbound", ProcessType.TEST)));
         cm.setStatus(new Endpoint("outbound", ProcessType.TEST), file.getName());
-        List<String> endpoints = Arrays.asList(endpoint); //new queue for integration tests
+        List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         Route route = new Route();
         route.setEndpoints(endpoints);
         cm.getProcessingInfo().setRoute(route);

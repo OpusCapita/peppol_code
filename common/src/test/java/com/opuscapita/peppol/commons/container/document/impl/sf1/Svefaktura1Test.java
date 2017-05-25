@@ -1,41 +1,28 @@
 package com.opuscapita.peppol.commons.container.document.impl.sf1;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
-import com.opuscapita.peppol.commons.container.xml.DocumentParser;
-import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
-import com.opuscapita.peppol.commons.container.xml.JsonDocumentTemplates;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.junit.Test;
-import org.xml.sax.SAXException;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class Svefaktura1Test {
-    private final DocumentLoader loader;
-    private ErrorHandler errorHandler = mock(ErrorHandler.class);
-
-    public Svefaktura1Test() throws ParserConfigurationException, SAXException {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-
-        DocumentTemplates templates = new JsonDocumentTemplates(errorHandler, new Gson());
-        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
-        loader = new DocumentLoader(parser);
-    }
-
+    @Autowired
+    private DocumentLoader loader;
 
     @Test
     public void testSvefaktura1() throws Exception {
