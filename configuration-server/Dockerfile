@@ -3,14 +3,17 @@ LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV CONFIG_SERVER_HOME /opt/local/services/peppol/configuration-server
 ENV CONFIG_SERVER_CONFIG /peppol/config/configuration-server
+
+USER root
 RUN set -x \
-    && mkdir -p "${CONFIG_SERVER_HOME}" \
-    && mkdir -p /var/local/services/peppol2.0/configuration-server/checkout \
-    && mkdir -p "${CONFIG_SERVER_CONFIG}" \
+    && mkdir -p "${CONFIG_SERVER_HOME}" "${CONFIG_SERVER_CONFIG}" \
+    && chown -R peppol "${CONFIG_SERVER_HOME}" "${CONFIG_SERVER_CONFIG}" \
     && ln -s "${CONFIG_SERVER_CONFIG}" "${CONFIG_SERVER_HOME}/config"
 
 ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+USER peppol
 
 ENV JAVA_OPTS "\
     -Dhttp.proxyHost=10.202.9.33 \
