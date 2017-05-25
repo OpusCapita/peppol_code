@@ -210,16 +210,18 @@ pipeline {
             }
         }
 
-		stage('Acceptance Test') {
-			steps {
+        stage('Acceptance Test') {
+            when { expression {false /*params.build_type in ['major_release', 'minor_release']*/} }
+            steps {
                 milestone 4
                 timeout(time: 3, unit: 'DAYS') {
                     input message: 'Deploy PEPPOL Access Point to production?', ok: 'Sure'
                 }
-			}
-		}
+            }
+        }
 
         stage('Deploy Production') {
+            when { expression {false /*params.build_type in ['major_release', 'minor_release']*/} }
             steps {
                 milestone 5
                 dir('infra/ap2/ansible') {
