@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
@@ -8,7 +7,6 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.container.xml.DocumentParser;
 import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
-import com.opuscapita.peppol.commons.container.xml.JsonDocumentTemplates;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
