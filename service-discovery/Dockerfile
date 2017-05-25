@@ -1,16 +1,21 @@
 FROM d-l-tools.ocnet.local:443/openjdk:8-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
-VOLUME "/etc/peppol2.0/service-discovery"
-ENV SERVICE_DISCOVERY_HOME "/opt/local/services/peppol2.0/service-discovery"
-ENV SERVICE_DISCOVERY_CONFIG "/etc/peppol2.0/service-discovery"
+ENV SERVICE_DISCOVERY_HOME "/opt/local/services/peppol/service-discovery"
+ENV SERVICE_DISCOVERY_CONFIG "/peppol/config/service-discovery"
+VOLUME "/peppol/config/service-discovery"
 
-RUN \
-    mkdir -p "${SERVICE_DISCOVERY_HOME}" && \
-    mkdir -p "${SERVICE_DISCOVERY_CONFIG}" && \
-    ln -s "${SERVICE_DISCOVERY_CONFIG}/" "${SERVICE_DISCOVERY_HOME}/config"
+RUN set -x \
+    && mkdir -p "${SERVICE_DISCOVERY_HOME}" \
+    && mkdir -p "${SERVICE_DISCOVERY_CONFIG}" \
+    && ln -s "${SERVICE_DISCOVERY_CONFIG}/" "${SERVICE_DISCOVERY_HOME}/config"
+
+ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
 
 WORKDIR "${SERVICE_DISCOVERY_HOME}"
 ADD ["build/libs/service-discovery.jar", "service-discovery.jar"]
 
-CMD java $JAVA_OPTS -jar service-discovery.jar
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["-jar", "service-discovery.jar"]
+
+EXPOSE 8761
