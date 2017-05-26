@@ -1,9 +1,8 @@
 FROM d-l-tools.ocnet.local:443/openjdk:8-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
-VOLUME "/etc/peppol2.0/eventing"
-ENV EVENTING_HOME "/opt/local/services/peppol2.0/eventing"
-ENV EVENTING_CONFIG "/etc/peppol2.0/eventing"
+ENV EVENTING_HOME "/opt/local/services/peppol/eventing"
+ENV EVENTING_CONFIG "/peppol/config/eventing"
 
 USER root
 RUN set -x \
@@ -12,10 +11,11 @@ RUN set -x \
     && ln -s "${EVENTING_CONFIG}/" "${EVENTING_HOME}/config"
 
 ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 USER peppol
 WORKDIR "${EVENTING_HOME}"
 
 ADD ["build/libs/eventing.jar", "eventing.jar"]
 
-ENTRYPOINT ["/docker-entrypoint.sh", "-jar", "eventing.jar"]
+CMD ["-jar", "eventing.jar"]

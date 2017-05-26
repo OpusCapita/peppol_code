@@ -2,6 +2,7 @@
 #set -x
 
 export CONFIGURATION_SERVER_HEALTH="http://configuration-server:8888/admin/health"
+export MYSQL_HEALTH="http://mysql.docker.local:3306"
 export RABBITMQ_HEALTH="http://rabbitmq.docker.local:15672"
 
 # change from default umask of 0022 to allow group writes
@@ -28,6 +29,11 @@ if [[ "$1" == "-jar" ]]; then
   # check services before startup
   while ! curl -fs ${CONFIGURATION_SERVER_HEALTH} > /dev/null; do
       echo "$(date) - still waiting on ${CONFIGURATION_SERVER_HEALTH}";
+      sleep 1;
+  done
+  
+  while ! curl -fs ${MYSQL_HEALTH} > /dev/null; do
+      echo "$(date) - still waiting on ${MYSQL_HEALTH}";
       sleep 1;
   done
 
