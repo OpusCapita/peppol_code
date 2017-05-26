@@ -34,6 +34,8 @@ public class WebWatchDogReporterReporter {
 
     public void process(@NotNull ContainerMessage cm) {
         try {
+            logger.info("Processing info: " + cm.getProcessingInfo());
+            logger.info("Current endpoint: " + cm.getProcessingInfo().getCurrentEndpoint());
             if (cm.getProcessingInfo().getCurrentEndpoint().getType().equals(ProcessType.OUT_OUTBOUND) && WebWatchDogMessenger.isApplicableForFile(cm.getFileName())) {
                 if ("delivered".equals(cm.getProcessingInfo().getCurrentStatus())) {
                     webWatchDogMessenger.sendOk(cm.getFileName());
