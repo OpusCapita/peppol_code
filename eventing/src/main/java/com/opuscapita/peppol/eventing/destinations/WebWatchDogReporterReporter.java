@@ -30,6 +30,7 @@ public class WebWatchDogReporterReporter {
     @Autowired
     public WebWatchDogReporterReporter(@NotNull WebWatchDogMessenger webWatchDogMessenger) {
         this.webWatchDogMessenger = webWatchDogMessenger;
+        logger.info("Initialized with WebWatchDogMessenger instance: " + webWatchDogMessenger);
     }
 
     public void process(@NotNull ContainerMessage cm) {
