@@ -197,6 +197,56 @@ peppol:
               mandatory: true
               mask: ".*extended:urn:www.difi.no:ehf.*"
 
+          - name: EHF.CreditNote
+            root: CreditNote
+            fields:
+            - id: sender_id
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+              mandatory: true
+            - id: version_id
+              paths:
+              - "$ROOT/UBLVersionID"
+              mandatory: true
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: true
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: sender_name
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+              mandatory: true
+            - id: sender_country_code
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+              mandatory: true
+            - id: recipient_country_code
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx|xy):ver[1-2]\.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: ".*extended:urn:www.difi.no:ehf.*"
+
           - name: EHF.Invoice
             root: "$SBD/Invoice"
             fields:
@@ -884,6 +934,56 @@ peppol:
               - "$SBDH/DocumentIdentification/Standard"
               mandatory: false
               mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: "(?!.*extended:urn:www.difi.no:ehf.*).*"
+
+          - name: PEPPOL_BIS.CreditNote
+            root: CreditNote
+            fields:
+            - id: sender_id
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+              mandatory: true
+            - id: version_id
+              paths:
+              - "$ROOT/UBLVersionID"
+              mandatory: true
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: true
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: sender_name
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+              mandatory: true
+            - id: sender_country_code
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+              mandatory: true
+            - id: recipient_country_code
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
             - id: profile_id
               paths:
               - "$ROOT/ProfileID"
