@@ -34,7 +34,7 @@ public class DocumentTemplatesTest {
         assertEquals(2, result.stream().map(DocumentTemplate::getName).filter("SVEFAKTURA1.Invoice"::equals).count());
         assertEquals(2, result.stream().map(DocumentTemplate::getName).filter("PEPPOL_BIS.Invoice"::equals).count());
         assertEquals(2, result.stream().map(DocumentTemplate::getName).filter("EHF.Invoice"::equals).count());
-        assertEquals(1, result.stream().map(DocumentTemplate::getName).filter("PEPPOL_BIS.CreditNote"::equals).count());
-        assertEquals(1, result.stream().map(DocumentTemplate::getName).filter("EHF.CreditNote"::equals).count());
+        assertEquals(2, result.stream().map(DocumentTemplate::getName).filter("PEPPOL_BIS.CreditNote"::equals).count());
+        assertEquals(2, result.stream().map(DocumentTemplate::getName).filter("EHF.CreditNote"::equals).count());
     }
 }
