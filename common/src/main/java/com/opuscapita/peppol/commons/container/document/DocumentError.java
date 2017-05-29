@@ -9,7 +9,8 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class DocumentError implements Serializable {
-    private static final long serialVersionUID = 1522769757163697306L;
+    private static final long serialVersionUID = 1522769757163697307L;
+    public static final String ERROR_SEPARATOR = " error: ";
 
     private final Endpoint source;
     private final String message;
@@ -29,6 +30,6 @@ public class DocumentError implements Serializable {
 
     @Override
     public String toString() {
-        return source + " error: " + message;
+        return source + ERROR_SEPARATOR + message;
     }
 }

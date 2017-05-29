@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.events.persistence.controller;
 
 
+import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.*;
 import com.opuscapita.peppol.events.persistence.model.*;
@@ -181,6 +182,10 @@ public class PersistenceController {
         failedFileInfo.setErrorFilePath(findErrorFilePath(peppolEvent, invalid));
         failedFileInfo.setInvalid(invalid);
         String errorMessage = peppolEvent.getErrorMessage();
+        String[] errors = errorMessage.split(DocumentError.ERROR_SEPARATOR);
+        if(errors.length > 2){                                      //taking only first error
+            errorMessage = errors[0] + DocumentError.ERROR_SEPARATOR + errors[1];  //DocumentError.toString()
+        }
         if (errorMessage.length() > 1000) {
             errorMessage = errorMessage.substring(0, 1000);
         }
