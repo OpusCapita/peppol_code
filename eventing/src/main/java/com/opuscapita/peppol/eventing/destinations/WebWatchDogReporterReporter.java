@@ -34,6 +34,9 @@ public class WebWatchDogReporterReporter {
     }
 
     public void process(@NotNull ContainerMessage cm) {
+        if (cm.getProcessingInfo() == null) {
+            logger.warn("No processing information for " + cm);
+        }
         try {
             logger.info("Processing info: " + cm.getProcessingInfo());
             logger.info("Current endpoint: " + cm.getProcessingInfo().getCurrentEndpoint());
