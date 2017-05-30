@@ -3,13 +3,11 @@ package com.opuscapita.peppol.eventing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.eventing.destinations.EventPersistenceReporter;
 import com.opuscapita.peppol.eventing.destinations.WebWatchDogReporterReporter;
 import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogConfig;
-import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogMessenger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -88,6 +86,10 @@ public class EventingApp {
         return new AbstractQueueListener(errorHandler, null, gson) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
+                if (cm == null || cm.getDocumentInfo() == null) {
+                    logger.warn("No document in received message, ignoring message");
+                    return;
+                }
                 // add other handlers here, e.g. NTT
                 eventPersistenceReporter.process(cm);
                 webWatchDogReporterReporter.process(cm);

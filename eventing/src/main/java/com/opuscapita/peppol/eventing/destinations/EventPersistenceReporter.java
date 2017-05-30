@@ -60,11 +60,6 @@ public class EventPersistenceReporter {
     private PeppolEvent convert(@NotNull ContainerMessage cm) {
         logger.debug("Message received");
 
-        if (cm.getDocumentInfo() == null) {
-            logger.info("No document in received message, ignoring message");
-            return null;
-        }
-
         ProcessingInfo ps = cm.getProcessingInfo();
         Endpoint endpoint = ps.getCurrentEndpoint();
 
