@@ -1,16 +1,17 @@
 FROM d-l-tools.ocnet.local:443/oxalis:4.0.0-RC1
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
-VOLUME "/etc/peppol2.0/inbound"
-ENV INBOUND_HOME "/opt/local/services/peppol2.0/inbound"
-ENV INBOUND_CONFIG "/etc/peppol2.0/inbound"
+ENV INBOUND_HOME "/opt/local/services/peppol/inbound"
+ENV INBOUND_CONFIG "/peppol/config/inbound"
 
 USER root
 RUN set -x \
-    && mkdir -p "${INBOUND_HOME}" \
-    && mkdir -p "${INBOUND_CONFIG}" \
+    && mkdir -p "${INBOUND_HOME}" "${INBOUND_CONFIG}" \
     && ln -s "${INBOUND_CONFIG}/" "${INBOUND_HOME}/config" \
     && ln -s "${INBOUND_CONFIG}/application.properties" "${INBOUND_HOME}/application.properties"
+
+ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 WORKDIR "${INBOUND_HOME}"
 
