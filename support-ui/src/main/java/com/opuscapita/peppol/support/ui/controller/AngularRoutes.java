@@ -14,8 +14,8 @@ public class AngularRoutes {
             "/status",
             "/outbound",
             "/outbound/*",
-            "/preprocessing",
-            "/preprocessing/*",
+            "/inbound",
+            "/inbound/*",
             "/access_point"
     })
     public String index() {
