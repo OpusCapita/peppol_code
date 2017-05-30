@@ -11,6 +11,7 @@ import no.difi.vefa.validator.renderer.XsltRenderer;
  * Created by bambr on 17.24.1.
  */
 public class DifiValidatorBuilder {
+    @SuppressWarnings("unchecked")
     public static Validator getValidatorInstance(Source source) throws ValidatorException {
         Validator result = new Validator();
         if(source != null) {

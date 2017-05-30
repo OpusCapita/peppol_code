@@ -73,6 +73,7 @@ public class DocumentParserHandler extends DefaultHandler {
         if (StringUtils.isNotBlank(value)) {
             String path = paths.getLast();
 
+            // for each known template
             Iterator<Template> iterator = templates.iterator();
             while (iterator.hasNext()) {
                 Template template = iterator.next();
@@ -80,33 +81,22 @@ public class DocumentParserHandler extends DefaultHandler {
                     if (field.getPaths() == null) {
                         continue;
                     }
+                    // for each known path in the single template
                     for (String fp : field.getPaths()) {
                         if (fp.startsWith("$ROOT")) {
                             fp = fp.replaceFirst("\\$ROOT", template.root);
                         }
+                        // when path is known by template
                         if (fp.equals(path)) {
-                            if (field.value != null && !value.equals(field.value)) {
-                                if (field.getId().equals("sender_id") || field.getId().equals("recipient_id")) {
-                                    if (!new ParticipantId(field.value).equals(new ParticipantId(value))) {
-                                        template.addError("Value of participant ID " + field.getId() + " differs in the document: " +
-                                                field.value + " and " + value);
-                                    }
-                                } else {
-                                    template.addError("There are different values for the field " + field.getId() + " in the document: "
-                                            + field.value + " and " + value);
-                                }
+                            if (!field.matches(value)) {
+                                // path is known but value not corresponds to the mask
+                                logger.debug("Removing unmatched template " + template.name);
+                                iterator.remove();
                             } else {
-                                if (field.getMask() != null && !value.matches(field.getMask())) {
-                                    logger.debug("Removing unmatched template " + template.name);
-                                    iterator.remove();
-                                } else {
-                                    logger.debug(
-                                            field.getId() + " matched by " + template.name + ", value = " + value + ", path = " + path);
-                                    if (!value.equals(field.value)) {
-                                        template.matchedCount++;
-                                        field.value = value;
-                                    }
-                                }
+                                // add another value here
+                                logger.debug(field.getId() + " matched by " + template.name +
+                                        ", value = " + value + ", path = " + path);
+                                field.addValue(value);
                             }
                             break;
                         }
@@ -123,41 +113,80 @@ public class DocumentParserHandler extends DefaultHandler {
         value = new String(ch, start, length).trim();
     }
 
+    /**
+     * Process parsing results, returns filled document information object that can be either accepted or
+     * rejected document.
+     *
+     * @return the complete document information object
+     */
     @NotNull
     public DocumentInfo getResult() {
+        // check if there are some results left after all
         if (templates.size() == 0) {
             return noResult(null);
         }
+
         // remove all templates without matched root
-        Template best = templates.stream().max(Comparator.comparingInt(t -> t.matchedCount)).orElse(null);
         templates.removeIf(template -> ":".equals(template.rootNameSpace));
+
+        // select the best template - the one that has most values filled
+        Template best = templates.stream().max(Comparator.comparingInt(Template::matchedCount)).orElse(null);
         if (templates.size() == 0) {
             return noResult(best);
         }
 
-        templates.forEach(this::checkMandatoryFields);
+        // process constants, check mandatory fields, check possible overwritten fields in remaining templates
+        templates.forEach(this::checkFields);
+
+        // select what to return if there are still more than one template left
         if (templates.size() != 1) {
+            // probably there is only one template without errors, return it then
             if (templates.stream().filter(t -> t.errors == null).count() == 1) {
                 return oneResult(templates.stream().filter(t -> t.errors == null).findFirst().orElse(null));
             }
+            // sorry, no luck, return all matching templates
             return manyResults(templates);
         }
 
+        // OK, only one template left, return it
         return oneResult(templates.get(0));
     }
 
-    private void checkMandatoryFields(Template template) {
+    private void checkFields(Template template) {
         for (Field field : template.fields) {
-            if (field.value == null && field.isMandatory()) {
+            // add errors for overwritten fields
+            if (field.values != null && field.values.size() > 1) {
+                // the first value should have been read from the header, count how many others have this value
+                String first = field.values.get(0);
+                if (field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
+                    template.addError("There are different conflicting values in the document for the field '"
+                            + field.getId() + ": " + String.join(", ", field.values));
+                }
+            }
+
+            // process constants
+            if (field.values == null && field.getConstant() != null) {
+                field.addValue(field.getConstant());
+            }
+
+            // check mandatory fields presence
+            if (field.values == null && field.isMandatory()) {
                 template.addError("Missing mandatory field " + field.getId());
             }
         }
     }
 
+    private boolean areEqual(@NotNull String id, @NotNull String valueOne, @NotNull String valueTwo) {
+        if (id.equals("sender_id") || id.equals("recipient_id")) {
+            return new ParticipantId(valueOne).equals(new ParticipantId(valueTwo));
+        }
+        return valueOne.equals(valueTwo);
+    }
+
     private void setFields(Template template, DocumentInfo result) {
         for (Field field : template.fields) {
-            if (field.value != null) {
-                result.with(field.getId(), field.value);
+            if (field.values != null) {
+                result.with(field.getId(), field.values.get(0));
             }
         }
     }
@@ -216,8 +245,8 @@ public class DocumentParserHandler extends DefaultHandler {
 
         if (best != null) {
             for (Field field : best.fields) {
-                if (field.value != null) {
-                    result.with(field.getId(), field.value);
+                if (field.values != null) {
+                    result.with(field.getId(), field.values.get(0));
                 }
             }
             addErrorsAndWarnings(result, best);
@@ -263,7 +292,7 @@ public class DocumentParserHandler extends DefaultHandler {
                 " in " + fileName);
     }
 
-    // single file format
+    // single supported file format
     private class Template {
         private final String name;
         private final String root;
@@ -271,7 +300,6 @@ public class DocumentParserHandler extends DefaultHandler {
         private List<Field> fields = new ArrayList<>();
         private List<String> errors = null;
         private String rootNameSpace = ":";
-        private int matchedCount;
 
         Template(@NotNull String name, @Nullable String root) {
             this.name = name;
@@ -295,16 +323,33 @@ public class DocumentParserHandler extends DefaultHandler {
             }
             errors.add(error);
         }
+
+        // how many fields have values
+        int matchedCount() {
+            return (int) fields.stream().filter(f -> f.values != null).count();
+        }
     }
 
     // single field in single known file format
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     private class Field extends FieldInfo {
-        private String value;
+        private List<String> values;
+
+        void addValue(@NotNull String value) {
+            if (values == null) {
+                values = new ArrayList<>();
+            }
+            values.add(value);
+        }
+
+        boolean matches(@NotNull String value) {
+            return getMask() == null || value.matches(getMask());
+        }
 
         Field(@NotNull FieldInfo other) {
             super(other.getId(), other.isMandatory(), other.getMask(), other.getConstant(), other.getPaths());
-            value = getConstant();
         }
+
     }
 
 }
