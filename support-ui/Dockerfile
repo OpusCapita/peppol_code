@@ -1,17 +1,31 @@
 FROM d-l-tools.ocnet.local:443/tomcat:8-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
-ENV PEPPOL_CONFIG_PATH /etc/peppol2.0/support-ui
-VOLUME ${PEPPOL_CONFIG_PATH}
+ENV PEPPOL_CONFIG_PATH "/peppol/config/support-ui"
+ENV CATALINA_BASE "/opt/local/services/peppol/oxalis/tomcat"
 
 USER root
 RUN set -x \
     && mkdir -p "${PEPPOL_CONFIG_PATH}" \
-    && chown -R peppol:elmaci "${PEPPOL_CONFIG_PATH}"
+    && mkdir -p \
+        "${PEPPOL_CONFIG_PATH}" \
+        "${PEPPOL_CONFIG_PATH}/tomcat/conf" \
+        "${PEPPOL_CONFIG_PATH}/tomcat/logs" \
+        "${CATALINA_BASE}/bin" \
+        "${CATALINA_BASE}/webapps" \
+        "${CATALINA_BASE}/work" \
+        "${CATALINA_BASE}/temp" \
+    && ln -s "${PEPPOL_CONFIG_PATH}/tomcat/conf" "${CATALINA_BASE}/conf" \
+    && ln -s "${PEPPOL_CONFIG_PATH}/tomcat/logs" "${CATALINA_BASE}/logs" \
+    && cp -r "${CATALINA_HOME}/conf" "${PEPPOL_CONFIG_PATH}/tomcat" \
+    && chown -R peppol:elmaci "${PEPPOL_CONFIG_PATH}" "${CATALINA_BASE}"
+
+ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 USER peppol
 
-WORKDIR "${CATALINA_HOME}"
+WORKDIR "${CATALINA_BASE}"
 ADD ["build/libs/support-ui.war", "webapps/ROOT.war"]
 
 ENV JAVA_OPTS "\
@@ -22,6 +36,6 @@ ENV JAVA_OPTS "\
     -Dhttp.nonProxyHosts=\"*.local|10.164.1.146\" \
     -Dums.server.url=https://ums.itella.com//itella-ums-server/services/BasicUms"
 
-CMD ["bin/catalina.sh", "run"]
+CMD ["catalina.sh", "run"]
 
 EXPOSE 8080
