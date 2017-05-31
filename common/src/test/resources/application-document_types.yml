@@ -145,7 +145,7 @@ peppol:
             - id: sender_id
               paths:
               - "$SBDH/Sender/Identifier"
-              - "$ROOT/AccountingSupplierParty/EndpointID"
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
               - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
               mandatory: true
             - id: recipient_id
