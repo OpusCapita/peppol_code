@@ -151,4 +151,32 @@ public class DocumentParserTest {
         }
 
     }
+
+    @Test
+    public void testParseEhfCatalogueSellerSuplier() throws Exception {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
+
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/Catalogue_document_type_seller_supplier_test.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_seller_supplier_test.xml", new Endpoint("test", ProcessType.TEST));
+
+            assertNotNull(result);
+            assertEquals(Archetype.EHF, result.getArchetype());
+            assertEquals("9908:982789761", result.getSenderId());
+            assertEquals("9908:972418013", result.getRecipientId());
+            assertTrue(result.getErrors().isEmpty());
+            assertTrue(result.getWarnings().isEmpty());
+            assertEquals("urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2", result.getRootNameSpace());
+            assertEquals("Catalogue", result.getRootNodeName());
+            assertEquals("Catalogue", result.getDocumentType());
+            assertEquals("2.1", result.getVersionId());
+            assertEquals("urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.difi.no:ehf:katalog:ver1.0",
+                    result.getCustomizationId());
+            assertEquals("urn:www.cenbii.eu:profile:bii01:ver2.0", result.getProfileId());
+            assertEquals("Helseservice Engros AS", result.getSenderName());
+            assertEquals("2017-04-26", result.getIssueDate());
+        }
+
+    }
 }
