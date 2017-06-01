@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 
-export CONFIGURATION_SERVER_HEALTH="${SPRING_CLOUD_CONFIG_URI}/admin/health"
+export CONFIGURATION_SERVER_HEALTH="http://configuration-server:8888/admin/health"
 export RABBITMQ_HEALTH="http://rabbitmq.docker.local:15672"
 
 # change from default umask of 0022 to allow group writes
@@ -30,7 +30,7 @@ if [[ "$1" == "-jar" ]]; then
       echo "$(date) - still waiting on ${CONFIGURATION_SERVER_HEALTH}";
       sleep 1;
   done
-
+  
   while ! curl -fs ${RABBITMQ_HEALTH} > /dev/null; do
       echo "$(date) - still waiting on ${RABBITMQ_HEALTH}";
       sleep 1;
