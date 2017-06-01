@@ -69,16 +69,18 @@ public class ModuleConfigurationCheck extends Check {
     //comparing expected configuration files and the actual files found on server
     private Optional<String> testConfiguration(Set<String> configuration, List<String> expectedConfiguration) {
         Optional<String> error = Optional.empty();
-        if (configuration.size() != expectedConfiguration.size() || !configuration.containsAll(expectedConfiguration))
+        if (configuration.size() != expectedConfiguration.size() - 1 || !expectedConfiguration.containsAll(configuration))
             error = Optional.of("Module configuration doesn't match, expected: [" + StringJoinUtils.join(expectedConfiguration, ", ")  +
                     "] received configuration: [" + StringJoinUtils.join(configuration, ", ") + "]");
         return error;
     }
 
+
     private List<String> getExpectedConfigurationForModule(String module) {
         List<String> moduleExpectedConfiguration = new ArrayList<>(configurableConfiguration);
         moduleExpectedConfiguration.add("application-" + profile + ".yml");
         moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
+        moduleExpectedConfiguration.add(module + ".yml"); //Accepting second option without the profile
         return  moduleExpectedConfiguration;
     }
 }
