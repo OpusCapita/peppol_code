@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 
-export CONFIGURATION_SERVER_HEALTH="${CONFIG_SERVER_URI}/admin/health"
+export CONFIGURATION_SERVER_HEALTH="${SPRING_CLOUD_CONFIG_URI}/admin/health"
 export RABBITMQ_HEALTH="http://rabbitmq.docker.local:15672"
 
 # change from default umask of 0022 to allow group writes

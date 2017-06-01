@@ -1,6 +1,7 @@
 FROM d-l-tools.ocnet.local:443/openjdk:8-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
+ENV SPRING_APPLICATION_NAME mq-to-file
 ENV TRANSPORT_HOME "/opt/local/services/peppol/mq-to-file"
 ENV TRANSPORT_CONFIG "/etc/peppol/mq-to-file"
 
@@ -14,11 +15,8 @@ ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 USER peppol
-ENV CONFIG_SERVER_URI http://configuration-server:8888
-
 WORKDIR "${TRANSPORT_HOME}"
 ADD ["build/libs/mq-to-file.jar", "mq-to-file.jar"]
-ADD ["bootstrap.yml", "config/bootstrap.yml"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["-jar", "mq-to-file.jar"]
