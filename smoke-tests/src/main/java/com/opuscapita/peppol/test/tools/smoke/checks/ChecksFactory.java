@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class ChecksFactory {
 
-    public static Check createCheck(String moduleName, String type, Map<String, String> params) throws UnsupportedDataTypeException {
+    public static Check createCheck(String moduleName, String type, Map<String, Object> params) throws UnsupportedDataTypeException {
         switch(type){
             case "link":
                 return new LinkCheck(moduleName, params);

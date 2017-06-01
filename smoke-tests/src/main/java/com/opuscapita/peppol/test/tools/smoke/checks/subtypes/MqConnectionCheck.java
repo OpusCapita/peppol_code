@@ -15,7 +15,7 @@ public class MqConnectionCheck extends Check {
 
     private final static String QUEUE_NAME = "persistence-test";
 
-    public MqConnectionCheck(String moduleName, Map<String, String> params) {
+    public MqConnectionCheck(String moduleName, Map<String, Object> params) {
         super(moduleName, params);
     }
 
@@ -25,18 +25,18 @@ public class MqConnectionCheck extends Check {
         CheckResult checkResult = null;
         try {
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(rawConfig.get("host"));
+            factory.setHost((String)rawConfig.get("host"));
             factory.setPort((int)(Object)rawConfig.get("port"));
-            factory.setUsername(rawConfig.get("username"));
-            factory.setPassword(rawConfig.get("password"));
+            factory.setUsername((String)rawConfig.get("username"));
+            factory.setPassword((String)rawConfig.get("password"));
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            checkResult = new CheckResult(name, true, "MQ Connection check succeeded ", rawConfig);
+            checkResult = new CheckResult(moduleName, true, "MQ Connection check succeeded ", rawConfig);
 
         } catch (Exception ex){
             ex.printStackTrace();
-            checkResult =  new CheckResult(name, false, "MQ Connection check failed " + ex, rawConfig);
+            checkResult =  new CheckResult(moduleName, false, "MQ Connection check failed " + ex, rawConfig);
         }
         finally {
             try {

@@ -38,7 +38,7 @@ public class SmokeTestConfigReader {
                 Map<String,?> configuration = (Map<String,?>) rawCheck.getValue();
                 String type = (String)configuration.get("type");
 
-                Map<String, String> params = (Map)configuration.get("params");
+                Map<String, Object> params = (Map)configuration.get("params");
                 Check check = ChecksFactory.createCheck(moduleName,type,params);
                 testConfig.AddCheck(check);
             }

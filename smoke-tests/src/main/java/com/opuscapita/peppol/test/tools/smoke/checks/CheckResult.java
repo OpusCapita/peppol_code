@@ -9,9 +9,9 @@ public class CheckResult {
     final String name;
     final boolean passed;
     final String details;
-    final Map<String, String> rawConfigOfCheck;
+    final Map<String, Object> rawConfigOfCheck;
 
-    public CheckResult(String name, boolean passed, String details, Map<String, String> rawConfigOfCheck) {
+    public CheckResult(String name, boolean passed, String details, Map<String, Object> rawConfigOfCheck) {
         this.name = name;
         this.passed = passed;
         this.details = details;
@@ -30,11 +30,10 @@ public class CheckResult {
         return details;
     }
 
-    public Map<String, String> getRawConfigOfCheck() {
+    public Map<String, Object> getRawConfigOfCheck() {
         return rawConfigOfCheck;
     }
 
-    //TODO: Pretty print the rawConfigOfCheck, MapUtils.debugPrint from commons-collections could be solution, just need to return string, not to output to standard output
     @Override
     public String toString() {
         return "CheckResult{" +

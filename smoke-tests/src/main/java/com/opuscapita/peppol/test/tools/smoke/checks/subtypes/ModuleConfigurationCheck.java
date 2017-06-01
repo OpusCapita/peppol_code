@@ -18,11 +18,10 @@ import java.util.*;
  * Created by bambr on 16.20.10.
  */
 public class ModuleConfigurationCheck extends Check {
-
     private String profile, host;
-    private String[] configurableConfiguration;
+    private List<String> configurableConfiguration;
 
-    public ModuleConfigurationCheck(String moduleName, Map<String, String> params) {
+    public ModuleConfigurationCheck(String moduleName, Map<String, Object> params) {
         super(moduleName,params);
     }
 
@@ -35,10 +34,10 @@ public class ModuleConfigurationCheck extends Check {
         String details = "";
 
         try{
-            host = rawConfig.get("host").replaceAll("/$","");
-            profile = rawConfig.get("profile");
-            String[] modules = rawConfig.get("module-names").trim().split(" ");
-            configurableConfiguration = rawConfig.get("expected-configurations").trim().split(" ");
+            host = ((String)rawConfig.get("host")).replaceAll("/$","");
+            profile = (String)rawConfig.get("profile");
+            List<String> modules = ((List<String>)rawConfig.get("module-names"));
+            configurableConfiguration = (List<String>)rawConfig.get("expected-configurations");
 
             for (String module : modules){
                 URL url = new URL(host + "/" + module + "/" + profile);
@@ -49,7 +48,7 @@ public class ModuleConfigurationCheck extends Check {
                 Set<String> configuration = new HashSet<>();
                 //collecting all configuration files retrieved from the server for current module
                 for(JsonElement source : jsonObj.get("propertySources").getAsJsonArray()){
-                    URL remoteConfigFile = new URL(source.getAsJsonObject().get("name").getAsString());
+                    URL remoteConfigFile = new URL(source.getAsJsonObject().get("moduleName").getAsString());
                     String configurationFile = Paths.get(remoteConfigFile.getFile()).getFileName().toString();
                     configuration.add(configurationFile);
                 }
@@ -60,11 +59,11 @@ public class ModuleConfigurationCheck extends Check {
         }
         catch (Exception ex){
             ex.printStackTrace();
-            return new CheckResult(name, false, "Configuration check failed " + ex, rawConfig);
+            return new CheckResult(moduleName, false, "Configuration check failed " + ex, rawConfig);
         }
         result = fullError.isEmpty() ? true : false;
         details = fullError.isEmpty() ? "Configuration check successful" : fullError;
-        return new CheckResult(name, result, details, rawConfig);
+        return new CheckResult(moduleName, result, details, rawConfig);
     }
 
     //comparing expected configuration files and the actual files found on server
@@ -77,7 +76,7 @@ public class ModuleConfigurationCheck extends Check {
     }
 
     private List<String> getExpectedConfigurationForModule(String module) {
-        List<String> moduleExpectedConfiguration = new ArrayList<>(Arrays.asList(configurableConfiguration));
+        List<String> moduleExpectedConfiguration = new ArrayList<>(configurableConfiguration);
         moduleExpectedConfiguration.add("application-" + profile + ".yml");
         moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
         return  moduleExpectedConfiguration;

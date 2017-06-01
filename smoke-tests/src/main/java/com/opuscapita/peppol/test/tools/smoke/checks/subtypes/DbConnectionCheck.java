@@ -15,7 +15,7 @@ import java.util.Properties;
 public class DbConnectionCheck extends Check {
 
 
-    public DbConnectionCheck(String moduleName, Map<String, String> params) {
+    public DbConnectionCheck(String moduleName, Map<String, Object> params) {
         super(moduleName, params);
     }
 
@@ -23,10 +23,10 @@ public class DbConnectionCheck extends Check {
     public CheckResult run() {
         CheckResult result;
         try (Connection conn = getConnection()){
-            result = new CheckResult(name, true, "the database: " + rawConfig.get("DB-name") +  " is reachable, ", rawConfig);
+            result = new CheckResult(moduleName, true, "the database: " + rawConfig.get("DB-moduleName") +  " is reachable, ", rawConfig);
         } catch (Exception ex) {
             ex.printStackTrace();
-            result = new CheckResult(name, false, "the database: " + rawConfig.get("DB-name") + " not reachable, " + ex, rawConfig);
+            result = new CheckResult(moduleName, false, "the database: " + rawConfig.get("DB-moduleName") + " not reachable, " + ex, rawConfig);
         }
         return result;
     }
@@ -41,7 +41,7 @@ public class DbConnectionCheck extends Check {
                 "jdbc:" + rawConfig.get("driver") + "://" +
                         rawConfig.get("host") +
                         ":" + String.valueOf(rawConfig.get("port"))+ "/"+
-                        rawConfig.get("DB-name"),
+                        rawConfig.get("DB-moduleName"),
                 props);
         return conn;
     }

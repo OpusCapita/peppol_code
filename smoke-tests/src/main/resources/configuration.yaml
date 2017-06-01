@@ -47,6 +47,11 @@ tests:
      type: module-configuration
      params:
        host: http://localhost:441
-       module-names: events-persistence transport
+       module-names:
+          - events-persistence
+          - transport
        profile: development
-       expected-configurations: application.yml application-document_types.yml
+       expected-configurations:
+          - application.yml
+          - application-document_types.yml
+          - test

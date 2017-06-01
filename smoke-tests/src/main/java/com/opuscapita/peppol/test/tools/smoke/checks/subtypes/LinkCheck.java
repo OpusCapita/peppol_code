@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class LinkCheck extends Check {
 
-    public LinkCheck(String moduleName, Map<String, String> params) {
+    public LinkCheck(String moduleName, Map<String, Object> params) {
         super(moduleName,params);
     }
 
@@ -21,14 +21,14 @@ public class LinkCheck extends Check {
         CheckResult result;
         HttpURLConnection conn = null;
         try {
-            URL url = new URL(rawConfig.get("reference"));
+            URL url = new URL((String)rawConfig.get("reference"));
             conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             boolean goodResponse = conn.getResponseCode() == HttpURLConnection.HTTP_OK;
-            result = new CheckResult(name, goodResponse, "HTTP Status code: " + conn.getResponseCode(), rawConfig);
+            result = new CheckResult(moduleName, goodResponse, "HTTP Status code: " + conn.getResponseCode(), rawConfig);
         } catch (Exception ex) {
             ex.printStackTrace();
-            result = new CheckResult(name, false, rawConfig.get("reference") + " link is not reachable, " + ex, rawConfig);
+            result = new CheckResult(moduleName, false, rawConfig.get("reference") + " link is not reachable, " + ex, rawConfig);
         }
         return result;
     }

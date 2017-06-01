@@ -16,14 +16,14 @@ import java.util.Map;
  */
 public class HealthCheck extends Check {
 
-    public HealthCheck(String moduleName, Map<String, String> params) {
+    public HealthCheck(String moduleName, Map<String, Object> params) {
         super(moduleName,params);
     }
 
     @Override
     public CheckResult run() {
         try {
-            URL url = new URL(rawConfig.get("reference"));
+            URL url = new URL((String)rawConfig.get("reference"));
             URLConnection urlConn = url.openConnection();
             InputStreamReader is = new InputStreamReader(urlConn.getInputStream(),Charset.defaultCharset());
 
@@ -32,12 +32,12 @@ public class HealthCheck extends Check {
             statusValue = statusValue.replaceAll("\"","");
             boolean statusCheck = statusValue.toUpperCase().equals("UP");
 
-            return new CheckResult(name, statusCheck, "Health check performed for: " +
+            return new CheckResult(moduleName, statusCheck, "Health check performed for: " +
                     rawConfig.get("reference") + " received status is: " +
                     statusValue, rawConfig);
         } catch (Exception ex){
             ex.printStackTrace();
-            return new CheckResult(name, false, "Health check for: " +
+            return new CheckResult(moduleName, false, "Health check for: " +
                     rawConfig.get("reference") + " failed "
                     + ex, rawConfig);
         }

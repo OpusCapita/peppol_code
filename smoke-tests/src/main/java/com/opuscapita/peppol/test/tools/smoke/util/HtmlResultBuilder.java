@@ -114,14 +114,14 @@ public class HtmlResultBuilder implements ResultBuilder{
 
             assertList.add(createAssertRow(check));
 
-            testMap.put("name", "name");
+            testMap.put("moduleName", "moduleName");
             testMap.put("asserts", assertList);
 
             summaryMap.put("details", testMap);
 
             summaryList.add(summaryMap);
 
-            summaryPair.put("name", check.getName());
+            summaryPair.put("moduleName", check.getName());
             summaryPair.put("value",summaryList);
             out.add(summaryPair);
         }
@@ -130,7 +130,7 @@ public class HtmlResultBuilder implements ResultBuilder{
 
     private Map<String, Object> createAssertRow(CheckResult check) {
         Map<String, Object> assertMap = new HashMap<>();
-        assertMap.put("name", check.getName());
+        assertMap.put("moduleName", check.getName());
         assertMap.put("comment",check.getDetails());
         assertMap.put("expected_result", "Passed");
         assertMap.put("output_value", check.isPassed() ? "Passed" : "Failed");

@@ -18,7 +18,7 @@ public class QueuesCheck extends Check {
     private final static Logger logger = LogManager.getLogger(QueuesCheck.class);
     final String _mesage = "Smoke Test MQ message";
 
-    public QueuesCheck(String moduleName, Map<String, String> params) {
+    public QueuesCheck(String moduleName, Map<String, Object> params) {
         super(moduleName, params);
     }
 
@@ -27,14 +27,14 @@ public class QueuesCheck extends Check {
         Connection connection = null;
         Channel channel = null;
         CheckResult checkResult = null;
-        String[] queues = rawConfig.get("queue").trim().split(" ");
+        String[] queues = ((String)rawConfig.get("queue")).trim().split(" ");
         try{
             logger.info("QueuesCheck: Start");
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(rawConfig.get("host"));
+            factory.setHost((String)rawConfig.get("host"));
             factory.setPort((int)(Object)rawConfig.get("port"));
-            factory.setUsername(rawConfig.get("username"));
-            factory.setPassword(rawConfig.get("password"));
+            factory.setUsername((String)rawConfig.get("username"));
+            factory.setPassword((String)rawConfig.get("password"));
             factory.setConnectionTimeout(500);
             connection = factory.newConnection();
             channel = connection.createChannel();
@@ -50,10 +50,10 @@ public class QueuesCheck extends Check {
             }
             if(!success)
                 throw new Exception("Queue not found!");
-            checkResult = new CheckResult(name, true, "Queues check succeeded ", rawConfig);
+            checkResult = new CheckResult(moduleName, true, "Queues check succeeded ", rawConfig);
         } catch (Exception ex){
             ex.printStackTrace();
-            checkResult =  new CheckResult(name, false, "Queues check failed " + ex, rawConfig);
+            checkResult =  new CheckResult(moduleName, false, "Queues check failed " + ex, rawConfig);
         }
         finally {
             try{

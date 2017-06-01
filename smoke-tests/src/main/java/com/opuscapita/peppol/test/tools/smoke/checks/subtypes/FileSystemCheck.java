@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class FileSystemCheck extends Check {
 
-    public FileSystemCheck(String moduleName, Map<String, String> params) {
+    public FileSystemCheck(String moduleName, Map<String, Object> params) {
         super(moduleName, params);
     }
 
@@ -20,8 +20,8 @@ public class FileSystemCheck extends Check {
     public CheckResult run() {
         try {
             boolean canWrite = true, canRead = true;
-            String[] writableDirectories = rawConfig.get("writable-directory").trim().split(" ");
-            String[] readableDirectories = rawConfig.get("readable-directory").trim().split(" ");
+            String[] writableDirectories = ((String)rawConfig.get("writable-directory")).trim().split(" ");
+            String[] readableDirectories = ((String)rawConfig.get("readable-directory")).trim().split(" ");
 
             for (String dir: writableDirectories) {
                 if (!Files.isWritable(new File(dir).toPath()))
@@ -32,12 +32,12 @@ public class FileSystemCheck extends Check {
                      canRead = false;
              }
 
-            return new CheckResult(name, canWrite && canRead, "read/write check for directories: " +
+            return new CheckResult(moduleName, canWrite && canRead, "read/write check for directories: " +
                     rawConfig.get("readable-directory") + " and " +
                     rawConfig.get("writable-directory"), rawConfig);
         } catch (Exception ex){
             ex.printStackTrace();
-            return new CheckResult(name, false, "read/write check for directories: " +
+            return new CheckResult(moduleName, false, "read/write check for directories: " +
                     rawConfig.get("readable-directory") + " and " +
                     rawConfig.get("writable-directory") + " failed! " + ex, rawConfig);
         }

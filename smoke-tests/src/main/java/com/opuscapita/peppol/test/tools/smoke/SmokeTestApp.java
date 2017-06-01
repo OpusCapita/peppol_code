@@ -31,7 +31,7 @@ public class SmokeTestApp {
         }
 
         if(testResultFileName == null || testResultFileName.isEmpty()){
-            logger.error("Test results file name empty or not specified, exiting!");
+            logger.error("Test results file moduleName empty or not specified, exiting!");
             return;
         }
 
