@@ -23,10 +23,10 @@ public class DbConnectionCheck extends Check {
     public CheckResult run() {
         CheckResult result;
         try (Connection conn = getConnection()){
-            result = new CheckResult(moduleName, true, "the database: " + rawConfig.get("DB-moduleName") +  " is reachable, ", rawConfig);
+            result = new CheckResult(moduleName, true, "the database: " + rawConfig.get("DB-name") +  " is reachable, ", rawConfig);
         } catch (Exception ex) {
             ex.printStackTrace();
-            result = new CheckResult(moduleName, false, "the database: " + rawConfig.get("DB-moduleName") + " not reachable, " + ex, rawConfig);
+            result = new CheckResult(moduleName, false, "the database: " + rawConfig.get("DB-name") + " not reachable, " + ex, rawConfig);
         }
         return result;
     }
@@ -41,7 +41,7 @@ public class DbConnectionCheck extends Check {
                 "jdbc:" + rawConfig.get("driver") + "://" +
                         rawConfig.get("host") +
                         ":" + String.valueOf(rawConfig.get("port"))+ "/"+
-                        rawConfig.get("DB-moduleName"),
+                        rawConfig.get("DB-name"),
                 props);
         return conn;
     }

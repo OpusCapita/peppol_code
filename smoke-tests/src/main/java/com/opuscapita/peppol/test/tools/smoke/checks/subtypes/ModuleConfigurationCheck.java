@@ -48,7 +48,7 @@ public class ModuleConfigurationCheck extends Check {
                 Set<String> configuration = new HashSet<>();
                 //collecting all configuration files retrieved from the server for current module
                 for(JsonElement source : jsonObj.get("propertySources").getAsJsonArray()){
-                    URL remoteConfigFile = new URL(source.getAsJsonObject().get("moduleName").getAsString());
+                    URL remoteConfigFile = new URL(source.getAsJsonObject().get("name").getAsString());
                     String configurationFile = Paths.get(remoteConfigFile.getFile()).getFileName().toString();
                     configuration.add(configurationFile);
                 }
