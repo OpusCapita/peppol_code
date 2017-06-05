@@ -115,7 +115,7 @@ public class IncomingChecker {
     private void send(File file) throws Exception {
         String fileName = storage.moveToTemporary(file, backupDir);
         logger.info("File moved to: " + fileName);
-        Endpoint source = new Endpoint(componentName, reprocess ? ProcessType.OUT_REPROCESS : ProcessType.OUT_FILE_TO_MQ);
+        Endpoint source = new Endpoint(componentName, getProcessType());
 
         ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
                 fileName, source);
@@ -130,4 +130,16 @@ public class IncomingChecker {
         }
     }
 
+    private ProcessType getProcessType() {
+        if(direction.toUpperCase().equals("OUT")){
+            if(reprocess)
+                return ProcessType.OUT_REPROCESS;
+            return ProcessType.OUT_FILE_TO_MQ;
+        }
+        else { //IN
+            if(reprocess)
+                return ProcessType.IN_REPROCESS;
+            throw new UnsupportedOperationException(componentName + " is not supposed to handle inbound messages");
+        }
+    }
 }
