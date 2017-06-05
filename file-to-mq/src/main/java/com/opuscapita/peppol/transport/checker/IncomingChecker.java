@@ -56,6 +56,8 @@ public class IncomingChecker {
     private String backupDir;
     @Value("${peppol.file-to-mq.reprocess:false}")
     private boolean reprocess;
+    @Value("${peppol.file-to-mq.direction:OUT}")
+    private String direction;
 
     @Autowired
     public IncomingChecker(@NotNull MessageQueue messageQueue, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
