@@ -10,8 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
 
 /**
@@ -21,12 +24,13 @@ import java.io.InputStream;
 @Lazy
 public class DocumentParser {
     private final static Logger logger = LoggerFactory.getLogger(DocumentParser.class);
-    private final SAXParser saxParser;
+    private final SAXParserFactory saxParserFactory;
     private final DocumentTemplates templates;
+    private ThreadLocal<SAXParser> saxParser = new ThreadLocal<>();
 
     @Autowired
-    public DocumentParser(@NotNull SAXParser saxParser, @NotNull DocumentTemplates templates) {
-        this.saxParser = saxParser;
+    public DocumentParser(@NotNull SAXParserFactory saxParserFactory, @NotNull DocumentTemplates templates) {
+        this.saxParserFactory = saxParserFactory;
         this.templates = templates;
     }
 
@@ -34,7 +38,7 @@ public class DocumentParser {
     public DocumentInfo parse(@NotNull InputStream inputStream, @NotNull String fileName, @NotNull Endpoint endpoint) throws Exception {
         DocumentParserHandler handler = new DocumentParserHandler(fileName, templates, endpoint);
         try {
-            saxParser.parse(inputStream, handler);
+            getSAXParser().parse(inputStream, handler);
         } catch (Exception e) {
             logger.warn("Failed to parse file " + fileName, e);
             DocumentInfo result = new DocumentInfo();
@@ -44,6 +48,13 @@ public class DocumentParser {
         }
 
         return handler.getResult();
+    }
+
+    protected SAXParser getSAXParser() throws ParserConfigurationException, SAXException {
+        if (saxParser.get() == null) {
+            saxParser.set(saxParserFactory.newSAXParser());
+        }
+        return saxParser.get();
     }
 
 }

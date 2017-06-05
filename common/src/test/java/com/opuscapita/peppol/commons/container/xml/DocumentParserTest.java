@@ -33,7 +33,7 @@ public class DocumentParserTest {
     public void testParseValid() throws Exception {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
-        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
+        DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/ehf.xml")) {
             DocumentInfo result = parser.parse(inputStream, "ehf.xml", new Endpoint("test", ProcessType.TEST));
@@ -65,7 +65,7 @@ public class DocumentParserTest {
     public void testParseAlmostValid() throws Exception {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
-        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
+        DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/ehf_no_issue_date.xml")) {
             DocumentInfo result = parser.parse(inputStream, "ehf_no_issue_date.xml", new Endpoint("test", ProcessType.TEST));
@@ -97,7 +97,7 @@ public class DocumentParserTest {
     public void testParseEhfInvoiceBiiyx() throws Exception {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
-        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
+        DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/BIIXY_document_type_test.xml")) {
             DocumentInfo result = parser.parse(inputStream, "BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST));
@@ -128,7 +128,7 @@ public class DocumentParserTest {
     public void testParseEhfCatalogue() throws Exception {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
-        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
+        DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/Catalogue_document_type_test.xml")) {
             DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_test.xml", new Endpoint("test", ProcessType.TEST));
@@ -156,7 +156,7 @@ public class DocumentParserTest {
     public void testParseEhfCatalogueSellerSuplier() throws Exception {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
-        DocumentParser parser = new DocumentParser(factory.newSAXParser(), templates);
+        DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/Catalogue_document_type_seller_supplier_test.xml")) {
             DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_seller_supplier_test.xml", new Endpoint("test", ProcessType.TEST));
