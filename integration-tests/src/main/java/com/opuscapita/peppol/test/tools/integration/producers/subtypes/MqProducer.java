@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -66,9 +65,6 @@ public class MqProducer implements Producer {
     @SuppressWarnings({"ConstantConditions", "finally"})
     @Override
     public void run() {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-
         Connection connection = null;
         Channel channel = null;
         File directory;
