@@ -3,14 +3,8 @@ package com.opuscapita.peppol.commons.errors;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.ProcessingInfo;
-import com.opuscapita.peppol.commons.container.document.DocumentError;
-import com.opuscapita.peppol.commons.container.document.DocumentWarning;
-import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -20,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.stream.Collectors;
 
 /**
  * Created by Daniil on 19.07.2016.
@@ -42,7 +35,8 @@ public class ErrorHandler {
     }
 
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
-    public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription, @Nullable String additionalDetails) {
+    public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription,
+                                           @Nullable String additionalDetails) {
         createTicketFromContainerMessage(cm, e, shortDescription, additionalDetails);
     }
 
@@ -59,34 +53,14 @@ public class ErrorHandler {
 
     private void createTicketWithoutContainerMessage(@Nullable String customerId, @Nullable Exception e, @Nullable String fileName,
                                                      @NotNull String shortDescription, @Nullable String correlationId, String additionalDetails) {
-        String detailedDescription = "Failed to process message";
+        String detailedDescription =
+                ErrorFormatter.getErrorDescription(customerId, e, fileName, additionalDetails);
 
-        if (fileName != null) {
-            detailedDescription += "\nFile name: " + fileName;
-        } else {
+        if (fileName == null) {
             fileName = "n/a";
         }
 
-        if (StringUtils.isNotBlank(customerId)) {
-            detailedDescription += "\nCustomerID: " + customerId;
-        }
-
-        if (e != null && StringUtils.isNotBlank(e.getMessage())) {
-            detailedDescription += "\nError message: " + e.getMessage();
-        }
-
-        String exceptionMessage = exceptionMessageToString(e);
-        if (exceptionMessage != null) {
-            detailedDescription += "\nPlatform exception message: " + exceptionMessage;
-        }
-
-        if (e != null) {
-            detailedDescription += "\n\nPlatform exception: " + ExceptionUtils.getStackTrace(e) + "\n";
-        }
-
-        if (additionalDetails != null) {
-            detailedDescription += "\n\nAdditional details: " + additionalDetails + "\n";
-        }
+        String exceptionMessage = ErrorFormatter.exceptionMessageToString(e);
 
         if (StringUtils.isBlank(correlationId)) {
             correlationId = fileName;
@@ -98,85 +72,19 @@ public class ErrorHandler {
         try {
             correlationId = correlationIdDigest(correlationId);
         } catch (NoSuchAlgorithmException e1) {
-            logger.warn("Failed to create SHA-1 has of correlation id");
+            logger.error("Failed to create SHA-1 has of correlation id");
             e1.printStackTrace();
         }
         createTicket(shortDescription, detailedDescription, correlationId, customerId, fileName);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e,
                                                   @NotNull String shortDescription, @Nullable String additionalDetails) {
-        String detailedDescription = "Failed to process message";
-
-        detailedDescription += "\nFile name: " + cm.getFileName();
-
-        if (StringUtils.isNotBlank(cm.getCustomerId())) {
-            detailedDescription += "\nCustomerID: " + cm.getCustomerId();
-        }
-
-        if (e != null && StringUtils.isNotBlank(e.getMessage())) {
-            detailedDescription += "\nError message: " + e.getMessage();
-        }
-
-        if (additionalDetails != null) {
-            detailedDescription += "\nDetails: " + additionalDetails;
-        }
-
-        if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getWarnings().size() > 0) {
-            detailedDescription += "\nDocument warnings: " +
-                    cm.getDocumentInfo().getWarnings().stream().map(DocumentWarning::toString).collect(Collectors.joining("\n\t"));
-        }
-        if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getErrors().size() > 0) {
-            detailedDescription += "\nDocument errors: " +
-                    cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining("\n\t"));
-        }
-
-        if (cm.getProcessingInfo() == null) {
-            cm.setProcessingInfo(new ProcessingInfo(new Endpoint("error_handler", ProcessType.UNKNOWN),
-                    "Processing info missing in Container Message"));
-        } else {
-            detailedDescription += "\nLast processing status: " + cm.getProcessingInfo().getCurrentStatus();
-        }
-
-        Exception processingException = null;
-        if (cm.getProcessingInfo() != null) {
-            processingException = cm.getProcessingInfo().getProcessingException();
-            if (processingException != null) {
-                String message = exceptionMessageToString(processingException);
-                if (StringUtils.isNotBlank(message)) {
-                    detailedDescription += "\nProcessing exception message: " + message;
-                }
-            }
-        }
-
-        String exceptionMessage = exceptionMessageToString(e);
-        if (exceptionMessage != null) {
-            detailedDescription += "\nPlatform exception message: " + exceptionMessage;
-        }
-
-        String json = cm.convertToJson().replaceAll("\\{|\\}|\\\"|\\'", "");
-        detailedDescription += "\nMessage content: \n" + json + "\n";
-
-        if (e != null) {
-            detailedDescription += "\n\nPlatform exception: " + ExceptionUtils.getStackTrace(e) + "\n";
-        }
-        if (processingException != null) {
-            detailedDescription += "\n\nProcessing exception: " + ExceptionUtils.getStackTrace(processingException);
-        }
+        String detailedDescription = ErrorFormatter.getErrorDescription(cm, e, additionalDetails);
 
         createTicket(shortDescription, detailedDescription, cm.getCorrelationId() + cm.getProcessingInfo().getCurrentStatus(),
                 cm.getCustomerId(), cm.getFileName());
-    }
-
-    @Nullable
-    private String exceptionMessageToString(@Nullable Exception e) {
-        if (e == null) {
-            return null;
-        }
-        if (StringUtils.isBlank(e.getMessage())) {
-            return null;
-        }
-        return e.getMessage();
     }
 
     private void createTicket(@NotNull String shortDescription, @NotNull String detailedDescription,

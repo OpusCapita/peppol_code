@@ -108,7 +108,7 @@ public class PersistenceController {
         return fileInfo;
     }
 
-    private FileInfo setFileInfoStatus(FileInfo fileInfo, PeppolEvent peppolEvent, Message message) {
+    private void setFileInfoStatus(FileInfo fileInfo, PeppolEvent peppolEvent, Message message) {
         boolean validationError = true;
         if(message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.reprocessed && message.getStatus() != MessageStatus.resolved) {
             message.setStatus(MessageStatus.processing);
@@ -162,7 +162,6 @@ public class PersistenceController {
             }
         }
 
-        return fileInfo;
     }
 
     private void addReprocessInfo(FileInfo fileInfo) {
@@ -182,14 +181,17 @@ public class PersistenceController {
         failedFileInfo.setErrorFilePath(findErrorFilePath(peppolEvent, invalid));
         failedFileInfo.setInvalid(invalid);
         String errorMessage = peppolEvent.getErrorMessage();
+
         String[] errors = errorMessage.split(DocumentError.ERROR_SEPARATOR);
-        if(errors.length > 2){                                      //taking only first error
-            errorMessage = errors[0] + DocumentError.ERROR_SEPARATOR + errors[1];  //DocumentError.toString()
+        if (errors.length > 2) {                                      //taking only first error
+            errorMessage = errors[0] + DocumentError.ERROR_SEPARATOR + errors[1];
         }
+
         if (errorMessage.length() > 1000) {
             errorMessage = errorMessage.substring(0, 1000);
         }
         failedFileInfo.setErrorMessage(errorMessage);
+
         failedFileInfo = failedFileInfoRepository.save(failedFileInfo);
         if (fileInfo.getFailedInfo() == null) {
             fileInfo.setFailedInfo(new TreeSet<>());
@@ -327,6 +329,7 @@ public class PersistenceController {
 
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     private AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
         AccessPoint accessPoint = null;
         if (peppolEvent.getCommonName() != null) {
