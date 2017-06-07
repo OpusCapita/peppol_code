@@ -14,10 +14,10 @@
 - debug: var=counter
 
 - name: update test results
-  delegate_to: localhost  
+#  delegate_to: localhost  
   lineinfile:
     create: yes
-    dest: "{{report_path}}/spike-test-inbound.txt"
+    dest: "{{report_path}}/spike-test-inbound-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
     line: 'Filename {{counter}}: {{file}}'
 

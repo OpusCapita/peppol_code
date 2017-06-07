@@ -1,10 +1,11 @@
 ---
 - name: Copy file to outbound from-a2a dir
-  become: no
+  become: "{{sudo}}"
   copy:
     remote_src: True
     src: "{{file}}"
     dest: "{{transport_from_a2a_path}}" 
+    mode: 0775
 - set_fact: file="{{file}}"
 - debug: var=file
 
