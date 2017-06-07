@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.eventing.destinations.webwatchdog;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +17,24 @@ import java.util.Arrays;
  */
 @Component
 public class WebWatchDogMessenger {
+    private final static Logger logger = LoggerFactory.getLogger(WebWatchDogMessenger.class);
+
     WebWatchDogConfig webWatchDogConfig;
 
     @Autowired
     public WebWatchDogMessenger(WebWatchDogConfig webWatchDogConfig) {
         this.webWatchDogConfig = webWatchDogConfig;
+    }
+
+    public static boolean isApplicableForFile(String fileName) {
+        fileName = ensureOnlyFileName(fileName);
+        return fileName.toLowerCase().startsWith("logger_") && fileName.toLowerCase().endsWith("xml");
+    }
+
+    @NotNull
+    protected static String ensureOnlyFileName(String fileName) {
+        fileName = new File(fileName).getName();
+        return fileName;
     }
 
     public void sendOk(String fileName) throws IOException {
@@ -44,16 +59,6 @@ public class WebWatchDogMessenger {
         bufferedWriter.write(content);
         bufferedWriter.flush();
         bufferedWriter.close();
-    }
-
-    public static boolean isApplicableForFile(String fileName) {
-        fileName = ensureOnlyFileName(fileName);
-        return fileName.toLowerCase().startsWith("logger_") && fileName.toLowerCase().endsWith("xml");
-    }
-
-    @NotNull
-    protected static String ensureOnlyFileName(String fileName) {
-        fileName = new File(fileName).getName();
-        return fileName;
+        logger.info("Stored " + statusFile.getAbsolutePath());
     }
 }

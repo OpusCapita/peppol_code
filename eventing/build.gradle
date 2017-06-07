@@ -36,6 +36,7 @@ dependencies {
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
+    testCompile 'junit:junit:4.12'
     compile project(':common')
     compile project(':common-model')
 }

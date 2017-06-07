@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +23,6 @@ public class WebWatchDogReporterReporter {
     private final static Logger logger = LoggerFactory.getLogger(WebWatchDogReporterReporter.class);
     private final WebWatchDogMessenger webWatchDogMessenger;
 
-    @Value("${peppol.eventing.queue.out.name}")
-    private String queueOut;
-
     @Autowired
     public WebWatchDogReporterReporter(@NotNull WebWatchDogMessenger webWatchDogMessenger) {
         this.webWatchDogMessenger = webWatchDogMessenger;
@@ -37,25 +33,30 @@ public class WebWatchDogReporterReporter {
         if (cm.getProcessingInfo() == null) {
             logger.warn("No processing information for " + cm);
         }
+        if (!WebWatchDogMessenger.isApplicableForFile(cm.getFileName())) {
+            return;
+        }
         try {
             logger.info("Processing info: " + cm.getProcessingInfo());
             logger.info("Current endpoint: " + cm.getProcessingInfo().getCurrentEndpoint());
-            if (cm.getProcessingInfo().getCurrentEndpoint().getType().equals(ProcessType.OUT_OUTBOUND) && WebWatchDogMessenger.isApplicableForFile(cm.getFileName())) {
+            if (cm.getProcessingInfo().getCurrentEndpoint().getType().equals(ProcessType.OUT_OUTBOUND)) {
                 if ("delivered".equals(cm.getProcessingInfo().getCurrentStatus())) {
                     webWatchDogMessenger.sendOk(cm.getFileName());
                 } else {
                     webWatchDogMessenger.sendFailed(cm.getFileName());
                 }
-            } else if (cm.getProcessingInfo().getCurrentEndpoint().getType().equals(ProcessType.OUT_VALIDATION) && WebWatchDogMessenger.isApplicableForFile(cm.getFileName())) {
+            } else if (cm.getProcessingInfo().getCurrentEndpoint().getType().equals(ProcessType.OUT_VALIDATION)) {
                 if (!"validation passed".equals(cm.getProcessingInfo().getCurrentStatus())) {
                     webWatchDogMessenger.sendInvalid(cm.getFileName());
                 }
+            } else {
+                logger.info("Not writing status: " + cm.getProcessingInfo().getCurrentEndpoint().getType().name() + " for " + cm.getFileName());
             }
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("Failed to store Web Watch Dog information for " + cm.getFileName());
         }
-        logger.info("Stored Web Watch Dog information for " + cm.getFileName());
+        logger.info("Finished processing Web Watch Dog information for " + cm.getFileName());
     }
 
 }
