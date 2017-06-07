@@ -37,6 +37,7 @@ dependencies {
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
     testCompile 'junit:junit:4.12'
+    compile 'org.hamcrest:hamcrest-junit:2.0.0.0'
     compile project(':common')
     compile project(':common-model')
 }
