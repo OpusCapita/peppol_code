@@ -38,21 +38,13 @@ public class EventingApp {
     @Value("${peppol.component.name}")
     private String componentName;
 
-
-    @Value("${wwd.folder}")
-    private String webWatchDogFolder;
-
-    @Value("${wwd.prefix}")
-    private String webWatchDogPrefix;
-
-
     public static void main(String[] args) {
         SpringApplication.run(EventingApp.class, args);
     }
 
 
     @Bean
-    WebWatchDogConfig webWatchDogConfig() {
+    WebWatchDogConfig webWatchDogConfig(@Value("${wwd.folder}") String webWatchDogFolder, @Value("${wwd.prefix}") String webWatchDogPrefix) {
         return new WebWatchDogConfig(webWatchDogFolder, webWatchDogPrefix);
     }
 
