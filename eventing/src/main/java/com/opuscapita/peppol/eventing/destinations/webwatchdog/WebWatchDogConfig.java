@@ -1,9 +1,14 @@
 package com.opuscapita.peppol.eventing.destinations.webwatchdog;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by Daniil on 05.07.2016.
  */
 public class WebWatchDogConfig {
+
+    private final static Logger logger = LoggerFactory.getLogger(WebWatchDogConfig.class);
 
     private String folder;
     private String prefix;
@@ -14,6 +19,7 @@ public class WebWatchDogConfig {
     public WebWatchDogConfig(String folder, String prefix) {
         this.folder = folder;
         this.prefix = prefix;
+        logger.info("Created Web Watch Dog config: " + this);
     }
 
     public String getFolder() {
