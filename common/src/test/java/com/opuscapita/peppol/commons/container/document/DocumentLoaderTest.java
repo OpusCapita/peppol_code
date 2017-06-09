@@ -62,6 +62,8 @@ public class DocumentLoaderTest {
 
         list = Arrays.asList(
                 "/valid/ehf.xml",
+                "/valid/many_names.xml",
+                "/valid/many_names_2.xml",
                 "/valid/valid_sbdh_2.1.xml",
                 "/valid/ehf_2.0_bii4_no.xml",
                 "/valid/ehf_2.0_bii5_no.xml",

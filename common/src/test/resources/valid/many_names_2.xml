@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"><StandardBusinessDocumentHeader><HeaderVersion>1.0</HeaderVersion><Sender><Identifier Authority="iso6523-actorid-upis">9908:929266544</Identifier></Sender><Receiver><Identifier Authority="iso6523-actorid-upis">9908:994572911</Identifier></Receiver><DocumentIdentification><Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard><TypeVersion>2.1</TypeVersion><InstanceIdentifier>bc43f088-ebeb-4b25-a35a-caf711b8b756</InstanceIdentifier><Type>Invoice</Type><CreationDateAndTime>2017-06-05T09:49:46.588+02:00</CreationDateAndTime></DocumentIdentification><BusinessScope><Scope><Type>DOCUMENTID</Type><InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1</InstanceIdentifier></Scope><Scope><Type>PROCESSID</Type><InstanceIdentifier>urn:www.cenbii.eu:profile:bii04:ver2.0</InstanceIdentifier></Scope></BusinessScope></StandardBusinessDocumentHeader><Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+    <cbc:ID>5900014125</cbc:ID>
+    <cbc:IssueDate>2017-06-03</cbc:IssueDate>
+    <cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
+    <cbc:Note languageID="no">Faktureringsperiode:03-06-2017 -&gt; 02-07-2017</cbc:Note>
+    <cbc:DocumentCurrencyCode listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
+    <cac:OrderReference>
+        <cbc:ID>ATLE MYHRSTAD</cbc:ID>
+    </cac:OrderReference>
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="NO:ORGNR">929266544</cbc:EndpointID>
+            <cac:PartyName>
+                <cbc:Name>NCH Norge AS</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Pb 68 - Haugenstua</cbc:StreetName>
+                <cbc:CityName>Oslo</cbc:CityName>
+                <cbc:PostalZone>0915</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT">929266544MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>NCH Norge AS</cbc:RegistrationName>
+                <cbc:CompanyID>929266544</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID> Østheim, Mr. Tom (Tom)</cbc:ID>
+                <cbc:Telephone>21 08 17 74</cbc:Telephone>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="NO:ORGNR">994572911</cbc:EndpointID>
+            <cac:PartyName>
+                <cbc:Name>GUMPENS AUTO ØST AS</cbc:Name>
+            </cac:PartyName>
+            <cac:PartyName>
+                <cbc:Name>ATLE MYHRSTAD</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>P.B.4540 GRIMM</cbc:StreetName>
+                <cbc:CityName>KRISTIANSAND</cbc:CityName>
+                <cbc:PostalZone>4673</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT">994572911MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>GUMPENS AUTO ØST AS</cbc:RegistrationName>
+                <cbc:CompanyID>994572911</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>Not available</cbc:ID>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+        <cbc:ActualDeliveryDate>2017-06-03</cbc:ActualDeliveryDate>
+        <cac:DeliveryLocation>
+            <cac:Address>
+                <cbc:StreetName>STEMMANE 3</cbc:StreetName>
+                <cbc:CityName>KRISTIANSAND S</cbc:CityName>
+                <cbc:PostalZone>4636</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+        <cac:DeliveryParty>
+            <cac:Contact>
+                <cbc:Name>ATLE MYHRSTAD</cbc:Name>
+            </cac:Contact>
+        </cac:DeliveryParty>
+    </cac:Delivery>
+    <cac:PaymentMeans>
+        <cbc:PaymentMeansCode listID="UNCL4461">1</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>2017-06-23</cbc:PaymentDueDate>
+        <cac:PayeeFinancialAccount>
+            <cbc:ID schemeID="LOCAL">97500650595</cbc:ID>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:PaymentMeans>
+        <cbc:PaymentMeansCode listAgencyID="NES" listID="UNCL4461">31</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>2017-06-23</cbc:PaymentDueDate>
+        <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+        <cac:PayeeFinancialAccount>
+            <cbc:ID schemeID="IBAN">NO9297500650595</cbc:ID>
+            <cac:FinancialInstitutionBranch>
+                <cac:FinancialInstitution>
+                    <cbc:ID schemeID="BIC">ESSENOKX</cbc:ID>
+                </cac:FinancialInstitution>
+            </cac:FinancialInstitutionBranch>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="NOK">532.25</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="NOK">2129.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="NOK">532.25</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+                <cbc:Percent>25.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="NOK">2129.00</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="NOK">2129.00</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="NOK">2661.25</cbc:TaxInclusiveAmount>
+        <cbc:PayableAmount currencyID="NOK">2661.25</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.00</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="NOK">2129.00</cbc:LineExtensionAmount>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="NOK">532.25</cbc:TaxAmount>
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Description>TORRENT SERVICE -154274</cbc:Description>
+            <cbc:Name>TORRENT SERVICE -154274</cbc:Name>
+            <cac:SellersItemIdentification>
+                <cbc:ID>10230112</cbc:ID>
+            </cac:SellersItemIdentification>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+                <cbc:Percent>25.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="NOK">2129.00</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+</Invoice></StandardBusinessDocument>

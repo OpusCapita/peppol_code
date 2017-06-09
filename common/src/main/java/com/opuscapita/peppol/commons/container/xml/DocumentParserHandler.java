@@ -177,10 +177,8 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     private boolean areEqual(@NotNull String id, @NotNull String valueOne, @NotNull String valueTwo) {
-        if (id.equals("sender_id") || id.equals("recipient_id")) {
-            return new ParticipantId(valueOne).equals(new ParticipantId(valueTwo));
-        }
-        return valueOne.equals(valueTwo);
+        return !(id.equals("sender_id") || id.equals("recipient_id"))
+                || new ParticipantId(valueOne).equals(new ParticipantId(valueTwo));
     }
 
     private void setFields(Template template, DocumentInfo result) {
