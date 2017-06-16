@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.support.ui.common;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +32,7 @@ public class Util {
     Environment environment;
     private List<String> directoryList;
 
+
     @PostConstruct
     public void init() {
         directoryList = new ArrayList<>(Arrays.asList(downloadDirectoryList.split(";")));
@@ -44,6 +47,7 @@ public class Util {
 class FileFinder {
     private final List<String> directoryList;
     private byte[] result = null;
+    private static final Logger logger = Logger.getLogger(FileFinder.class);
 
     public FileFinder(List<String> directoryList) throws Exception {
         this.directoryList = directoryList;
@@ -52,6 +56,7 @@ class FileFinder {
     }
 
     public byte[] find(String fileName) throws FileNotFoundException {
+        logger.warn("Started to search for" + fileName + " " + LocalDateTime.now());
         File f = new File(fileName);
         //checking if file already has full path and can be found on this step
         if(f.exists())
@@ -60,11 +65,14 @@ class FileFinder {
         fileName = f.getName();
         for (String dir : directoryList){
             find(fileName, new File(dir));
-            if(result != null)
+            if(result != null) {
+                logger.warn("Found file " + LocalDateTime.now());
                 return result;
+            }
         }
         if (result == null)
             throw new FileNotFoundException("File: " + fileName + " not found!");
+        logger.warn("Found file " + LocalDateTime.now());
         return result;
     }
 
