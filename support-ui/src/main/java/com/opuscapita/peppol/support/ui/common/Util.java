@@ -56,17 +56,16 @@ class FileFinder {
     }
 
     public byte[] find(String fileName) throws FileNotFoundException {
-        logger.warn("Started to search for" + fileName + " " + LocalDateTime.now());
         File f = new File(fileName);
         //checking if file already has full path and can be found on this step
         if(f.exists())
             return convertFileToByteArray(f);
         //clearing the path if any and leaving just simple name
+        logger.warn("WARNING! " + fileName + " not found, looking for the file in all directories, this might be very slow and should be avoided in production!");
         fileName = f.getName();
         for (String dir : directoryList){
             find(fileName, new File(dir));
             if(result != null) {
-                logger.warn("Found file " + LocalDateTime.now());
                 return result;
             }
         }

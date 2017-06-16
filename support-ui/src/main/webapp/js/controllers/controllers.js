@@ -14,6 +14,7 @@ function createTable(ngTableParams, $location, $timeout, Factory, $scope, inboun
         angular.extend({
                 page: 1,            // show first page
                 count: 50,          // count per page
+                exactSearch: false,
                 sorting: {
                     'id': 'desc'
                 },
@@ -45,6 +46,12 @@ function createTable(ngTableParams, $location, $timeout, Factory, $scope, inboun
             search: function (data) {
                 this.data = data;
                 this.settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
+            },
+
+            exactSearchChanged: function () {
+            console.log("before: " + this.exactSearch);
+            this.exactSearch = !this.exactSearch;
+            console.log("after: " + this.exactSearch);
             }
         });
 }
@@ -222,7 +229,7 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
             }
         };
         $scope.downloadFile = function (filename) {
-            $window.open('/rest/outbound/download/' + filename);
+            $window.open('/rest/outbound/download?file=' + filename);
         };
 
         $scope.isAllowedToReprocess = function () {
