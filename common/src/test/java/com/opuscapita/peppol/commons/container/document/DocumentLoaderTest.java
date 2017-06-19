@@ -57,6 +57,7 @@ public class DocumentLoaderTest {
                 "/invalid/simpler_invoicing_files/invalids3.xml",
                 "/invalid/simpler_invoicing_files/invalids4.xml",
                 "/invalid/simpler_invoicing_files/invalids5.xml"
+                /*"/valid/simpler_invoicing_files/wrapped.SI-UBL-PO-1.2-ok-minimal.xml"*/
         );
         checkTypes(list, Archetype.PEPPOL_BIS);
 
