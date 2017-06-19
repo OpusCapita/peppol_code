@@ -63,7 +63,6 @@ public class PreprocessingController {
         logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
         cm.setDocumentInfo(document).setFileName(longTerm);
         cm.setStatus(endpoint, "parsed");
-        logger.info("DEBUG##: " + document.getDocumentType());
         return cm;
     }
 
