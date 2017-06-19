@@ -11,15 +11,21 @@
             </button>
         </p>
     </div>
-    <div class="col-md-offset-5 col-md-3 search-bar">
+    <div class="input-group col-md-offset-5 col-md-3">
         <input type="text" class="form-control" ng-model="tableParams.$params.search"
                ng-keyup="$event.keyCode == 13 && tableParams.reload()"
                placeholder="Type to search...">
+        <div class="input-group-btn">
+            <button class="btn btn-default" type="submit" ng-click="tableParams.reload()"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
     </div>
 
     <div class="clearfix"></div>
     <div loading-container="tableParams.settings().$loading">
         <table ng-table="tableParams" show-filter="true" class="table ng-table-rowselected">
+           <!-- <label>Use exact search:
+                <input type="checkbox" ng-model="tableParams.exactSearch" ng-click="tableParams.exactSearchChanged()">
+            </label><br/>-->
             <tbody ng-repeat="group in $groups">
             <tr class="ng-table-group">
                 <td colspan="{{$columns.length}}">
