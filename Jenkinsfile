@@ -213,7 +213,8 @@ try {
 }
 catch(e) {
     echo e.toString()
-    failBuild('', "Unexpected error has occured. Check the log for details.\n${e}\n")
+    emailNotify('', "Unexpected error has occured. Check the log for details.\n${e}\n")
+    throw e
 }
 
 /**
