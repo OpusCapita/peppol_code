@@ -74,21 +74,20 @@ public class PersistenceController {
         logger.info("About to process peppol event " + peppolEvent);
         if (/*peppolEvent.getProcessType() == ProcessType.IN_INBOUND ||*/
                 peppolEvent.getProcessType() == ProcessType.OUT_FILE_TO_MQ ||
-                peppolEvent.getProcessType() == ProcessType.REST) {
+                        peppolEvent.getProcessType() == ProcessType.REST) {
             // some events cannot be processed
-            logger.info("Skipping persisting of Peppol event for unsupported type [" +peppolEvent.getProcessType().name()+ "]");
+            logger.info("Skipping persisting of Peppol event for unsupported type [" + peppolEvent.getProcessType().name() + "]");
             return;
         }
 
         swapSenderAndReceiverForInbound(peppolEvent);
         AccessPoint accessPoint = getAccessPoint(peppolEvent);
-        logger.info("Access point: " + accessPoint);
         Message message = getOrCreateMessage(peppolEvent);
         FileInfo fileInfo = getFileInfo(message, peppolEvent);
         setFileInfoStatus(fileInfo, peppolEvent, message);
         fileInfoRepository.save(fileInfo);
         Message persistedMessage = messageRepository.save(message);
-        logger.info("Message persisted with id: " + persistedMessage.getId());
+        logger.info("Message[" + peppolEvent.getFileName() + " : AP - " + (accessPoint != null ? accessPoint: "N/A") + "] persisted with id: " + persistedMessage.getId());
     }
 
     private FileInfo getFileInfo(Message message, PeppolEvent peppolEvent) {
@@ -110,7 +109,7 @@ public class PersistenceController {
 
     private void setFileInfoStatus(FileInfo fileInfo, PeppolEvent peppolEvent, Message message) {
         boolean validationError = true;
-        if(message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.reprocessed && message.getStatus() != MessageStatus.resolved) {
+        if (message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.reprocessed && message.getStatus() != MessageStatus.resolved) {
             message.setStatus(MessageStatus.processing);
         }
         switch (peppolEvent.getProcessType()) {
@@ -156,7 +155,7 @@ public class PersistenceController {
             if (peppolEvent.getProcessType() == ProcessType.OUT_PEPPOL || peppolEvent.getProcessType() == ProcessType.OUT_OUTBOUND) {
                 message.setStatus(MessageStatus.reprocessed);
             } else {
-                if(message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.resolved) {
+                if (message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.resolved) {
                     message.setStatus(validationError ? MessageStatus.invalid : MessageStatus.failed);
                 }
             }
@@ -211,7 +210,7 @@ public class PersistenceController {
 
         // this should provide backward compatibility
         if (new File(result).exists()) {
-            logger.info("PersistenceController: error file path set to: "+ result);
+            logger.info("PersistenceController: error file path set to: " + result);
             return result;
         }
 
@@ -220,7 +219,7 @@ public class PersistenceController {
         if (StringUtils.isNotBlank(message)) {
             try (OutputStream outputStream = new FileOutputStream(result)) {
                 outputStream.write(message.getBytes());
-                logger.info("PersistenceController: error file path set to: "+ result);
+                logger.info("PersistenceController: error file path set to: " + result);
                 return result;
             } catch (Exception e) {
                 logger.error("Failed to store error message in file: ", e);
