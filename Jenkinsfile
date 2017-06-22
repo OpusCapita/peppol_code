@@ -50,6 +50,9 @@ def release_version, next_version, code_hash, infra_hash
 try {
     node {
         stage('Checkout') {
+            // clean up the last time
+            dir('src/system-tests/reports') { deleteDir() }
+
             // get latest version of code
             checkout([
                 $class: 'GitSCM',
@@ -166,7 +169,6 @@ try {
             stage('System Tests') {
                 try {
                     dir('src/system-tests') {
-                        dir('reports') { deleteDir() }
                         ansiblePlaybook(
                             'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
                             'report_path=$PWD/reports/'
