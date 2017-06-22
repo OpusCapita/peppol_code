@@ -8,6 +8,6 @@
 - set_fact: file="{{file}}"
 - debug: var=file
 
-#- pause:
-#    seconds: 5
+- pause:
+    seconds: 5
 ...
