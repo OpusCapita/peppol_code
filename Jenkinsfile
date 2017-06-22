@@ -114,7 +114,7 @@ try {
 
             // skip versioning and tagging for development builds
             if (release_type in ['patch_release', 'minor_release', 'major_release']) {
-                dir('code') {
+                dir('src') {
                     release(release_version, next_version, code_version, code_hash, infra_version, infra_hash)
                 }
             }
