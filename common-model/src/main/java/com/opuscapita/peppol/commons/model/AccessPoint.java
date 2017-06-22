@@ -67,4 +67,12 @@ public class AccessPoint {
     public void setContactPerson(String contactPerson) {
         this.contactPerson = contactPerson;
     }
+
+    @Override
+    public String toString() {
+        return "AccessPoint{" +
+                "accessPointId='" + accessPointId + '\'' +
+                ", accessPointName='" + accessPointName + '\'' +
+                '}';
+    }
 }

@@ -81,8 +81,8 @@ public class PersistenceController {
         }
 
         swapSenderAndReceiverForInbound(peppolEvent);
-        getAccessPoint(peppolEvent);
-
+        AccessPoint accessPoint = getAccessPoint(peppolEvent);
+        logger.info("Access point: " + accessPoint);
         Message message = getOrCreateMessage(peppolEvent);
         FileInfo fileInfo = getFileInfo(message, peppolEvent);
         setFileInfoStatus(fileInfo, peppolEvent, message);
