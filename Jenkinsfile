@@ -279,7 +279,7 @@ def release(release_version, next_version, code_version, code_hash, infra_versio
     description += "${changes}"
     currentBuild.description = description
 
-    //sh "bash gradlew release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${release_version} -Prelease.newVersion=${next_version}"
+    sh "bash gradlew release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${release_version} -Prelease.newVersion=${next_version}"
 }
 
 // execute ansible playbook on hosts using the credentials provided
