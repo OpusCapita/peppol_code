@@ -10,7 +10,9 @@
             <label class="col-md-2 col-lg-1 control-label">Arrived:</label>
 
             <div class="col-md-10 col-lg-11">
-                <p class="form-control-static">{{file.arrivedTimeStamp}}
+                <p class="form-control-static">
+                    {{file.arrivedTimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
+                    <!--{{file.arrivedTimeStamp}}-->
                 </p>
             </div>
             <hr/>
@@ -24,7 +26,10 @@
             <label class="col-md-1 control-label" ng-if="event.type == 'failed'">Failed:</label>
 
             <div class="col-md-2">
-                <p class="form-control-static">{{event.ts}}</p>
+                <p class="form-control-static">
+                    {{event.ts | date:'yyyy-MM-dd HH:mm:ss'}}
+                   <!-- {{event.ts}}-->
+                </p>
             </div>
 
             <label class="col-md-2 control-label" ng-if="event.type == 'failed'">Error:</label>

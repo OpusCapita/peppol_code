@@ -10,7 +10,7 @@ layout 'layouts/main.tpl',
                     }
                     if(!status) {
                         div() {
-                            span('Validation errors:'+errors.size())
+                            span(class:'label label-danger', 'Validation errors:'+errors.size())
                             for(Object error: errors) {
                                 div(style: 'font-color: red;', error.source)
                                 div(error.message)

@@ -48,11 +48,11 @@ public class ValidationController {
         }
         String customizationId = containerMessage.getDocumentInfo().getCustomizationId();
         if (archetype == Archetype.EHF || archetype == Archetype.PEPPOL_BIS) {
-            // detecting sub-types, like AT or SI
+            // detecting sub-types, like AT or PEPPOL_SI
             if (customizationId.contains("erechnung")) {
                 archetype = Archetype.AT;
             } else if (customizationId.contains("simplerinvoicing")) {
-                archetype = Archetype.SI;
+                archetype = Archetype.PEPPOL_SI;
             }
 
         }

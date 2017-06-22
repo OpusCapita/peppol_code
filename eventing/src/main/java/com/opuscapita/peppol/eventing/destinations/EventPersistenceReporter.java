@@ -71,6 +71,7 @@ public class EventPersistenceReporter {
             cm.setDocumentInfo(new DocumentInfo());
         }
         result.setInvoiceId(cm.getDocumentInfo().getDocumentId());
+        result.setDocumentType(cm.getDocumentInfo().getDocumentType());
         result.setInvoiceDate(cm.getDocumentInfo().getIssueDate());
         result.setDueDate(cm.getDocumentInfo().getDueDate());
         result.setRecipientId(cm.getDocumentInfo().getRecipientId());

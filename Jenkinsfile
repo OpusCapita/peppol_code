@@ -39,142 +39,123 @@ recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
 recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
 
 
-def releaseVersion
-def tag = "latest"
-def status = 0      // build status
+import java.util.regex.*
 
-code_author = ""
-infra_author = ""
+def code_version = params.CODE_BRANCH ?: 'master'
+def infra_version = params.INFRA_BRANCH ?: 'develop'
+def release_type = params.RELEASE_TYPE ?: 'development'
+def release_version, next_version, code_hash, infra_hash
 
-def properties      // additional properties loaded from file
 
-pipeline {
-    agent any
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-        disableConcurrentBuilds()
-        skipDefaultCheckout()
-    }
-    triggers { pollSCM('H/5 * * * *') }
-    stages {
+try {
+    node {
         stage('Checkout') {
-            steps {
-                dir('src') {
-                    // get latest version of code
-                    git 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git'
-                }
-                dir('infra') {
-                    // get latest version of infrastructure
-                    git branch: 'develop', url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git'
+            // clean up the last time
+            dir('src/system-tests/reports') { deleteDir() }
 
-                    // install additional roles
-                    dir('ap2/ansible') {
-                        sh 'make requirements'
-                    }
-                }
+            // get latest version of code
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: code_version]],
+                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git']],
+                extensions: [
+                    [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
+                    [$class: 'LocalBranch', localBranch: 'master']
+                ]
+            ])
+            // get latest version of infrastructure
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: infra_version]],
+                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git']],
+                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'infra']]
+            ])
 
-                script {
-                    dir('src') {
-                        code_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
+            // work around missing tuple handlings (https://issues.jenkins-ci.org/browse/JENKINS-38846)
+            def versions = getReleaseVersion(loadProperties('src/gradle.properties').version, release_type).split('##')
+            release_version = versions[0]
+            next_version = versions[1]
+            code_hash = getGitCommitID('src')
+            infra_hash = getGitCommitID('infra')
+            code_author = getGitCommitAuthor('src')
+            infra_author = getGitCommitAuthor('infra')
 
-                        // load additional properties
-                        properties = loadProperties('gradle.properties')
-                        releaseVersion = properties.version
-                        tag = "${releaseVersion}-${env.BUILD_NUMBER}"
-                    }
-                    dir('infra') {
-                        infra_author = sh returnStdout: true, script: 'git show -s --pretty=%ae'
-                    }
-                }
+            // install additional roles
+            dir('infra/ap2/ansible') {
+                sh 'make requirements'
             }
         }
-
+        milestone 1
         stage('Build') {
-            steps {
-                dir('src') {
-                    sh 'bash gradlew clean assemble'
-                    assemble(test_modules)
-                }
+            dir('src') {
+                sh 'bash gradlew clean assemble'
+                assemble(test_modules)
             }
         }
-
-        stage('Unit Test') {
-            steps {
+        stage('Unit Tests') {
+            try {
                 dir('src') {
                     sh 'bash gradlew check'
                     check(test_modules)
                 }
             }
-            post {
-                always {
-                    junit 'src/*/build/test-results/*.xml'
-                }
-                failure {
-                    error 'Unit tests failed for some reason'
-                }
+            catch(e) {
+                error 'Unit tests failed for some reason'
+            }
+            finally {
+                junit 'src/*/build/test-results/*.xml'
             }
         }
-
         stage('Package') {
-            steps {
+            dir('src') {
+                dockerBuild(modules + test_modules, release_version)
+            }
+        }
+        milestone 2
+        stage('Release') {
+            dockerPush(modules + test_modules, ['latest', release_version])
+
+            // skip versioning and tagging for development builds
+            if (release_type in ['patch_release', 'minor_release', 'major_release']) {
                 dir('src') {
-                    dockerBuild(modules + test_modules, tag)
+                    release(release_version, next_version, code_version, code_hash, infra_version, infra_hash)
                 }
             }
         }
-
-        stage('Release') {
-            steps {
-                milestone 1
-                dockerPush(modules + test_modules, ['latest', releaseVersion])
-                script {
-                    dir('src') {
-                        // automatic versions trigger a new build repeatedly, disabled for now
-                        //sh 'bash gradlew release -Prelease.useAutomaticVersion=true'
+    }
+    node {
+        lock(resource: 'peppol-stage-servers') {
+            milestone 3
+            stage('Deployment to Stage') {
+                try {
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo', "peppol_version=${release_version}")
                     }
                 }
-            }
-        }
-
-        stage('Deploy Stage') {
-            steps {
-                milestone 2
-                dir('infra/ap2/ansible') {
-                    ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo')
-                }
-            }
-            post {
-                failure {
+                catch(e) {
                     failBuild(
                         "${recipients.ops}, ${recipients.devops}, ${infra_author}, ${code_author}",
-                        'Deployment to stage environment has failed. Check the log for details.'
+                        'Deployment to Stage environment has failed. Check the log for details.'
                     )
                 }
             }
-        }
-
-        stage('Smoke Test') {
-            steps {
-                milestone 3
-                dir('infra/ap2/ansible') {
-                    ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
+            stage('Smoke Tests') {
+                try {
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo')
+                    }
                 }
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
-                }
-                failure {
+                catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
                         'Smoke tests have failed. Check the log for details.'
                     )
                 }
+                finally {
+                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
+                }
             }
-        }
-
-        stage('Integration Test') {
-            steps {
+            stage('Integration Tests') {
                 echo "Coming soon.."
                 script {
                     /*
@@ -185,68 +166,58 @@ pipeline {
                     */
                 }
             }
-        }
-
-        stage('System Tests') {
-            steps {
-                dir('src/system-tests') {
-                    dir('reports') { deleteDir() }
-                    ansiblePlaybook(
-                        'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
-                        'report_path=$PWD/reports/'
-                    )
+            stage('System Tests') {
+                try {
+                    dir('src/system-tests') {
+                        ansiblePlaybook(
+                            'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
+                            'report_path=$PWD/reports/'
+                        )
+                    }
                 }
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
-                }
-                failure {
+                catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
                         'System tests have failed. Check the log for details.'
                     )
                 }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
+                }
             }
-        }
-
-        stage('Acceptance Test') {
-            when { expression {false /*params.build_type in ['major_release', 'minor_release']*/} }
-            steps {
-                milestone 4
-                timeout(time: 3, unit: 'DAYS') {
+            stage('Acceptance') {
+                if (release_type in ['patch_release', 'minor_release', 'major_release']) {
                     input message: 'Deploy PEPPOL Access Point to production?', ok: 'Sure'
                 }
             }
         }
 
-        stage('Deploy Production') {
-            when { expression {false /*params.build_type in ['major_release', 'minor_release']*/} }
-            steps {
-                milestone 5
-                dir('infra/ap2/ansible') {
-                    ansiblePlaybook('peppol-components.yml', 'production.hosts', 'ansible-sudo')
-                }
-            }
-            post {
-                failure {
-                    failBuild(
-                        "${recipients.devops}",
-                        'Deployment to PROD environment has failed. Check the log for details immediately!'
-                    )
+        lock(resource: 'peppol-production-servers') {
+            milestone 4
+            stage('Deployment to Production') {
+                if (release_type in ['patch_release', 'minor_release', 'major_release']) {
+                    try {
+                        dir('infra/ap2/ansible') {
+                            ansiblePlaybook('peppol-components.yml', 'production.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                        }
+                    }
+                    catch(e) {
+                        failBuild(
+                            "${recipients.devops}",
+                            'Deployment to PROD environment has failed. Check the log for details immediately!'
+                        )
+                    }
                 }
             }
         }
-
-    }
-    post {
-        failure {
-            emailNotify('', 'Unexpected error has occured. Check the log for details.')
-        }
+        milestone 5
     }
 }
-
-
+catch(e) {
+    echo e.toString()
+    emailNotify('', "Unexpected error has occured. Check the log for details.\n${e}\n")
+    throw e
+}
 
 /**
  * Stages
@@ -300,6 +271,18 @@ def dockerPush(modules, tags) {
     }
 }
 
+def release(release_version, next_version, code_version, code_hash, infra_version, infra_hash) {
+    def changes = getChangeString(250)
+    def description = ""
+    description += "Release: ${release_version}\n"
+    description += "Code: ${code_version}" + (code_hash.startsWith(code_version) ? "" : " (${code_hash.take(7)})") + "\n"
+    description += "Infra: ${infra_version}" + (infra_hash.startsWith(infra_version) ? "" : " (${infra_hash.take(7)})") + "\n"
+    description += "Changes:\n"
+    description += "${changes}"
+    currentBuild.description = description
+
+    sh "bash gradlew release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${release_version} -Prelease.newVersion=${next_version}"
+}
 
 // execute ansible playbook on hosts using the credentials provided
 def ansiblePlaybook(playbook, hosts, credentials, extraVars='') {
@@ -320,17 +303,8 @@ def ansiblePlaybook(playbook, hosts, credentials, extraVars='') {
 }
 
 
-def Properties loadProperties(String filename) {
-    Properties properties = new Properties()
-    String content = readFile "${filename}"
-    properties.load(new StringReader(content));
-    return properties
-}
-
-
 @NonCPS
-def getChangeString() {
-    MAX_MSG_LEN = 100
+def getChangeString(MAX_MSG_LEN=100) {
     def changeString = ""
 
     echo "Gathering SCM changes"
@@ -348,6 +322,77 @@ def getChangeString() {
         changeString = " - No new changes"
     }
     return changeString
+}
+
+def getGitCommitID(path) {
+    dir(path) {
+        def commit_id = sh returnStdout: true, script: 'git rev-parse HEAD'
+        return commit_id
+    }
+}
+
+def getGitCommitAuthor(path) {
+    dir(path) {
+        def author_email = sh returnStdout: true, script: 'git show -s --pretty=%ae'
+        return author_email
+    }
+}
+
+def Properties loadProperties(String filename) {
+    Properties properties = new Properties()
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
+    return properties
+}
+
+def getReleaseVersion(this_version, release_type) {
+    def parser = ~/(?<major>\d+).(?<minor>\d+).(?<patch>\d+)(-(?<build>SNAPSHOT))?/
+    def major, minor, patch, build
+    def release_version, next_version
+
+    def match = this_version =~ parser
+    if(match.matches()) {
+        major = match.group('major') as Integer
+        minor = match.group('minor') as Integer
+        patch = match.group('patch') as Integer
+        build = match.group('build')
+
+        // figure out the release number based on simple semver rules
+        switch (release_type) {
+            case 'patch_release':
+                // patch number was already increased the last time we were here
+                break
+            case 'minor_release':
+                patch = 0
+                minor += 1
+                break
+            case 'major_release':
+                // we should not have these for the foreseeable future but
+                // for the sake of completeness
+                patch = 0
+                minor = 0
+                major += 1
+                break
+            case 'development':
+                build = env.BUILD_NUMBER
+                break
+            default:
+                error "Unknown release type: ${release_type}"
+                break
+        }
+        release_version = [major, minor, patch].join('.')
+        if (release_type == 'development') {
+            release_version += "-${build}"
+        }
+
+        // assume next version is to be bugfix/patch release
+        patch += 1
+        next_version = [major, minor, patch].join('.')
+        next_version += '-SNAPSHOT'
+
+        return [release_version, next_version].join('##')
+    }
+    error "Could not parse the version string: ${this_version}"
 }
 
 def emailNotify(String whom, String message) {
@@ -369,7 +414,6 @@ ${changes}
 
 """
 }
-
 
 def failBuild(String email_recipients, String message) {
     emailNotify(email_recipients, message)

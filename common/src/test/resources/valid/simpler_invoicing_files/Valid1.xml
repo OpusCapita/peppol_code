@@ -7755,7 +7755,8 @@ MDAwMCBuIAowMDAwNDE1Mzk4IDAwMDAwIG4gCjAwMDA0MTU0NTUgMDAwMDAgbiAKMDAwMDQx
 NTgzNCAwMDAwMCBuIAp0cmFpbGVyCjw8L1NpemUgMzQvUm9vdCAzMyAwIFIvSW5mbyAzMiAw
 IFIvSURbPDE5QTZBMDBDMTQ3QzU4REE2NTc5MjcyRUZCREVEODA4PjwxOUE2QTAwQzE0N0M1
 OERBNjU3OTI3MkVGQkRFRDgwOD5dPj4Kc3RhcnR4cmVmCjQxNTg4MAolJUVPRgo=
-</cbc:EmbeddedDocumentBinaryObject></cac:Attachment></cac:AdditionalDocumentReference><cac:AccountingSupplierParty>
+</cbc:EmbeddedDocumentBinaryObject></cac:Attachment></cac:AdditionalDocumentReference>
+        <cac:AccountingSupplierParty>
   <cac:Party>
    <cbc:EndpointID schemeID="NO:ORGNR">929120825</cbc:EndpointID>
    <cac:PartyIdentification>

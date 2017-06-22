@@ -2,7 +2,7 @@ FROM d-l-tools.ocnet.local:443/tomcat:8-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV PEPPOL_CONFIG_PATH "/peppol/config/support-ui"
-ENV CATALINA_BASE "/opt/local/services/peppol/oxalis/tomcat"
+ENV CATALINA_BASE "/opt/local/services/peppol/support-ui/tomcat"
 
 USER root
 RUN set -x \

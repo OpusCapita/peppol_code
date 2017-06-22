@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.support.ui.common;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +32,7 @@ public class Util {
     Environment environment;
     private List<String> directoryList;
 
+
     @PostConstruct
     public void init() {
         directoryList = new ArrayList<>(Arrays.asList(downloadDirectoryList.split(";")));
@@ -44,6 +47,7 @@ public class Util {
 class FileFinder {
     private final List<String> directoryList;
     private byte[] result = null;
+    private static final Logger logger = Logger.getLogger(FileFinder.class);
 
     public FileFinder(List<String> directoryList) throws Exception {
         this.directoryList = directoryList;
@@ -57,14 +61,17 @@ class FileFinder {
         if(f.exists())
             return convertFileToByteArray(f);
         //clearing the path if any and leaving just simple name
+        logger.warn("WARNING! " + fileName + " not found, looking for the file in all directories, this might be very slow and should be avoided in production!");
         fileName = f.getName();
         for (String dir : directoryList){
             find(fileName, new File(dir));
-            if(result != null)
+            if(result != null) {
                 return result;
+            }
         }
         if (result == null)
             throw new FileNotFoundException("File: " + fileName + " not found!");
+        logger.warn("Found file " + LocalDateTime.now());
         return result;
     }
 

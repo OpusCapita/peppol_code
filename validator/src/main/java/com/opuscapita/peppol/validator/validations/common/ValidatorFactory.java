@@ -37,7 +37,7 @@ public class ValidatorFactory {
         try {
             switch (archetype) {
                 case AT:
-                case SI:
+                case PEPPOL_SI:
                 case PEPPOL_BIS:
                 case EHF:
                     if (difiValidator == null) {

@@ -41,24 +41,29 @@ public class DocumentLoaderTest {
                 "/valid/austria_files/Valid4.xml",
                 "/valid/austria_files/Valid5.xml",
                 "/valid/austria_files/Valid-AT-UBL_Austria_profile-bii04-invoice.xml",
+                "/invalid/austria_files/invalids1.xml",
+                "/invalid/austria_files/invalids2.xml",
+                "/invalid/austria_files/invalids3.xml",
+                "/invalid/austria_files/invalids4.xml",
+                "/invalid/austria_files/invalids5.xml"
+        );
+        checkTypes(list, Archetype.PEPPOL_BIS);
+
+        list = Arrays.asList(
                 "/valid/simpler_invoicing_files/Valid1.xml",
                 "/valid/simpler_invoicing_files/Valid2.xml",
                 "/valid/simpler_invoicing_files/Valid3.xml",
                 "/valid/simpler_invoicing_files/Valid4.xml",
                 "/valid/simpler_invoicing_files/Valid5.xml",
-                "/invalid/austria_files/invalids1.xml",
-                "/invalid/austria_files/invalids2.xml",
-                "/invalid/austria_files/invalids3.xml",
-                "/invalid/austria_files/invalids4.xml",
-                "/invalid/austria_files/invalids5.xml",
-               // "/invalid/simpler_invoicing_files/SI-inv-v1.1.3-Valid-version.xml.no.sbdh.sad.smiley",
+                "/invalid/simpler_invoicing_files/SI-inv-v1.1.3-Valid-version.xml.no.sbdh.sad.smiley",
                 "/invalid/simpler_invoicing_files/invalids1.xml",
                 "/invalid/simpler_invoicing_files/invalids2.xml",
                 "/invalid/simpler_invoicing_files/invalids3.xml",
                 "/invalid/simpler_invoicing_files/invalids4.xml",
-                "/invalid/simpler_invoicing_files/invalids5.xml"
+                "/invalid/simpler_invoicing_files/invalids5.xml",
+                "/valid/simpler_invoicing_files/wrapped.SI-UBL-PO-1.2-ok-minimal.xml"
         );
-        checkTypes(list, Archetype.PEPPOL_BIS);
+        checkTypes(list, Archetype.PEPPOL_SI);
 
         list = Arrays.asList(
                 "/valid/ehf.xml",
