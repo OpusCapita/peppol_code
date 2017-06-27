@@ -23,9 +23,7 @@
     <div class="clearfix"></div>
     <div loading-container="tableParams.settings().$loading">
         <table ng-table="tableParams" show-filter="true" class="table ng-table-rowselected">
-           <!-- <label>Use exact search:
-                <input type="checkbox" ng-model="tableParams.exactSearch" ng-click="tableParams.exactSearchChanged()">
-            </label><br/>-->
+            <label style="margin-top: 10px; margin-bottom: 0px; margin-left: 15px;">Exact search:  <input type="checkbox" ng-model="tableParams.$params.exactSearch" ng-click="tableParams.exact()"></label>
             <tbody ng-repeat="group in $groups">
             <tr class="ng-table-group">
                 <td colspan="{{$columns.length}}">

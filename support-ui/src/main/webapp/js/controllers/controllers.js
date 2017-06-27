@@ -47,11 +47,8 @@ function createTable(ngTableParams, $location, $timeout, Factory, $scope, inboun
                 this.data = data;
                 this.settings.$scope.pages = self.generatePagesArray(self.page(), self.total(), self.count());
             },
-
-            exactSearchChanged: function () {
-            console.log("before: " + this.exactSearch);
-            this.exactSearch = !this.exactSearch;
-            console.log("after: " + this.exactSearch);
+            exact: function () {
+                this.exactSearch = !this.exactSearch;
             }
         });
 }
@@ -445,12 +442,10 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
         $scope.changeSelect = function (dt) {
             if (dt == undefined)
                 return;
-            // console.log("before: " + dt);
             var userDate = new Date();
             dt.setHours(userDate.getHours());
             dt.setMinutes(userDate.getMinutes());
             dt.setSeconds(userDate.getSeconds());
-            // console.log("after: " + dt);
         };
 
         $scope.events = [

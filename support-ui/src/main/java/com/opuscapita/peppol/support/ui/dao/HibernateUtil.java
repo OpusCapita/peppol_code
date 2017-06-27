@@ -55,7 +55,8 @@ public class HibernateUtil {
                         e.printStackTrace();
                     }
                 } else {
-                    conjunction.add(Restrictions.like(entry.getKey(), "%" + entry.getValue() + "%").ignoreCase());
+                    String search = tableParameters.isExactSearch() ? "" : "%";
+                    conjunction.add(Restrictions.like(entry.getKey(), search + entry.getValue() + search).ignoreCase());
                 }
             }
         }

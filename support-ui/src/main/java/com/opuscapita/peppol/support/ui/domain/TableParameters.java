@@ -21,6 +21,7 @@ public class TableParameters {
     private Map<String, String> filter = new HashMap<String, String>();
     private Map<String, String> sorting = new HashMap<String, String>();
     private String search;
+    private boolean exactSearch = false;
 
     public TableParameters(String uriQuery) {
         try {
@@ -43,6 +44,8 @@ public class TableParameters {
                         this.filter.put(key.substring(leftBracket, rightBracket), value);
                     } else if (key.equals("search")) {
                         this.search = value;
+                    } else if (key.equals(("exactSearch"))){
+                        this.exactSearch = Boolean.valueOf(value);
                     }
                 } catch (Exception e) {
                     logger.warn("Error: " + e.getMessage());
@@ -111,5 +114,13 @@ public class TableParameters {
 
     public String getSearch() {
         return search;
+    }
+
+    public boolean isExactSearch() {
+        return exactSearch;
+    }
+
+    public void setExactSearch(boolean exactSearch) {
+        this.exactSearch = exactSearch;
     }
 }
