@@ -89,6 +89,8 @@ public class OutboundController {
             }
             logger.info("Message " + cm.getFileName() + " sent with transmission ID = " + transmissionResponse.getTransmissionId());
             cm.getProcessingInfo().setTransactionId(transmissionResponse.getTransmissionId().toString());
+            cm.getProcessingInfo().setCommonName(transmissionResponse.getCommonName().toString());
+            cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol().toString());
         } catch (IOException ioe) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with error: " + ioe.getMessage());
 

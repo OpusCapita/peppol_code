@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.preprocessing;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
@@ -46,6 +47,11 @@ public class PreprocessingApp {
         container.setMessageConverter(new JsonMessageConverter());
         container.setMessageListener(listenerAdapter);
         return container;
+    }
+
+    @Bean
+    public Gson gson() {
+        return new GsonBuilder().disableHtmlEscaping().create();
     }
 
     @Bean

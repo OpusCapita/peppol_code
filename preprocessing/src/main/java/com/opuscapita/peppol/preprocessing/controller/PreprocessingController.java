@@ -1,8 +1,11 @@
 package com.opuscapita.peppol.preprocessing.controller;
 
+import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadataContianer;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.storage.Storage;
@@ -14,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 /**
  * Parses input document and moves file from temporary to long-term storage.
  *
@@ -24,14 +30,16 @@ public class PreprocessingController {
     private static final Logger logger = LoggerFactory.getLogger(PreprocessingController.class);
     private final DocumentLoader documentLoader;
     private final Storage storage;
+    private final Gson gson;
 
     @Value("${peppol.component.name}")
     private String componentName;
 
     @Autowired
-    public PreprocessingController(@NotNull DocumentLoader documentLoader, @NotNull Storage storage) {
+    public PreprocessingController(@NotNull DocumentLoader documentLoader, @NotNull Storage storage, @NotNull Gson gson) {
         this.documentLoader = documentLoader;
         this.storage = storage;
+        this.gson = gson;
     }
 
     /**
@@ -53,6 +61,12 @@ public class PreprocessingController {
         Endpoint endpoint;
         if (cm.isInbound()) {
             endpoint = new Endpoint(componentName, ProcessType.IN_PREPROCESS);
+            PeppolMessageMetadata inboundMetaData = getInboundMetadata(cm.getFileName());
+            if(inboundMetaData != null) {
+                cm.getProcessingInfo().setCommonName(inboundMetaData.getSendingAccessPoint());
+                cm.getProcessingInfo().setTransactionId(inboundMetaData.getTransmissionId());
+                cm.getProcessingInfo().setSendingProtocol(inboundMetaData.getProtocol());
+            }
         } else {
             endpoint = new Endpoint(componentName, ProcessType.OUT_PREPROCESS);
         }
@@ -64,6 +78,21 @@ public class PreprocessingController {
         cm.setDocumentInfo(document).setFileName(longTerm);
         cm.setStatus(endpoint, "parsed");
         return cm;
+    }
+
+    protected PeppolMessageMetadata getInboundMetadata(String ehfFilePath) {
+        final String metadataFilePath = ehfFilePath.substring(0, ehfFilePath.length() - 3) + "txt";
+        logger.info("Reading metadata file: " + metadataFilePath);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(metadataFilePath));
+            PeppolMessageMetadataContianer container = gson.fromJson(br, PeppolMessageMetadataContianer.class);
+            return container.getPeppolMessageMetaData();
+        } catch (Exception e) {
+            logger.error("Failed to read inbound metadata file '" + metadataFilePath + "': " + e.getMessage());
+            return null;
+        }
+
     }
 
 }

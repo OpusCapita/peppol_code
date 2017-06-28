@@ -24,6 +24,8 @@ public class ProcessingInfo implements Serializable {
     private Endpoint currentEndpoint;
     private String currentStatus;
     private Exception processingException;
+    private String commonName;
+    private String sendingProtocol;
 
     /**
      * @param source the initial endpoint
@@ -103,5 +105,21 @@ public class ProcessingInfo implements Serializable {
 
     public Endpoint getCurrentEndpoint() {
         return currentEndpoint;
+    }
+
+    public void setCommonName(String commonName) {
+        this.commonName = commonName;
+    }
+
+    public String getCommonName() {
+        return commonName;
+    }
+
+    public void setSendingProtocol(String sendingProtocol) {
+        this.sendingProtocol = sendingProtocol;
+    }
+
+    public String getSendingProtocol() {
+        return sendingProtocol;
     }
 }
