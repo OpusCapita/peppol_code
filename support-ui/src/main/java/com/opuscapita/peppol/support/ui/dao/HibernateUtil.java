@@ -47,7 +47,7 @@ public class HibernateUtil {
                 if ("status".equals(entry.getKey())) {
                     conjunction.add(Restrictions.eq(entry.getKey(), MessageStatus.valueOf(entry.getValue())));
                 } else if ("fileName".equals(entry.getKey())) {
-                    conjunction.add(Restrictions.like("file.filename", getFormedFileNameRestriction(entry.getValue())));
+                    conjunction.add(Restrictions.like("file.filename", getFormedFileNameRestriction(entry.getValue(),tableParameters.isExactSearch())));
                 } else if ("invoiceDate".equals(entry.getKey())) {
                     try {
                         conjunction.add(Restrictions.like(entry.getKey(), getFormedDateRestriction(entry.getValue())));
@@ -71,8 +71,8 @@ public class HibernateUtil {
         return sdf.parse(dateString);
     }
 
-    private static String getFormedFileNameRestriction(String fileName) {
+    private static String getFormedFileNameRestriction(String fileName, boolean exactSearch) {
         fileName = fileName.trim().replaceAll("%", "\\\\%").replaceAll("_", "\\\\_");
-        return "%" + fileName + "%";
+        return exactSearch ? fileName : "%" + fileName + "%";
     }
 }
