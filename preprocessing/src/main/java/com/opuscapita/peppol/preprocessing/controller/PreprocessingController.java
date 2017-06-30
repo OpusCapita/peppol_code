@@ -17,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-
 /**
  * Parses input document and moves file from temporary to long-term storage.
  *
@@ -80,18 +77,17 @@ public class PreprocessingController {
         return cm;
     }
 
-    protected PeppolMessageMetadata getInboundMetadata(String ehfFilePath) {
-        final String metadataFilePath = ehfFilePath.substring(0, ehfFilePath.length() - 3) + "txt";
-        logger.info("Reading metadata file: " + metadataFilePath);
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(metadataFilePath));
-            PeppolMessageMetadataContianer container = gson.fromJson(br, PeppolMessageMetadataContianer.class);
-            return container.getPeppolMessageMetaData();
-        } catch (Exception e) {
-            logger.error("Failed to read inbound metadata file '" + metadataFilePath + "': " + e.getMessage());
-            return null;
+    protected PeppolMessageMetadata getInboundMetadata(String rawMetadata) {
+        PeppolMessageMetadata result = null;
+        if (rawMetadata != null) {
+            try {
+                result = gson.fromJson(rawMetadata, PeppolMessageMetadataContianer.class).getPeppolMessageMetaData();
+            } catch (Exception e) {
+                logger.warn("Failed to parse raw metadata: " + rawMetadata);
+                e.printStackTrace();
+            }
         }
+        return result;
 
     }
 
