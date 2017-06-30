@@ -58,7 +58,7 @@ public class PreprocessingController {
         Endpoint endpoint;
         if (cm.isInbound()) {
             endpoint = new Endpoint(componentName, ProcessType.IN_PREPROCESS);
-            PeppolMessageMetadata inboundMetaData = getInboundMetadata(cm.getFileName());
+            PeppolMessageMetadata inboundMetaData = getInboundMetadata(cm.getProcessingInfo().getSourceMetadata());
             if(inboundMetaData != null) {
                 cm.getProcessingInfo().setCommonName(inboundMetaData.getSendingAccessPoint());
                 cm.getProcessingInfo().setTransactionId(inboundMetaData.getTransmissionId());
