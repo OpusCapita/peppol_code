@@ -13,4 +13,10 @@
 
 - set_fact: outbound_result="outbound={{result.msg}}"
 - debug: var=outbound_result
+
+- name: check if outbound sending has failed
+  fail: msg="outbound test failed"
+  when:
+    - log.stdout | search(fileName+".*failed .* error")
+
 ...
