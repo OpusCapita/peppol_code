@@ -73,6 +73,6 @@ public class HibernateUtil {
 
     private static String getFormedFileNameRestriction(String fileName, boolean exactSearch) {
         fileName = fileName.trim().replaceAll("%", "\\\\%").replaceAll("_", "\\\\_");
-        return exactSearch ? fileName : "%" + fileName + "%";
+        return exactSearch ? "%" + fileName : "%" + fileName + "%";
     }
 }

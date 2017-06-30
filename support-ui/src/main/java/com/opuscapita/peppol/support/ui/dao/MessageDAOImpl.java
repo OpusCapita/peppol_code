@@ -111,7 +111,7 @@ public class MessageDAOImpl implements MessageDAO {
         criteria.add(Restrictions.eq("sender.id", customerId));
 
         if (tableParameters.getSearch() != null) {
-            addSearchCriteria(criteria, tableParameters.getSearch());
+            addSearchCriteria(criteria, tableParameters);
         }
         criteria.setResultTransformer(new AliasToBeanResultTransformer(MessageDTO.class));
         return criteria.list();
@@ -142,7 +142,7 @@ public class MessageDAOImpl implements MessageDAO {
 
         if (tableParameters.getSearch() != null) {
             criteria.createAlias("file.failedInfo", "failed", JoinType.LEFT_OUTER_JOIN);
-            addSearchCriteria(criteria, tableParameters.getSearch());
+            addSearchCriteria(criteria, tableParameters);
         }
 
         criteria.setResultTransformer(new AliasToBeanResultTransformer(MessageDTO.class));
@@ -186,7 +186,7 @@ public class MessageDAOImpl implements MessageDAO {
         criteria.setProjection(projectionList);
         if (tableParameters.getSearch() != null) {
             criteria.createAlias("file.sentInfo", "sent", JoinType.LEFT_OUTER_JOIN);
-            addSearchCriteria(criteria, tableParameters.getSearch());
+            addSearchCriteria(criteria, tableParameters);
         }
         criteria.setResultTransformer(new AliasToBeanResultTransformer(MessageDTO.class));
         List<MessageDTO> messageDTOs = criteria.list();
@@ -221,7 +221,7 @@ public class MessageDAOImpl implements MessageDAO {
 
         if (tableParameters.getSearch() != null) {
             criteria.createAlias("file.failedInfo", "failed", JoinType.LEFT_OUTER_JOIN);
-            addSearchCriteria(criteria, tableParameters.getSearch());
+            addSearchCriteria(criteria, tableParameters);
         }
 
         criteria.setResultTransformer(new AliasToBeanNestedResultTransformer(MessageDTO.class));
@@ -242,7 +242,7 @@ public class MessageDAOImpl implements MessageDAO {
 
         if (tableParameters.getSearch() != null) {
             criteria.createAlias("file.failedInfo", "failed", JoinType.LEFT_OUTER_JOIN);
-            addSearchCriteria(criteria, tableParameters.getSearch());
+            addSearchCriteria(criteria, tableParameters);
         }
 
         criteria.setResultTransformer(new AliasToBeanNestedResultTransformer(MessageDTO.class));
@@ -263,17 +263,21 @@ public class MessageDAOImpl implements MessageDAO {
         if (tableParameters.getSearch() != null) {
             criteria.createAlias("file.sentInfo", "sent", JoinType.LEFT_OUTER_JOIN);
             criteria.createAlias("file.failedInfo", "failed", JoinType.LEFT_OUTER_JOIN);
-            addSearchCriteria(criteria, tableParameters.getSearch());
+            addSearchCriteria(criteria, tableParameters);
         }
 
         criteria.setResultTransformer(new AliasToBeanNestedResultTransformer(MessageDTO.class));
         return criteria.list();
     }
 
-    private Criteria addSearchCriteria(Criteria criteria, String searchCriteria) {
+    private Criteria addSearchCriteria(Criteria criteria, TableParameters tableParameters) {
         Disjunction disjunction = Restrictions.disjunction();
         for (String field : SEARCHEABLE_FIELDS) {
-            disjunction.add(Restrictions.like(field, "%" + searchCriteria + "%").ignoreCase());
+            String restriction = tableParameters.isExactSearch() ?
+                    field.equals("file.filename") ? "%" + tableParameters.getSearch()
+                            : tableParameters.getSearch()
+                    : "%" + tableParameters.getSearch() + "%";
+            disjunction.add(Restrictions.like(field, restriction).ignoreCase());
         }
         criteria.add(disjunction);
         return criteria;
