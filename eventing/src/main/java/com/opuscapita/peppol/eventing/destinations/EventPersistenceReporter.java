@@ -1,10 +1,12 @@
 package com.opuscapita.peppol.eventing.destinations;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
@@ -57,7 +59,7 @@ public class EventPersistenceReporter {
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
-    private PeppolEvent convert(@NotNull ContainerMessage cm) {
+    protected PeppolEvent convert(@NotNull ContainerMessage cm) {
         logger.debug("Message received");
 
         ProcessingInfo ps = cm.getProcessingInfo();
@@ -78,6 +80,10 @@ public class EventPersistenceReporter {
         result.setSenderId(cm.getDocumentInfo().getSenderId());
         result.setRecipientName(cm.getDocumentInfo().getRecipientName());
         result.setSenderName(cm.getDocumentInfo().getSenderName());
+        if (cm.getProcessingInfo().getCommonName() == null && hasCommonNameInMetadata(cm)) {
+            cm.getProcessingInfo().setCommonName(extractCommonNameFromMetadata(cm));
+        }
+        result.setCommonName(cm.getProcessingInfo().getCommonName());
         result.setSenderCountryCode(cm.getDocumentInfo().getSenderCountryCode());
         result.setRecipientCountryCode(cm.getDocumentInfo().getRecipientCountryCode());
         result.setTransactionId(ps == null ? UUID.randomUUID().toString() : ps.getTransactionId());
@@ -89,4 +95,22 @@ public class EventPersistenceReporter {
         return result;
     }
 
+
+    private String extractCommonNameFromMetadata(ContainerMessage containerMessage) {
+        String result = null;
+        try {
+            JsonObject rawMetadata = gson.fromJson(containerMessage.getProcessingInfo().getSourceMetadata(), JsonObject.class);
+            PeppolMessageMetadata messageMetadata = gson.fromJson(rawMetadata.get("PeppolMessageMetaData"), PeppolMessageMetadata.class);
+            result = containerMessage.isInbound() ? messageMetadata.getSendingAccessPoint() : messageMetadata.getReceivingAccessPoint();
+            logger.info("Extracted Access Point Common Name [" + result + "] for file: " + containerMessage.getFileName());
+        } catch (Exception e) {
+            logger.warn("Failed to extract common name from metadata[" + containerMessage.getProcessingInfo().getSourceMetadata() + "] for file: " + containerMessage.getFileName());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    protected boolean hasCommonNameInMetadata(ContainerMessage containerMessage) {
+        return (containerMessage.isInbound() && containerMessage.getProcessingInfo().getSourceMetadata().contains("sendingAccessPoint")) || (!containerMessage.isInbound() && containerMessage.getProcessingInfo().getSourceMetadata().contains("receivingAccessPoint"));
+    }
 }
