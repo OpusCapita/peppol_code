@@ -13,4 +13,11 @@
 
 - set_fact: validator_result="validator={{result.msg}}"
 - debug: var=validator_result
+
+#check for failures as well and adjust report accordingly->
+- name: check if validation failed
+  set_fact: validator_result="validator=Failed"
+  when:
+    - log.stdout | search(".*Validation failed for.*"+fileName)
+
 ...

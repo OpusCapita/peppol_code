@@ -7,16 +7,17 @@
   ignore_errors: yes
   assert:
     that:
-      - "fileName in log.stdout"
+      - log.stdout | search(".*Message.*"+fileName+".*sent with")
     msg: "Failed"
   register: result
 
 - set_fact: outbound_result="outbound={{result.msg}}"
-- debug: var=outbound_result
+#- debug: var=outbound_result
 
+#check for failures as well and adjust report accordingly->
 - name: check if outbound sending has failed
-  fail: msg="outbound test failed"
+  set_fact: outbound_result="outbound=Failed"
   when:
-    - log.stdout | search(fileName+".*failed .* error")
+    - log.stdout | search(".*Message processing failed.*"+fileName)
 
 ...

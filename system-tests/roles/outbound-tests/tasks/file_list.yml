@@ -12,4 +12,9 @@
     - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice.xml"
     - "{{test_data_path}}/validation_test_suite/valid/peppol-bis.xml"
     - "{{test_data_path}}/validation_test_suite/valid/SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-biixy-ver2.0-invoice.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_catalogue_document_type_test.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_OC_zero_values.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_peppol-bis-5a_invoice.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/peppol-bis-svefaktura2.xml"
 ...
