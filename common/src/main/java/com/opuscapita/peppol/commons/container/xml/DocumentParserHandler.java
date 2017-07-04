@@ -171,7 +171,11 @@ public class DocumentParserHandler extends DefaultHandler {
 
             // check mandatory fields presence
             if (field.values == null && field.isMandatory()) {
-                template.addError("Missing mandatory field " + field.getId());
+                String errorText = "Missing mandatory field " + field.getId() + System.lineSeparator() + "Paths: ";
+                for (String path : field.getPaths()) {
+                    errorText += path + System.lineSeparator();
+                }
+                template.addError(errorText);
             }
         }
     }
