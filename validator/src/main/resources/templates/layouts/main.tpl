@@ -34,10 +34,10 @@ html(class: 'no-js') {
         footer(id: 'footer') {
             div(class: 'wrap') {
                 span(class: 'right') {
-                    a(href: 'http://www.itella.com', target: '_blank', 'Part of Itella Group')
+                    a(href: 'http://www.itella.com', target: '_blank', 'Part of Posti Group')
                 }
                 section(class: 'copy') {
-                    span('© OpusCapita 2016')
+                    span('© OpusCapita 2017')
                 }
             }
         }
