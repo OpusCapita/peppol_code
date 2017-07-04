@@ -80,7 +80,7 @@
     </div>
     <footer id="footer">
         <div class="wrap">
-            <span class="right"><a href="http://www.itella.com" target="_blank">Part of Itella Group</a></span>
+            <span class="right"><a href="http://www.itella.com" target="_blank">Part of Posti Group</a></span>
             <section class="copy">
                 <span>© OpusCapita <fmt:formatDate value="${date}" pattern="yyyy"/></span>
             </section>
