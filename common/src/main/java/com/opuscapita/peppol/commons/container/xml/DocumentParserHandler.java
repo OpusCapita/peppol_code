@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.document.ParticipantId;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,10 +38,13 @@ public class DocumentParserHandler extends DefaultHandler {
     private final List<DocumentWarning> warnings = new ArrayList<>();
 
     private String value;
+    private boolean skipSBDH = false;
 
     DocumentParserHandler(@Nullable String fileName, @NotNull DocumentTemplates templates, @NotNull Endpoint endpoint) {
         this.fileName = fileName;
         this.endpoint = endpoint;
+        if(endpoint.getType().equals(ProcessType.REST) || endpoint.getType().equals(ProcessType.WEB)) //skipping sbdh for validator module
+            skipSBDH = true;
         for (DocumentTemplate dt : templates.getTemplates()) {
             Template template = new Template(dt.getName(), dt.getRoot());
             for (FieldInfo fi : dt.getFields()) {
@@ -158,7 +162,7 @@ public class DocumentParserHandler extends DefaultHandler {
             if (field.values != null && field.values.size() > 1) {
                 // the first value should have been read from the header, count how many others have this value
                 String first = field.values.get(0);
-                if (field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
+                if (!skipSBDH && field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
                     String errorText = "There are different conflicting values in the document for the field '"
                             + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator());
                     errorText += "There should be at least one match in the document body for the " + field.getId() +" specified in SBDH" + System.lineSeparator();
