@@ -24,7 +24,9 @@ layout 'layouts/main.tpl',
                         span('Validation warnings:'+warnings.size())
                         for(Object warning: warnings) {
                             div(style: 'font-color: brown;', warning.source)
-                            div(warning.message)
+                            div(class: 'woot') {
+                                pre(warning.message)
+                            }
                             hr('')
                         }
                     }
