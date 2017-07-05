@@ -159,8 +159,14 @@ public class DocumentParserHandler extends DefaultHandler {
                 // the first value should have been read from the header, count how many others have this value
                 String first = field.values.get(0);
                 if (field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
-                    template.addError("There are different conflicting values in the document for the field '"
-                            + field.getId() + ": " + String.join(", ", field.values));
+                    String errorText = "There are different conflicting values in the document for the field '"
+                            + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator());
+                    errorText += "There should be at least one match in the document body for the " + field.getId() +" specified in SBDH" + System.lineSeparator();
+                    errorText += "Paths: " + System.lineSeparator();
+                    for (String path : field.getPaths()) {
+                        errorText += "  " + path + System.lineSeparator();
+                    }
+                    template.addError(errorText);
                 }
             }
 
@@ -171,7 +177,8 @@ public class DocumentParserHandler extends DefaultHandler {
 
             // check mandatory fields presence
             if (field.values == null && field.isMandatory()) {
-                String errorText = "Missing mandatory field: " + field.getId() + System.lineSeparator() + "Paths: " + System.lineSeparator();
+                String errorText = "Missing mandatory field: " + field.getId() + System.lineSeparator();
+                errorText += "Paths: " + System.lineSeparator();
                 for (String path : field.getPaths()) {
                     errorText += "  " + path + System.lineSeparator();
                 }
