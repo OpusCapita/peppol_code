@@ -13,7 +13,9 @@ layout 'layouts/main.tpl',
                             span(class:'label label-danger', 'Validation errors:'+errors.size())
                             for(Object error: errors) {
                                 div(style: 'font-color: red;', error.source)
-                                div(error.message)
+                                div(class: 'woot') {
+                                    pre(error.message)
+                                }
                                 hr('')
                             }
                         }
