@@ -1,10 +1,10 @@
 #complete configuration for stage
 configurations:
     databases:
-        db1: jdbc:mysql://mysql.docker.local:3306/peppol?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
+        db1: jdbc:mysql://mysql:3306/peppol?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
     queues:
         mq1:
-            host: localhost
+            host: rabbitmq
             port: 5672
             username: guest
             password: guest
