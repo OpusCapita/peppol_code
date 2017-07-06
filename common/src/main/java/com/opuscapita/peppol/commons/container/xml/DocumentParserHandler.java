@@ -38,13 +38,13 @@ public class DocumentParserHandler extends DefaultHandler {
     private final List<DocumentWarning> warnings = new ArrayList<>();
 
     private String value;
-    private boolean skipSBDH = false;
+    private boolean checkSBDH = true;
 
     DocumentParserHandler(@Nullable String fileName, @NotNull DocumentTemplates templates, @NotNull Endpoint endpoint) {
         this.fileName = fileName;
         this.endpoint = endpoint;
         if(endpoint.getType().equals(ProcessType.REST) || endpoint.getType().equals(ProcessType.WEB)) //skipping sbdh for validator module
-            skipSBDH = true;
+            checkSBDH = false;
         for (DocumentTemplate dt : templates.getTemplates()) {
             Template template = new Template(dt.getName(), dt.getRoot());
             for (FieldInfo fi : dt.getFields()) {
@@ -162,16 +162,17 @@ public class DocumentParserHandler extends DefaultHandler {
             if (field.values != null && field.values.size() > 1) {
                 // the first value should have been read from the header, count how many others have this value
                 String first = field.values.get(0);
-                if (!skipSBDH && field.getPaths().get(0).contains("$SBDH") && field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
-                    String errorText = "There are different conflicting values in the document for the field '"
-                            + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator());
-                    errorText += "There should be at least one match in the document body for the " + field.getId() +" specified in SBDH" + System.lineSeparator();
-                    errorText += "Paths: " + System.lineSeparator();
-                    for (String path : field.getPaths()) {
-                        errorText += "  " + path + System.lineSeparator();
-                    }
-                    template.addError(errorText);
-                }
+                //if we need to check for SBDH or the SBDH is anyway present letsh check for corectenes
+                 if ((checkSBDH || field.getPaths().get(0).contains("$SBDH")) && field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
+                     String errorText = "There are different conflicting values in the document for the field '"
+                             + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator());
+                     errorText += "There should be at least one match in the document body for the " + field.getId() + " specified in SBDH" + System.lineSeparator();
+                     errorText += "Paths: " + System.lineSeparator();
+                     for (String path : field.getPaths()) {
+                         errorText += "  " + path + System.lineSeparator();
+                     }
+                     template.addError(errorText);
+                 }
             }
 
             // process constants
