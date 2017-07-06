@@ -1644,7 +1644,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(01|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(01|xx|36a):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
