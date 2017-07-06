@@ -179,4 +179,17 @@ public class DocumentParserTest {
         }
 
     }
+
+    @Test
+    public void testParseSvefakturaNoSbdh() throws Exception{
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentParser parser = new DocumentParser(factory, templates);
+
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-no-sbdh.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-no-sbdh.xml", new Endpoint("test", ProcessType.TEST));
+            assertNotNull(result);
+            assertEquals(Archetype.INVALID, result.getArchetype());
+        }
+    }
 }

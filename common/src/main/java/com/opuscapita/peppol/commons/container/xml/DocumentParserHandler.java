@@ -240,12 +240,16 @@ public class DocumentParserHandler extends DefaultHandler {
             setFields(template, result);
         }
 
-        Template[] array = new Template[templates.size()];
+       /* //this causes mess because the main error is: document matches several templates, the rest doesn't matter that much
+        Template[] templatesArray = new Template[templates.size()];
         int count = 0;
         for (Template template : templates) {
-            array[count++] = template;
+            templatesArray[count++] = template;
         }
-        addErrorsAndWarnings(result, array);
+        addErrorsAndWarnings(result, templatesArray);
+        */
+        result.getErrors().addAll(errors);
+        result.getWarnings().addAll(warnings);
         return result;
     }
 
