@@ -26,7 +26,7 @@ public class IntegrationTest {
     }
 
     public List<TestResult> run() {
-        logger.info("Test starting: " + name);
+        logger.info(System.lineSeparator() + "**** Test starting: " + name +" ****");
         producers.forEach(Producer::run);
         List<TestResult> testResults = new ArrayList<>();
         subscribers.stream().map(Subscriber::run).forEach(testResults::addAll);

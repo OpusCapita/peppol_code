@@ -19,7 +19,7 @@ tests:
                 source directory: /etc/resources/events-persistence-test
                 db connection: db1
                 endpoint: events-persistence-integration-test
-                DB preprocess querry: delete from messages where invoice_number='92426725'
+                DB preprocess querry: delete from messages where invoice_number='20828'
         subscribers:
             - snc subscriber:
                 source directory: /peppol/integration-latest/data/snc-stub
@@ -28,7 +28,7 @@ tests:
             - db subscriber:
                 db connection: db1
                 timeout: 1500
-                query: select count(*) from messages where invoice_number="92426725"
+                query: select count(*) from messages where invoice_number="20828"
                 consumers: 4
         consumers:
             - DB test:
