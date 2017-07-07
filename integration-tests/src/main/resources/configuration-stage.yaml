@@ -22,12 +22,8 @@ tests:
                 DB preprocess querry: delete from messages where invoice_number='92426725'
         subscribers:
             - snc subscriber:
-                source directory: C:/var/lib/peppol2.0/events-persistence/error
-                consumers: 7 8
-                timeout: 1500
-            - snc subscriber:
-                source directory: C:/var/lib/peppol2.0/events-persistence/invalid
-                consumers: 9 10
+                source directory: /peppol/integration-latest/data/snc-stub
+                consumers: 7 8 9 10
                 timeout: 1500
             - db subscriber:
                 db connection: db1
