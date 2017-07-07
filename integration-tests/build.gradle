@@ -34,6 +34,7 @@ dependencies {
     runtime ('mysql:mysql-connector-java:5.1.25')
     compile ('org.springframework.boot:spring-boot-starter-actuator')
     compile ('org.springframework.boot:spring-boot-starter-amqp')
+    compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
     compile project(':common')
     compile 'log4j:log4j:1.2.17'
     compile 'com.intellij:annotations:12.0'

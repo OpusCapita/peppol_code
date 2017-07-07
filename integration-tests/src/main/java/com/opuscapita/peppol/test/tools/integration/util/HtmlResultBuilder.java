@@ -56,10 +56,10 @@ public class HtmlResultBuilder implements ResultBuilder{
 
 		try(PrintWriter writer = new PrintWriter(testResultFileName)){
 			writer.println(htmlContent);
-            logger.info(HtmlResultBuilder.class + ": result file created: " + testResultFileName);
+            logger.info("HtmlResultBuilder:" + ": result file created: " + testResultFileName);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-            logger.error(HtmlResultBuilder.class + ": Error saving result file " + e);
+            logger.error("HtmlResultBuilder:" + ": Error saving result file " + e);
 		}
 	}
 

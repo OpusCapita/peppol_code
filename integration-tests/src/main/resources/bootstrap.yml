@@ -1,0 +1,6 @@
+spring:
+      cloud:
+          config:
+              uri: http://10.117.83.136:8888
+      profiles:
+          active: development
