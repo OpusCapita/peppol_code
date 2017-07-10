@@ -5,6 +5,7 @@ import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,8 +21,8 @@ public class FileSystemCheck extends Check {
     public CheckResult run() {
         try {
             boolean canWrite = true, canRead = true;
-            String[] writableDirectories = ((String)rawConfig.get("writable-directory")).trim().split(" ");
-            String[] readableDirectories = ((String)rawConfig.get("readable-directory")).trim().split(" ");
+            List<String> writableDirectories = ((List<String>)rawConfig.get("writable-directories"));
+            List<String> readableDirectories = ((List<String>)rawConfig.get("readable-directories"));
 
             for (String dir: writableDirectories) {
                 if (!Files.isWritable(new File(dir).toPath()))
@@ -33,13 +34,13 @@ public class FileSystemCheck extends Check {
              }
 
             return new CheckResult(moduleName, canWrite && canRead, "read/write check for directories: " +
-                    rawConfig.get("readable-directory") + " and " +
-                    rawConfig.get("writable-directory"), rawConfig);
+                    rawConfig.get("readable-directories") + " and " +
+                    rawConfig.get("writable-directories"), rawConfig);
         } catch (Exception ex){
             ex.printStackTrace();
             return new CheckResult(moduleName, false, "read/write check for directories: " +
-                    rawConfig.get("readable-directory") + " and " +
-                    rawConfig.get("writable-directory") + " failed! " + ex, rawConfig);
+                    rawConfig.get("readable-directories") + " and " +
+                    rawConfig.get("writable-directories") + " failed! " + ex, rawConfig);
         }
     }
 }

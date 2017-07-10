@@ -20,7 +20,7 @@ public class ChecksFactory {
                 return new DbConnectionCheck(moduleName,params);
             case "MQ-connection":
                 return new MqConnectionCheck(moduleName,params);
-            case "File-System-connection":
+            case "File-system-connection":
                 return new FileSystemCheck(moduleName,params);
             case "module-configuration":
                 return new ModuleConfigurationCheck(moduleName,params);

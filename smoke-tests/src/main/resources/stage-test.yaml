@@ -2,21 +2,17 @@ tests:
    support-ui:
      type: link
      params:
-       reference: http://peppol.itella.net/login
-   validation:
-     type: link
-     params:
-       reference: http://validator:8083/
+       reference: http://support-ui:8080/login
    configuration-server:
      type: reference
      params:
-       reference: http://localhost:440/admin/health
+       reference: http://configuration-server:8888/admin/health
    queue:
      type: queue
      params:
        exchange: peppol
-       queue: events-persistence email-notificator persistence-test routing transport-in transport-out
-       host: localhost
+       queue: email-notificator eventing events-persistence internal-routing outbound preprocessing transport-to-a2a transport-to-xib validator
+       host: rabbitmq.docker.local
        port: 5672
        username: guest
        password: guest
@@ -24,38 +20,37 @@ tests:
    dataBase:
      type: DB-connection
      params:
-       host: t-l-mysql01.ocnet.local
+       host: mysql.docker.local
        port: 3306
        username: oxalis
        password: grAm0f0n_1982-X_
-       DB-name: oxalis
+       DB-name: peppol
        driver: mysql
    MQ-connection:
      type: MQ-connection
      params:
-       host: s-l-web1.ocnet.local
+       host: rabbitmq.docker.local
        port: 5672
        username: guest
        password: guest
        virtual-host: /
-   File-system-connection:
-     type: File-system-connection
-     params:
-       readable-directories:
-          - C:\test_dir
-          - C:\test_dir
-       writable-directories:
-          - C:\test_dir
-          - C:\test_dir
    module-configuration:
      type: module-configuration
      params:
-       host: http://localhost:441
+       host: http://configuration-server:8888
        module-names:
           - events-persistence
-          - transport
+          - validator
+          - eventing
+          - internal-routing
+          - outbound
+          - preprocessing
+          - transport-to-a2a
+          - transport-to-xib
+          - email-notificator
        profile: development
        expected-configurations:
-          - application.yml
           - application-document_types.yml
-          - test
+          - application-snc-stage.yml
+          - application.yml
+...
