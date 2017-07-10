@@ -25,6 +25,7 @@ configurations {
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-web:1.4.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.1.RELEASE'
 
     compile project (':common')
