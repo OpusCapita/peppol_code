@@ -22,7 +22,7 @@ tests:
                 DB preprocess querry: delete from messages where invoice_number='20828'
         subscribers:
             - snc subscriber:
-                source directory: /peppol/integration-latest/data/snc-stub
+                source directory: /peppol/data/snc-stub
                 consumers: 7 8 9 10
                 timeout: 1500
             - db subscriber:
