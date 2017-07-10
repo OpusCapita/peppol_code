@@ -14,7 +14,7 @@ public class ChecksFactory {
         switch(type){
             case "link":
                 return new LinkCheck(moduleName, params);
-            case "reference":
+            case "health":
                 return new HealthCheck(moduleName,params);
             case "DB-connection":
                 return new DbConnectionCheck(moduleName,params);

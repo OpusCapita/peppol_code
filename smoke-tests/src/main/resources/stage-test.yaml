@@ -4,7 +4,7 @@ tests:
      params:
        reference: http://support-ui:8080/login
    configuration-server:
-     type: reference
+     type: health
      params:
        reference: http://configuration-server:8888/admin/health
    queue:

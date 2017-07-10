@@ -8,9 +8,17 @@ tests:
      params:
        reference: http://validator:8083/
    configuration-server:
-     type: reference
+     type: health
      params:
        reference: http://localhost:440/admin/health
+   preprocessing:
+     type: health
+     params:
+       reference: http://preprocessing:8080/health
+   inbound:
+     type: link
+     params:
+        reference: http://localhost:440/peppol-ap-inbound/status
    queue:
      type: queue
      params:
