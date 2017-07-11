@@ -102,12 +102,13 @@ tests:
         consumers:
             - queue msg count check:
                 id: 1
-                expected value: 5
+                expected value: 4
                 name: validation Mq check
             - web ui check:
                 id: 2
-                expected value: 5
+                expected value: 4
                 name: validation web ui check
             - rest check:
                 id: 3
+                expected value: 4
                 name: validation rest check
