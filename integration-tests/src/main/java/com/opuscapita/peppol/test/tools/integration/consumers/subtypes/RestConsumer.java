@@ -19,10 +19,12 @@ import java.util.List;
 public class RestConsumer extends Consumer {
 
     private final String name;
+    private final int expectedResult;
 
-    public RestConsumer(String id, String name) {
+    public RestConsumer(String id, String name, Object expectedResult) {
         super(id);
         this.name = name;
+        this.expectedResult = (int) expectedResult;
     }
 
     @Override
@@ -32,19 +34,19 @@ public class RestConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        boolean success = true;
+        int passed = 0;
         List<String> linedResult = null;
         try {
             ValidationResult result;
             linedResult = Files.readLines(new File((String)consumable), Charsets.UTF_8);
             for(String line : linedResult){
                 result = new Gson().fromJson(line, ValidationResult.class);
-                if(!result.isPassed())
-                    success = false;
+                if(result.isPassed())
+                    passed ++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new TestResult(name, success, "Got " + linedResult.size() + " results from rest");
+        return new TestResult(name, passed == expectedResult, "Expected: "+ expectedResult +" Got: " + passed);
     }
 }
