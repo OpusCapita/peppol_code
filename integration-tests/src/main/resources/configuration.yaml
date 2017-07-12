@@ -17,9 +17,12 @@ tests:
          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
          destination link: http://localhost:441/validator/
          result directory: validation result folder
+       file producer:
+         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
+         destination directory: C:\Peppol\tmp\tmp\integration-test
        mq producer:
          mq connection: mq1
-         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
+         source directory: C:\Peppol\tmp\tmp\integration-test
          destination queue: validator
          endpoint: validation-integration-test
        rest producer:

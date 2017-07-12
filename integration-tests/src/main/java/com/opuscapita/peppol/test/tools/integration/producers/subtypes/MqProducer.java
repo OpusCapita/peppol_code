@@ -16,9 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -42,7 +40,6 @@ public class MqProducer implements Producer {
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
-    private String destinationDirectory = null;
 
     @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
@@ -51,11 +48,10 @@ public class MqProducer implements Producer {
     public MqProducer() {
     }
 
-    public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String destinationDirectory, String endpoint, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
+    public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String endpoint, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
         this.mqSettings = mqSettings;
         this.sourceDirectory = sourceDirectory;
         this.destinationQueue = destinationQueue;
-        this.destinationDirectory = destinationDirectory;
         this.endpoint = endpoint;
         this.dbConnection = dbConnection;
         this.dbPreprocessQuery = dbPreprocessQuery;
@@ -95,13 +91,7 @@ public class MqProducer implements Producer {
         try {
             for (File file : directory.listFiles()) {
                 if (file.isFile()) {
-                    Path destinationPath = prepareFile(file);
-                    Path parentDir = destinationPath.getParent();
-                    if (!Files.exists(parentDir))
-                        Files.createDirectories(parentDir);
-                    Files.write(destinationPath, Files.readAllBytes(file.toPath()), StandardOpenOption.CREATE);
-                    logger.info("MqProducer: File created: " + destinationPath);
-                    ContainerMessage cm = createContainerMessageFromFile(destinationPath.toFile());
+                    ContainerMessage cm = createContainerMessageFromFile(file);
                     logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue + " -> " + endpoint);
                     mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
                     logger.info("MqProducer: published to MQ: " + cm.getFileName());
@@ -118,10 +108,6 @@ public class MqProducer implements Producer {
             } catch (Exception ignore) {
             }
         }
-    }
-
-    private Path prepareFile(File file) {
-        return new File(destinationDirectory, file.getName()).toPath();
     }
 
     private void executeDbPreprocess() {

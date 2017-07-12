@@ -71,11 +71,13 @@ tests:
                 expected value: true
    validation:
         producers:
+            file producer:
+              source directory: /etc/resources/validation-xml-test
+              destination directory: /peppol/data/storage/integration-test
             mq producer:
                 mq connection: mq1
-                source directory: /etc/resources/validation-xml-test
+                source directory: /peppol/data/storage/integration-test
                 destination queue: validator
-                destination directory: /peppol/data/storage/integration-test
                 endpoint: validation-integration-test
             web ui producer:
                 source directory: /etc/resources/validation-xml-test
