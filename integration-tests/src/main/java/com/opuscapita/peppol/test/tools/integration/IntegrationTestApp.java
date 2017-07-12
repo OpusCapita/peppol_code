@@ -84,8 +84,6 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
         new LoggingResultBuilder().processResult(testResults); //outputs the result to console
         new HtmlResultBuilder(testResultFileName,templateDir).processResult(testResults); //test result for jenkins
 
-        //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
-        //cleaning temp directory
         if(tempDir.startsWith("C")) { //hack to clean windows directory, no need to clean docker directory however
             try {
                 FileUtils.cleanDirectory(new File(tempDir));

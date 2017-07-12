@@ -72,8 +72,8 @@ tests:
    validation:
         producers:
             file producer:
-              source directory: /etc/resources/validation-xml-test
-              destination directory: /peppol/data/storage/integration-test
+                source directory: /etc/resources/validation-xml-test
+                destination directory: /peppol/data/storage/integration-test
             mq producer:
                 mq connection: mq1
                 source directory: /peppol/data/storage/integration-test
