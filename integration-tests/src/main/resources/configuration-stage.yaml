@@ -75,6 +75,7 @@ tests:
                 mq connection: mq1
                 source directory: /etc/resources/validation-xml-test
                 destination queue: validator
+                destination directory: /peppol/data/storage/integration-test
                 endpoint: validation-integration-test
             web ui producer:
                 source directory: /etc/resources/validation-xml-test
