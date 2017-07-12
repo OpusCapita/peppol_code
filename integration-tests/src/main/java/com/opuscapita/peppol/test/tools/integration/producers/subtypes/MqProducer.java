@@ -131,7 +131,7 @@ public class MqProducer implements Producer {
 
     @SuppressWarnings("ConstantConditions")
     private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
-        ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(),
+        ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(),
                 new Endpoint("integration-tests", ProcessType.TEST))
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("outbound", ProcessType.TEST)));
         cm.setStatus(new Endpoint("integration-tests", ProcessType.TEST), file.getName());
