@@ -87,7 +87,7 @@ public class PersistenceController {
         setFileInfoStatus(fileInfo, peppolEvent, message);
         fileInfoRepository.save(fileInfo);
         Message persistedMessage = messageRepository.save(message);
-        logger.info("Message[" + peppolEvent.getFileName() + " : AP - " + (accessPoint != null ? accessPoint: "N/A") + "] persisted with id: " + persistedMessage.getId());
+        logger.info("Message[" + peppolEvent.getFileName() + " : AP - " + (accessPoint != null ? accessPoint : "N/A") + "] persisted with id: " + persistedMessage.getId());
     }
 
     private FileInfo getFileInfo(Message message, PeppolEvent peppolEvent) {
@@ -236,8 +236,9 @@ public class PersistenceController {
         sentFileInfo.setApProtocol(peppolEvent.getSendingProtocol());
         if (peppolEvent.getCommonName() != null) {
             // CN example: "O=Telenor Norge AS,CN=APP_1000000030,C=NO"
-            sentFileInfo.setApCompanyName(getApName(peppolEvent.getCommonName()));
-            sentFileInfo.setApId(getApId(peppolEvent.getCommonName()));
+            ApInfo apInfo = ApInfo.parseFromCommonName(peppolEvent.getCommonName());
+            sentFileInfo.setApCompanyName(apInfo.getName());
+            sentFileInfo.setApId(apInfo.getId());
         }
         sentFileInfo = sentFileInfoRepository.save(sentFileInfo);
         if (fileInfo.getSentInfo() == null) {
@@ -332,19 +333,21 @@ public class PersistenceController {
     private AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
         AccessPoint accessPoint = null;
         if (peppolEvent.getCommonName() != null) {
-            final String apId = getApId(peppolEvent.getCommonName());
+            ApInfo apInfo = ApInfo.parseFromCommonName(peppolEvent.getCommonName());
+            final String apId = apInfo.getId();//getApId(peppolEvent.getCommonName());
             accessPoint = accessPointRepository.findByAccessPointId(apId);
             if (accessPoint == null) {
                 accessPoint = new AccessPoint();
                 accessPoint.setAccessPointId(apId);
-                accessPoint.setAccessPointName(getApName(peppolEvent.getCommonName()));
+                accessPoint.setAccessPointName(apInfo.getName());
                 accessPoint = accessPointRepository.save(accessPoint);
             }
         }
         return accessPoint;
     }
 
-    private String getApId(String commonName) {
+
+    /*private String getApId(String commonName) {
         String[] parts = commonName.split(",");
         if (parts.length > 1) {
             String[] idParts = parts[1].split("=");
@@ -364,7 +367,6 @@ public class PersistenceController {
             }
         }
         return null;
-    }
-
+    }*/
 
 }
