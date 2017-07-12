@@ -80,7 +80,7 @@ public class EventPersistenceReporter {
         result.setSenderId(cm.getDocumentInfo().getSenderId());
         result.setRecipientName(cm.getDocumentInfo().getRecipientName());
         result.setSenderName(cm.getDocumentInfo().getSenderName());
-        if (cm.getProcessingInfo().getCommonName() == null && hasCommonNameInMetadata(cm)) {
+        if (shouldExtractCommonNameFromMetadata(cm)) {
             cm.getProcessingInfo().setCommonName(extractCommonNameFromMetadata(cm));
         }
         result.setCommonName(cm.getProcessingInfo().getCommonName());
@@ -93,6 +93,10 @@ public class EventPersistenceReporter {
 
         logger.debug("Peppol event prepared");
         return result;
+    }
+
+    private boolean shouldExtractCommonNameFromMetadata(@NotNull ContainerMessage cm) {
+        return (cm.getProcessingInfo().getCommonName() == null || !cm.getProcessingInfo().getCommonName().contains(",")) && hasCommonNameInMetadata(cm);
     }
 
 
