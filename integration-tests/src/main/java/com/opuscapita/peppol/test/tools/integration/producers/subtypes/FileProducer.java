@@ -25,6 +25,7 @@ public class FileProducer implements Producer {
     /*takes files from directory -> uploads via web -> takes page html result -> stores it into folder */
     @Override
     public void run() {
+        logger.info("FileProducer: starting, sourceFolder: " + sourceFolder + " destinationFolder: " + destinationFolder);
         try {
             File source = new File(this.sourceFolder);
             destination = new File(this.destinationFolder);
@@ -60,7 +61,7 @@ public class FileProducer implements Producer {
             destinationFile = new File(destinationFolder + "\\" + file.getName());
         else
             destinationFile = destination;
-
+        logger.info("FileProducer: moving " + file.getAbsolutePath()  + " -> " + destinationFile);
         try (FileOutputStream fos = new FileOutputStream(destinationFile)) {
             fos.write(Files.readAllBytes(file.toPath()));
         } catch (IOException ex) {
