@@ -124,7 +124,7 @@ try {
         }
     }
     node {
-        lock(resource: 'peppol-integration-servers') {
+        lock(resource: 'peppol-stage-servers') {
             milestone 3
             stage('Integration Tests') {
                 try {
@@ -141,8 +141,6 @@ try {
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/integration-tests-results.html'
                 }
             }
-        }
-        lock(resource: 'peppol-stage-servers') {
             milestone 4
             stage('Deployment to Stage') {
                 try {
