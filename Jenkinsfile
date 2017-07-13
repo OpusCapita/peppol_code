@@ -127,7 +127,6 @@ try {
         lock(resource: 'peppol-integration-servers') {
             milestone 3
             stage('Integration Tests') {
-            /**
                 try {
                     dir('infra/ap2/ansible') {
                         ansiblePlaybook('integration-tests.yml', 'stage-integration.hosts', 'ansible-sudo', "peppol_version=${release_version}")
@@ -141,7 +140,6 @@ try {
                 finally {
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/integration-tests-results.html'
                 }
-            **/
             }
         }
         lock(resource: 'peppol-stage-servers') {
