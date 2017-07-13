@@ -58,7 +58,7 @@ public class FileProducer implements Producer {
         File destinationFile;
         //check if destination is already specified as file or just directory
         if(destination.isDirectory())
-            destinationFile = new File(destinationFolder + "\\" + file.getName());
+            destinationFile = new File(destinationFolder + "/" + file.getName());
         else
             destinationFile = destination;
         logger.info("FileProducer: moving " + file.getAbsolutePath()  + " -> " + destinationFile);
