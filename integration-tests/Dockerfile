@@ -16,4 +16,4 @@ ADD ["build/libs/integration-tests.jar", "integration-tests.jar"]
 
 ADD ["src/main/resources", "/etc/resources"]
 
-CMD java -jar integration-tests.jar /etc/resources/configuration-stage.yaml /etc/integration-test.result /etc/resources/html /tmp/
+CMD java -jar -Dspring.profiles.active=stage integration-tests.jar /etc/resources/configuration-stage.yaml /etc/integration-test.result /etc/resources/html /tmp/

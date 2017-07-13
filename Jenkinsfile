@@ -124,8 +124,26 @@ try {
         }
     }
     node {
-        lock(resource: 'peppol-stage-servers') {
+        lock(resource: 'peppol-integration-servers') {
             milestone 3
+            stage('Integration Tests') {
+                try {
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook('integration-tests.yml', 'stage-integration.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                    }
+                } catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Integration tests have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/integration-tests-results.html'
+                }
+            }
+        }
+        lock(resource: 'peppol-stage-servers') {
+            milestone 4
             stage('Deployment to Stage') {
                 try {
                     dir('infra/ap2/ansible') {
@@ -155,17 +173,6 @@ try {
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
                 }
             }
-            stage('Integration Tests') {
-                echo "Coming soon.."
-                script {
-                    /*
-                    dir('infra/ap2/ansible') {
-                        ansiblePlaybook('integration-tests.yml', 'stage.hosts', 'ansible-sudo')
-                        archiveArtifacts artifacts: 'test/integration-tests-results.html'
-                    }
-                    */
-                }
-            }
             stage('System Tests') {
                 try {
                     dir('src/system-tests') {
@@ -193,7 +200,7 @@ try {
         }
 
         lock(resource: 'peppol-production-servers') {
-            milestone 4
+            milestone 5
             stage('Deployment to Production') {
                 if (release_type in ['patch_release', 'minor_release', 'major_release']) {
                     try {
@@ -210,7 +217,7 @@ try {
                 }
             }
         }
-        milestone 5
+        milestone 6
     }
 }
 catch(e) {

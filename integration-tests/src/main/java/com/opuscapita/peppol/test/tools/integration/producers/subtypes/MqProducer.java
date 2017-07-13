@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -93,7 +94,6 @@ public class MqProducer implements Producer {
                     ContainerMessage cm = createContainerMessageFromFile(file);
                     logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue + " -> " + endpoint);
                     mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
-                    //channel.basicPublish("", destinationQueue, null, cm);
                     logger.info("MqProducer: published to MQ: " + cm.getFileName());
                 }
             }
@@ -131,10 +131,10 @@ public class MqProducer implements Producer {
 
     @SuppressWarnings("ConstantConditions")
     private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
-        ContainerMessage cm = new ContainerMessage("integration-tests", file.getName(),
+        ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(),
                 new Endpoint("integration-tests", ProcessType.TEST))
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("outbound", ProcessType.TEST)));
-        cm.setStatus(new Endpoint("outbound", ProcessType.TEST), file.getName());
+        cm.setStatus(new Endpoint("integration-tests", ProcessType.TEST), file.getName());
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         Route route = new Route();
         route.setEndpoints(endpoints);

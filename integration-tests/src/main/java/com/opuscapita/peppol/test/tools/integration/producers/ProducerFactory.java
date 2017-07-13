@@ -16,6 +16,9 @@ public class ProducerFactory {
     @Autowired
     private AutowireCapableBeanFactory beanFactory;
 
+    @Autowired
+    private MessageQueue mq;
+
     public Producer createProducer(Map.Entry<String, ?> producerConfig, Map<String, Object> genericConfiguration) {
         String name = producerConfig.getKey().toLowerCase();
         Map<String,String> properties = (Map<String, String>) producerConfig.getValue();
@@ -27,7 +30,6 @@ public class ProducerFactory {
             case "mq producer":
                 String mqKey = properties.get("mq connection");
                 dbKey = properties.get("db connection");
-                MessageQueue mq = (MessageQueue) genericConfiguration.get("mq");
                 dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
                 String dbPreprocessQuery = (dbKey == null) ? null : properties.get("DB preprocess querry");
                 MqProducer mqProducer = new MqProducer((Map<String, String>) genericConfiguration.get(mqKey), properties.get("source directory"),

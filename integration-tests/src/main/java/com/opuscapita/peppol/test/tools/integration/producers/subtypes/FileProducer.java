@@ -32,9 +32,10 @@ public class FileProducer implements Producer {
                 logger.warn("File producer: " + this.sourceFolder + " doesn't exist, exiting!");
                 return;
             }
-            if (destination.isDirectory() && !destination.exists()) {
-                logger.warn("File producer: " + this.destinationFolder + " doesn't exist, exiting!");
-                return;
+            //if source is directory - then it's dir to dir copy
+            if (source.isDirectory() && !destination.exists()) {
+                logger.warn("File producer: " + this.destinationFolder + " doesn't exist, creating");
+                Files.createDirectories(destination.toPath());
             }
             if(source.isDirectory()) {
                 File[] files = source.listFiles();

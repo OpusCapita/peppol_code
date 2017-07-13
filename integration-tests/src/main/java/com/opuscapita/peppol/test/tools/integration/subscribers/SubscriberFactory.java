@@ -23,6 +23,7 @@ import java.util.Map;
 public class SubscriberFactory {
     private final static Logger logger = LogManager.getLogger(SubscriberFactory.class);
 
+
     public Subscriber createSubscriber(Map.Entry<String, ?> subscriberConfig, Map<String, Object> genericConfiguration, Map<String, Consumer> existingConsumers) {
         String name = subscriberConfig.getKey().toLowerCase();
         Map<String, Object> properties = (Map<String, Object>) subscriberConfig.getValue();

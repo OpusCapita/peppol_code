@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,20 +49,10 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
     private Environment environment;
 
     @Autowired
-    private MessageQueue mq;
-
-    private static MessageQueue staticMq;
-
-    @Autowired
     private IntegrationTestProperties props;
 
     @Autowired
     private IntegrationTestConfigReader configReader;
-
-    @PostConstruct
-    public void init() {
-        staticMq = mq;
-    }
 
     public static void main(String[] args) {
         logger.info("IntegrationTestApp : Starting!");
@@ -91,12 +80,10 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
             configFile = configFile + "\\configuration.yaml";
 
 
-        List<TestResult> testResults = runTests(configFile, staticMq);
+        List<TestResult> testResults = runTests(configFile);
         new LoggingResultBuilder().processResult(testResults); //outputs the result to console
         new HtmlResultBuilder(testResultFileName,templateDir).processResult(testResults); //test result for jenkins
 
-        //new HtmlResultBuilder(testResultFileName, templateDir).processResult(testResults);
-        //cleaning temp directory
         if(tempDir.startsWith("C")) { //hack to clean windows directory, no need to clean docker directory however
             try {
                 FileUtils.cleanDirectory(new File(tempDir));
@@ -108,8 +95,8 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
         System.exit(0);
     }
 
-    private List<TestResult> runTests(String configFile, MessageQueue staticMq) {
-        IntegrationTestConfig config = configReader.initConfig(configFile, staticMq);
+    private List<TestResult> runTests(String configFile) {
+        IntegrationTestConfig config = configReader.initConfig(configFile);
         return config.runTests();
     }
 
