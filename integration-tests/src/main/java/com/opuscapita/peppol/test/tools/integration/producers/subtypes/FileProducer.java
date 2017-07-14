@@ -61,7 +61,7 @@ public class FileProducer implements Producer {
             destinationFile = new File(destinationFolder + "/" + file.getName());
         else
             destinationFile = destination;
-        if(destinationFile.getName().contains("SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml"))
+        if(destinationFile.getName().contains("file_not_stored.xml"))
             return;
         logger.info("FileProducer: moving " + file.getAbsolutePath()  + " -> " + destinationFile);
         try (FileOutputStream fos = new FileOutputStream(destinationFile)) {
