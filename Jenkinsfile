@@ -139,6 +139,10 @@ try {
                 }
                 finally {
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/integration-tests-results.html'
+                    dir('infra/ap2/ansible') {
+                        // clean up the integration-tests environment (destroy everything)
+                        ansiblePlaybook('integration-tests-clean.yml', 'stage-integration.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                    }
                 }
             }
             milestone 4
