@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -133,7 +132,7 @@ public class MqProducer implements Producer {
     private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
         ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(),
                 new Endpoint("integration-tests", ProcessType.TEST))
-                .setDocumentInfo(documentLoader.load(file, new Endpoint("outbound", ProcessType.TEST)));
+                .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
         cm.setStatus(new Endpoint("integration-tests", ProcessType.TEST), file.getName());
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         Route route = new Route();

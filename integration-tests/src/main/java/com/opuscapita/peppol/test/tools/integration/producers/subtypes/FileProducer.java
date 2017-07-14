@@ -54,13 +54,15 @@ public class FileProducer implements Producer {
         }
     }
 
-    private void processFile(File file) {
+    private void processFile(File file) { //testing hack for snc stub
         File destinationFile;
         //check if destination is already specified as file or just directory
         if(destination.isDirectory())
             destinationFile = new File(destinationFolder + "/" + file.getName());
         else
             destinationFile = destination;
+        if(destinationFile.getName().contains("SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml"))
+            return;
         logger.info("FileProducer: moving " + file.getAbsolutePath()  + " -> " + destinationFile);
         try (FileOutputStream fos = new FileOutputStream(destinationFile)) {
             fos.write(Files.readAllBytes(file.toPath()));
