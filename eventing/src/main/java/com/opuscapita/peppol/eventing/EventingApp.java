@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.eventing.destinations.EventPersistenceReporter;
+import com.opuscapita.peppol.eventing.destinations.MessageLevelResponseReporter;
 import com.opuscapita.peppol.eventing.destinations.WebWatchDogReporterReporter;
 import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogConfig;
 import org.jetbrains.annotations.NotNull;
@@ -26,12 +27,13 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Sergejs.Roze
  */
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing", "com.opuscapita.peppol.eventing.destinations.webwatchdog"})
 @EnableDiscoveryClient
 public class EventingApp {
 
     @Autowired
-    WebWatchDogReporterReporter webWatchDogReporterReporter;
+    private WebWatchDogReporterReporter webWatchDogReporterReporter;
 
     @Value("${peppol.eventing.queue.in.name}")
     private String queueIn;
@@ -42,12 +44,10 @@ public class EventingApp {
         SpringApplication.run(EventingApp.class, args);
     }
 
-
     @Bean
     WebWatchDogConfig webWatchDogConfig(@Value("${wwd.folder}") String webWatchDogFolder, @Value("${wwd.prefix}") String webWatchDogPrefix) {
         return new WebWatchDogConfig(webWatchDogFolder, webWatchDogPrefix);
     }
-
 
     @SuppressWarnings("Duplicates")
     @Bean
@@ -74,8 +74,9 @@ public class EventingApp {
 
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EventPersistenceReporter eventPersistenceReporter,
-                                        @NotNull Gson gson) {
+                                        @NotNull Gson gson, @NotNull MessageLevelResponseReporter messageLevelResponseReporter) {
         return new AbstractQueueListener(errorHandler, null, gson) {
+            @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 if (cm == null || cm.getDocumentInfo() == null) {
@@ -85,6 +86,7 @@ public class EventingApp {
                 // add other handlers here, e.g. NTT
                 eventPersistenceReporter.process(cm);
                 webWatchDogReporterReporter.process(cm);
+                messageLevelResponseReporter.process(cm);
             }
         };
     }
