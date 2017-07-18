@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import java.text.ParseException;
+
 /**
  * Checks whether we should report the message. If yes - creates the file in given directory.
  *
@@ -29,7 +32,7 @@ public class MessageLevelResponseReporter {
     }
 
     // only messages about errors and successfull delivery must get through
-    void process(@NotNull ContainerMessage cm) {
+    void process(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
         // nothing to do if there is no info about the file
         if (cm.getDocumentInfo() == null || cm.getProcessingInfo() == null) {
             return;
