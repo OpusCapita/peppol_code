@@ -5,9 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
-import com.opuscapita.peppol.eventing.destinations.EventPersistenceReporter;
-import com.opuscapita.peppol.eventing.destinations.MessageLevelResponseReporter;
-import com.opuscapita.peppol.eventing.destinations.WebWatchDogReporterReporter;
+import com.opuscapita.peppol.eventing.destinations.ReportingManager;
 import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +31,7 @@ import org.springframework.context.annotation.Bean;
 public class EventingApp {
 
     @Autowired
-    private WebWatchDogReporterReporter webWatchDogReporterReporter;
+    private ReportingManager reportingManager;
 
     @Value("${peppol.eventing.queue.in.name}")
     private String queueIn;
@@ -73,8 +71,7 @@ public class EventingApp {
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EventPersistenceReporter eventPersistenceReporter,
-                                        @NotNull Gson gson, @NotNull MessageLevelResponseReporter messageLevelResponseReporter) {
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson) {
         return new AbstractQueueListener(errorHandler, null, gson) {
             @SuppressWarnings("ConstantConditions")
             @Override
@@ -83,10 +80,7 @@ public class EventingApp {
                     logger.warn("No document in received message, ignoring message");
                     return;
                 }
-                // add other handlers here, e.g. NTT
-                eventPersistenceReporter.process(cm);
-                webWatchDogReporterReporter.process(cm);
-                messageLevelResponseReporter.process(cm);
+                reportingManager.report(cm);
             }
         };
     }

@@ -1,0 +1,54 @@
+package com.opuscapita.peppol.eventing.destinations;
+
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+/**
+ * Created by gamanse1 on 2017.07.18..
+ */
+@Component
+@Lazy
+public class ReportingManager {
+    private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseReporter.class);
+    WebWatchDogReporterReporter webWatchDogReporterReporter;
+    MessageLevelResponseReporter messageLevelResponseReporter;
+    EventPersistenceReporter eventPersistenceReporter;
+
+    @Autowired
+    public ReportingManager(@NotNull WebWatchDogReporterReporter webWatchDogReporterReporter, @NotNull MessageLevelResponseReporter messageLevelResponseReporter, @NotNull EventPersistenceReporter eventPersistenceReporter) {
+        this.webWatchDogReporterReporter = webWatchDogReporterReporter;
+        this.messageLevelResponseReporter = messageLevelResponseReporter;
+        this.eventPersistenceReporter = eventPersistenceReporter;
+    }
+
+    public void report(ContainerMessage cm) {
+        try {
+            eventPersistenceReporter.process(cm);
+        }
+        catch (Exception ex){
+            logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        try {
+            webWatchDogReporterReporter.process(cm);
+        }
+        catch (Exception ex1){
+            logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
+            ex1.printStackTrace();
+        }
+
+        try {
+            messageLevelResponseReporter.process(cm);
+        }
+        catch (Exception ex2){
+            logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
+            ex2.printStackTrace();
+        }
+    }
+}
