@@ -15,12 +15,15 @@ import org.springframework.stereotype.Component;
 @Lazy
 public class ReportingManager {
     private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseReporter.class);
-    WebWatchDogReporterReporter webWatchDogReporterReporter;
-    MessageLevelResponseReporter messageLevelResponseReporter;
-    EventPersistenceReporter eventPersistenceReporter;
+
+    private WebWatchDogReporterReporter webWatchDogReporterReporter;
+    private MessageLevelResponseReporter messageLevelResponseReporter;
+    private EventPersistenceReporter eventPersistenceReporter;
 
     @Autowired
-    public ReportingManager(@NotNull WebWatchDogReporterReporter webWatchDogReporterReporter, @NotNull MessageLevelResponseReporter messageLevelResponseReporter, @NotNull EventPersistenceReporter eventPersistenceReporter) {
+    public ReportingManager(@NotNull WebWatchDogReporterReporter webWatchDogReporterReporter,
+                            @NotNull MessageLevelResponseReporter messageLevelResponseReporter,
+                            @NotNull EventPersistenceReporter eventPersistenceReporter) {
         this.webWatchDogReporterReporter = webWatchDogReporterReporter;
         this.messageLevelResponseReporter = messageLevelResponseReporter;
         this.eventPersistenceReporter = eventPersistenceReporter;
@@ -29,24 +32,21 @@ public class ReportingManager {
     public void report(ContainerMessage cm) {
         try {
             eventPersistenceReporter.process(cm);
-        }
-        catch (Exception ex){
+        } catch (Exception ex){
             logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
             ex.printStackTrace();
         }
 
         try {
             webWatchDogReporterReporter.process(cm);
-        }
-        catch (Exception ex1){
+        } catch (Exception ex1){
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
             ex1.printStackTrace();
         }
 
         try {
             messageLevelResponseReporter.process(cm);
-        }
-        catch (Exception ex2){
+        } catch (Exception ex2){
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
             ex2.printStackTrace();
         }

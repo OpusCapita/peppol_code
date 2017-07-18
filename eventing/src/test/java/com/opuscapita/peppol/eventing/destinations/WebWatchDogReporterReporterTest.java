@@ -8,7 +8,6 @@ import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogConfig
 import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogMessenger;
 import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogStatus;
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.CoreMatchers;
 import org.junit.*;
 
 import java.io.File;
@@ -17,15 +16,16 @@ import java.nio.file.Files;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by bambr on 17.7.6.
  */
+@SuppressWarnings("ConstantConditions")
 public class WebWatchDogReporterReporterTest {
     private static final String MEATDATA = "MEATDATA->TRIBUTE TO HOLY KACEN";
     private static File tmpDir;
-    WebWatchDogReporterReporter webWatchDogReporterReporter = null;
+    private WebWatchDogReporterReporter webWatchDogReporterReporter = null;
     private Endpoint endpoint;
     private ProcessingInfo processingInfo;
     private ContainerMessage containerMessage;
@@ -71,9 +71,7 @@ public class WebWatchDogReporterReporterTest {
         //We should be having only one file
         assertEquals(1, Arrays.asList(tmpDir.listFiles()).size());
         //It should contain FAILED status
-        assertThat(FileUtils.readFileToString(tmpDir.listFiles()[0], "UTF-8"), CoreMatchers.containsString(WebWatchDogStatus.FAILED));
-
-
+        assertTrue(FileUtils.readFileToString(tmpDir.listFiles()[0], "UTF-8").contains(WebWatchDogStatus.FAILED));
     }
 
     @Test
@@ -87,7 +85,7 @@ public class WebWatchDogReporterReporterTest {
         //We should be having only one file
         assertEquals(1, Arrays.asList(tmpDir.listFiles()).size());
         //It should contain OK status
-        assertThat(FileUtils.readFileToString(tmpDir.listFiles()[0], "UTF-8"), CoreMatchers.containsString(WebWatchDogStatus.OK));
+        assertTrue(FileUtils.readFileToString(tmpDir.listFiles()[0], "UTF-8").contains(WebWatchDogStatus.OK));
     }
 
     @Test
@@ -100,7 +98,7 @@ public class WebWatchDogReporterReporterTest {
         containerMessage.setProcessingInfo(processingInfo);
         webWatchDogReporterReporter.process(containerMessage);
         assertEquals(1, Arrays.asList(tmpDir.listFiles()).size());
-        assertThat(FileUtils.readFileToString(tmpDir.listFiles()[0], "UTF-8"), CoreMatchers.containsString(WebWatchDogStatus.INVALID));
+        assertTrue(FileUtils.readFileToString(tmpDir.listFiles()[0], "UTF-8").contains(WebWatchDogStatus.INVALID));
     }
 
     @Test
