@@ -192,4 +192,30 @@ public class DocumentParserTest {
             assertEquals(Archetype.INVALID, result.getArchetype());
         }
     }
+
+    @Test
+    public void testParseSvefakturaWrongPartyId() throws Exception{
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentParser parser = new DocumentParser(factory, templates);
+
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml", new Endpoint("test", ProcessType.TEST));
+            assertNotNull(result);
+            assertEquals(Archetype.INVALID, result.getArchetype());
+        }
+    }
+
+    @Test
+    public void testParseSvefakturaValid() throws Exception{
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentParser parser = new DocumentParser(factory, templates);
+
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml", new Endpoint("test", ProcessType.TEST));
+            assertNotNull(result);
+            assertEquals(Archetype.SVEFAKTURA1, result.getArchetype());
+        }
+    }
 }

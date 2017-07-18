@@ -144,9 +144,11 @@ public class DocumentParserHandler extends DefaultHandler {
 
         // select what to return if there are still more than one template left
         if (templates.size() != 1) {
-            // probably there is only one template without errors, return it then
-            if (templates.stream().filter(t -> t.errors == null).count() == 1) {
-                return oneResult(templates.stream().filter(t -> t.errors == null).findFirst().orElse(null));
+            //Template bestTemplate = templates.stream().min(Comparator.comparingInt(Template::errorsCount)).orElse(null);
+            //trying to find best template according to which one has less errors
+            Collections.sort(templates, Comparator.comparingInt(Template::errorsCount));
+            if(templates.get(0).errorsCount() < templates.get(1).errorsCount()){
+                return oneResult(templates.get(0));
             }
             // sorry, no luck, return all matching templates
             return manyResults(templates);
@@ -345,6 +347,11 @@ public class DocumentParserHandler extends DefaultHandler {
         // how many fields have values
         int matchedCount() {
             return (int) fields.stream().filter(f -> f.values != null).count();
+        }
+
+        //safe check for errors count
+        int errorsCount() {
+            return (errors == null) ? 0 : errors.size();
         }
     }
 
