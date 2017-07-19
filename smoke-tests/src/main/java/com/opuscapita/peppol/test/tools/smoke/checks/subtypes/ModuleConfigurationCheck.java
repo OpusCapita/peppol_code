@@ -79,7 +79,7 @@ public class ModuleConfigurationCheck extends Check {
     private List<String> getExpectedConfigurationForModule(String module) {
         List<String> moduleExpectedConfiguration = new ArrayList<>(genericConfiguration);
         moduleExpectedConfiguration.add("application-" + profile + ".yml");
-        moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
+        //moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
         moduleExpectedConfiguration.add(module + ".yml"); //Accepting second option without the profile
         return  moduleExpectedConfiguration;
     }
