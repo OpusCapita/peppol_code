@@ -50,7 +50,8 @@ public class SubscriberFactory {
                 logger.error("Invalid subscriber configuration, unable to create subscriber: " + name);
         }
         for (String consumerId : consumerIds) {
-            consumers.add(existingConsumers.get(consumerId));
+            if(existingConsumers.containsKey(consumerId))
+                consumers.add(existingConsumers.get(consumerId));
         }
         subscriber.setConsumers(consumers);
         return subscriber;
