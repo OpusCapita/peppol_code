@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class ModuleConfigurationCheck extends Check {
     private String profile, host;
-    private List<String> configurableConfiguration;
+    private List<String> genericConfiguration;
 
     public ModuleConfigurationCheck(String moduleName, Map<String, Object> params) {
         super(moduleName,params);
@@ -37,7 +37,7 @@ public class ModuleConfigurationCheck extends Check {
             host = ((String)rawConfig.get("host")).replaceAll("/$","");
             profile = (String)rawConfig.get("profile");
             List<String> modules = ((List<String>)rawConfig.get("module-names"));
-            configurableConfiguration = (List<String>)rawConfig.get("expected-configurations");
+            genericConfiguration = (List<String>)rawConfig.get("expected-configurations");
 
             for (String module : modules){
                 URL url = new URL(host + "/" + module + "/" + profile);
@@ -45,14 +45,14 @@ public class ModuleConfigurationCheck extends Check {
                 InputStreamReader is = new InputStreamReader(urlConn.getInputStream(), Charset.defaultCharset());
                 JsonObject jsonObj = new Gson().fromJson(is, JsonObject.class);
 
-                Set<String> configuration = new HashSet<>();
+                Set<String> receivedConfiguration = new HashSet<>();
                 //collecting all configuration files retrieved from the server for current module
                 for(JsonElement source : jsonObj.get("propertySources").getAsJsonArray()){
                     URL remoteConfigFile = new URL(source.getAsJsonObject().get("name").getAsString());
                     String configurationFile = Paths.get(remoteConfigFile.getFile()).getFileName().toString();
-                    configuration.add(configurationFile);
+                    receivedConfiguration.add(configurationFile);
                 }
-                oneModuleError = testConfiguration(configuration, getExpectedConfigurationForModule(module));
+                oneModuleError = testConfiguration(receivedConfiguration, getExpectedConfigurationForModule(module));
                 if(oneModuleError.isPresent())
                     fullError += module.toUpperCase() + " Check failed: " + oneModuleError.get() + " ";
             }
@@ -69,7 +69,7 @@ public class ModuleConfigurationCheck extends Check {
     //comparing expected configuration files and the actual files found on server
     private Optional<String> testConfiguration(Set<String> configuration, List<String> expectedConfiguration) {
         Optional<String> error = Optional.empty();
-        if (configuration.size() != expectedConfiguration.size() - 1 || !expectedConfiguration.containsAll(configuration))
+        if (configuration.size() < expectedConfiguration.size() || !configuration.containsAll(expectedConfiguration))
             error = Optional.of("Module configuration doesn't match, expected: [" + StringJoinUtils.join(expectedConfiguration, ", ")  +
                     "] received configuration: [" + StringJoinUtils.join(configuration, ", ") + "]");
         return error;
@@ -77,9 +77,9 @@ public class ModuleConfigurationCheck extends Check {
 
 
     private List<String> getExpectedConfigurationForModule(String module) {
-        List<String> moduleExpectedConfiguration = new ArrayList<>(configurableConfiguration);
+        List<String> moduleExpectedConfiguration = new ArrayList<>(genericConfiguration);
         moduleExpectedConfiguration.add("application-" + profile + ".yml");
-        moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
+        //moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
         moduleExpectedConfiguration.add(module + ".yml"); //Accepting second option without the profile
         return  moduleExpectedConfiguration;
     }
