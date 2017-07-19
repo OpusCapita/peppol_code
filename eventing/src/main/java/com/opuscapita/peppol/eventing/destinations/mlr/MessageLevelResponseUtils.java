@@ -11,20 +11,20 @@ import java.util.GregorianCalendar;
 /**
  * @author Sergejs.Roze
  */
-class MlrUtils {
+class MessageLevelResponseUtils {
 
     /**
-     * Expects issue date in format yyyy-MM-dd and returns date in Peppol expected format.
+     * Receives date in format yyyy-MM-dd and returns date in Peppol expected format.
      *
-     * @param issueDate the issue date in yyyy-MM-dd format
+     * @param date the issue date in yyyy-MM-dd format
      *
      * @return the issue date to be used in document composition
      *
      * @throws ParseException failed to parse input date
      * @throws DatatypeConfigurationException failed to configure XML parser
      */
-    static XMLGregorianCalendar convertToXml(String issueDate) throws ParseException, DatatypeConfigurationException {
-        return convertToXml(new SimpleDateFormat("yyyy-MM-dd").parse(issueDate));
+    static XMLGregorianCalendar convertToXml(String date) throws ParseException, DatatypeConfigurationException {
+        return convertToXml(new SimpleDateFormat("yyyy-MM-dd").parse(date));
     }
 
     static XMLGregorianCalendar convertToXml(Date date) throws DatatypeConfigurationException {

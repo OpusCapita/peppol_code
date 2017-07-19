@@ -1,7 +1,9 @@
 package com.opuscapita.peppol.commons.container.document;
 
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.validation.ValidationError;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
@@ -9,23 +11,36 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class DocumentError implements Serializable {
-    private static final long serialVersionUID = 1522769757163697307L;
+    private static final long serialVersionUID = 1522769757163697308L;
     public static final String ERROR_SEPARATOR = " error: ";
 
     private final Endpoint source;
     private final String message;
+    private final ValidationError validationError;
 
     public DocumentError(@NotNull Endpoint source, @NotNull String message) {
-        this.source = source;
-        this.message = message;
+        this(source, message, null);
     }
 
+    public DocumentError(@NotNull Endpoint source, @NotNull String message, @Nullable ValidationError validationError) {
+        this.source = source;
+        this.message = message;
+        this.validationError = validationError;
+    }
+
+    @NotNull
     public Endpoint getSource() {
         return source;
     }
 
+    @NotNull
     public String getMessage() {
         return message;
+    }
+
+    @Nullable
+    public ValidationError getValidationError() {
+        return validationError;
     }
 
     @Override

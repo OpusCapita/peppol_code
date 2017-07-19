@@ -87,7 +87,7 @@ public class ValidationError implements Serializable {
 
     @NotNull
     public DocumentError toDocumentError(@NotNull Endpoint source) {
-        return new DocumentError(source, this.toString());
+        return new DocumentError(source, this.toString(), this);
     }
 
     @NotNull
