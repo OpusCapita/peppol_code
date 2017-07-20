@@ -2,7 +2,6 @@ package com.opuscapita.peppol.test.tools.integration;
 
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
-import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.*;
@@ -92,7 +91,8 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
             }
         }
         logger.info("IntegrationTestApp : Ended!");
-        System.exit(0);
+        int fails = (int)testResults.stream().filter(res -> !res.isPassed()).count();
+        System.exit(fails);
     }
 
     private List<TestResult> runTests(String configFile) {
