@@ -79,6 +79,41 @@
         </div>
     </#if>
     </div>
+    <div>
+    <#if fails?has_content>
+        <h3>Failed tests</h3>
+        <#list fails as item>
+            <div>
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">${item.name}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <#list item.value as f>
+
+                            <table class="table table-bordered table-hover table-condensed">
+                                <tr>
+                                    <th style="width: 210px;">Test</th>
+                                    <th style="width: 150px;">Output</th>
+                                    <th style="width: 150px;">Expected</th>
+                                    <th>Details</th>
+                                </tr>
+                                <#list f.details.asserts as a>
+                                    <tr>
+                                        <td>${a.name}</td>
+                                        <td>${a.output_value}</td>
+                                        <td>${a.expected_result}</td>
+                                        <td>${a.comment}</td>
+                                    </tr>
+                                </#list>
+                            </table>
+                        </#list>
+                    </div>
+                </div>
+            </div>
+        </#list>
+    </#if>
+    </div>
 
     <div>
     <#if oks?has_content>
@@ -115,41 +150,6 @@
     </#if>
     </div>
 
-    <div>
-    <#if fails?has_content>
-        <h3>Failed tests</h3>
-        <#list fails as item>
-            <div>
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">${item.name}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <#list item.value as f>
-
-                            <table class="table table-bordered table-hover table-condensed">
-                                <tr>
-                                    <th style="width: 210px;">Test</th>
-                                    <th style="width: 150px;">Output</th>
-                                    <th style="width: 150px;">Expected</th>
-                                    <th>Details</th>
-                                </tr>
-                                <#list f.details.asserts as a>
-                                    <tr>
-                                        <td>${a.name}</td>
-                                        <td>${a.output_value}</td>
-                                        <td>${a.expected_result}</td>
-                                        <td>${a.comment}</td>
-                                    </tr>
-                                </#list>
-                            </table>
-                        </#list>
-                    </div>
-                </div>
-            </div>
-        </#list>
-    </#if>
-    </div>
 </div>
 </body>
 </html>
