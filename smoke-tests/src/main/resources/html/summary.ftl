@@ -81,41 +81,6 @@
     </div>
 
     <div>
-    <#if oks?has_content>
-        <h3>Succeed tests</h3>
-        <#list oks as item>
-            <div>
-                <div class="panel panel-info">
-                    <div class="panel-heading" style="padding:5; margin:0;">
-                        <h3 class="panel-title">${item.name}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <#list item.value as s>
-
-                            <table class="table table-bordered table-hover table-condensed"
-                                   style="padding:0; margin:0;">
-                                <tr>
-                                    <th style="width: 210px;">Test</th>
-                                    <th style="width: 150px;">Test result</th>
-                                    <th>Details</th>
-                                </tr>
-                                <#list s.details.asserts as d>
-                                    <tr>
-                                        <td>${d.name}</td>
-                                        <td>${d.output_value}</td>
-                                        <td>${d.comment}</td>
-                                    </tr>
-                                </#list>
-                            </table>
-                        </#list>
-                    </div>
-                </div>
-            </div>
-        </#list>
-    </#if>
-    </div>
-
-    <div>
     <#if fails?has_content>
         <h3>Failed tests</h3>
         <#list fails as item>
@@ -140,6 +105,41 @@
                                         <td>${a.output_value}</td>
                                         <td>${a.expected_result}</td>
                                         <td>${a.comment}</td>
+                                    </tr>
+                                </#list>
+                            </table>
+                        </#list>
+                    </div>
+                </div>
+            </div>
+        </#list>
+    </#if>
+    </div>
+
+    <div>
+    <#if oks?has_content>
+        <h3>Succeed tests</h3>
+        <#list oks as item>
+            <div>
+                <div class="panel panel-info">
+                    <div class="panel-heading" style="padding:5; margin:0;">
+                        <h3 class="panel-title">${item.name}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <#list item.value as s>
+
+                            <table class="table table-bordered table-hover table-condensed"
+                                   style="padding:0; margin:0;">
+                                <tr>
+                                    <th style="width: 210px;">Test</th>
+                                    <th style="width: 150px;">Test result</th>
+                                    <th>Details</th>
+                                </tr>
+                                <#list s.details.asserts as d>
+                                    <tr>
+                                        <td>${d.name}</td>
+                                        <td>${d.output_value}</td>
+                                        <td>${d.comment}</td>
                                     </tr>
                                 </#list>
                             </table>
