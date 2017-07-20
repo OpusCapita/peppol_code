@@ -1,12 +1,25 @@
 package com.opuscapita.peppol.eventing.destinations;
 
+import com.helger.ubl21.UBL21Writer;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.ProcessingInfo;
+import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
+import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import java.io.File;
+import java.text.ParseException;
 
 /**
  * Checks whether we should report the message. If yes - creates the file in given directory.
@@ -17,6 +30,11 @@ import org.springframework.stereotype.Component;
 public class MessageLevelResponseReporter {
     private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseReporter.class);
 
+    @Value("${peppol.eventing.mlr.a2a}")
+    private String destinationA2A;
+    @Value("${peppol.eventing.mlr.xib}")
+    private String destinationXiB;
+
     private final MessageLevelResponseCreator creator;
 
     @Autowired
@@ -24,7 +42,47 @@ public class MessageLevelResponseReporter {
         this.creator = creator;
     }
 
-    public void process(@NotNull ContainerMessage cm) {
+    // only messages about errors and successfull delivery must get through
+    void process(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
+        // nothing to do if there is no info about the file
+        if (cm.getDocumentInfo() == null || cm.getProcessingInfo() == null) {
+            return;
+        }
 
+        ProcessingInfo pi = cm.getProcessingInfo();
+        DocumentInfo di = cm.getDocumentInfo();
+
+        // report errors
+        if (di.getArchetype() == Archetype.INVALID) {
+            storeResponse(creator.reportError(cm), cm);
+            return;
+        }
+
+        // report successfull end of the flow
+        if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_FINAL) {
+            if (di.getErrors().isEmpty()) {
+                storeResponse(creator.reportSuccess(cm), cm);
+            } else {
+                storeResponse(creator.reportError(cm), cm);
+            }
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void storeResponse(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm) {
+        if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getSource().getName(), "a2a")) {
+            storeResponse(art, destinationA2A + File.separator + FilenameUtils.getBaseName(cm.getFileName()) + "-mlr.xml");
+        }
+        if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getSource().getName(), "xib")) {
+            storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) + "-mlr.xml");
+        }
+    }
+
+    private void storeResponse(@NotNull ApplicationResponseType art, @NotNull String fileName) {
+        logger.info("Storing MLR as " + fileName);
+
+        UBL21Writer.applicationResponse().write(art, new File(fileName));
+
+        logger.info("MLR successfully stored as " + fileName);
     }
 }
