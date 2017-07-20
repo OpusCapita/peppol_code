@@ -52,7 +52,7 @@ public class ModuleConfigurationCheck extends Check {
                     String configurationFile = Paths.get(remoteConfigFile.getFile()).getFileName().toString();
                     receivedConfiguration.add(configurationFile);
                 }
-                oneModuleError = testConfiguration(receivedConfiguration, getExpectedConfigurationForModule(module));
+                oneModuleError = testConfiguration(receivedConfiguration, module);
                 if(oneModuleError.isPresent())
                     fullError += module.toUpperCase() + " Check failed: " + oneModuleError.get() + " ";
             }
@@ -67,11 +67,14 @@ public class ModuleConfigurationCheck extends Check {
     }
 
     //comparing expected configuration files and the actual files found on server
-    private Optional<String> testConfiguration(Set<String> configuration, List<String> expectedConfiguration) {
+    private Optional<String> testConfiguration(Set<String> configuration, String module) {
+        List<String> expectedConfiguration = getExpectedConfigurationForModule(module);
         Optional<String> error = Optional.empty();
         if (configuration.size() < expectedConfiguration.size() || !configuration.containsAll(expectedConfiguration))
             error = Optional.of("Module configuration doesn't match, expected: [" + StringJoinUtils.join(expectedConfiguration, ", ")  +
                     "] received configuration: [" + StringJoinUtils.join(configuration, ", ") + "]");
+        if(!configuration.contains(module + "-" + profile + ".yml") && !configuration.contains(module + ".yml"))
+            error = Optional.of("Mandatory configuration missing: " + module + "-" + profile + ".yml or " + module + ".yml should be present");
         return error;
     }
 
@@ -80,7 +83,7 @@ public class ModuleConfigurationCheck extends Check {
         List<String> moduleExpectedConfiguration = new ArrayList<>(genericConfiguration);
         moduleExpectedConfiguration.add("application-" + profile + ".yml");
         //moduleExpectedConfiguration.add(module + "-" + profile + ".yml");
-        moduleExpectedConfiguration.add(module + ".yml"); //Accepting second option without the profile
+        //moduleExpectedConfiguration.add(module + ".yml"); //Accepting second option without the profile
         return  moduleExpectedConfiguration;
     }
 }
