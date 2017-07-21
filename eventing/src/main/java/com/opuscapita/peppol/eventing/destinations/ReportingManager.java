@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.eventing.destinations;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,26 +30,26 @@ public class ReportingManager {
         this.eventPersistenceReporter = eventPersistenceReporter;
     }
 
-    public void report(ContainerMessage cm) {
+    public void report(ContainerMessage cm, ErrorHandler errorHandler) {
         try {
             eventPersistenceReporter.process(cm);
         } catch (Exception ex){
             logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
-            ex.printStackTrace();
+            errorHandler.reportWithContainerMessage(cm, ex, ex.getMessage());
         }
 
         try {
             webWatchDogReporterReporter.process(cm);
         } catch (Exception ex1){
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
-            ex1.printStackTrace();
+            errorHandler.reportWithContainerMessage(cm, ex1, ex1.getMessage());
         }
 
         try {
             messageLevelResponseReporter.process(cm);
         } catch (Exception ex2){
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
-            ex2.printStackTrace();
+            errorHandler.reportWithContainerMessage(cm, ex2, ex2.getMessage());
         }
     }
 }
