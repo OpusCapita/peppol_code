@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
+import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
@@ -54,9 +55,16 @@ public class MessageLevelResponseCreator {
             drt = createDocumentResponseType("RE", di.getDocumentId(), "Document parse error");
         }
 
+        drt.setLineResponse(createLineResponse(di.getErrors(), di));
+
+        result.setDocumentResponse(Collections.singletonList(drt));
+        return result;
+    }
+
+    private List<LineResponseType> createLineResponse(List<? extends DocumentError> errors, DocumentInfo di) {
         List<LineResponseType> list = new ArrayList<>();
 
-        for (DocumentError error : di.getErrors()) {
+        for (DocumentError error : errors) {
             LineResponseType lineResponse = new LineResponseType();
             ValidationError validationError = error.getValidationError();
 
@@ -74,27 +82,28 @@ public class MessageLevelResponseCreator {
 
             ResponseType response = new ResponseType();
             if (validationError != null) {
-                response.setReferenceID(validationError.getTest());
+                response.setReferenceID(validationError.getIdentifier());
                 response.setDescription(Collections.singletonList(new DescriptionType(validationError.getDetails())));
             } else {
                 response.setDescription(Collections.singletonList(new DescriptionType(error.getMessage())));
             }
 
             StatusType status = new StatusType();
-            if (validationError != null) {
-                status.setStatusReasonCode("RVF");
+            if (error instanceof DocumentWarning) {
+                status.setStatusReasonCode("RWF");
             } else {
-                status.setStatusReasonCode("SV");
+                if (validationError != null) {
+                    status.setStatusReasonCode("RVF");
+                } else {
+                    status.setStatusReasonCode("SV");
+                }
             }
             response.setStatus(Collections.singletonList(status));
             lineResponse.setResponse(Collections.singletonList(response));
             list.add(lineResponse);
         }
 
-        drt.setLineResponse(list);
-
-        result.setDocumentResponse(Collections.singletonList(drt));
-        return result;
+        return list;
     }
 
     /**
@@ -107,7 +116,13 @@ public class MessageLevelResponseCreator {
         ApplicationResponseType art = commonPart(cm);
         DocumentInfo di = cm.getDocumentInfo();
 
-        art.setDocumentResponse(Collections.singletonList(createDocumentResponseType("AP", di.getDocumentId(), null)));
+        DocumentResponseType drt = createDocumentResponseType("AP", di.getDocumentId(), null);
+        List<LineResponseType> warnings = createLineResponse(di.getWarnings(), di);
+        if (!warnings.isEmpty()) {
+            drt.setLineResponse(warnings);
+        }
+
+        art.setDocumentResponse(Collections.singletonList(drt));
 
         return art;
     }

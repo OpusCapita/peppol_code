@@ -59,7 +59,7 @@ public class MessageLevelResponseReporter {
         }
 
         // report successfull end of the flow
-        if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_FINAL) {
+        if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
             if (di.getErrors().isEmpty()) {
                 storeResponse(creator.reportSuccess(cm), cm);
             } else {

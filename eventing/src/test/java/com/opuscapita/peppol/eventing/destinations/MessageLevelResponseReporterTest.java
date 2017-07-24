@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
+import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.junit.Test;
 
 import static org.mockito.Matchers.any;
@@ -45,6 +46,7 @@ public class MessageLevelResponseReporterTest {
         cm.setProcessingInfo(pi);
 
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
+        when(creator.reportError(any())).thenReturn(new ApplicationResponseType());
 
         MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator);
         reporter.process(cm);
@@ -54,7 +56,7 @@ public class MessageLevelResponseReporterTest {
 
     @Test
     public void testProcessSuccess() throws Exception {
-        Endpoint ep = new Endpoint("xxx", ProcessType.OUT_PEPPOL_FINAL);
+        Endpoint ep = new Endpoint("xxx", ProcessType.OUT_OUTBOUND);
         ContainerMessage cm = new ContainerMessage("metadata", "test.txt", ep);
         cm.setDocumentInfo(new DocumentInfo());
         cm.getDocumentInfo().setArchetype(Archetype.EHF);
@@ -62,6 +64,7 @@ public class MessageLevelResponseReporterTest {
         cm.setProcessingInfo(pi);
 
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
+        when(creator.reportSuccess(any())).thenReturn(new ApplicationResponseType());
 
         MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator);
         reporter.process(cm);

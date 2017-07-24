@@ -92,7 +92,7 @@ public class ValidationError implements Serializable {
 
     @NotNull
     public DocumentWarning toDocumentWarning(@NotNull Endpoint source) {
-        return new DocumentWarning(source, this.toString());
+        return new DocumentWarning(source, this.toString(), this);
     }
 
     @Override
