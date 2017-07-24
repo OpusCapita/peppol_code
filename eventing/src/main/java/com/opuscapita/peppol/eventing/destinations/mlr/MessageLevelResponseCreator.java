@@ -90,7 +90,7 @@ public class MessageLevelResponseCreator {
 
             StatusType status = new StatusType();
             if (error instanceof DocumentWarning) {
-                status.setStatusReasonCode("RWF");
+                status.setStatusReasonCode("RVW");
             } else {
                 if (validationError != null) {
                     status.setStatusReasonCode("RVF");
