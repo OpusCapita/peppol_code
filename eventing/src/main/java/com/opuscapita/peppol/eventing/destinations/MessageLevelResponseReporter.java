@@ -54,27 +54,29 @@ public class MessageLevelResponseReporter {
 
         // report errors
         if (di.getArchetype() == Archetype.INVALID) {
-            storeResponse(creator.reportError(cm), cm);
+            storeResponse(creator.reportError(cm), cm, "re");
             return;
         }
 
         // report successfull end of the flow
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
             if (di.getErrors().isEmpty()) {
-                storeResponse(creator.reportSuccess(cm), cm);
+                storeResponse(creator.reportSuccess(cm), cm, "ap");
             } else {
-                storeResponse(creator.reportError(cm), cm);
+                storeResponse(creator.reportError(cm), cm, "re");
             }
         }
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void storeResponse(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm) {
+    private void storeResponse(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) {
         if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getSource().getName(), "a2a")) {
-            storeResponse(art, destinationA2A + File.separator + FilenameUtils.getBaseName(cm.getFileName()) + "-mlr.xml");
+            storeResponse(art, destinationA2A + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
+                    "-" + result + "-mlr.xml");
         }
         if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getSource().getName(), "xib")) {
-            storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) + "-mlr.xml");
+            storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
+                    "-" + result + "-mlr.xml");
         }
     }
 
