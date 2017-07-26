@@ -17,7 +17,7 @@ public class OutboundErrorHandler {
 
     void handleError(ContainerMessage cm, Exception e) throws Exception {
         cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "failed to deliver");
-        throw new Exception(e);
+        throw e;
     }
 
 }

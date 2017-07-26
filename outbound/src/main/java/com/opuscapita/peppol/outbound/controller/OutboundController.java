@@ -92,7 +92,7 @@ public class OutboundController {
             cm.getProcessingInfo().setCommonName(transmissionResponse.getCommonName() != null ? transmissionResponse.getCommonName().toString() : "N/A");
             cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol() != null ? transmissionResponse.getProtocol().toString() : "N/A");
         } catch (IOException ioe) {
-            logger.warn("Sending of the message " + cm.getFileName() + " failed with error: " + ioe.getMessage());
+            logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + ioe.getMessage());
 
             // try to retry if it is defined in route
             if (cm.getProcessingInfo().getRoute() != null) {
