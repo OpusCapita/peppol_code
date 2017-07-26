@@ -3,7 +3,6 @@ package com.opuscapita.peppol.transport.controller;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
-import com.opuscapita.peppol.commons.container.document.impl.ubl.UblDocumentType;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,7 @@ public class TransportControllerTest {
 
         DocumentInfo doc = mock(DocumentInfo.class);
         when(doc.getArchetype()).thenReturn(Archetype.PEPPOL_BIS);
-        when(doc.getDocumentType()).thenReturn(UblDocumentType.ORDER.getTag());
+        when(doc.getDocumentType()).thenReturn("Order");
         cm.setDocumentInfo(doc);
 
         TransportController controller = new TransportController() {
