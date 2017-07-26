@@ -16,10 +16,15 @@ tests:
             mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source directory: /etc/resources/events-persistence-test
+                source directory: /etc/resources/events-persistence-test/ehf.xml
                 db connection: db1
                 endpoint: events-persistence-integration-test
                 DB preprocess querry: delete from messages where invoice_number='20828'
+            mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source directory: /etc/resources/events-persistence-test/invalid.xml
+                endpoint: events-persistence-integration-test
         subscribers:
             - snc subscriber:
                 source directory: /peppol/data/snc-stub

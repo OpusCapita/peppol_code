@@ -8,6 +8,7 @@ import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
+import com.opuscapita.peppol.test.tools.integration.util.EvilContainerMessage;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
@@ -67,13 +68,9 @@ public class MqProducer implements Producer {
     public void run() {
         Connection connection = null;
         Channel channel = null;
-        File directory;
+        File folder;
         try {
-            directory = new File(sourceDirectory);
-            if (!directory.isDirectory()) {
-                logger.error(this.sourceDirectory + " doesn't exist!");
-                return;
-            }
+            folder = new File(sourceDirectory);
         } catch (Exception ex) {
             logger.error("Error reading: " + sourceDirectory, ex);
             return;
@@ -88,12 +85,13 @@ public class MqProducer implements Producer {
         }
 
         try {
-            for (File file : directory.listFiles()) {
-                if (file.isFile()) {
-                    ContainerMessage cm = createContainerMessageFromFile(file);
-                    logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue + " -> " + endpoint);
-                    mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
-                    logger.info("MqProducer: published to MQ: " + cm.getFileName());
+            if(folder.isFile() && folder.exists()) {
+                processSingleFile(folder);
+            }
+            else {
+                for (File file : folder.listFiles()) {
+                    if (file.isFile())
+                        processSingleFile(file);
                 }
             }
         } catch (Exception ex2) {
@@ -107,6 +105,13 @@ public class MqProducer implements Producer {
             } catch (Exception ignore) {
             }
         }
+    }
+
+    private void processSingleFile(File file) throws Exception {
+        ContainerMessage cm = createContainerMessageFromFile(file);
+        logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue + " -> " + endpoint);
+        mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
+        logger.info("MqProducer: published to MQ: " + cm.getFileName());
     }
 
     private void executeDbPreprocess() {
@@ -130,14 +135,24 @@ public class MqProducer implements Producer {
 
     @SuppressWarnings("ConstantConditions")
     private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
-        ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(),
-                new Endpoint("integration-tests", ProcessType.TEST))
-                .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
+        ContainerMessage cm = (file.getName().contains("invalid")) ? createInvalidContainerMessage(file) : createValidContainerMessage(file);
         cm.setStatus(new Endpoint("integration-tests", ProcessType.TEST), file.getName());
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         Route route = new Route();
         route.setEndpoints(endpoints);
         cm.getProcessingInfo().setRoute(route);
         return cm;
+    }
+
+    private ContainerMessage createValidContainerMessage(File file) throws Exception {
+        return  new ContainerMessage("integration-tests", file.getAbsolutePath(),
+                new Endpoint("integration-tests", ProcessType.TEST))
+                .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
+    }
+
+    private ContainerMessage createInvalidContainerMessage(File file) throws Exception {
+        return  new EvilContainerMessage("integration-tests", file.getAbsolutePath(),
+                new Endpoint("integration-tests", ProcessType.TEST))
+                .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
     }
 }
