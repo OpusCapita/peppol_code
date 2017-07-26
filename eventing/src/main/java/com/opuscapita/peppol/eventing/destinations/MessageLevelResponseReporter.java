@@ -62,6 +62,7 @@ public class MessageLevelResponseReporter {
         // processing exception
         if (pi.getProcessingException() != null) {
             storeResponse(creator.reportError(cm), cm, "fail");
+            return;
         }
 
         // report successfull end of the flow
