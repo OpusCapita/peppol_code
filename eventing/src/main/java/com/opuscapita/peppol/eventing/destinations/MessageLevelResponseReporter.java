@@ -46,6 +46,7 @@ public class MessageLevelResponseReporter {
     void process(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
         // nothing to do if there is no info about the file
         if (cm.getDocumentInfo() == null || cm.getProcessingInfo() == null) {
+            logger.warn("No document in received message, ignoring message");
             return;
         }
 
