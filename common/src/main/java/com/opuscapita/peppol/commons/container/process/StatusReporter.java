@@ -44,6 +44,7 @@ public class StatusReporter {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void reportError(@NotNull ContainerMessage cm, @Nullable Exception e) {
         if (cm.getProcessingInfo() == null) {
             cm.setProcessingInfo(new ProcessingInfo(
