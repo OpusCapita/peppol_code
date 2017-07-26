@@ -35,21 +35,24 @@ public class ReportingManager {
             eventPersistenceReporter.process(cm);
         } catch (Exception ex){
             logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
-            errorHandler.reportWithContainerMessage(cm, ex, ex.getMessage());
+            if(errorHandler != null)
+                errorHandler.reportWithContainerMessage(cm, ex, ex.getMessage());
         }
 
         try {
             webWatchDogReporterReporter.process(cm);
         } catch (Exception ex1){
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
-            errorHandler.reportWithContainerMessage(cm, ex1, ex1.getMessage());
+            if(errorHandler != null)
+                errorHandler.reportWithContainerMessage(cm, ex1, ex1.getMessage());
         }
 
         try {
             messageLevelResponseReporter.process(cm);
         } catch (Exception ex2){
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
-            errorHandler.reportWithContainerMessage(cm, ex2, ex2.getMessage());
+            if(errorHandler != null)
+                errorHandler.reportWithContainerMessage(cm, ex2, ex2.getMessage());
         }
     }
 }
