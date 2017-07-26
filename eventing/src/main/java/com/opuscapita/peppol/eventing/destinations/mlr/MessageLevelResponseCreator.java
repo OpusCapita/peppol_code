@@ -47,6 +47,10 @@ public class MessageLevelResponseCreator {
             throw new IllegalArgumentException("Missing processing info from the document");
         }
 
+        if (pi.getProcessingException() != null) {
+            di.getErrors().add(new DocumentError(pi.getCurrentEndpoint(), pi.getProcessingException().getMessage()));
+        }
+
         DocumentResponseType drt;
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
                 pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {

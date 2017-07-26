@@ -15,7 +15,7 @@ public class OutboundErrorHandler {
     @Value("${peppol.component.name}")
     private String componentName;
 
-    public void handleError(ContainerMessage cm, Exception e) throws Exception {
+    void handleError(ContainerMessage cm, Exception e) throws Exception {
         cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "failed to deliver");
         throw new Exception(e);
     }
