@@ -22,10 +22,10 @@ import static org.junit.Assert.assertTrue;
  * Created by bambr on 17.7.6.
  */
 @SuppressWarnings("ConstantConditions")
-public class WebWatchDogReporterReporterTest {
+public class WebWatchDogReporterTest {
     private static final String MEATDATA = "MEATDATA->TRIBUTE TO HOLY KACEN";
     private static File tmpDir;
-    private WebWatchDogReporterReporter webWatchDogReporterReporter = null;
+    private WebWatchDogReporter webWatchDogReporter = null;
     private Endpoint endpoint;
     private ProcessingInfo processingInfo;
     private ContainerMessage containerMessage;
@@ -44,7 +44,7 @@ public class WebWatchDogReporterReporterTest {
     public void setUp() throws Exception {
         WebWatchDogConfig webWatchDogConfig = new WebWatchDogConfig(tmpDir.getAbsolutePath(), "wwd");
         WebWatchDogMessenger webWatchDogMessenger = new WebWatchDogMessenger(webWatchDogConfig);
-        webWatchDogReporterReporter = new WebWatchDogReporterReporter(webWatchDogMessenger);
+        webWatchDogReporter = new WebWatchDogReporter(webWatchDogMessenger);
         endpoint = new Endpoint("test", ProcessType.OUT_OUTBOUND);
         processingInfo = new ProcessingInfo(endpoint, MEATDATA);
         processingInfo.setCurrentStatus(endpoint, "w00t");
@@ -54,7 +54,7 @@ public class WebWatchDogReporterReporterTest {
 
     @After
     public void tearDown() throws Exception {
-        webWatchDogReporterReporter = null;
+        webWatchDogReporter = null;
         endpoint = null;
         processingInfo = null;
         containerMessage = null;
@@ -67,7 +67,7 @@ public class WebWatchDogReporterReporterTest {
 
         //Creating container message, initially endpoint is having testOutboundNegative type of OUT_OUTBOUND
         containerMessage.setProcessingInfo(processingInfo);
-        webWatchDogReporterReporter.process(containerMessage);
+        webWatchDogReporter.process(containerMessage);
         //We should be having only one file
         assertEquals(1, Arrays.asList(tmpDir.listFiles()).size());
         //It should contain FAILED status
@@ -81,7 +81,7 @@ public class WebWatchDogReporterReporterTest {
         //Changing status for container message to delivered
         processingInfo.setCurrentStatus(endpoint, "delivered");
         containerMessage.setProcessingInfo(processingInfo);
-        webWatchDogReporterReporter.process(containerMessage);
+        webWatchDogReporter.process(containerMessage);
         //We should be having only one file
         assertEquals(1, Arrays.asList(tmpDir.listFiles()).size());
         //It should contain OK status
@@ -96,7 +96,7 @@ public class WebWatchDogReporterReporterTest {
         endpoint = new Endpoint("test", ProcessType.OUT_VALIDATION);
         processingInfo.setCurrentStatus(endpoint, "YOU SHALL NOT PASS!!!");
         containerMessage.setProcessingInfo(processingInfo);
-        webWatchDogReporterReporter.process(containerMessage);
+        webWatchDogReporter.process(containerMessage);
         assertEquals(1, Arrays.asList(tmpDir.listFiles()).size());
         assertTrue(FileUtils.readFileToString(tmpDir.listFiles()[0], "UTF-8").contains(WebWatchDogStatus.INVALID));
     }
@@ -109,7 +109,7 @@ public class WebWatchDogReporterReporterTest {
         endpoint = new Endpoint("test", ProcessType.OUT_VALIDATION);
         processingInfo.setCurrentStatus(endpoint, "validation passed");
         containerMessage.setProcessingInfo(processingInfo);
-        webWatchDogReporterReporter.process(containerMessage);
+        webWatchDogReporter.process(containerMessage);
         assertEquals(0, Arrays.asList(tmpDir.listFiles()).size());
     }
 
@@ -119,7 +119,7 @@ public class WebWatchDogReporterReporterTest {
         assertEquals(0, Arrays.asList(tmpDir.listFiles()).size());
         containerMessage = new ContainerMessage(MEATDATA, "not_a_logger.xml", endpoint);
         containerMessage.setProcessingInfo(processingInfo);
-        webWatchDogReporterReporter.process(containerMessage);
+        webWatchDogReporter.process(containerMessage);
         assertEquals(0, Arrays.asList(tmpDir.listFiles()).size());
     }
 

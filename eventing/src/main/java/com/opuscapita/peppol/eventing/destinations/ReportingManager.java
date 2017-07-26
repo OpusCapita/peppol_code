@@ -3,6 +3,7 @@ package com.opuscapita.peppol.eventing.destinations;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +18,20 @@ import org.springframework.stereotype.Component;
 public class ReportingManager {
     private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseReporter.class);
 
-    private WebWatchDogReporterReporter webWatchDogReporterReporter;
+    private WebWatchDogReporter webWatchDogReporter;
     private MessageLevelResponseReporter messageLevelResponseReporter;
     private EventPersistenceReporter eventPersistenceReporter;
 
     @Autowired
-    public ReportingManager(@NotNull WebWatchDogReporterReporter webWatchDogReporterReporter,
+    public ReportingManager(@NotNull WebWatchDogReporter webWatchDogReporter,
                             @NotNull MessageLevelResponseReporter messageLevelResponseReporter,
                             @NotNull EventPersistenceReporter eventPersistenceReporter) {
-        this.webWatchDogReporterReporter = webWatchDogReporterReporter;
+        this.webWatchDogReporter = webWatchDogReporter;
         this.messageLevelResponseReporter = messageLevelResponseReporter;
         this.eventPersistenceReporter = eventPersistenceReporter;
     }
 
-    public void report(ContainerMessage cm, ErrorHandler errorHandler) {
+    public void report(ContainerMessage cm, @Nullable ErrorHandler errorHandler) {
         try {
             eventPersistenceReporter.process(cm);
         } catch (Exception ex){
@@ -40,7 +41,7 @@ public class ReportingManager {
         }
 
         try {
-            webWatchDogReporterReporter.process(cm);
+            webWatchDogReporter.process(cm);
         } catch (Exception ex1){
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
             if(errorHandler != null)
