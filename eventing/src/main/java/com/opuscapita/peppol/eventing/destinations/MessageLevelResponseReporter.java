@@ -46,7 +46,7 @@ public class MessageLevelResponseReporter {
     void process(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
         // nothing to do if there is no info about the file
         if (cm.getDocumentInfo() == null || cm.getProcessingInfo() == null) {
-            logger.warn("No document in received message, ignoring message");
+            logger.info("No document in received message, ignoring message");
             return;
         }
 
@@ -55,21 +55,25 @@ public class MessageLevelResponseReporter {
 
         // report errors
         if (di.getArchetype() == Archetype.INVALID) {
+            logger.info("Creating MLR for invalid message: " + cm.getFileName());
             storeResponse(creator.reportError(cm), cm, "re");
             return;
         }
 
         // processing exception
         if (pi.getProcessingException() != null) {
-            storeResponse(creator.reportError(cm), cm, "fail");
+            logger.info("Creating MLR for message failed due to processing error: " + cm.getFileName());
+            storeResponse(creator.reportError(cm), cm, "er");
             return;
         }
 
         // report successfull end of the flow
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
             if (di.getErrors().isEmpty()) {
+                logger.info("Creating MLR for successfully sent message: " + cm.getFileName());
                 storeResponse(creator.reportSuccess(cm), cm, "ap");
             } else {
+                logger.info("Creating MLR for message with errors: " + cm.getFileName());
                 storeResponse(creator.reportError(cm), cm, "re");
             }
         }

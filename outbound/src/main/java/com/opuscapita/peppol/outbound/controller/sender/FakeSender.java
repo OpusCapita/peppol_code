@@ -27,6 +27,11 @@ public class FakeSender implements PeppolSender {
 
     @SuppressWarnings("unused")
     public TransmissionResponse send(@NotNull ContainerMessage cm) {
+        if (cm.getFileName().contains("-fail-me-")) {
+            logger.info("Rejecting message as requested by the file name");
+            throw new IllegalStateException("This sending expected to fail in test mode");
+        }
+
         logger.info("Returning fake transmission result, to enable real sending set 'peppol.outbound.sending.enabled' to true");
 
         return new TransmissionResponse() {

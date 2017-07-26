@@ -77,6 +77,10 @@ public class TestSender extends UblSender {
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 
             logger.info("Sending message " + cm.getFileName() + " to " + testRecipient);
+            if (cm.getFileName().contains("-fail-me-")) {
+                throw new IllegalStateException("This sending expected to fail in test mode");
+            }
+
             TransmissionResponse result = transmitter.transmit(transmissionRequest);
             logger.info("Delivered message " + cm.getFileName() + " to URL " + result.getURL() + " with transmission ID: " +
                     result.getTransmissionId());
