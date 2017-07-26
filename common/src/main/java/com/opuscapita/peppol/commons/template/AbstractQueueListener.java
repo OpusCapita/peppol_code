@@ -36,7 +36,7 @@ public abstract class AbstractQueueListener {
     public synchronized void receiveMessage(@NotNull ContainerMessage cm) {
         try {
             logger.debug("Message received, file id: " + (cm == null ? "UNAVAILABLE" : cm.getFileName()));
-            logger.info("Received message: " + gson.toJson(cm));
+           // logger.info("Received message: " + gson.toJson(cm));
             processMessage(cm);
             if (reporter != null) {
                 reporter.report(cm);
