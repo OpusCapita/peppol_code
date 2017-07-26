@@ -17,15 +17,15 @@ import org.springframework.stereotype.Component;
 public class ReportingManager {
     private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseReporter.class);
 
-    private WebWatchDogReporterReporter webWatchDogReporterReporter;
+    private WebWatchDogReporter webWatchDogReporter;
     private MessageLevelResponseReporter messageLevelResponseReporter;
     private EventPersistenceReporter eventPersistenceReporter;
 
     @Autowired
-    public ReportingManager(@NotNull WebWatchDogReporterReporter webWatchDogReporterReporter,
+    public ReportingManager(@NotNull WebWatchDogReporter webWatchDogReporter,
                             @NotNull MessageLevelResponseReporter messageLevelResponseReporter,
                             @NotNull EventPersistenceReporter eventPersistenceReporter) {
-        this.webWatchDogReporterReporter = webWatchDogReporterReporter;
+        this.webWatchDogReporter = webWatchDogReporter;
         this.messageLevelResponseReporter = messageLevelResponseReporter;
         this.eventPersistenceReporter = eventPersistenceReporter;
     }
@@ -40,7 +40,7 @@ public class ReportingManager {
         }
 
         try {
-            webWatchDogReporterReporter.process(cm);
+            webWatchDogReporter.process(cm);
         } catch (Exception ex1){
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
             if(errorHandler != null)

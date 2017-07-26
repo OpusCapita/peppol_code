@@ -19,12 +19,12 @@ import java.io.IOException;
  */
 @Component
 @Lazy
-public class WebWatchDogReporterReporter {
-    private final static Logger logger = LoggerFactory.getLogger(WebWatchDogReporterReporter.class);
+public class WebWatchDogReporter {
+    private final static Logger logger = LoggerFactory.getLogger(WebWatchDogReporter.class);
     private final WebWatchDogMessenger webWatchDogMessenger;
 
     @Autowired
-    public WebWatchDogReporterReporter(@NotNull WebWatchDogMessenger webWatchDogMessenger) {
+    public WebWatchDogReporter(@NotNull WebWatchDogMessenger webWatchDogMessenger) {
         this.webWatchDogMessenger = webWatchDogMessenger;
         logger.info("Initialized with WebWatchDogMessenger instance: " + webWatchDogMessenger);
     }
