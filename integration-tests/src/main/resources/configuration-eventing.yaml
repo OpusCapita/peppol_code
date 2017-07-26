@@ -1,10 +1,10 @@
 configurations:
     databases:
-        db1: jdbc:mysql://mysql.docker.local:3306/peppol?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
+        db1: jdbc:mysql://10.117.83.136:3306/peppol?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
     queues:
         mq1:
-            host: rabbitmq
-            port: 5672
+            host: localhost
+            port: 441
             username: guest
             password: guest
             virtual host: /
@@ -12,13 +12,18 @@ configurations:
 tests:
    events-persistence:
         producers:
-          mq producer:
-            mq connection: mq1
-            destination queue: eventing
-            source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test
-            db connection: db1
-            endpoint: events-persistence-integration-test
-            DB preprocess querry: delete from messages where invoice_number='92426725'; delete from access_points where ap_id='123456' and ap_name='TEST'
+          - mq producer:
+              mq connection: mq1
+              destination queue: eventing
+              source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test\ehf.xml
+              db connection: db1
+              endpoint: events-persistence-integration-test
+              DB preprocess querry: delete from messages where invoice_number='92426725'; delete from access_points where ap_id='123456' and ap_name='TEST'
+          - mq producer:
+              mq connection: mq1
+              destination queue: eventing
+              source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test\invalid.xml
+              endpoint: events-persistence-integration-test
         subscribers:
           - snc subscriber:
              source directory: C:/var/lib/peppol2.0/events-persistence/error

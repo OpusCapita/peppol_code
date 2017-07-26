@@ -13,14 +13,14 @@ configurations:
 tests:
    events-persistence:
         producers:
-            mq producer:
+            - mq producer:
                 mq connection: mq1
                 destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/ehf.xml
                 db connection: db1
                 endpoint: events-persistence-integration-test
                 DB preprocess querry: delete from messages where invoice_number='20828'
-            mq producer:
+            - mq producer:
                 mq connection: mq1
                 destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/invalid.xml
@@ -43,7 +43,7 @@ tests:
                 expected value: 1
    support-ui:
         producers:
-            file producer:
+            - file producer:
                 source directory: /etc/resources/support-ui-test/d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
                 destination directory: /peppol/data/storage/support-ui-test.xml
         subscribers:
@@ -60,19 +60,19 @@ tests:
                 expected value: true
    validation:
         producers:
-            file producer:
+            - file producer:
                 source directory: /etc/resources/validation-xml-test
                 destination directory: /peppol/data/storage/integration-test
-            mq producer:
+            - mq producer:
                 mq connection: mq1
                 source directory: /peppol/data/storage/integration-test
                 destination queue: validator
                 endpoint: validation-integration-test
-            web ui producer:
+            - web ui producer:
                 source directory: /etc/resources/validation-xml-test
                 destination link: http://validator:8080/validator/
                 result directory: validation result folder
-            rest producer:
+            - rest producer:
                 source directory: /etc/resources/validation-xml-test
                 destination link: http://validator:8080/validator/validate
                 result directory: validation result folder

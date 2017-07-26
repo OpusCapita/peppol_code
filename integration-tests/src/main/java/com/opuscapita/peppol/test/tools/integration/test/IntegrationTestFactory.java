@@ -36,8 +36,7 @@ public class IntegrationTestFactory {
             logger.error(moduleName + "config is empty !");
             return null;
         }
-        //TODO refactor
-        Map<String,?> producersConfiguration = (Map<String, ?>) moduleSettings.get("producers");
+        List<Map<String,?>> producersConfiguration = (List<Map<String, ?>>) moduleSettings.get("producers");
         List<Map<String,?>> consumersConfiguration = (List<Map<String, ?>>) moduleSettings.get("consumers");
         List<Map<String,?>> subscribersConfiguration = (List<Map<String, ?>>) moduleSettings.get("subscribers");
 
@@ -53,12 +52,16 @@ public class IntegrationTestFactory {
         return subscribersConfiguration.stream().map(subscriber -> subscriberFactory.createSubscriber(subscriber.entrySet().iterator().next(), genericConfiguration, consumers)).collect(Collectors.toList());
     }
 
-    private List<Producer> createProducers(Map<String, Object> genericConfiguration, Map<String, ?> producersConfiguration) {
-        return producersConfiguration.entrySet().stream().map(entry -> producerFactory.createProducer(entry, genericConfiguration)).collect(Collectors.toList());
+    private List<Producer> createProducers(Map<String, Object> genericConfiguration, List<Map<String,?>> producersConfiguration) {
+        List<Producer> producers = new ArrayList<>();
+        for (Map<String, ?> producerConfig : producersConfiguration) {
+            producers.add(producerFactory.createProducer(producerConfig.entrySet().iterator().next(), genericConfiguration));
+        }
+        return producers;
     }
 
     private Map<String, Consumer> createConsumers(Map<String, Object> genericConfiguration, List<Map<String,?>> consumersConfiguration){
-         Map<String, Consumer> consumers = new HashMap<>();
+        Map<String, Consumer> consumers = new HashMap<>();
         for (Map<String, ?> consumerConfig : consumersConfiguration) {
             Consumer consumer = consumerFactory.createConsumer(consumerConfig.entrySet().iterator().next(), genericConfiguration);
             consumers.put(consumer.getId(),consumer);
