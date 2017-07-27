@@ -17,9 +17,9 @@ public class Route implements Serializable {
     private static final long serialVersionUID = -9123055794300438132L;
 
     private List<String> endpoints = new ArrayList<>();
-    private String description;
-    private String mask;
-    private String source;
+    private String description = "";
+    private String mask = "";
+    private String source = "";
 
     private int current = 0;
 
