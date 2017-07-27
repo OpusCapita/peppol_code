@@ -47,7 +47,10 @@ public class MessageLevelResponseCreator {
             throw new IllegalArgumentException("Missing processing info from the document");
         }
 
+        String reason = "Document parse error";
+
         if (pi.getProcessingException() != null) {
+            reason = "Failed to send document";
             di.getErrors().add(new DocumentError(pi.getCurrentEndpoint(), pi.getProcessingException().getMessage()));
         }
 
@@ -56,7 +59,7 @@ public class MessageLevelResponseCreator {
                 pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
             drt = createDocumentResponseType("RE", di.getDocumentId(), "Validation error");
         } else {
-            drt = createDocumentResponseType("RE", di.getDocumentId(), "Document parse error");
+            drt = createDocumentResponseType("RE", di.getDocumentId(), reason);
         }
 
         drt.setLineResponse(createLineResponse(di.getErrors(), di));
