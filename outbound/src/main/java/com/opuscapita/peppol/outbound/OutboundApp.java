@@ -8,6 +8,7 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.outbound.controller.OutboundController;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -44,8 +45,10 @@ public class OutboundApp {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 controller.send(cm);
-                logger.debug("Message " + cm.getFileName() + "delivered with transaction id = " + cm.getProcessingInfo().getTransactionId());
-                cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "delivered");
+                if (StringUtils.isNotBlank(cm.getProcessingInfo().getTransactionId())) {
+                    logger.debug("Message " + cm.getFileName() + "delivered with transaction id = " + cm.getProcessingInfo().getTransactionId());
+                    cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "delivered");
+                }
             }
         };
     }
