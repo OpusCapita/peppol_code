@@ -62,6 +62,7 @@ public class MessageLevelResponseReporterTest {
         cm.getDocumentInfo().setArchetype(Archetype.EHF);
         ProcessingInfo pi = new ProcessingInfo(ep, "metadata").setCurrentStatus(ep, "ERROR");
         cm.setProcessingInfo(pi);
+        pi.setTransactionId("transaction id");
 
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
         when(creator.reportSuccess(any())).thenReturn(new ApplicationResponseType());
