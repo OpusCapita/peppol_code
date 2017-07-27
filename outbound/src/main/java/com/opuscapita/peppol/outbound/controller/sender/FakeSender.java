@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.UUID;
 
@@ -26,7 +27,11 @@ public class FakeSender implements PeppolSender {
     private static final Logger logger = LoggerFactory.getLogger(FakeSender.class);
 
     @SuppressWarnings("unused")
-    public TransmissionResponse send(@NotNull ContainerMessage cm) {
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
+        if (cm.getFileName().contains("-fail-me-io-")) {
+            logger.info("Rejecting message with I/O error as requested by the file name");
+            throw new IOException("This sending expected to fail I/O in test mode");
+        }
         if (cm.getFileName().contains("-fail-me-")) {
             logger.info("Rejecting message as requested by the file name");
             throw new IllegalStateException("This sending expected to fail in test mode");
