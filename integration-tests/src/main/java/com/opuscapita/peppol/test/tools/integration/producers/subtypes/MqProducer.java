@@ -146,7 +146,7 @@ public class MqProducer implements Producer {
 
     private ContainerMessage createValidContainerMessage(File file) throws Exception {
         return  new ContainerMessage("integration-tests", file.getAbsolutePath(),
-                new Endpoint("integration-tests", ProcessType.TEST))
+                new Endpoint("integration-tests-a2a", ProcessType.OUT_OUTBOUND))
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
     }
 

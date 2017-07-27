@@ -11,7 +11,7 @@ configurations:
             virtual host: /
     validation result folder: /etc/resources/validation-result
 tests:
-   events-persistence:
+   eventing:
         producers:
             - mq producer:
                 mq connection: mq1

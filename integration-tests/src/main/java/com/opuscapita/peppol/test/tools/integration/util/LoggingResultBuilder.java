@@ -14,16 +14,22 @@ public class LoggingResultBuilder implements ResultBuilder {
     private final static Logger logger = LogManager.getLogger(LoggingResultBuilder.class);
 
     @Override
-    public void processResult(List<TestResult> checkResults) {
+    public void processResult(List<TestResult> testResults) {
         logger.info("LoggingResultBuilder start *****************************************");
-        if(checkResults == null  || checkResults.isEmpty())
+        int success = 0, failed = 0;
+        if(testResults == null  || testResults.isEmpty())
             logger.info("LoggingResultBuilder: empty test results! ");
-        for (TestResult result : checkResults) {
-            if (!result.isPassed())
+        for (TestResult result : testResults) {
+            if (!result.isPassed()) {
                 logger.warn(result.toString());
-            else
+                failed++;
+            }
+            else {
                 logger.info(result.toString());
+                success++;
+            }
         }
+        logger.info("Total tests : " + testResults.size() + " success: " + success + " failed: " + failed);
         logger.info("LoggingResultBuilder end *****************************************");
     }
 }
