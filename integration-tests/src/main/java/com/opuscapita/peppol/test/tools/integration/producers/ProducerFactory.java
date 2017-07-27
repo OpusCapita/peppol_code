@@ -30,10 +30,16 @@ public class ProducerFactory {
             case "mq producer":
                 String mqKey = properties.get("mq connection");
                 dbKey = properties.get("db connection");
+                String sourceEndpoint = properties.get("source");
+                String processType = properties.get("endpoint type");
                 dbConnection = (dbKey == null) ? null : (String) genericConfiguration.get(dbKey);
                 String dbPreprocessQuery = (dbKey == null) ? null : properties.get("DB preprocess querry");
                 MqProducer mqProducer = new MqProducer((Map<String, String>) genericConfiguration.get(mqKey), properties.get("source directory"),
                         properties.get("destination queue"), properties.get("endpoint"), dbConnection, dbPreprocessQuery, mq);
+                if(processType != null && !processType.isEmpty())
+                    mqProducer.setProcessType(processType);
+                if(sourceEndpoint != null && !sourceEndpoint.isEmpty())
+                    mqProducer.setEndpointSourceName(sourceEndpoint);
                 beanFactory.autowireBean(mqProducer);
                 return mqProducer;
             case "rest producer":

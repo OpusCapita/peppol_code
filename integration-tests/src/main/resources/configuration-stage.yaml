@@ -11,7 +11,7 @@ configurations:
             virtual host: /
     validation result folder: /etc/resources/validation-result
 tests:
-   eventing:
+   events-persistence:
         producers:
             - mq producer:
                 mq connection: mq1
@@ -20,16 +20,7 @@ tests:
                 db connection: db1
                 endpoint: events-persistence-integration-test
                 DB preprocess querry: delete from messages where invoice_number='20828'
-            - mq producer:
-                mq connection: mq1
-                destination queue: eventing
-                source directory: /etc/resources/events-persistence-test/invalid.xml
-                endpoint: events-persistence-integration-test
         subscribers:
-            - snc subscriber:
-                source directory: /peppol/data/snc-stub
-                consumers: 7 8 9 10
-                timeout: 1500
             - db subscriber:
                 db connection: db1
                 timeout: 5000
@@ -41,6 +32,32 @@ tests:
                 name: Message persisted into DB positive test
                 connection string: db1
                 expected value: 1
+   eventing:
+        producers:
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source: integration-test-a2a
+                source directory: /etc/resources/events-persistence-test/ehf.xml
+                db connection: db1
+                endpoint: events-persistence-integration-test
+                endpoint type: outbound
+                DB preprocess querry: delete from messages where invoice_number='20828'
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source directory: /etc/resources/events-persistence-test/invalid.xml
+                endpoint: events-persistence-integration-test
+        subscribers:
+            - snc subscriber:
+                source directory: /peppol/data/snc-stub
+                consumers: 5
+                timeout: 1500
+        consumers:
+            - SNC test:
+                name: Invalida container message test
+                id: 5
+                expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
    support-ui:
         producers:
             - file producer:

@@ -10,57 +10,29 @@ configurations:
             virtual host: /
     validation result folder: etc/resources/validation-result
 tests:
-   events-persistence:
-        producers:
-          - mq producer:
-              mq connection: mq1
-              destination queue: eventing
-              source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test\ehf.xml
-              db connection: db1
-              endpoint: events-persistence-integration-test
-              DB preprocess querry: delete from messages where invoice_number='92426725'; delete from access_points where ap_id='123456' and ap_name='TEST'
-          - mq producer:
-              mq connection: mq1
-              destination queue: eventing
-              source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test\invalid.xml
-              endpoint: events-persistence-integration-test
-        subscribers:
-          - snc subscriber:
-             source directory: C:/var/lib/peppol2.0/events-persistence/error
-             consumers: 7 8
-             timeout: 1500
-          - snc subscriber:
-              source directory: C:/var/lib/peppol2.0/events-persistence/invalid
-              consumers: 9 10
-              timeout: 1500
-          - db subscriber:
-              db connection: db1
-              query: select count(*) from messages where invoice_number="92426725"
-              timeout: 1500
-              consumers: 4
-          - db subscriber:
-              db connection: db1
-              query: select count(*) from access_points where ap_id="123456" and ap_name="TEST"
-              consumers: 5
-        consumers:
-          - DB test:
-             id: 4
-             name: Message "status" can be seen in DB- positive test
-             connection string: db1
-             expected value: 1
-          - SNC test:
-             name: Invalid message error case- ticket is sent to SNC (snc stub)
-             id: 7
-             expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
-          - SNC test:
-             name: Not JSON file in input- Error case -> ticket to SNC
-             id: 8
-             expected value: nojson
-          - SNC test:
-             name: Invalid msg field lenghts and corrupted contents- negative test
-             id: 9
-             expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
-          - SNC test:
-             name: correlationID start with invoice file name for SNC tickets- positive test
-             id: 10
-             expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8
+   eventing:
+           producers:
+               - mq producer:
+                   mq connection: mq1
+                   destination queue: eventing
+                   source: integration-test-a2a
+                   source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test\ehf.xml
+                   db connection: db1
+                   endpoint: events-persistence-integration-test
+                   endpoint type: outbound
+                   DB preprocess querry: delete from messages where invoice_number='20828'
+               - mq producer:
+                   mq connection: mq1
+                   destination queue: eventing
+                   source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test\invalid.xml
+                   endpoint: events-persistence-integration-test
+           subscribers:
+               - snc subscriber:
+                   source directory: /peppol/data/snc-stub
+                   consumers: 5
+                   timeout: 1500
+           consumers:
+               - SNC test:
+                   name: Invalida container message test
+                   id: 5
+                   expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml

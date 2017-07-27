@@ -40,6 +40,8 @@ public class MqProducer implements Producer {
     private Map<String, String> mqSettings;
     private String sourceDirectory;
     private String destinationQueue;
+    private ProcessType processType = ProcessType.TEST;  //default
+    private String endpointSourceName = "integration-tests"; //default
 
     @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
@@ -136,7 +138,8 @@ public class MqProducer implements Producer {
     @SuppressWarnings("ConstantConditions")
     private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
         ContainerMessage cm = (file.getName().contains("invalid")) ? createInvalidContainerMessage(file) : createValidContainerMessage(file);
-        cm.setStatus(new Endpoint("integration-tests", ProcessType.TEST), file.getName());
+        //current endpoint
+        cm.setStatus(new Endpoint("integration-tests", processType), file.getName());
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         Route route = new Route();
         route.setEndpoints(endpoints);
@@ -145,14 +148,31 @@ public class MqProducer implements Producer {
     }
 
     private ContainerMessage createValidContainerMessage(File file) throws Exception {
-        return  new ContainerMessage("integration-tests", file.getAbsolutePath(),
-                new Endpoint("integration-tests-a2a", ProcessType.OUT_OUTBOUND))
+        Endpoint source = new Endpoint(endpointSourceName, ProcessType.TEST);
+        return  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
     }
 
     private ContainerMessage createInvalidContainerMessage(File file) throws Exception {
-        return  new EvilContainerMessage("integration-tests", file.getAbsolutePath(),
-                new Endpoint("integration-tests", ProcessType.TEST))
+        Endpoint source = new Endpoint(endpointSourceName, ProcessType.TEST);
+        return  new EvilContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
+    }
+
+    public void setProcessType(String type){
+        switch (type){
+            case "outbound":
+                processType = ProcessType.OUT_OUTBOUND;
+                return;
+            case "test":
+                processType = ProcessType.TEST;
+                return;
+            default:
+                throw new IllegalArgumentException("process type not recognized!");
+        }
+    }
+
+    public void setEndpointSourceName(String endpointSourceName) {
+        this.endpointSourceName = endpointSourceName;
     }
 }
