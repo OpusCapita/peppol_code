@@ -80,7 +80,7 @@ public class EventingApp {
                     logger.warn("No document in received message, ignoring message");
                     return;
                 }
-                reportingManager.report(cm, errorHandler);
+                reportingManager.process(cm, errorHandler);
             }
         };
     }

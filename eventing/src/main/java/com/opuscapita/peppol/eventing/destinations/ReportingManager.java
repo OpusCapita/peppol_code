@@ -31,7 +31,7 @@ public class ReportingManager {
         this.eventPersistenceReporter = eventPersistenceReporter;
     }
 
-    public void report(ContainerMessage cm, @Nullable ErrorHandler errorHandler) {
+    public void process(ContainerMessage cm, @Nullable ErrorHandler errorHandler) {
         try {
             eventPersistenceReporter.process(cm);
         } catch (Exception ex){
