@@ -121,7 +121,7 @@ public class OutboundController {
             }
         }
 
-        logger.info("No (more) retries possible reporting IO error");
+        logger.info("No (more) retries possible for " + cm.getFileName() + ", reporting IO error");
         cm.getProcessingInfo().setProcessingException(e);
         throw e;
     }

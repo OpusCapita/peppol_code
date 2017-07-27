@@ -70,8 +70,12 @@ public class MessageLevelResponseReporter {
         // report successfull end of the flow
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
             if (di.getErrors().isEmpty()) {
-                logger.info("Creating MLR for successfully sent message: " + cm.getFileName());
-                storeResponse(creator.reportSuccess(cm), cm, "ap");
+                if (StringUtils.isNotBlank(pi.getTransactionId())) {
+                    logger.info("Creating MLR for successfully sent message: " + cm.getFileName());
+                    storeResponse(creator.reportSuccess(cm), cm, "ap");
+                } else {
+                    logger.info("Skipping MLR creation for " + cm.getFileName() + ", seems to be sending retry");
+                }
             } else {
                 logger.info("Creating MLR for message with errors: " + cm.getFileName());
                 storeResponse(creator.reportError(cm), cm, "re");
