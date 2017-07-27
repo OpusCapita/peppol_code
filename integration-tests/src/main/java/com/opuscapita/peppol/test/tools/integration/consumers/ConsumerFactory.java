@@ -33,9 +33,8 @@ public class ConsumerFactory {
             case "file test":
             case "file check":
                 String fileTestName = (String) properties.get("name");
-                String directory = (String) properties.get("dir");
-                String fileTestExpression = (String) properties.get("expression");
-                return new FileConsumer(id, fileTestName, directory, fileTestExpression);
+                String expectedValue = (String) properties.get("expected value");
+                return new FileConsumer(id, fileTestName, expectedValue);
             case "web ui check":
             case "web ui test":
                 return new WebUiConsumer(id, (String) properties.get("name"), properties.get("expected value"));

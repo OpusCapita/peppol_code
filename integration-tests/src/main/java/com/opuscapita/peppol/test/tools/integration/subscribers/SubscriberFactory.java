@@ -2,10 +2,7 @@ package com.opuscapita.peppol.test.tools.integration.subscribers;
 
 import com.opuscapita.peppol.test.tools.integration.IntegrationTestApp;
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
-import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.DbSubscriber;
-import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.FileSubscriber;
-import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.MqSubscriber;
-import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.SncSubscriber;
+import com.opuscapita.peppol.test.tools.integration.subscribers.subtypes.*;
 import com.opuscapita.peppol.test.tools.integration.util.MqListener;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.LogManager;
@@ -37,6 +34,9 @@ public class SubscriberFactory {
                 break;
             case "snc subscriber":
                 subscriber = new SncSubscriber(properties.get("timeout"), properties.get("source directory"));
+                break;
+            case "mlr subscriber":
+                subscriber = new MlrSubscriber(properties.get("timeout"), properties.get("source directory"));
                 break;
             case "db subscriber":
                 String dbKey = (String) properties.get("db connection");

@@ -31,8 +31,15 @@ tests:
                    source directory: /peppol/data/snc-stub
                    consumers: 5
                    timeout: 1500
+               - mlr subscriber:
+                   consumers: 6
+                   source directory: C:\test
            consumers:
                - SNC test:
                    name: Invalid container message test
                    id: 5
                    expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
+               - file test:
+                   name: MLR accepted creation test
+                   id: 6
+                   expected value: ehf-ap-mlr.xml
