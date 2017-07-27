@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.outbound.controller.sender.FakeSender;
 import com.opuscapita.peppol.outbound.controller.sender.Svefaktura1Sender;
@@ -27,7 +29,6 @@ public class OutboundController {
 
     private final UblSender ublSender;
     private final Svefaktura1Sender svefaktura1Sender;
-    private final OutboundErrorHandler outboundErrorHandler;
     private final FakeSender fakeSender;
     private final MessageQueue messageQueue;
     private final TestSender testSender;
@@ -36,23 +37,26 @@ public class OutboundController {
     private boolean sendingEnabled;
     @Value("${peppol.outbound.test.recipient:''}")
     private String testRecipient;
+    @Value("${peppol.component.name}")
+    private String componentName;
 
     @Autowired
-    public OutboundController(@NotNull OutboundErrorHandler outboundErrorHandler, @NotNull MessageQueue messageQueue,
+    public OutboundController(@NotNull MessageQueue messageQueue,
                               @NotNull UblSender ublSender, @Nullable FakeSender fakeSender, @NotNull Svefaktura1Sender svefaktura1Sender,
                               @Nullable TestSender testSender) {
         this.ublSender = ublSender;
-        this.outboundErrorHandler = outboundErrorHandler;
         this.fakeSender = fakeSender;
         this.svefaktura1Sender = svefaktura1Sender;
         this.messageQueue = messageQueue;
         this.testSender = testSender;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void send(@NotNull ContainerMessage cm) throws Exception {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("There is no document in message: " + cm);
         }
+        Endpoint endpoint = new Endpoint(componentName, ProcessType.OUT_OUTBOUND);
 
         logger.info("Sending message " + cm.getFileName());
         TransmissionResponse transmissionResponse;
@@ -93,24 +97,33 @@ public class OutboundController {
             cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol() != null ? transmissionResponse.getProtocol().toString() : "N/A");
         } catch (IOException ioe) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + ioe.getMessage());
-
-            // try to retry if it is defined in route
-            if (cm.getProcessingInfo().getRoute() != null) {
-                String next = cm.popRoute();
-                if (StringUtils.isNotBlank(next)) {
-                    logger.info("Message " + cm.getFileName() + " queued for retry");
-                    messageQueue.convertAndSend(next, cm);
-                } else {
-                    outboundErrorHandler.handleError(cm, ioe);
-                }
-            } else {
-                outboundErrorHandler.handleError(cm, ioe);
-            }
+            whatAboutRetry(cm, messageQueue, ioe, endpoint);
         } catch (Exception e) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with error: " + e.getMessage());
-            outboundErrorHandler.handleError(cm, e);
+            cm.getProcessingInfo().setProcessingException(e);
+            cm.setStatus(endpoint, "message delivery failure");
+            throw e;
         }
 
+    }
+
+    // will try to re-send the message to the delayed queue only for I/O exceptions
+    private void whatAboutRetry(@NotNull ContainerMessage cm, @NotNull MessageQueue messageQueue,
+            @NotNull Exception e, @NotNull Endpoint endpoint) throws Exception {
+        cm.setStatus(endpoint, "message delivery failure");
+
+        if (cm.getProcessingInfo() != null && cm.getProcessingInfo().getRoute() != null) {
+            String next = cm.popRoute();
+            if (StringUtils.isNotBlank(next)) {
+                messageQueue.convertAndSend(next, cm);
+                logger.info("Message " + cm.getFileName() + " queued for retry to the queue " + next);
+                return;
+            }
+        }
+
+        logger.info("No (more) retries possible reporting IO error");
+        cm.getProcessingInfo().setProcessingException(e);
+        throw e;
     }
 
 }
