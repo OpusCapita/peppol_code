@@ -137,8 +137,14 @@ public class MqProducer implements Producer {
 
     @SuppressWarnings("ConstantConditions")
     private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
-        ContainerMessage cm = (file.getName().contains("invalid")) ? createInvalidContainerMessage(file) : createValidContainerMessage(file);
-        //current endpoint
+        return (file.getName().contains("invalid")) ? createInvalidContainerMessage(file) : createValidContainerMessage(file);
+    }
+
+    private ContainerMessage createValidContainerMessage(File file) throws Exception {
+        Endpoint source = new Endpoint(endpointSourceName, ProcessType.TEST);
+        ContainerMessage cm =  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
+                .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
+        //final endpoint
         cm.setStatus(new Endpoint("integration-tests", processType), file.getName());
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         cm.getProcessingInfo().setTransactionId("transactionId");
@@ -148,16 +154,12 @@ public class MqProducer implements Producer {
         return cm;
     }
 
-    private ContainerMessage createValidContainerMessage(File file) throws Exception {
-        Endpoint source = new Endpoint(endpointSourceName, ProcessType.TEST);
-        return  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
-                .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
-    }
-
     private ContainerMessage createInvalidContainerMessage(File file) throws Exception {
         Endpoint source = new Endpoint(endpointSourceName, ProcessType.TEST);
-        return  new EvilContainerMessage("integration-tests", file.getAbsolutePath(),source)
+        ContainerMessage cm =  new EvilContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
+
+        return cm;
     }
 
     public void setProcessType(String type){
