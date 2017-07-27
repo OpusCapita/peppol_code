@@ -141,6 +141,7 @@ public class MqProducer implements Producer {
         //current endpoint
         cm.setStatus(new Endpoint("integration-tests", processType), file.getName());
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
+        cm.getProcessingInfo().setTransactionId("transactionId");
         Route route = new Route();
         route.setEndpoints(endpoints);
         cm.getProcessingInfo().setRoute(route);

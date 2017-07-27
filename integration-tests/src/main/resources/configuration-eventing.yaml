@@ -33,6 +33,6 @@ tests:
                    timeout: 1500
            consumers:
                - SNC test:
-                   name: Invalida container message test
+                   name: Invalid container message test
                    id: 5
                    expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
