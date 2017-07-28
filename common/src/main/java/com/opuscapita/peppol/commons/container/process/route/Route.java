@@ -14,7 +14,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class Route implements Serializable {
-    private static final long serialVersionUID = -9123055794300438132L;
+    private static final long serialVersionUID = -9123055794300438133L;
 
     private List<String> endpoints = new ArrayList<>();
     private String description = "";
