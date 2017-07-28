@@ -46,6 +46,15 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
+                source: integration-test-xib
+                source directory: /etc/resources/events-persistence-test/rejected.xml
+                db connection: db1
+                endpoint: events-persistence-integration-test
+                endpoint type: outbound
+                DB preprocess querry: delete from messages where invoice_number='61016660'
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/invalid.xml
                 endpoint: events-persistence-integration-test
         subscribers:
@@ -56,11 +65,18 @@ tests:
             - mlr subscriber:
                 consumers: 6
                 source directory: /peppol/data/eventing/a2a/mlr
+            - mlr subscriber:
+                consumers: 7
+                source directory: /peppol/data/eventing/xib/mlr
         consumers:
             - file test:
-                name: MLR creation test
+                name: MLR a2a accepted creation test
                 id: 6
                 expected value: ehf-ap-mlr.xml
+            - file test:
+                name: MLR xib rejected creation test
+                id: 7
+                expected value: rejected-re-mlr.xml
    support-ui:
         producers:
             - file producer:
