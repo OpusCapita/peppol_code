@@ -55,7 +55,7 @@ tests:
                 timeout: 1500
             - mlr subscriber:
                 consumers: 6
-                source directory: /peppol-a2a-nfs/out/test/mlr
+                source directory: /peppol/data/eventing/a2a/mlr
         consumers:
             - file test:
                 name: MLR creation test
