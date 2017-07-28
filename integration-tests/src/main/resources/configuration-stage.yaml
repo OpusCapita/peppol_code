@@ -57,10 +57,6 @@ tests:
                 consumers: 6
                 source directory: /peppol-a2a-nfs/out/test/mlr
         consumers:
-            - SNC test:
-                name: Invalid container message test
-                id: 5
-                expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
             - file test:
                 name: MLR creation test
                 id: 6
