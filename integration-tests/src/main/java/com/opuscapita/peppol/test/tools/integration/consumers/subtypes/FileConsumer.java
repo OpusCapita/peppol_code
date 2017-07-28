@@ -29,8 +29,10 @@ public class FileConsumer extends Consumer {
         if(consumable == null)
             return new TestResult(name, false, "FileConsumer: Invalid consumable, null or empty!");
         File directory = (File) consumable;
-        if(!directory.isDirectory() || directory.list().length < 1)
-            return new TestResult(name, false, "FileConsumer: no files to consume in: " + directory);
+        if(!directory.isDirectory())
+            return new TestResult(name, false, "FileConsumer Directory not found " + directory);
+        if(directory.list().length < 1)
+            return new TestResult(name, false, "FileConsumer: no files to consume in " + directory);
         for (File f : directory.listFiles()){
             if (f.getName().equals(expectedValue)){
                 testResult = new TestResult(name, true, "Found expected file " + f.getAbsolutePath());
