@@ -50,8 +50,7 @@ public class MessageLevelResponseCreator {
         String reason = "Document parse error";
 
         if (pi.getProcessingException() != null) {
-            reason = "Failed to send document";
-            di.getErrors().add(new DocumentError(pi.getCurrentEndpoint(), pi.getProcessingException().getMessage()));
+            reason = pi.getProcessingException().getMessage();
         }
 
         DocumentResponseType drt;
@@ -62,7 +61,9 @@ public class MessageLevelResponseCreator {
             drt = createDocumentResponseType("RE", di.getDocumentId(), reason);
         }
 
-        drt.setLineResponse(createLineResponse(di.getErrors(), di));
+        if (!di.getErrors().isEmpty()) {
+            drt.setLineResponse(createLineResponse(di.getErrors(), di));
+        }
 
         result.setDocumentResponse(Collections.singletonList(drt));
         return result;
