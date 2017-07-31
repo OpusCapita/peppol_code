@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @SuppressWarnings("WeakerAccess")
 public class ProcessingInfo implements Serializable {
-    private static final long serialVersionUID = -556566093311452294L;
+    private static final long serialVersionUID = -556566093311452295L;
 
     private final Endpoint source;
     private String sourceMetadata;
@@ -23,7 +23,7 @@ public class ProcessingInfo implements Serializable {
     private String correlationId;
     private Endpoint currentEndpoint;
     private String currentStatus;
-    private Exception processingException;
+    private String processingException; // this is actually an exception message but called exception for historical reasons
     private String commonName;
     private String sendingProtocol;
 
@@ -74,11 +74,11 @@ public class ProcessingInfo implements Serializable {
     }
 
     @Nullable
-    public Exception getProcessingException() {
+    public String getProcessingException() {
         return processingException;
     }
 
-    public void setProcessingException(@Nullable Exception processingException) {
+    public void setProcessingException(@Nullable String processingException) {
         this.processingException = processingException;
     }
 

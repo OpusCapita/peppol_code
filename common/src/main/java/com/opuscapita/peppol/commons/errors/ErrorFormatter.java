@@ -55,14 +55,11 @@ public class ErrorFormatter {
             detailedDescription += "\nLast processing status: " + cm.getProcessingInfo().getCurrentStatus();
         }
 
-        Exception processingException = null;
+        String processingException = null;
         if (cm.getProcessingInfo() != null) {
             processingException = cm.getProcessingInfo().getProcessingException();
-            if (processingException != null) {
-                String message = exceptionMessageToString(processingException);
-                if (StringUtils.isNotBlank(message)) {
-                    detailedDescription += "\nProcessing exception message: " + message;
-                }
+            if (StringUtils.isNotBlank(processingException)) {
+                detailedDescription += "\nProcessing exception message: " + processingException;
             }
         }
 
@@ -76,9 +73,6 @@ public class ErrorFormatter {
 
         if (e != null) {
             detailedDescription += "\n\nPlatform exception: " + ExceptionUtils.getStackTrace(e) + "\n";
-        }
-        if (processingException != null) {
-            detailedDescription += "\n\nProcessing exception: " + ExceptionUtils.getStackTrace(processingException);
         }
 
         return detailedDescription;
