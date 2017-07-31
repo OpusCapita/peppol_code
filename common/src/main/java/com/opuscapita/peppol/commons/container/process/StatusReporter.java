@@ -53,6 +53,8 @@ public class StatusReporter {
         cm.getProcessingInfo().setProcessingException(e);
         try {
             rabbitTemplate.convertAndSend(reportDestination, cm);
+            logger.info("Error message about " + cm.getFileName() + " send to " + reportDestination +
+                    ", endpoint: " + cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
         } catch (Exception exception) {
             failedToProcess(cm, e, "Failed to report service error");
         }
