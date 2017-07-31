@@ -44,6 +44,8 @@ public class MessageLevelResponseReporter {
 
     // only messages about errors and successfull delivery must get through
     void process(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
+        logger.info("Message content: " + cm.convertToJson());
+
         // nothing to do if there is no info about the file
         if (cm.getDocumentInfo() == null || cm.getProcessingInfo() == null) {
             logger.info("No document in received message, ignoring message");
