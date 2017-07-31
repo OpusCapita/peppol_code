@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.internal_routing.controller;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ public class RoutingConfigurationTest {
     private RoutingConfiguration routingConfiguration;
 
     @Test
-    @Ignore
     public void testLoader() {
         assertNotNull(routingConfiguration);
         assertEquals(4, routingConfiguration.getRoutes().size());

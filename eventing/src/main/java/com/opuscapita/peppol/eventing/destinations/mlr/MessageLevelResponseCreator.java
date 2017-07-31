@@ -14,6 +14,8 @@ import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.XPathTy
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +34,7 @@ import java.util.List;
 @Component
 @Lazy
 public class MessageLevelResponseCreator {
+    private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseCreator.class);
 
     /**
      * Creates MLR file about an error.
@@ -49,11 +52,11 @@ public class MessageLevelResponseCreator {
 
         String reason = "Document parse error";
 
+        DocumentResponseType drt;
         if (pi.getProcessingException() != null) {
             reason = pi.getProcessingException().getMessage();
         }
 
-        DocumentResponseType drt;
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
                 pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
             drt = createDocumentResponseType("RE", di.getDocumentId(), "Validation error");
