@@ -28,12 +28,12 @@ public class FileConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        TestResult testResult = null;
         if(consumable == null)
             return new TestResult(name, false, "FileConsumer: Invalid consumable, null or empty!");
         File directory = (File) consumable;
         if(!directory.isDirectory())
             return new TestResult(name, false, "FileConsumer: Directory not found " + directory);
+        TestResult testResult = new TestResult(name, false, "FileConsumer: expected file: " + expectedValue + " not found in: " + directory);
         if(directory.list().length < 1){
             logger.warn("FileConsumer: no files to consume in " + directory + " retry in: " + DELAY);
             try {
@@ -44,12 +44,12 @@ public class FileConsumer extends Consumer {
         }
         if(directory.list().length < 1) {
             logger.warn("FileConsumer: still no files to consume in " + directory);
-            return new TestResult(name, false, "FileConsumer: no files to consume in " + directory);
+            return testResult;
         }
         for (File f : directory.listFiles()){
             if (f.getName().equals(expectedValue)){
-                testResult = new TestResult(name, true, "Found expected file " + f.getAbsolutePath());
                 f.delete();
+                return new TestResult(name, true, "Found expected file " + f.getAbsolutePath());
             }
         }
         return testResult;

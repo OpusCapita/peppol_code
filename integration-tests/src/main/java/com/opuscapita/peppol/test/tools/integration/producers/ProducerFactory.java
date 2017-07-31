@@ -39,7 +39,7 @@ public class ProducerFactory {
                 if(processType != null && !processType.isEmpty())
                     mqProducer.setProcessType(processType);
                 if(sourceEndpoint != null && !sourceEndpoint.isEmpty())
-                    mqProducer.setEndpointSourceName(sourceEndpoint);
+                    mqProducer.setSourceEndpoint(sourceEndpoint);
                 beanFactory.autowireBean(mqProducer);
                 return mqProducer;
             case "rest producer":
