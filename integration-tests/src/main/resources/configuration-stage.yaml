@@ -57,6 +57,13 @@ tests:
                 destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/invalid.xml
                 endpoint: events-persistence-integration-test
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source: integration-test-xib
+                source directory: /etc/resources/events-persistence-test/logger_xib_test.xml
+                endpoint type: outbound
+                endpoint: events-persistence-integration-test
         subscribers:
             - snc subscriber:
                 source directory: /peppol/data/snc-stub

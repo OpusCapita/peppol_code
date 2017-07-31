@@ -41,7 +41,7 @@ public class MqProducer implements Producer {
     private String sourceDirectory;
     private String destinationQueue;
     private ProcessType processType = ProcessType.TEST;  //default
-    private String endpointSourceName = "integration-tests"; //default
+    private String sourceEndpoint = "integration-tests"; //default
 
     @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
@@ -141,11 +141,11 @@ public class MqProducer implements Producer {
     }
 
     private ContainerMessage createValidContainerMessage(File file) throws Exception {
-        Endpoint source = new Endpoint(endpointSourceName, ProcessType.TEST);
+        Endpoint source = new Endpoint(sourceEndpoint, ProcessType.TEST);
         ContainerMessage cm =  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
         //final endpoint
-        cm.setStatus(new Endpoint("integration-tests", processType), file.getName());
+        cm.setStatus(new Endpoint("delivered", processType), file.getName());
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         cm.getProcessingInfo().setTransactionId("transactionId");
         Route route = new Route();
@@ -155,7 +155,7 @@ public class MqProducer implements Producer {
     }
 
     private ContainerMessage createInvalidContainerMessage(File file) throws Exception {
-        Endpoint source = new Endpoint(endpointSourceName, ProcessType.TEST);
+        Endpoint source = new Endpoint(sourceEndpoint, ProcessType.TEST);
         ContainerMessage cm =  new EvilContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
 
@@ -175,7 +175,7 @@ public class MqProducer implements Producer {
         }
     }
 
-    public void setEndpointSourceName(String endpointSourceName) {
-        this.endpointSourceName = endpointSourceName;
+    public void setSourceEndpoint(String sourceEndpoint) {
+        this.sourceEndpoint = sourceEndpoint;
     }
 }

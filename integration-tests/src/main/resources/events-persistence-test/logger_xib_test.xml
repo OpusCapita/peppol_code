@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?><StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"><StandardBusinessDocumentHeader><HeaderVersion>1.0</HeaderVersion><Sender><Identifier Authority="iso6523-actorid-upis">0007:SE556841755301</Identifier></Sender><Receiver><Identifier Authority="iso6523-actorid-upis">0088:7381036454481</Identifier></Receiver><DocumentIdentification><Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard><TypeVersion>2.1</TypeVersion><InstanceIdentifier>82498ad8-1_D2637C6C</InstanceIdentifier><Type>Invoice</Type><CreationDateAndTime>2016-09-27T10:49:53.807Z</CreationDateAndTime></DocumentIdentification><BusinessScope><Scope><Type>DOCUMENTID</Type><InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1</InstanceIdentifier></Scope><Scope><Type>PROCESSID</Type><InstanceIdentifier>urn:www.cenbii.eu:profile:bii04:ver2.0</InstanceIdentifier></Scope></BusinessScope></StandardBusinessDocumentHeader><Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:oasis:names:specification:ubl:schema:xsd:CoreComponentParameters-2" xmlns:sdt="urn:oasis:names:specification:ubl:schema:xsd:SpecializedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver2.0</cbc:ProfileID>
+  <cbc:ID>0518003193</cbc:ID>
+  <cbc:IssueDate>2016-09-27</cbc:IssueDate>
+  <cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode listID="ISO4217">SEK</cbc:DocumentCurrencyCode>
+  <cac:OrderReference>
+    <cbc:ID>Fax 27.09.16, Karolina</cbc:ID>
+  </cac:OrderReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>0011934372</cbc:ID>
+    <cbc:DocumentType>Suppliers order number</cbc:DocumentType>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeAgencyID="9" schemeID="SE:ORGNR">SE556841755301</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="SE:ORGNR">SE556841755301</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>BIOTRONIK AB</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>c/o CorpNordic Sweden, Box 162</cbc:StreetName>
+        <cbc:CityName>Stockholm</cbc:CityName>
+        <cbc:PostalZone>10325</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2">SE</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID schemeID="SE:ORGNR">SE556841755301</cbc:CompanyID>
+        <cbc:ExemptionReason>Godkänd för F-skatt</cbc:ExemptionReason>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>BIOTRONIK AB</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="SE:ORGNR">SE556841755301</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ID>MOSBAEK</cbc:ID>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeAgencyID="9" schemeID="GLN">7381036454481</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>Södersjukhuset, Redovisningssektionen</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>
+        </cbc:StreetName>
+        <cbc:CityName>Stockholm</cbc:CityName>
+        <cbc:PostalZone>11883</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2">SE</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID schemeID="SE:ORGNR">SE556595740301</cbc:CompanyID>
+        <cbc:ExemptionReason>Godkänd för F-skatt</cbc:ExemptionReason>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Södersjukhuset</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="SE:ORGNR">SE556595740301</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ID>N/A</cbc:ID>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cbc:ActualDeliveryDate>2016-09-27</cbc:ActualDeliveryDate>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:StreetName>Jägergatan 33</cbc:StreetName>
+        <cbc:AdditionalStreetName>Coronarintervention PCI - VO Kardiologi</cbc:AdditionalStreetName>
+        <cbc:CityName>Stockholm</cbc:CityName>
+        <cbc:PostalZone>11867</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2">SE</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+  </cac:Delivery>
+  <cac:PaymentMeans>
+    <cbc:ID>1</cbc:ID>
+    <cbc:PaymentMeansCode listID="UNCL4461">1</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2016-10-27</cbc:PaymentDueDate>
+    <cbc:PaymentChannelCode>ZZZ</cbc:PaymentChannelCode>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID schemeID="IBAN">749-6672</cbc:ID>
+      <cac:FinancialInstitutionBranch>
+        <cac:FinancialInstitution>
+          <cbc:ID schemeID="BIC">SWEDSESS</cbc:ID>
+          <cbc:Name>Swedbank</cbc:Name>
+        </cac:FinancialInstitution>
+      </cac:FinancialInstitutionBranch>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:ID>1</cbc:ID>
+    <cbc:PaymentMeansID>1</cbc:PaymentMeansID>
+    <cbc:Note>30 days due net</cbc:Note>
+    <cbc:Amount currencyID="SEK">15877.50</cbc:Amount>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="SEK">3175.50</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="SEK">12702.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="SEK">3175.50</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.00</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="SEK">12702.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="SEK">12702.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="SEK">15877.50</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="SEK">15877.50</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>000010</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">3.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">1407.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">351.75</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 3.5/12</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367008</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415669</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">469</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000011</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.00</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">0.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">0.00</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 3.5/12</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367008</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415669</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">0.00</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.00</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000012</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.00</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">0.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">0.00</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 3.5/12</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367008</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415669</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">0.00</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.00</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000020</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">1520.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">380.00</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Orsiro 2.5/15</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000364482</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130411470</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">1520</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000030</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">469.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">117.25</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 2.25/30</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367036</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415942</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">469</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000040</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">469.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">117.25</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 3.0/20</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367028</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415867</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">469</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000050</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">469.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">117.25</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 3.0/12</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367006</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415645</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">469</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000060</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">1520.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">380.00</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Orsiro 3.0/30</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000364514</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130411791</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">1520</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000070</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">1932.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">483.00</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Orsiro 2.25/40</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000391238</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130436879</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">1932</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000080</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">2.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">938.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">234.50</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 2.5/20</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367026</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415843</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">469</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000090</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">469.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">117.25</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 3.5/15</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367019</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415775</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">469</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000100</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">1520.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">380.00</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Orsiro 2.5/26</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000364506</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130411715</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">1520</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000110</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">1520.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">380.00</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Orsiro 3.5/18</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000364491</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130411562</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">1520</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>000120</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="SEK">469.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="SEK">117.25</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>Pantera LEO 4.0/20</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID schemeID="N/A">000000000000367032</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:StandardItemIdentification>
+        <cbc:ID schemeID="N/A">07640130415904</cbc:ID>
+      </cac:StandardItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+        <cbc:Percent>25.000</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="SEK">469</cbc:PriceAmount>
+      <cbc:BaseQuantity unitCode="EA" unitCodeListID="UNECERec20">1.0000</cbc:BaseQuantity>
+      <cbc:OrderableUnitFactorRate>1.00</cbc:OrderableUnitFactorRate>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice></StandardBusinessDocument>
