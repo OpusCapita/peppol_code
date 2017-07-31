@@ -31,7 +31,13 @@ public class ReportingManager {
         this.eventPersistenceReporter = eventPersistenceReporter;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void process(ContainerMessage cm, @Nullable ErrorHandler errorHandler) {
+        try {
+            logger.info("Received message about " + cm.getFileName() + ", current endpoint: " +
+                    cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
+        } catch (Exception ignored) {}
+
         try {
             eventPersistenceReporter.process(cm);
         } catch (Exception ex){
