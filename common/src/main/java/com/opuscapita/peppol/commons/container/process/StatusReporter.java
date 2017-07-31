@@ -52,10 +52,12 @@ public class StatusReporter {
         }
         cm.getProcessingInfo().setProcessingException(e);
         try {
+            logger.info("Sending updated container message to " + reportDestination);
             rabbitTemplate.convertAndSend(reportDestination, cm);
             logger.info("Error message about " + cm.getFileName() + " send to " + reportDestination +
                     ", endpoint: " + cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
         } catch (Exception exception) {
+            logger.error("Failed to report error: " + e.getMessage(), e);
             failedToProcess(cm, e, "Failed to report service error");
         }
     }
