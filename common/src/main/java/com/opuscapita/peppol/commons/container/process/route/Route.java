@@ -14,12 +14,12 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class Route implements Serializable {
-    private static final long serialVersionUID = -9123055794300438133L;
+    private static final long serialVersionUID = -9123055794300438134L;
 
     private List<String> endpoints = new ArrayList<>();
-    private String description = "";
-    private String mask = "";
-    private String source = "";
+    private String description;
+    private String mask;
+    private String source;
 
     private int current = 0;
 
