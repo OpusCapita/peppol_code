@@ -57,7 +57,7 @@ public class StatusReporter {
             logger.info("Error message about " + cm.getFileName() + " send to " + reportDestination +
                     ", endpoint: " + cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
         } catch (Exception exception) {
-            logger.error("Failed to report error: " + e.getMessage(), e);
+            logger.error("Failed to report error: " + exception.getMessage(), exception);
             failedToProcess(cm, e, "Failed to report service error");
         }
     }
