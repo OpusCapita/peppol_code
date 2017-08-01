@@ -13,11 +13,15 @@ import java.util.Optional;
 public class RequestUtils {
     private final static Logger logger = LoggerFactory.getLogger(RequestUtils.class);
 
-    public static String extractRequestedService(HttpServletRequest request) {
+    public static String extractRequestedService(HttpServletRequest request, String zuulServletPath) {
         logger.debug("Extracting service from: " + request.getRequestURI());
         logger.debug("Context path: " + request.getContextPath());
         logger.debug("Query string: " + request.getQueryString());
-        String[] requestParts = request.getRequestURI().split("/");
+        String requestUri = request.getRequestURI();
+        if (zuulServletPath != null) {
+            requestUri = requestUri.replaceFirst(zuulServletPath, "");
+        }
+        String[] requestParts = requestUri.split("/");
         if (requestParts.length > 1) {
             Optional<String> first = Arrays.asList(requestParts).stream().filter(part -> !part.isEmpty()).findFirst();
             if (first.isPresent()) {

@@ -18,9 +18,11 @@ public class AccessCheckFilter extends ZuulFilter {
     private final static Logger logger = LoggerFactory.getLogger(AccessCheckFilter.class);
     private static final String HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
     private final AccessFilterProperties accessFilterProperties;
+    private final String zuulServletPath;
 
-    public AccessCheckFilter(AccessFilterProperties accessFilterProperties) {
+    public AccessCheckFilter(AccessFilterProperties accessFilterProperties, String zuulServletPath) {
         this.accessFilterProperties = accessFilterProperties;
+        this.zuulServletPath = zuulServletPath;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class AccessCheckFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest request = requestContext.getRequest();
-        String requestedService = RequestUtils.extractRequestedService(request);
+        String requestedService = RequestUtils.extractRequestedService(request, zuulServletPath);
         boolean result = !accessFilterProperties.getServicesToBypass().contains(requestedService);
         logger.debug("Should filter for service ["+requestedService+"]: "+result);
         return result;
@@ -59,7 +61,7 @@ public class AccessCheckFilter extends ZuulFilter {
     }
 
     protected boolean isNotAllowed(HttpServletRequest request) {
-        String requestedService = RequestUtils.extractRequestedService(request);
+        String requestedService = RequestUtils.extractRequestedService(request, zuulServletPath);
         String remoteAddr = request.getRemoteAddr();
         logger.debug("remoteAddr: " + remoteAddr);
 
