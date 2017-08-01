@@ -40,7 +40,7 @@ public class ReportingManager {
 
         try {
             eventPersistenceReporter.process(cm);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
             if (errorHandler != null) {
                 errorHandler.reportWithContainerMessage(cm, ex, ex.getMessage());
@@ -49,7 +49,7 @@ public class ReportingManager {
 
         try {
             webWatchDogReporter.process(cm);
-        } catch (Exception ex1){
+        } catch (Exception ex1) {
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
             if (errorHandler != null) {
                 errorHandler.reportWithContainerMessage(cm, ex1, ex1.getMessage());
@@ -58,7 +58,7 @@ public class ReportingManager {
 
         try {
             messageLevelResponseReporter.process(cm);
-        } catch (Exception ex2){
+        } catch (Exception ex2) {
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
             if (errorHandler != null) {
                 errorHandler.reportWithContainerMessage(cm, ex2, ex2.getMessage());

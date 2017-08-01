@@ -100,7 +100,7 @@ public class OutboundController {
             whatAboutRetry(cm, messageQueue, ioe, endpoint);
         } catch (Exception e) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with error: " + e.getMessage());
-            cm.getProcessingInfo().setProcessingException(e);
+            cm.getProcessingInfo().setProcessingException(e.getMessage());
             cm.setStatus(endpoint, "message delivery failure");
             throw e;
         }
@@ -122,7 +122,7 @@ public class OutboundController {
         }
 
         logger.info("No (more) retries possible for " + cm.getFileName() + ", reporting IO error");
-        cm.getProcessingInfo().setProcessingException(e);
+        cm.getProcessingInfo().setProcessingException(e.getMessage());
         throw e;
     }
 

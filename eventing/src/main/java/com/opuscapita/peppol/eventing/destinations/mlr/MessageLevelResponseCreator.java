@@ -53,8 +53,8 @@ public class MessageLevelResponseCreator {
         String reason = "Document parse error";
 
         DocumentResponseType drt;
-        if (pi.getProcessingException() != null) {
-            reason = pi.getProcessingException().getMessage();
+        if (StringUtils.isNotBlank(pi.getProcessingException())) {
+            reason = pi.getProcessingException();
         }
 
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||

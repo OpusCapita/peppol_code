@@ -50,10 +50,13 @@ public class StatusReporter {
             cm.setProcessingInfo(new ProcessingInfo(
                     new Endpoint("status_reporter", ProcessType.UNKNOWN), "Process info missing in Container Message"));
         }
-        cm.getProcessingInfo().setProcessingException(e);
+        cm.getProcessingInfo().setProcessingException(e.getMessage());
         try {
             rabbitTemplate.convertAndSend(reportDestination, cm);
+            logger.info("Error message about " + cm.getFileName() + " send to " + reportDestination +
+                    ", endpoint: " + cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
         } catch (Exception exception) {
+            logger.error("Failed to report error: " + exception.getMessage(), exception);
             failedToProcess(cm, e, "Failed to report service error");
         }
     }

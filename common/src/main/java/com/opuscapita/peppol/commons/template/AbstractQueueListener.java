@@ -82,14 +82,14 @@ public abstract class AbstractQueueListener {
             }
             String fileName = (cm == null ? "n/a" : cm.getFileName());
 
-            logger.warn("Message processing failed. File id: " + fileName + ", " + (StringUtils.isBlank(customerId) ? "" : customerId), e);
+            logger.warn("Message processing failed. File id: " + fileName + ", " + (StringUtils.isBlank(customerId) ? "" : customerId));
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
 
         if (reporter != null) {
             if (cm != null) {
-                logger.info("Reporting error to the eventing");
+                logger.info("Reporting error about " + cm.getFileName() + " to the eventing");
                 reporter.reportError(cm, e);
             } else {
                 logger.warn("No container message present, cannot report to eventing");

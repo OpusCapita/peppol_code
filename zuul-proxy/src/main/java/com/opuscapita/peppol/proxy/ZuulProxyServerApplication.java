@@ -5,6 +5,7 @@ import com.opuscapita.peppol.proxy.filters.pre.AccessFilterProperties;
 import com.opuscapita.peppol.proxy.filters.pre.PreserveHeaderFilterProperties;
 import com.opuscapita.peppol.proxy.filters.pre.PreserveHeadersFilter;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
@@ -25,14 +26,14 @@ public class ZuulProxyServerApplication {
     }
 
     @Bean
-    public AccessCheckFilter customFilter(AccessFilterProperties accessFilterProperties) {
-        return new AccessCheckFilter(accessFilterProperties);
+    public AccessCheckFilter customFilter(AccessFilterProperties accessFilterProperties, @Value("{zuul.servletPath}") String zuulServletPath) {
+        return new AccessCheckFilter(accessFilterProperties, zuulServletPath);
     }
 
-	@Bean
-	public PreserveHeadersFilter preserveHostHeader(PreserveHeaderFilterProperties preserveHeaderFilterProperties) {
-	  return new PreserveHeadersFilter(preserveHeaderFilterProperties);
-	}
+    @Bean
+    public PreserveHeadersFilter preserveHostHeader(PreserveHeaderFilterProperties preserveHeaderFilterProperties, @Value("{zuul.servletPath}") String zuulServletPath) {
+        return new PreserveHeadersFilter(preserveHeaderFilterProperties, zuulServletPath);
+    }
 
     @Bean
     public TomcatEmbeddedServletContainerFactory containerFactory() {

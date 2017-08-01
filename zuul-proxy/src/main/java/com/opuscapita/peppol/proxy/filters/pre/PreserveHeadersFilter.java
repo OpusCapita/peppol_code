@@ -21,9 +21,11 @@ public class PreserveHeadersFilter extends ZuulFilter {
     public static final String REQUEST_SERVICE = "Service";
     public static final Logger logger = LoggerFactory.getLogger(PreserveHeadersFilter.class);
     private final PreserveHeaderFilterProperties preserveHeaderFilterProperties;
+    private final String zuulServletPath;
 
-    public PreserveHeadersFilter(PreserveHeaderFilterProperties preserveHeaderFilterProperties) {
+    public PreserveHeadersFilter(PreserveHeaderFilterProperties preserveHeaderFilterProperties, String zuulServletPath) {
         this.preserveHeaderFilterProperties = preserveHeaderFilterProperties;
+        this.zuulServletPath = zuulServletPath;
     }
 
     public String filterType() {
@@ -56,7 +58,7 @@ public class PreserveHeadersFilter extends ZuulFilter {
         });
         /*String host = ctx.getRequest().getHeaders(HEADER_HOST).nextElement();
         ctx.getZuulRequestHeaders().put(HEADER_HOST, host);*/
-        ctx.getZuulRequestHeaders().put(REQUEST_SERVICE, RequestUtils.extractRequestedService(ctx.getRequest()));
+        ctx.getZuulRequestHeaders().put(REQUEST_SERVICE, RequestUtils.extractRequestedService(ctx.getRequest(), zuulServletPath));
         return null;
     }
 

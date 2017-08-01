@@ -77,7 +77,7 @@ public class EventingApp {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 if (cm == null || cm.getDocumentInfo() == null) {
-                    logger.warn("No document in received message, ignoring message");
+                    logger.info("No document in received message, ignoring message");
                     return;
                 }
                 reportingManager.process(cm, errorHandler);
