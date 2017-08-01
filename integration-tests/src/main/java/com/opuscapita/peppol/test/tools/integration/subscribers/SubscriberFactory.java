@@ -35,8 +35,8 @@ public class SubscriberFactory {
             case "snc subscriber":
                 subscriber = new SncSubscriber(properties.get("timeout"), properties.get("source directory"));
                 break;
-            case "mlr subscriber":
-                subscriber = new MlrSubscriber(properties.get("timeout"), properties.get("source directory"));
+            case "directory subscriber":
+                subscriber = new DirectorySubscriber(properties.get("timeout"), properties.get("source directory"));
                 break;
             case "db subscriber":
                 String dbKey = (String) properties.get("db connection");

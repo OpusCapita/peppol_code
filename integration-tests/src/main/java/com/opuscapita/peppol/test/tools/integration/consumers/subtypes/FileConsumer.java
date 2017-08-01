@@ -11,9 +11,11 @@ import java.io.File;
  */
 public class FileConsumer extends Consumer {
     private final static org.apache.log4j.Logger logger = LogManager.getLogger(FileConsumer.class);
-    private final String name;
-    private final String expectedValue;
-    private final static int DELAY = 6000;
+    protected final String name;
+    protected final String expectedValue;
+    protected final static int DELAY = 6000;
+    protected File file;
+    protected TestResult result;
 
     public FileConsumer(String id, String name, String expectedValue) {
         super(id);
@@ -28,25 +30,44 @@ public class FileConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        if(consumable == null)
-            return new TestResult(name, false, "FileConsumer: Invalid consumable, null or empty!");
+        init(consumable);
+
+        if(!file.exists())
+            waitFixedDealy();
+
+        if(file.exists()) {
+            clean();
+            return new TestResult(name, true, "Found expected file " + file.getAbsolutePath());
+        }
+        return result;
+    }
+
+    protected void init(Object consumable) {
+        if(consumable == null) {
+            result = new TestResult(name, false, "FileConsumer: Invalid consumable, null or empty!");
+            return;
+        }
+
         File directory = (File) consumable;
-        if(!directory.isDirectory())
-            return new TestResult(name, false, "FileConsumer: Directory not found " + directory);
-        TestResult testResult = new TestResult(name, false, "FileConsumer: expected file: " + expectedValue + " not found in: " + directory);
-        File f = new File(directory,expectedValue);
-        if(!f.exists()){
-            logger.warn("FileConsumer: no files to consume in " + directory + " retry in: " + DELAY);
-            try {
-                Thread.sleep(DELAY);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        if(!directory.isDirectory()) {
+            result = new TestResult(name, false, "FileConsumer: Directory not found " + directory);
+            return;
         }
-        if(f.exists()) {
-            f.delete();
-            return new TestResult(name, true, "Found expected file " + f.getAbsolutePath());
+
+        result = new TestResult(name, false, "FileConsumer: expected file: " + expectedValue + " not found in: " + directory);
+        file = new File(directory,expectedValue);
+    }
+
+    protected boolean clean(){
+        return file.delete();
+    }
+
+    protected void waitFixedDealy() {
+        logger.warn("WebWatchDogConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+        try {
+            Thread.sleep(DELAY);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        return testResult;
     }
 }
