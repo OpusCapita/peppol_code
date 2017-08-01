@@ -35,6 +35,10 @@ public class ConsumerFactory {
                 String fileTestName = (String) properties.get("name");
                 String expectedValue = (String) properties.get("expected value");
                 return new FileConsumer(id, fileTestName, expectedValue);
+            case "wwd test":
+                String wwdFileTestName = (String) properties.get("name");
+                String wwdExpectedValue = (String) properties.get("expected value");
+                return new WebWatchDogConsumer(id, wwdFileTestName, wwdExpectedValue);
             case "web ui check":
             case "web ui test":
                 return new WebUiConsumer(id, (String) properties.get("name"), properties.get("expected value"));

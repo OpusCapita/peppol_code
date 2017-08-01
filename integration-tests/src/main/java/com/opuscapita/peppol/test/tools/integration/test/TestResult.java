@@ -20,6 +20,10 @@ public class TestResult {
         this.details = details;
     }
 
+    public TestResult(String name, boolean passed, Exception e) {
+        this(name,passed,e.getMessage());
+    }
+
     public String getName() {
         return name;
     }

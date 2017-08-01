@@ -38,8 +38,11 @@ tests:
                    source directory: /peppol/data/snc-stub
                    consumers: 5
                    timeout: 1500
-               - mlr subscriber:
+               - directory subscriber:
                    consumers: 6
+                   source directory: C:\test
+               - directory subscriber:
+                   consumers: 8
                    source directory: C:\test
            consumers:
                - SNC test:
@@ -50,3 +53,7 @@ tests:
                    name: MLR accepted creation test
                    id: 6
                    expected value: ehf-ap-mlr.xml
+               - wwd test:
+                   name: Web Watch Dog successful report test
+                   id: 8
+                   expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_xib_test
