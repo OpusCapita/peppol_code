@@ -75,6 +75,9 @@ tests:
             - directory subscriber:
                 consumers: 7
                 source directory: /peppol/data/eventing/xib/mlr
+            - directory subscriber:
+                consumers: 8
+                source directory: /peppol/data/eventing/xib/wwd
         consumers:
             - file test:
                 name: MLR a2a accepted creation test
