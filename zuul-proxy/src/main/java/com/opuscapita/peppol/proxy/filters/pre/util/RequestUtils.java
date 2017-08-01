@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Created by bambr on 17.20.1.
@@ -19,7 +20,7 @@ public class RequestUtils {
         logger.debug("Query string: " + request.getQueryString());
         String requestUri = request.getRequestURI();
         if (zuulServletPath != null) {
-            requestUri = requestUri.replaceFirst(zuulServletPath, "");
+            requestUri = requestUri.replaceFirst(Pattern.quote(zuulServletPath), "");
         }
         String[] requestParts = requestUri.split("/");
         if (requestParts.length > 1) {
