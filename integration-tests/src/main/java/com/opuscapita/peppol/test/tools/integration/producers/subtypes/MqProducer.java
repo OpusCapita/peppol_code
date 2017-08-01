@@ -145,7 +145,7 @@ public class MqProducer implements Producer {
         ContainerMessage cm =  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
         //final endpoint
-        cm.setStatus(new Endpoint("delivered", processType), file.getName());
+        cm.setStatus(new Endpoint("integration-tests", processType), "delivered");
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         cm.getProcessingInfo().setTransactionId("transactionId");
         Route route = new Route();

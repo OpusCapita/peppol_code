@@ -28,14 +28,21 @@ public class WebWatchDogConsumer extends FileConsumer{
         if(file.exists()) {
             try {
                 String[] result = Files.readLines(file, Charsets.UTF_8).get(0).split(";");
-                if(result.length < 3)
+                if(result.length < 3) {
+                    clean();
                     return new TestResult(name, false, "content length read from WWD report file doesn't match! " + file.getName() + " " + result);
-                if(!result[0].contains(expectedValue.replaceAll(PREFIX,"")))
-                    return new TestResult(name, false, expectedValue.replaceAll(PREFIX,"") + " not found in WWD report file: " + file.getName() + " " + result);
-                if(!result[1].toUpperCase().equals("OK"))
-                    return new TestResult(name, false, "OK not found in WWD report file: " + file.getName() + " " + result);
+                }
+                if(!result[0].contains(expectedValue.replaceAll(PREFIX,""))) {
+                    clean();
+                    return new TestResult(name, false, expectedValue.replaceAll(PREFIX, "") + " not found in WWD report file: " + file.getName() + " " + result[0]);
+                }
+                if(!result[1].toUpperCase().equals("OK")) {
+                    clean();
+                    return new TestResult(name, false, "OK not found in WWD report file: " + file.getName() + " " + result[1]);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
+                clean();
                 return new TestResult(name, false, e);
             }
             clean();
