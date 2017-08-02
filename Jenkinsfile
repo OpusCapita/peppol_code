@@ -182,6 +182,10 @@ try {
                             'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
                             'report_path=$PWD/reports/'
                         )
+                        ansiblePlaybook(
+                            'inbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
+                            'report_path=$PWD/reports/'
+                        )
                     }
                 }
                 catch(e) {
