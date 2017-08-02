@@ -34,6 +34,13 @@ tests:
                    source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test\logger_xib_test.xml
                    endpoint type: outbound
                    endpoint: events-persistence-integration-test
+               - mq producer:
+                   mq connection: mq1
+                   destination queue: eventing
+                   endpoint type: outbound
+                   source: integration-test-xib
+                   source directory: /etc/resources/events-persistence-test/invalid-snc-test.xml
+                   endpoint: events-persistence-integration-test
            subscribers:
                - snc subscriber:
                    source directory: /peppol/data/snc-stub
