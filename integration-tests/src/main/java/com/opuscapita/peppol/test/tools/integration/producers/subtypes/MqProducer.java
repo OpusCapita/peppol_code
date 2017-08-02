@@ -146,7 +146,7 @@ public class MqProducer implements Producer {
         Endpoint source = new Endpoint(sourceEndpoint, ProcessType.TEST);
         ContainerMessage cm =  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
-        //final endpoint
+        //final endpoint current status
         cm.setStatus(new Endpoint("integration-tests", processType), "delivered");
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         cm.getProcessingInfo().setTransactionId("transactionId");
@@ -162,6 +162,7 @@ public class MqProducer implements Producer {
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
         Exception ex = new IOException("This sending expected to fail I/O in test mode");
         cm.getProcessingInfo().setProcessingException(ex.getMessage());
+        cm.setStatus(new Endpoint("integration-tests", processType), "delivered");
         return cm;
     }
 
