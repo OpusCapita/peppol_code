@@ -59,6 +59,7 @@ public class ReportingManager {
         try {
             messageLevelResponseReporter.process(cm);
         } catch (Exception ex2) {
+            ex2.printStackTrace();
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
             if (errorHandler != null) {
                 errorHandler.reportWithContainerMessage(cm, ex2, ex2.getMessage());

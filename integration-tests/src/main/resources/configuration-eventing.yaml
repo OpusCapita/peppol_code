@@ -24,6 +24,7 @@ tests:
                - mq producer:
                    mq connection: mq1
                    destination queue: eventing
+                   source: integration-test-xib
                    source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test\invalid.xml
                    endpoint: events-persistence-integration-test
                - mq producer:

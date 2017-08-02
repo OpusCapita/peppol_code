@@ -55,6 +55,8 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
+                endpoint type: outbound
+                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/invalid.xml
                 endpoint: events-persistence-integration-test
             - mq producer:

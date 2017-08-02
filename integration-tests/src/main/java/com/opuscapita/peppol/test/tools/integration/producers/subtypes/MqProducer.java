@@ -8,7 +8,6 @@ import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
-import com.opuscapita.peppol.test.tools.integration.util.EvilContainerMessage;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.log4j.LogManager;
@@ -17,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -137,14 +137,16 @@ public class MqProducer implements Producer {
 
     @SuppressWarnings("ConstantConditions")
     private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
-        return (file.getName().contains("invalid")) ? createInvalidContainerMessage(file) : createValidContainerMessage(file);
+        if(file.getName().contains("invalid"))
+            return createInvalidContainerMessage(file);
+        return createValidContainerMessage(file);
     }
 
     private ContainerMessage createValidContainerMessage(File file) throws Exception {
         Endpoint source = new Endpoint(sourceEndpoint, ProcessType.TEST);
         ContainerMessage cm =  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
-        //final endpoint
+        //final endpoint current status
         cm.setStatus(new Endpoint("integration-tests", processType), "delivered");
         List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
         cm.getProcessingInfo().setTransactionId("transactionId");
@@ -156,9 +158,11 @@ public class MqProducer implements Producer {
 
     private ContainerMessage createInvalidContainerMessage(File file) throws Exception {
         Endpoint source = new Endpoint(sourceEndpoint, ProcessType.TEST);
-        ContainerMessage cm =  new EvilContainerMessage("integration-tests", file.getAbsolutePath(),source)
+        ContainerMessage cm =  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
                 .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
-
+        Exception ex = new IOException("This sending expected to fail I/O in test mode");
+        cm.getProcessingInfo().setProcessingException(ex.getMessage());
+        cm.setStatus(new Endpoint("integration-tests", processType), "delivered");
         return cm;
     }
 
