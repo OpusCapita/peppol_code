@@ -43,7 +43,7 @@ tests:
                    consumers: 6
                    source directory: C:\test
                - directory subscriber:
-                   consumers: 8
+                   consumers: 8 9
                    source directory: C:\test
            consumers:
                - SNC test:

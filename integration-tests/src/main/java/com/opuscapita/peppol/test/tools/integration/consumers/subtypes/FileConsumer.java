@@ -63,7 +63,7 @@ public class FileConsumer extends Consumer {
     }
 
     protected void waitFixedDealy() {
-        logger.warn("WebWatchDogConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+        logger.warn("FileConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
         try {
             Thread.sleep(DELAY);
         } catch (InterruptedException e) {

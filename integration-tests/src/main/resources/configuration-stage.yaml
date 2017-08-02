@@ -75,7 +75,7 @@ tests:
                 consumers: 6
                 source directory: /peppol/data/eventing/a2a/mlr
             - directory subscriber:
-                consumers: 7
+                consumers: 7 9
                 source directory: /peppol/data/eventing/xib/mlr
             - directory subscriber:
                 consumers: 8
@@ -93,6 +93,10 @@ tests:
                 name: Web Watch Dog successful report test
                 id: 8
                 expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_xib_test
+            - mlr test:
+                name: IO exception in ml test
+                id: 9
+                expected value: invalid-er-mlr.xml
    support-ui:
         producers:
             - file producer:
