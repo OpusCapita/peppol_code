@@ -198,30 +198,6 @@ try {
                     archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
                 }
             }
-            stage('System Tests: inbound-invalid-tests') {
-                try {
-                    dir('src/system-tests') {
-                        ansiblePlaybook(
-                            'inbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            'report_path=$PWD/reports/'
-                        )
-                    }
-                }
-                catch(e) {
-                    failBuild(
-                        "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'System tests have failed. Check the log for details.'
-                    )
-                }
-                finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
-                }
-            }
-            stage('Acceptance') {
-                if (release_type in ['patch_release', 'minor_release', 'major_release']) {
-                    input message: 'Deploy PEPPOL Access Point to production?', ok: 'Sure'
-                }
-            }
         }
 
         lock(resource: 'peppol-production-servers') {
