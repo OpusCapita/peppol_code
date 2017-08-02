@@ -1,0 +1,129 @@
+#!groovy
+
+/**
+ * List of modules. Each module is expected to be in subdirectory named as
+ * module for assemble, check and dockerBuild to work properly.
+ */
+
+/**
+ * A map of recipient groups. Each group should have comma separated list of
+ * email addresses to receive notifications. See 'handlers' section for details
+ * on how the groups are used in certain notifications.
+ */
+recipients = [:]
+recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+
+
+import java.util.regex.*
+
+def code_version = params.CODE_BRANCH ?: 'master'
+def infra_version = params.INFRA_BRANCH ?: 'develop'
+def release_type = params.RELEASE_TYPE ?: 'development'
+def release_version, next_version, code_hash, infra_hash
+
+
+try {
+    node {
+        lock(resource: 'peppol-stage-servers') {
+            milestone 1
+            stage('System Tests') {
+                try {
+                    dir('src/system-tests') {
+                        ansiblePlaybook(
+                            'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
+                            'report_path=$PWD/reports/'
+                        )
+                    }
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'System tests have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
+                }
+            }
+        }
+    }
+}
+catch(e) {
+    echo e.toString()
+    emailNotify('', "Unexpected error has occured. Check the log for details.\n${e}\n")
+    throw e
+}
+
+/**
+ * Stages
+ */
+
+// execute ansible playbook on hosts using the credentials provided
+def ansiblePlaybook(playbook, hosts, credentials, extraVars='') {
+    def ansible_credentials = [[
+        $class: 'UsernamePasswordMultiBinding',
+        credentialsId: credentials,
+        passwordVariable: 'ANSIBLE_PASSWORD',
+        usernameVariable: 'ANSIBLE_USERNAME'
+    ]]
+
+    withCredentials(ansible_credentials) {
+        sh script: """
+            ansible-playbook -i '${hosts}' '${playbook}' \
+            --user='${ANSIBLE_USERNAME}' \
+            --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} ${extraVars}'
+        """
+    }
+}
+
+@NonCPS
+def getChangeString(MAX_MSG_LEN=100) {
+    def changeString = ""
+
+    echo "Gathering SCM changes"
+    def changeLogSets = currentBuild.changeSets
+    for (int i = 0; i < changeLogSets.size(); i++) {
+        def entries = changeLogSets[i].items
+        for (int j = 0; j < entries.length; j++) {
+            def entry = entries[j]
+            truncated_msg = entry.msg.take(MAX_MSG_LEN)
+            changeString += " - ${truncated_msg} [${entry.author}]\n"
+        }
+    }
+
+    if (!changeString?.trim()) {
+        changeString = " - No new changes"
+    }
+    return changeString
+}
+def Properties loadProperties(String filename) {
+    Properties properties = new Properties()
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
+    return properties
+}
+
+def emailNotify(String whom, String message) {
+    def changes = getChangeString()
+
+    mail to: whom, cc: recipients.devops,
+        subject: "Job '${JOB_NAME}': build ${BUILD_NUMBER} has failed!",
+        body: """
+${message}
+Please go to ${BUILD_URL} and fix the build!
+
+Build status: ${currentBuild.result}
+Build URL: ${BUILD_URL}
+Project: ${JOB_NAME}
+Build duration: ${currentBuild.durationString}
+
+CHANGE SET
+${changes}
+
+"""
+}
+
+def failBuild(String email_recipients, String message) {
+    emailNotify(email_recipients, message)
+    error message
+}
