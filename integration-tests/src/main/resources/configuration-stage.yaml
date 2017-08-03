@@ -77,7 +77,6 @@ tests:
             - snc subscriber:
                 source directory: /peppol/data/snc-stub
                 consumers: 5
-                timeout: 1500
             - directory subscriber:
                 consumers: 6
                 source directory: /peppol/data/eventing/a2a/mlr
@@ -104,6 +103,10 @@ tests:
                 name: IO exception in mlr test
                 id: 9
                 expected value: invalid-er-mlr.xml
+            - scn test:
+                name: SNC ticket creation test
+                id: 5
+                expected value: 9908:937270062
    support-ui:
         producers:
             - file producer:
