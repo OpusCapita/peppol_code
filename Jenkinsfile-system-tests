@@ -30,7 +30,7 @@ try {
                 try {
                     dir('src/system-tests') {
                         ansiblePlaybook(
-                            'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
+                            'outbound-tests.yml', 'stage.hosts', 'ansible-sudo',
                             'report_path=$PWD/reports/'
                         )
                     }
