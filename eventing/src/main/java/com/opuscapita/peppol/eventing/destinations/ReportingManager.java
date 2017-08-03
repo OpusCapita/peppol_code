@@ -43,7 +43,7 @@ public class ReportingManager {
         } catch (Exception ex) {
             logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
             if (errorHandler != null) {
-                errorHandler.reportWithContainerMessage(cm, ex, ex.getMessage());
+                errorHandler.reportWithContainerMessage(cm, ex, "Exception during reporting to Events persistence");
             }
         }
 
@@ -52,7 +52,7 @@ public class ReportingManager {
         } catch (Exception ex1) {
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
             if (errorHandler != null) {
-                errorHandler.reportWithContainerMessage(cm, ex1, ex1.getMessage());
+                errorHandler.reportWithContainerMessage(cm, ex1, "Exception during reporting to Web Watch Dog");
             }
         }
 
@@ -62,7 +62,7 @@ public class ReportingManager {
             ex2.printStackTrace();
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
             if (errorHandler != null) {
-                errorHandler.reportWithContainerMessage(cm, ex2, ex2.getMessage());
+                errorHandler.reportWithContainerMessage(cm, ex2, "Exception during reporting to MLR");
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.proxy.filters.pre;
 
+import com.google.common.collect.Iterables;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.opuscapita.peppol.proxy.filters.pre.util.RequestUtils;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -41,7 +44,7 @@ public class AccessCheckFilter extends ZuulFilter {
         HttpServletRequest request = requestContext.getRequest();
         String requestedService = RequestUtils.extractRequestedService(request, zuulServletPath);
         boolean result = !accessFilterProperties.getServicesToBypass().contains(requestedService);
-        logger.debug("Should filter for service ["+requestedService+"]: "+result);
+        logger.debug("Should filter for service [" + requestedService + "]: " + result);
         return result;
     }
 
@@ -85,6 +88,12 @@ public class AccessCheckFilter extends ZuulFilter {
         }
         boolean result = true;
 
+        if (containsProhibitedMasks(request, accessFilterProperties.getProhibitedMasks())
+                &&
+                !hasProhibitedMasksNetworkOverride(finalRemoteAddr, accessFilterProperties.getProhibitedMasksNetworkOverrides())) {
+            return true;
+        }
+
         //Deny global settings
         if (accessFilterProperties.getDenyFrom() != null && accessFilterProperties.getDenyFrom().contains("*")) {
             result = true;
@@ -126,6 +135,19 @@ public class AccessCheckFilter extends ZuulFilter {
         }
 
         return result;
+    }
+
+    private boolean hasProhibitedMasksNetworkOverride(String finalRemoteAddr, List<String> prohibitedMasksNetworkOverrides) {
+        List<String> matchedProhibitedMasksNetworkOverrides = prohibitedMasksNetworkOverrides.stream().filter(override -> new SubnetUtils(override).getInfo().isInRange(finalRemoteAddr)).collect(Collectors.toList());
+        logger.info("Matched subnet(s): " + Iterables.toString(matchedProhibitedMasksNetworkOverrides) + " for " + finalRemoteAddr);
+        return matchedProhibitedMasksNetworkOverrides.size() > 0;
+    }
+
+    private boolean containsProhibitedMasks(HttpServletRequest request, List<String> prohibitedMasks) {
+        String requestUri = request.getRequestURI().toLowerCase();
+        List<String> matchedProhibitedMasks = prohibitedMasks.stream().filter(prohibitedMask -> requestUri.contains(prohibitedMask.toLowerCase())).collect(Collectors.toList());
+        logger.info("Matched prohibited part(s): " + Iterables.toString(matchedProhibitedMasks) + " in " + requestUri);
+        return matchedProhibitedMasks.size() > 0;
     }
 
 }

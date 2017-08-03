@@ -35,6 +35,11 @@ public class ConsumerFactory {
                 String fileTestName = (String) properties.get("name");
                 String expectedValue = (String) properties.get("expected value");
                 return new FileConsumer(id, fileTestName, expectedValue);
+            case "mlr test":
+            case "mlr check":
+                String mlrFileTestName = (String) properties.get("name");
+                String mlrExpectedValue = (String) properties.get("expected value");
+                return new MlrConsumer(id, mlrFileTestName, mlrExpectedValue);
             case "wwd test":
                 String wwdFileTestName = (String) properties.get("name");
                 String wwdExpectedValue = (String) properties.get("expected value");

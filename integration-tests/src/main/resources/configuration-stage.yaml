@@ -62,6 +62,13 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
+                endpoint type: outbound
+                source: integration-test-xib
+                source directory: /etc/resources/events-persistence-test/invalid-snc-test.xml
+                endpoint: events-persistence-integration-test
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
                 source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/logger_xib_test.xml
                 endpoint type: outbound
@@ -75,7 +82,7 @@ tests:
                 consumers: 6
                 source directory: /peppol/data/eventing/a2a/mlr
             - directory subscriber:
-                consumers: 7
+                consumers: 7 9
                 source directory: /peppol/data/eventing/xib/mlr
             - directory subscriber:
                 consumers: 8
@@ -93,6 +100,10 @@ tests:
                 name: Web Watch Dog successful report test
                 id: 8
                 expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_xib_test
+            - mlr test:
+                name: IO exception in ml test
+                id: 9
+                expected value: invalid-er-mlr.xml
    support-ui:
         producers:
             - file producer:
