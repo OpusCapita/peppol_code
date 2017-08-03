@@ -106,7 +106,7 @@ def Properties loadProperties(String filename) {
 def emailNotify(String whom, String message) {
     def changes = getChangeString()
 
-    mail to: whom, cc: recipients.devops,
+    mail to: whom, cc: recipients.testers,
         subject: "Job '${JOB_NAME}': build ${BUILD_NUMBER} has failed!",
         body: """
 ${message}
