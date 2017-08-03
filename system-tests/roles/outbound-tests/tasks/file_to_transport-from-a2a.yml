@@ -7,7 +7,7 @@
   copy:
     remote_src: True
     src: "{{file}}"
-    dest: "{{transport_from_a2a_path}}"
+    dest: "{{transport_from_a2a_path}}/"
 
 - set_fact: file="{{file}}"
 - debug: var=file
