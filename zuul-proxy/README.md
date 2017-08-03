@@ -16,6 +16,8 @@ Here is the sample config for Zuul proxy:
         proxy:
           allowFrom: '*'
           denyFrom: 192.168.1.200
+          prohibitedMasks: 'admin, status'
+          prohibitedMasksNetworkOverride: '10.10.10.0/24, 192.0.0.0/24'
           servicesAllowFrom:
             validator: 192.168.1.110
           servicesDenyFrom:
@@ -41,13 +43,14 @@ Here is the sample config for Zuul proxy:
   Actually, when combining global setting such as 
   __**allowFrom**__ and __**denyFrom**__ then per-service settings allow to 
   override the global settings.
-  Order of processing:
+  Order of processing:  
   1. Deny global settings
   2. Allow global settings
   3. Deny service level settings
   4. Allow service level settings
   
-  **The later settings have more priority.**
+  **The later settings have more priority.** 
+  
   
   Supported values for settings are:
   1. `'*'` - all
@@ -59,6 +62,11 @@ Here is the sample config for Zuul proxy:
         This will match any address starting with 192.168
   
   Multiple ranges are now supported for every setting, they must be comma separated.
+  
+  **NB!** Prohibited masks and overrides settings do have priority over aforementioned settings due to their nature - e.g. being security oriented.
+    
+  `peppol.zuul.proxy.prohibitedMasks` - string containing comma-separated list of prohibited parts(masks) in request URI, has default value: "admin"
+  `peppol.zuul.proxy.prohibitedMasksNetworkOvveride` - string containing comma-separated list of CIDR notated network ranges for which prohibited masks do **NOT APPLY**! Has no default value
   
   `peppol.zuul.headers` is a section for configuring headers to preserve for requests.
   
