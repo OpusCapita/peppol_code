@@ -37,12 +37,12 @@ try {
                 }
                 catch(e) {
                     failBuild(
-                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        "${recipients.testers}",
                         'System tests have failed. Check the log for details.'
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
+                    archiveArtifacts artifacts: 'src/system-tests/reports/outbound*.txt'
                 }
             }
         }
