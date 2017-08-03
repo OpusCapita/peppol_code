@@ -2,11 +2,12 @@
 #sending file to outbound, then doing asserts for each module
 
 - name: Copy file to outbound from-a2a dir
-  become: "{{sudo}}"
+  become: true
+  become_user: peppol
   copy:
     remote_src: True
     src: "{{file}}"
-    dest: "{{transport_from_a2a_path}}"
+    dest: "{{transport_from_a2a_path}}/"
 
 - set_fact: file="{{file}}"
 - debug: var=file

@@ -5,6 +5,8 @@ import com.opuscapita.peppol.proxy.filters.pre.AccessFilterProperties;
 import com.opuscapita.peppol.proxy.filters.pre.PreserveHeaderFilterProperties;
 import com.opuscapita.peppol.proxy.filters.pre.PreserveHeadersFilter;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,17 +23,21 @@ import org.springframework.context.annotation.Bean;
 @EnableDiscoveryClient
 @SpringBootApplication
 public class ZuulProxyServerApplication {
+    private final static Logger logger = LoggerFactory.getLogger(ZuulProxyServerApplication.class);
+
     public static void main(String[] args) {
         SpringApplication.run(ZuulProxyServerApplication.class, args);
     }
 
     @Bean
-    public AccessCheckFilter customFilter(AccessFilterProperties accessFilterProperties, @Value("{zuul.servletPath}") String zuulServletPath) {
+    public AccessCheckFilter customFilter(AccessFilterProperties accessFilterProperties, @Value("${zuul.servletPath}") String zuulServletPath) {
+        logger.info("zuul.servletPath: " + zuulServletPath);
         return new AccessCheckFilter(accessFilterProperties, zuulServletPath);
     }
 
     @Bean
-    public PreserveHeadersFilter preserveHostHeader(PreserveHeaderFilterProperties preserveHeaderFilterProperties, @Value("{zuul.servletPath}") String zuulServletPath) {
+    public PreserveHeadersFilter preserveHostHeader(PreserveHeaderFilterProperties preserveHeaderFilterProperties, @Value("${zuul.servletPath}") String zuulServletPath) {
+        logger.info("zuul.servletPath: " + zuulServletPath);
         return new PreserveHeadersFilter(preserveHeaderFilterProperties, zuulServletPath);
     }
 

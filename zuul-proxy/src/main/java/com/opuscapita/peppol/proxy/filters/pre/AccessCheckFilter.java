@@ -65,24 +65,9 @@ public class AccessCheckFilter extends ZuulFilter {
 
     protected boolean isNotAllowed(HttpServletRequest request) {
         String requestedService = RequestUtils.extractRequestedService(request, zuulServletPath);
-        String remoteAddr = request.getRemoteAddr();
-        logger.debug("remoteAddr: " + remoteAddr);
+        final String finalRemoteAddr = extractRemoteAddress(request, requestedService);
 
-        String forwardedFor = "";
-        // when working behind a proxy we get the original ip in X-Forwarded-For
-        // while remoteAddr is the ip of the proxy itself
-        if (request.getHeaders(HEADER_X_FORWARDED_FOR) != null && request.getHeaders(HEADER_X_FORWARDED_FOR).hasMoreElements()) {
-            forwardedFor = request.getHeaders(HEADER_X_FORWARDED_FOR).nextElement();
-        }
-        logger.debug("forwardedFor: " + forwardedFor);
 
-        if (!forwardedFor.isEmpty()) {
-            remoteAddr = forwardedFor;
-        }
-
-        final String finalRemoteAddr = remoteAddr;
-
-        logger.debug("Checking against address: " + remoteAddr + " and service: " + requestedService);
         if (requestedService.isEmpty()) {
             requestedService = "/";
         }
@@ -135,6 +120,25 @@ public class AccessCheckFilter extends ZuulFilter {
         }
 
         return result;
+    }
+
+    private String extractRemoteAddress(HttpServletRequest request, String requestedService) {
+        String remoteAddr = request.getRemoteAddr();
+        logger.debug("remoteAddr: " + remoteAddr);
+
+        String forwardedFor = "";
+        // when working behind a proxy we get the original ip in X-Forwarded-For
+        // while remoteAddr is the ip of the proxy itself
+        if (request.getHeaders(HEADER_X_FORWARDED_FOR) != null && request.getHeaders(HEADER_X_FORWARDED_FOR).hasMoreElements()) {
+            forwardedFor = request.getHeaders(HEADER_X_FORWARDED_FOR).nextElement();
+        }
+        logger.debug("forwardedFor: " + forwardedFor);
+
+        if (!forwardedFor.isEmpty()) {
+            remoteAddr = forwardedFor;
+        }
+        logger.debug("Checking against address: " + remoteAddr + " and service: " + requestedService);
+        return remoteAddr;
     }
 
     private boolean hasProhibitedMasksNetworkOverride(String finalRemoteAddr, List<String> prohibitedMasksNetworkOverrides) {

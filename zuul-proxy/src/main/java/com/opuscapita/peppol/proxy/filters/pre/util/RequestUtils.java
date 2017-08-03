@@ -21,14 +21,18 @@ public class RequestUtils {
         String requestUri = request.getRequestURI();
         if (zuulServletPath != null) {
             requestUri = requestUri.replaceFirst(Pattern.quote(zuulServletPath), "");
+            logger.info("Request URI after stripping zuul servlet path: " + requestUri);
         }
         String[] requestParts = requestUri.split("/");
         if (requestParts.length > 1) {
             Optional<String> first = Arrays.asList(requestParts).stream().filter(part -> !part.isEmpty()).findFirst();
             if (first.isPresent()) {
-                return first.get();
+                String result = first.get();
+                logger.info("URI split marked as service name: " + result);
+                return result;
             }
         }
+        logger.info("No split happened");
         return request.getRequestURI().replaceAll("/", "");
     }
 }
