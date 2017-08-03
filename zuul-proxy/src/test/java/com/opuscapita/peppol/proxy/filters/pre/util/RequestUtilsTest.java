@@ -12,11 +12,11 @@ public class RequestUtilsTest {
 
     @Test
     public void testRequestUriExtraction() {
-        HttpServletRequest request = new MockHttpServletRequest("GET", "/peppol-ap-inbound/as2");
+        HttpServletRequest request = new MockHttpServletRequest("GET", "/peppol-ap-inbound/admin/env");
         String zuulServletPath = "/peppol-ap-inbound";
         String service = RequestUtils.extractRequestedService(request, zuulServletPath);
         assertNotNull(service);
-        assertEquals("as2", service);
+        assertEquals("admin", service);
     }
 
 }
