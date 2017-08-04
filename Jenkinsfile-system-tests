@@ -141,6 +141,78 @@ def Properties loadProperties(String filename) {
     return properties
 }
 
+ 
+def getGitCommitID(path) {
+    dir(path) {
+        def commit_id = sh returnStdout: true, script: 'git rev-parse HEAD'
+        return commit_id
+    }
+}
+ 
+def getGitCommitAuthor(path) {
+    dir(path) {
+        def author_email = sh returnStdout: true, script: 'git show -s --pretty=%ae'
+        return author_email
+    }
+}
+ 
+def Properties loadProperties(String filename) {
+    Properties properties = new Properties()
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
+    return properties
+}
+ 
+def getReleaseVersion(this_version, release_type) {
+    def parser = ~/(?<major>\d+).(?<minor>\d+).(?<patch>\d+)(-(?<build>SNAPSHOT))?/
+    def major, minor, patch, build
+    def release_version, next_version
+ 
+    def match = this_version =~ parser
+    if(match.matches()) {
+        major = match.group('major') as Integer
+        minor = match.group('minor') as Integer
+        patch = match.group('patch') as Integer
+        build = match.group('build')
+ 
+        // figure out the release number based on simple semver rules
+        switch (release_type) {
+            case 'patch_release':
+                // patch number was already increased the last time we were here
+                break
+            case 'minor_release':
+                patch = 0
+                minor += 1
+                break
+            case 'major_release':
+                // we should not have these for the foreseeable future but
+                // for the sake of completeness
+                patch = 0
+                minor = 0
+                major += 1
+                break
+            case 'development':
+                build = env.BUILD_NUMBER
+                break
+            default:
+                error "Unknown release type: ${release_type}"
+                break
+        }
+        release_version = [major, minor, patch].join('.')
+        if (release_type == 'development') {
+            release_version += "-${build}"
+        }
+ 
+        // assume next version is to be bugfix/patch release
+        patch += 1
+        next_version = [major, minor, patch].join('.')
+        next_version += '-SNAPSHOT'
+ 
+        return [release_version, next_version].join('##')
+    }
+    error "Could not parse the version string: ${this_version}"
+}
+ 
 def emailNotify(String whom, String message) {
     def changes = getChangeString()
 
