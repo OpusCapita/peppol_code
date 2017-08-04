@@ -63,7 +63,7 @@ public class AccessCheckFilter extends ZuulFilter {
         return null;
     }
 
-    protected boolean isNotAllowed(HttpServletRequest request) {
+    boolean isNotAllowed(HttpServletRequest request) {
         String requestedService = RequestUtils.extractRequestedService(request, zuulServletPath);
         final String finalRemoteAddr = extractRemoteAddress(request, requestedService);
 
@@ -108,9 +108,14 @@ public class AccessCheckFilter extends ZuulFilter {
             }
         }
 
-        //Allow  service level settings
+        //Allow service level settings
         if (accessFilterProperties.getServicesAllowFrom() != null) {
             if (accessFilterProperties.getServicesAllowFrom().containsKey(requestedService)) {
+                // TODO fix this hack
+                if (!(accessFilterProperties.getServicesAllowFrom().get(requestedService) instanceof List)) {
+                    logger.warn("Attempting to use string as a list, hello to Daniil... allowing access for now");
+                    return false;
+                }
                 if (accessFilterProperties.getServicesAllowFrom().get(requestedService).contains("*")) {
                     result = false;
                 } else {
