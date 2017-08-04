@@ -53,7 +53,7 @@ tests:
                    consumers: 8 9
                    source directory: C:\test
            consumers:
-               - SNC test:
+               - snc test:
                    name: Invalid container message test
                    id: 5
                    expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
