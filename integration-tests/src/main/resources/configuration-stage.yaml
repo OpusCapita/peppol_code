@@ -103,7 +103,7 @@ tests:
                 name: IO exception in mlr test
                 id: 9
                 expected value: invalid-er-mlr.xml
-            - scn test:
+            - snc test:
                 name: SNC ticket creation test
                 id: 5
                 expected value: 9908:937270062
