@@ -134,14 +134,7 @@ def getChangeString(MAX_MSG_LEN=100) {
     }
     return changeString
 }
-def Properties loadProperties(String filename) {
-    Properties properties = new Properties()
-    String content = readFile "${filename}"
-    properties.load(new StringReader(content));
-    return properties
-}
 
- 
 def getGitCommitID(path) {
     dir(path) {
         def commit_id = sh returnStdout: true, script: 'git rev-parse HEAD'
