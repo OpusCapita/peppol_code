@@ -113,7 +113,8 @@ public class AccessCheckFilter extends ZuulFilter {
             if (accessFilterProperties.getServicesAllowFrom().containsKey(requestedService)) {
                 // TODO fix this hack
                 if (!(accessFilterProperties.getServicesAllowFrom().get(requestedService) instanceof List)) {
-                    logger.warn("Attempting to use string as a list, hello to Daniil... allowing access for now");
+                    logger.warn("Attempting to use string as a list, hello to Daniil... allowing access for now. The value is: " +
+                            accessFilterProperties.getServicesAllowFrom().get(requestedService));
                     return false;
                 }
                 if (accessFilterProperties.getServicesAllowFrom().get(requestedService).contains("*")) {
