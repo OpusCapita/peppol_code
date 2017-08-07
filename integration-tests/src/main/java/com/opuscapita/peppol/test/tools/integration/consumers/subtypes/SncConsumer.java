@@ -24,13 +24,24 @@ public class SncConsumer extends FileConsumer {
             return new TestResult(name, false, "SncConsumer: Directory not found " + directory);
         }
 
+        if(searchforFile(directory))
+            return new TestResult(name, true, "Found expected file " + expectedValue);
+
+        waitFixedDealy();
+
+        if(searchforFile(directory))  //retry
+            return new TestResult(name, true, "Found expected file " + expectedValue);
+
+        return new TestResult(name, false, "not found expected file with name " + expectedValue);
+    }
+
+    private boolean searchforFile(File directory){
         for(File f : directory.listFiles()) {
             if(f.getName().startsWith(expectedValue)){
                 f.delete();
-                return new TestResult(name, true, "Found expected file " + f.getAbsolutePath());
+                return true;
             }
         }
-
-        return new TestResult(name, false, "not found expected file with name " + expectedValue);
+        return false;
     }
 }
