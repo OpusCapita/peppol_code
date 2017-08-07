@@ -22,8 +22,10 @@ public class WebWatchDogConsumer extends FileConsumer{
     @Override
     public TestResult consume(Object consumable) {
         init(consumable);
-        if(!file.exists())
-            waitFixedDealy();
+        if(!file.exists()) {
+            logger.warn("WebWatchDogConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+            waitFixedDelay();
+        }
 
         if(file.exists()) {
             try {

@@ -3,9 +3,11 @@ package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
+import org.apache.log4j.LogManager;
 
 public class MlrConsumer extends FileConsumer {
 
+    private final static org.apache.log4j.Logger logger = LogManager.getLogger(MlrConsumer.class);
     private final String ERROR_DESCRIPTION = "<cbc:Description>This sending expected to fail I/O in test mode</cbc:Description>";
     public MlrConsumer(String id, String fileTestName, String expectedValue) {
         super(id, fileTestName, expectedValue);
@@ -14,8 +16,10 @@ public class MlrConsumer extends FileConsumer {
     @Override
     public TestResult consume(Object consumable) {
         init(consumable);
-        if(!file.exists())
-            waitFixedDealy();
+        if(!file.exists()) {
+            logger.warn("MlrConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+            waitFixedDelay();
+        }
         try {
             if (file.exists()) {
                 String content = Files.toString(file, Charsets.UTF_8);

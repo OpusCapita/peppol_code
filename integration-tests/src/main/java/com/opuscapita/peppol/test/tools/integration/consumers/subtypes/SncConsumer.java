@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
+import org.apache.log4j.LogManager;
 
 import java.io.File;
 
@@ -8,6 +9,7 @@ import java.io.File;
  * Created by gamanse1 on 2016.11.24..
  */
 public class SncConsumer extends FileConsumer {
+    private final static org.apache.log4j.Logger logger = LogManager.getLogger(SncConsumer.class);
 
     public SncConsumer(String id, String name, String expected) {
         super(id, name, expected);
@@ -27,7 +29,8 @@ public class SncConsumer extends FileConsumer {
         if(searchforFile(directory))
             return new TestResult(name, true, "Found expected file " + expectedValue);
 
-        waitFixedDealy();
+        logger.warn("SncConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+        waitFixedDelay();
 
         if(searchforFile(directory))  //retry
             return new TestResult(name, true, "Found expected file " + expectedValue);

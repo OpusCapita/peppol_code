@@ -32,10 +32,13 @@ public class FileConsumer extends Consumer {
     public TestResult consume(Object consumable) {
         init(consumable);
 
-        if(!file.exists())
-            waitFixedDealy();
+        if(!file.exists()) {
+            logger.warn("FileConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+            waitFixedDelay();
+        }
 
-        if(file.exists()) {
+
+            if(file.exists()) {
             clean();
             return new TestResult(name, true, "Found expected file " + file.getAbsolutePath());
         }
@@ -62,8 +65,7 @@ public class FileConsumer extends Consumer {
         return file.delete();
     }
 
-    protected void waitFixedDealy() {
-        logger.warn("FileConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+    protected void waitFixedDelay() {
         try {
             Thread.sleep(DELAY);
         } catch (InterruptedException e) {
