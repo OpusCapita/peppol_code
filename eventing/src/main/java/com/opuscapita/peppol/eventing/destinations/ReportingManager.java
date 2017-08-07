@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by gamanse1 on 2017.07.18..
  */
@@ -33,27 +36,25 @@ public class ReportingManager {
 
     @SuppressWarnings("ConstantConditions")
     public void process(ContainerMessage cm, @Nullable ErrorHandler errorHandler) {
+        Map<String, Exception> failures = new HashMap<>();
         try {
             logger.info("Received message about " + cm.getFileName() + ", current endpoint: " +
                     cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             eventPersistenceReporter.process(cm);
         } catch (Exception ex) {
             logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
-            if (errorHandler != null) {
-                errorHandler.reportWithContainerMessage(cm, ex, "Exception during reporting to Events persistence");
-            }
+            failures.put("Exception during reporting to Events persistence", ex);
         }
 
         try {
             webWatchDogReporter.process(cm);
         } catch (Exception ex1) {
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
-            if (errorHandler != null) {
-                errorHandler.reportWithContainerMessage(cm, ex1, "Exception during reporting to Web Watch Dog");
-            }
+            failures.put("Exception during reporting to Web Watch Dog", ex1);
         }
 
         try {
@@ -61,9 +62,10 @@ public class ReportingManager {
         } catch (Exception ex2) {
             ex2.printStackTrace();
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
-            if (errorHandler != null) {
-                errorHandler.reportWithContainerMessage(cm, ex2, "Exception during reporting to MLR");
-            }
+            failures.put("Exception during reporting to MLR", ex2);
+        }
+        if (errorHandler != null) {
+            failures.entrySet().forEach(entry -> errorHandler.reportWithContainerMessage(cm, entry.getValue(), entry.getKey()));
         }
     }
 }
