@@ -29,12 +29,13 @@ public class SncConsumer extends FileConsumer {
         if(searchforFile(directory))
             return new TestResult(name, true, "Found expected file " + expectedValue);
 
-        logger.warn("SncConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+        logger.warn("SncConsumer: no files to consume in " + directory + " retry in: " + DELAY);
         waitFixedDelay();
 
         if(searchforFile(directory))  //retry
             return new TestResult(name, true, "Found expected file " + expectedValue);
 
+        logger.warn("SncConsumer: still no files to consume in " + directory + " test failed ");
         return new TestResult(name, false, "not found expected file with name " + expectedValue);
     }
 
