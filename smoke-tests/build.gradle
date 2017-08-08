@@ -42,8 +42,8 @@ repositories {
 dependencies {
     compile('org.yaml:snakeyaml:1.17')
     compile('mysql:mysql-connector-java:6.0.4')
+    compile('org.slf4j:slf4j-log4j12:1.7.25')
     compile('com.rabbitmq:amqp-client:3.6.5')
-    compile('log4j:log4j:1.2.17')
     compile('com.intellij:annotations:12.0')
     compile('org.jetbrains:annotations:13.0')
     compile('com.google.code.gson:gson:2.7')
