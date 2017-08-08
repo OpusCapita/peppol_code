@@ -3,6 +3,7 @@ package com.opuscapita.peppol.eventing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.eventing.destinations.ReportingManager;
@@ -71,8 +72,8 @@ public class EventingApp {
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull Gson gson) {
-        return new AbstractQueueListener(errorHandler, null, gson) {
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull ContainerMessageSerializer serializer) {
+        return new AbstractQueueListener(errorHandler, null, serializer) {
             @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {

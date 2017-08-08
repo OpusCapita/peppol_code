@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.email;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.email.controller.EmailController;
@@ -48,8 +48,9 @@ public class EmailNotificatorApp {
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EmailController controller, @NotNull Gson gson) {
-        return new AbstractQueueListener(errorHandler, null, gson) {
+    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EmailController controller,
+                                        @NotNull ContainerMessageSerializer serializer) {
+        return new AbstractQueueListener(errorHandler, null, serializer) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 controller.processMessage(cm);

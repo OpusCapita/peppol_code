@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.process.route;
 
+import com.google.gson.annotations.Since;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -13,7 +14,9 @@ import java.io.Serializable;
 public class Endpoint implements Serializable {
     private static final long serialVersionUID = -3805355254135733535L;
 
+    @Since(1.0)
     private final String name;
+    @Since(1.0)
     private final ProcessType type;
 
     /**

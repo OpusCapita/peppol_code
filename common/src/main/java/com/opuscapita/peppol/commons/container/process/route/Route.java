@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.process.route;
 
+import com.google.gson.annotations.Since;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,11 +17,15 @@ import java.util.List;
 public class Route implements Serializable {
     private static final long serialVersionUID = -9123055794300438134L;
 
+    @Since(1.0)
     private List<String> endpoints = new ArrayList<>();
+    @Since(1.0)
     private String description;
+    @Since(1.0)
     private String mask;
+    @Since(1.0)
     private String source;
-
+    @Since(1.0)
     private int current = 0;
 
     public Route() {}

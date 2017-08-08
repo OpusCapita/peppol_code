@@ -3,6 +3,7 @@ package com.opuscapita.peppol.preprocessing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -64,8 +65,8 @@ public class PreprocessingApp {
     @NotNull
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull StatusReporter reporter,
                                         @NotNull PreprocessingController controller, @NotNull MessageQueue messageQueue,
-                                        @NotNull Gson gson) {
-        return new AbstractQueueListener(errorHandler, reporter, gson) {
+                                        @NotNull ContainerMessageSerializer serializer) {
+        return new AbstractQueueListener(errorHandler, reporter, serializer) {
             @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
