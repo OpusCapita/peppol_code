@@ -5,6 +5,7 @@ import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
@@ -122,8 +123,8 @@ public class PeppolValidatorApplication {
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
                                         @NotNull ValidationController controller, @NotNull MessageQueue messageQueue,
-                                        @NotNull StatusReporter reporter, @NotNull Gson gson) {
-        return new AbstractQueueListener(errorHandler, reporter, gson) {
+                                        @NotNull StatusReporter reporter, @NotNull ContainerMessageSerializer serializer) {
+        return new AbstractQueueListener(errorHandler, reporter, serializer) {
             @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {

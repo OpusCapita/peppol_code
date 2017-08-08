@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container;
 
+import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.Route;
 import org.jetbrains.annotations.NotNull;
@@ -16,15 +17,25 @@ import java.io.Serializable;
 public class ProcessingInfo implements Serializable {
     private static final long serialVersionUID = -556566093311452295L;
 
+    @Since(1.0)
     private final Endpoint source;
+    @Since(1.0)
     private String sourceMetadata;
+    @Since(1.0)
     private Route route;
+    @Since(1.0)
     private String transactionId;
+    @Since(1.0)
     private String correlationId;
+    @Since(1.0)
     private Endpoint currentEndpoint;
+    @Since(1.0)
     private String currentStatus;
+    @Since(1.0)
     private String processingException; // this is actually an exception message but called exception for historical reasons
+    @Since(1.0)
     private String commonName;
+    @Since(1.0)
     private String sendingProtocol;
 
     /**

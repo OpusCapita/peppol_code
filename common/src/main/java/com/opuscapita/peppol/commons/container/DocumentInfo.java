@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container;
 
+import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
@@ -33,23 +34,41 @@ public class DocumentInfo implements Serializable {
     public static final String UNKNOWN_CUSTOMIZATION_ID = "";
     public static final String UNKNOWN_DOCUMENT_TYPE = "";
 
+    @Since(1.0)
     private final List<DocumentError> errors = new ArrayList<>();
+    @Since(1.0)
     private final List<DocumentWarning> warnings = new ArrayList<>();
+    @Since(1.0)
     private String senderId = UNKNOWN_SENDER;
+    @Since(1.0)
     private String recipientId = UNKNOWN_RECIPIENT;
+    @Since(1.0)
     private String versionId = UNKNOWN_VERSION_ID;
+    @Since(1.0)
     private String documentId = UNKNOWN_DOCUMENT_ID;
+    @Since(1.0)
     private String issueDate = UNKNOWN_ISSUE_DATE;
+    @Since(1.0)
     private String dueDate = UNKNOWN_DUE_DATE;
+    @Since(1.0)
     private String senderName = UNKNOWN_SENDER_NAME;
+    @Since(1.0)
     private String senderCountryCode = UNKNOWN_SENDER_COUNTRY_CODE;
+    @Since(1.0)
     private String recipientName = UNKNOWN_RECIPIENT_NAME;
+    @Since(1.0)
     private String recipientCountryCode = UNKNOWN_RECIPIENT_COUNTRY_CODE;
+    @Since(1.0)
     private String profileId = UNKNOWN_PROFILE_ID;
+    @Since(1.0)
     private String customizationId = UNKNOWN_CUSTOMIZATION_ID;
+    @Since(1.0)
     private String rootNameSpace;
+    @Since(1.0)
     private String rootNodeName;
+    @Since(1.0)
     private Archetype archetype = Archetype.INVALID;
+    @Since(1.0)
     private String documentType = UNKNOWN_DOCUMENT_TYPE;
 
     public void with(@NotNull String key, @NotNull String value) {
