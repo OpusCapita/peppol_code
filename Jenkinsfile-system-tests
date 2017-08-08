@@ -82,7 +82,7 @@ try {
                 }
                 catch(e) {
                     failBuild(
-                        "${recipients.testers}",
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
                         'System tests have failed. Check the log for details.'
                     )
                 }
