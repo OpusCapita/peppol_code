@@ -3,12 +3,12 @@ package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import org.apache.log4j.LogManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class WebWatchDogConsumer extends FileConsumer{
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(WebWatchDogConsumer.class);
+    private final static Logger logger = LoggerFactory.getLogger(WebWatchDogConsumer.class);
     private final String PREFIX = "SEMAIDPOST_PEPPOL_XIB_status_";
     public WebWatchDogConsumer(String id, String name, String expectedValue) {
         super(id, name, expectedValue);

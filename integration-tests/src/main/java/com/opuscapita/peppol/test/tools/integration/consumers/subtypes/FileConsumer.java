@@ -2,7 +2,8 @@ package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import org.apache.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -10,7 +11,7 @@ import java.io.File;
  * Created by gamanse1 on 2016.11.24..
  */
 public class FileConsumer extends Consumer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(FileConsumer.class);
+    private final static Logger logger = LoggerFactory.getLogger(FileConsumer.class);
     protected final String name;
     protected final String expectedValue;
     protected final static int DELAY = 6000;

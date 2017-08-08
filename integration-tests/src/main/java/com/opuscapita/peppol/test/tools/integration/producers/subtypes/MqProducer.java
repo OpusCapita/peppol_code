@@ -10,11 +10,11 @@ import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import org.apache.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.DriverManager;
@@ -32,7 +32,7 @@ import java.util.Properties;
 @Component
 @Scope("prototype")
 public class MqProducer implements Producer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqProducer.class);
+    private final static Logger logger = LoggerFactory.getLogger(MqProducer.class);
     private String endpoint;
     private MessageQueue mq;
     private String dbConnection = null;

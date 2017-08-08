@@ -8,8 +8,6 @@ import com.opuscapita.peppol.test.tools.integration.util.*;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
@@ -23,7 +21,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ import java.util.concurrent.TimeoutException;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.test.tools.integration"})
 public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLineRunner {
-    private final static Logger logger = LogManager.getLogger(IntegrationTestApp.class);
+    private final static Logger logger = LoggerFactory.getLogger(IntegrationTestApp.class);
     static String configFile;
     static String testResultFileName;
     static String templateDir;

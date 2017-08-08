@@ -10,8 +10,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.LogManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.*;
 
 
@@ -19,7 +19,7 @@ import java.io.*;
  * Created by gamanse1 on 2016.11.17..
  */
 public class FileDownloadConsumer extends Consumer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(WebUiProducer.class);
+    private final static Logger logger = LoggerFactory.getLogger(WebUiProducer.class);
     private final String name;
     private boolean expectedValue;
     private String link;

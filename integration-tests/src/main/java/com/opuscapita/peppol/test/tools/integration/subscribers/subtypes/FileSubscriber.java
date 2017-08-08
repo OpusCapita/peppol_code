@@ -3,8 +3,8 @@ package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import org.apache.log4j.LogManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Created by gamanse1 on 2016.11.24..
  */
 public class FileSubscriber extends Subscriber {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(FileSubscriber.class);
+    private final static Logger logger = LoggerFactory.getLogger(FileSubscriber.class);
     private final String sourceFile;
 
     public FileSubscriber(Object timeout, Object sourceFile) {

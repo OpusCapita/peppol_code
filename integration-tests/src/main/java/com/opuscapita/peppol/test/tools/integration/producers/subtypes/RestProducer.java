@@ -10,8 +10,8 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.log4j.LogManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.util.List;
  * Created by gamanse1 on 2016.11.14..
  */
 public class RestProducer implements Producer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(RestProducer.class);
+    private final static Logger logger = LoggerFactory.getLogger(RestProducer.class);
     private final String sourceDirectory;
     private final String link;
     private final String method;

@@ -3,11 +3,12 @@ package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import org.apache.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MlrConsumer extends FileConsumer {
 
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(MlrConsumer.class);
+    private final static Logger logger = LoggerFactory.getLogger(MlrConsumer.class);
     private final String ERROR_DESCRIPTION = "<cbc:Description>This sending expected to fail I/O in test mode</cbc:Description>";
     public MlrConsumer(String id, String fileTestName, String expectedValue) {
         super(id, fileTestName, expectedValue);

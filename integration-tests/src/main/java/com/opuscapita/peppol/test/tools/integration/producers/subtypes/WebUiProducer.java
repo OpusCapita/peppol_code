@@ -3,8 +3,8 @@ package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.MultipartPostMethod;
-import org.apache.log4j.LogManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Properties;
@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 
 public class WebUiProducer implements Producer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(WebUiProducer.class);
+    private final static Logger logger = LoggerFactory.getLogger(WebUiProducer.class);
     private String sourceDirectory;
     private String link;
     private String resultDirectory;

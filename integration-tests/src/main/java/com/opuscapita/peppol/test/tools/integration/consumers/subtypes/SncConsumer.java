@@ -1,15 +1,15 @@
 package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import org.apache.log4j.LogManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 
 /**
  * Created by gamanse1 on 2016.11.24..
  */
 public class SncConsumer extends FileConsumer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(SncConsumer.class);
+    private final static Logger logger = LoggerFactory.getLogger(SncConsumer.class);
 
     public SncConsumer(String id, String name, String expected) {
         super(id, name, expected);
