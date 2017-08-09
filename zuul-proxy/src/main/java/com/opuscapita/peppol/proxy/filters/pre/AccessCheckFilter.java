@@ -55,7 +55,7 @@ public class AccessCheckFilter extends ZuulFilter {
         logger.debug(request.getRemoteAddr());
         if (isNotAllowed(request)) {
             try {
-                requestContext.getResponse().sendError(500, "Denied!!!");
+                requestContext.getResponse().sendError(403, "Denied!!!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
