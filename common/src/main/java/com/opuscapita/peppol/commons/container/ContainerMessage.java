@@ -106,10 +106,6 @@ public class ContainerMessage implements Serializable {
         return new Gson().toJson(this);
     }
 
-    public byte[] convertToJsonByteArray() {
-        return convertToJson().getBytes();
-    }
-
     /**
      * Returns correlation ID if any or file name as correlation ID. Data is being read from processing status object.
      *
