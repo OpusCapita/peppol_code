@@ -20,4 +20,4 @@ ADD ["build/libs/zuul-proxy.jar", "zuul-proxy.jar"]
 
 CMD ["-jar", "zuul-proxy.jar"]
 
-EXPOSE 8989
+EXPOSE 8989 8769
