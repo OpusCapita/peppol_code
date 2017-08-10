@@ -27,6 +27,10 @@ class MessageLevelResponseUtils {
         return convertToXml(new SimpleDateFormat("yyyy-MM-dd").parse(date));
     }
 
+    static XMLGregorianCalendar convertToXmlTime(String time) throws ParseException, DatatypeConfigurationException {
+        return convertToXml(new SimpleDateFormat("HH:mm:ss").parse(time));
+    }
+
     static XMLGregorianCalendar convertToXml(Date date) throws DatatypeConfigurationException {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(date);

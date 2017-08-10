@@ -24,6 +24,7 @@ public class MessageLevelResponseCreatorTest {
         DocumentInfo di = new DocumentInfo();
         di.setDocumentId("doc_id");
         di.setIssueDate("2017-07-18");
+        di.setIssueTime("11:12:13");
         di.setRecipientId("recipient_id");
         di.setRecipientName("recipient_name");
         di.setSenderId("sender_id");
@@ -36,6 +37,7 @@ public class MessageLevelResponseCreatorTest {
         UBL21Writer.applicationResponse().write(art, out);
 
         String result = out.toString();
+        System.out.println(result);
         assertTrue(result.contains("<cbc:ID>doc_id-MLR</cbc:ID>"));
         assertTrue(result.contains(
                 "<cac:SenderParty>" +

@@ -10,9 +10,9 @@ import com.opuscapita.peppol.commons.validation.ValidationError;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_21.*;
 import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.DescriptionType;
+import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.IssueTimeType;
 import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.NoteType;
 import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.XPathType;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,9 +61,9 @@ public class MessageLevelResponseCreator {
 
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
                 pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
-            drt = createDocumentResponseType("RE", di.getDocumentId(), "Validation error");
+            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "Validation error");
         } else {
-            drt = createDocumentResponseType("RE", di.getDocumentId(), reason);
+            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), reason);
         }
 
         if (!di.getErrors().isEmpty()) {
@@ -130,7 +130,7 @@ public class MessageLevelResponseCreator {
 
         DocumentInfo di = cm.getDocumentInfo();
 
-        DocumentResponseType drt = createDocumentResponseType("AP", di.getDocumentId(), null);
+        DocumentResponseType drt = createDocumentResponseType("AP", di.getDocumentBusinessIdentifier(), null);
         List<LineResponseType> warnings = createLineResponse(di.getWarnings(), di);
         if (!warnings.isEmpty()) {
             drt.setLineResponse(warnings);
@@ -148,10 +148,15 @@ public class MessageLevelResponseCreator {
         }
 
         ApplicationResponseType art = new ApplicationResponseType();
-        art.setNote(Collections.singletonList(new NoteType(FilenameUtils.getBaseName(cm.getFileName()))));
+        art.setNote(Collections.singletonList(new NoteType(cm.getOriginalFileName())));
         art.setID(di.getDocumentId() + "-MLR");
         art.setIssueDate(MessageLevelResponseUtils.convertToXml(di.getIssueDate()));
-        art.setResponseDate(MessageLevelResponseUtils.convertToXml(new Date()));
+        if (StringUtils.isNotBlank(di.getIssueTime())) {
+            art.setIssueTime(new IssueTimeType(MessageLevelResponseUtils.convertToXmlTime(di.getIssueTime())));
+        }
+        Date now = new Date();
+        art.setResponseDate(MessageLevelResponseUtils.convertToXml(now));
+        art.setResponseTime(MessageLevelResponseUtils.convertToXml(now));
         art.setSenderParty(createParty(di.getSenderId(), di.getSenderName()));
         art.setReceiverParty(createParty(di.getRecipientId(), di.getRecipientName()));
 
@@ -171,7 +176,7 @@ public class MessageLevelResponseCreator {
         return result;
     }
 
-    private DocumentResponseType createDocumentResponseType(@NotNull String responseCode, @NotNull String documentId,
+    private DocumentResponseType createDocumentResponseType(@NotNull String responseCode, @NotNull String instanceIdentifier,
                                                             @Nullable String responseText) {
         DocumentResponseType result = new DocumentResponseType();
 
@@ -185,7 +190,7 @@ public class MessageLevelResponseCreator {
         result.setResponse(rt);
 
         DocumentReferenceType drt = new DocumentReferenceType();
-        drt.setID(documentId);
+        drt.setID(instanceIdentifier);
         result.setDocumentReference(Collections.singletonList(drt));
 
         return result;

@@ -4,6 +4,7 @@ import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -303,6 +304,9 @@ public class DocumentInfo implements Serializable {
 
     @NotNull
     public String getDocumentBusinessIdentifier() {
+        if (StringUtils.isBlank(documentBusinessIdentifier)) {
+            return documentId;
+        }
         return documentBusinessIdentifier;
     }
 
