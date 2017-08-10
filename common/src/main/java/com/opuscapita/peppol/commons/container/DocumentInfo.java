@@ -33,6 +33,8 @@ public class DocumentInfo implements Serializable {
     public static final String UNKNOWN_PROFILE_ID = "";
     public static final String UNKNOWN_CUSTOMIZATION_ID = "";
     public static final String UNKNOWN_DOCUMENT_TYPE = "";
+    public static final String UNKNOWN_ISSUE_TIME = "";
+    public static final String UNKNOWN_BUSINESS_IDENTIFIER = "";
 
     @Since(1.0)
     private final List<DocumentError> errors = new ArrayList<>();
@@ -48,6 +50,8 @@ public class DocumentInfo implements Serializable {
     private String documentId = UNKNOWN_DOCUMENT_ID;
     @Since(1.0)
     private String issueDate = UNKNOWN_ISSUE_DATE;
+    @Since(1.0)
+    private String issueTime = UNKNOWN_ISSUE_TIME;
     @Since(1.0)
     private String dueDate = UNKNOWN_DUE_DATE;
     @Since(1.0)
@@ -70,6 +74,8 @@ public class DocumentInfo implements Serializable {
     private Archetype archetype = Archetype.INVALID;
     @Since(1.0)
     private String documentType = UNKNOWN_DOCUMENT_TYPE;
+    @Since(1.0)
+    private String documentBusinessIdentifier = UNKNOWN_BUSINESS_IDENTIFIER;
 
     public void with(@NotNull String key, @NotNull String value) {
         switch (key) {
@@ -91,6 +97,10 @@ public class DocumentInfo implements Serializable {
             }
             case "issue_date": {
                 setIssueDate(value);
+                break;
+            }
+            case "issue_time": {
+                setIssueTime(value);
                 break;
             }
             case "due_date": {
@@ -119,6 +129,10 @@ public class DocumentInfo implements Serializable {
             }
             case "customization_id": {
                 setCustomizationId(value);
+                break;
+            }
+            case "document_business_identifier": {
+                setDocumentBusinessIdentifier(value);
                 break;
             }
         }
@@ -276,5 +290,23 @@ public class DocumentInfo implements Serializable {
 
     public void setRootNodeName(@Nullable String rootNodeName) {
         this.rootNodeName = rootNodeName;
+    }
+
+    @NotNull
+    public String getIssueTime() {
+        return issueTime;
+    }
+
+    public void setIssueTime(@NotNull String issueTime) {
+        this.issueTime = issueTime;
+    }
+
+    @NotNull
+    public String getDocumentBusinessIdentifier() {
+        return documentBusinessIdentifier;
+    }
+
+    public void setDocumentBusinessIdentifier(@NotNull String documentBusinessIdentifier) {
+        this.documentBusinessIdentifier = documentBusinessIdentifier;
     }
 }

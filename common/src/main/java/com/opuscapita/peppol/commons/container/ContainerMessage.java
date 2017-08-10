@@ -5,6 +5,7 @@ import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +29,8 @@ public class ContainerMessage implements Serializable {
     private ProcessingInfo processingInfo;
     @Since(1.0)
     private String fileName;
+    @Since(1.0)
+    private String originalFileName = "";
     @Since(1.0)
     private DocumentInfo documentInfo;
 
@@ -159,5 +162,17 @@ public class ContainerMessage implements Serializable {
 
     public double getVersion() {
         return version;
+    }
+
+    @NotNull
+    public String getOriginalFileName() {
+        if (StringUtils.isBlank(originalFileName)) {
+            return FilenameUtils.getBaseName(fileName);
+        }
+        return originalFileName;
+    }
+
+    public void setOriginalFileName(@NotNull String originalFileName) {
+        this.originalFileName = FilenameUtils.getBaseName(originalFileName);
     }
 }

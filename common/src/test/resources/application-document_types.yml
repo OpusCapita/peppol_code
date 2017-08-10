@@ -28,6 +28,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: due_date
               paths:
               - "$ROOT/PaymentMeans/DuePaymentDate"
@@ -55,6 +59,10 @@ peppol:
               - "$SBDH/DocumentIdentification/Standard"
               mandatory: false
               mask: ".*urn:sfti:documents:BasicInvoice:1:0.*"
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: profile_id
               paths:
               - "$ROOT/ProfileID"
@@ -97,6 +105,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: due_date
               paths:
               - "$ROOT/PaymentMeans/DuePaymentDate"
@@ -124,6 +136,10 @@ peppol:
               - "$SBDH/DocumentIdentification/Standard"
               mandatory: false
               mask: ".*urn:sfti:documents:BasicInvoice:1:0.*"
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: profile_id
               paths:
               - "$ROOT/ProfileID"
@@ -159,6 +175,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -167,6 +187,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
@@ -224,6 +248,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
@@ -272,6 +300,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -280,6 +312,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: due_date
               paths:
               - "$ROOT/PaymentMeans/PaymentDueDate"
@@ -342,6 +378,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: due_date
               paths:
               - "$ROOT/PaymentMeans/PaymentDueDate"
@@ -393,6 +433,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -401,6 +445,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -458,6 +506,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -505,6 +557,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -513,6 +569,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -570,6 +630,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -617,6 +681,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -625,6 +693,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/DespatchSupplierParty/Party/PartyName/Name"
@@ -682,6 +754,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/DespatchSupplierParty/Party/PartyName/Name"
@@ -730,6 +806,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -738,6 +818,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -796,6 +880,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -843,6 +931,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -851,6 +943,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SenderParty/PartyName/Name"
@@ -900,6 +996,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SenderParty/PartyName/Name"
@@ -941,6 +1041,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -949,6 +1053,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
@@ -1008,6 +1116,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
@@ -1056,6 +1168,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1064,6 +1180,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: due_date
               paths:
               - "$ROOT/PaymentMeans/PaymentDueDate"
@@ -1126,6 +1246,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: due_date
               paths:
               - "$ROOT/PaymentMeans/PaymentDueDate"
@@ -1177,6 +1301,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1185,6 +1313,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -1242,6 +1374,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -1289,6 +1425,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1297,6 +1437,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -1354,6 +1498,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -1401,6 +1549,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1409,6 +1561,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/DespatchSupplierParty/Party/PartyName/Name"
@@ -1466,6 +1622,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/DespatchSupplierParty/Party/PartyName/Name"
@@ -1514,6 +1674,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1522,6 +1686,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -1576,6 +1744,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -1619,6 +1791,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1627,6 +1803,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SenderParty/PartyName/Name"
@@ -1644,7 +1824,7 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(01|xx|36a):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(01|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
@@ -1676,6 +1856,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SenderParty/PartyName/Name"
@@ -1716,6 +1900,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1724,6 +1912,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: due_date
               paths:
               - "$ROOT/DueDate"
@@ -1786,6 +1978,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: due_date
               paths:
               - "$ROOT/DueDate"
@@ -1837,6 +2033,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1845,6 +2045,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -1902,6 +2106,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/BuyerCustomerParty/Party/PartyName/Name"
@@ -1949,6 +2157,10 @@ peppol:
               - "$SBDH/DocumentIdentification/TypeVersion"
               - "$ROOT/UBLVersionID"
               mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
             - id: document_id
               paths:
               - "$ROOT/ID"
@@ -1957,6 +2169,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"
@@ -2014,6 +2230,10 @@ peppol:
               paths:
               - "$ROOT/IssueDate"
               mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
             - id: sender_name
               paths:
               - "$ROOT/SellerSupplierParty/Party/PartyName/Name"

@@ -120,6 +120,7 @@ public class IncomingChecker {
         ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
                 fileName, source);
         cm.setStatus(source, "received");
+        cm.setOriginalFileName(file.getAbsolutePath());
 
         logger.info("Sending message: " + new Gson().toJson(cm));
         messageQueue.convertAndSend(queue, cm);
