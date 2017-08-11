@@ -29,13 +29,16 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-amqp'
+}
+
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile 'org.springframework.cloud:spring-cloud-starter-zuul'
     compile 'org.springframework.cloud:spring-cloud-starter-eureka'
-    compile('org.springframework.boot:spring-boot-starter-amqp')
     compile 'com.google.code.gson:gson:2.7'
     compile 'commons-net:commons-net:3.6'
     compile project(':common')
