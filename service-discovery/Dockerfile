@@ -1,4 +1,4 @@
-FROM d-l-tools.ocnet.local:443/openjdk:8-peppol
+FROM d-l-tools.ocnet.local:443/openjdk:8u111-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV SERVICE_DISCOVERY_HOME "/opt/local/services/peppol/service-discovery"
