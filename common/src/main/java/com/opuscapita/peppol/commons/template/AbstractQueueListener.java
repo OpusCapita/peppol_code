@@ -45,15 +45,17 @@ public abstract class AbstractQueueListener {
 
     @SuppressWarnings("unused")
     public synchronized void receiveMessage(@NotNull String message) {
-        ContainerMessage cm = null;
+        ContainerMessage cm;
         try {
             logger.debug("Received string message, assuming JSON");
             cm = serializer.fromJson(message);
-            receiveMessage(cm);
         } catch (Exception e) {
             logger.error("Failed to deserialize received message: " + e.getMessage());
-            handleError("n/a", e, cm);
+            handleError("n/a", e, null);
+            return;
         }
+
+        receiveMessage(cm);
     }
 
     @SuppressWarnings("unused")
