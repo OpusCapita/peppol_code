@@ -1,4 +1,4 @@
-FROM d-l-tools.ocnet.local:443/openjdk:8u111-peppol
+FROM d-l-tools.ocnet.local:443/openjdk:8u141-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV SPRING_APPLICATION_NAME mq-to-file
