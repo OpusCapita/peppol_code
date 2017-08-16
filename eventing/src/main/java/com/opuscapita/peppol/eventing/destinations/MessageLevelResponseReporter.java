@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.eventing.destinations;
 
+import com.helger.commons.state.ESuccess;
 import com.helger.ubl21.UBL21Writer;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
@@ -98,8 +99,12 @@ public class MessageLevelResponseReporter {
     private void storeResponse(@NotNull ApplicationResponseType art, @NotNull String fileName) {
         logger.info("Storing MLR as " + fileName);
 
-        UBL21Writer.applicationResponse().write(art, new File(fileName));
+        ESuccess result = UBL21Writer.applicationResponse().write(art, new File(fileName));
 
-        logger.info("MLR successfully stored as " + fileName);
+        if (result.isSuccess()) {
+            logger.info("MLR successfully stored as " + fileName);
+        } else {
+            logger.error("Failed to create MLR file " + fileName);
+        }
     }
 }
