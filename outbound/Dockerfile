@@ -19,3 +19,4 @@ WORKDIR "${OUTBOUND_HOME}"
 ADD ["build/libs/outbound.jar", "outbound.jar"]
 
 CMD ["-jar", "outbound.jar"]
+EXPOSE 5005

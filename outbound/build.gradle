@@ -1,6 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '1.5.6.RELEASE'
+        applicationDefaultJvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005']
     }
     repositories {
         mavenCentral()
