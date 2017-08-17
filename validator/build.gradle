@@ -38,6 +38,7 @@ dependencies {
     compile 'no.difi.vefa:validator-core:2.0.2'
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
+    testCompile project(':common-test')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     optional "org.springframework.boot:spring-boot-configuration-processor"
 }

@@ -3,6 +3,7 @@ package com.opuscapita.peppol.validator.validations;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
+import com.opuscapita.peppol.test.util.ContainerMessageTestLoader;
 import com.opuscapita.peppol.validator.TestConfig;
 import com.opuscapita.peppol.validator.validations.common.TestCommon;
 import org.junit.Test;
@@ -12,9 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.function.Consumer;
-
 import static org.junit.Assert.fail;
 
 /**
@@ -41,7 +42,7 @@ public class ValidationControllerTest extends TestCommon {
     private void testDocumentProfileValidation(final String documentProfile) {
         Consumer<? super File> consumer = (File file) -> {
             try {
-                ContainerMessage containerMessage = createContainerMessageFromFile(documentLoader, file);
+                ContainerMessage containerMessage = ContainerMessageTestLoader.createContainerMessageFromFile(documentLoader, file);
                 if (containerMessage == null) {
                     System.out.println("Failed to create ContainerMessage for file: " + file.getAbsolutePath());
                     return;
@@ -62,7 +63,12 @@ public class ValidationControllerTest extends TestCommon {
                 fail("Failed with exception: " + e.getMessage());
             }
         };
-        runTestsOnDocumentProfile(documentProfile, consumer);
+        try {
+            runTestsOnDocumentProfile(documentProfile, consumer);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            fail(documentProfile + " -> " + e.getMessage());
+        }
     }
 
 }

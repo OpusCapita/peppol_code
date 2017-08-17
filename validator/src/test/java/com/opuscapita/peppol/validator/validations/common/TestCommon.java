@@ -7,28 +7,49 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by bambr on 17.21.2.
  */
 public class TestCommon {
-    protected void runTestsOnDocumentProfile(String documentProfile, Consumer<? super File> consumer) {
+    protected void runTestsOnDocumentProfile(String documentProfile, Consumer<? super File> consumer) throws UnsupportedEncodingException {
         File resourceDir = new File(this.getClass().getResource("/test_data/" + documentProfile + "_files").getFile());
-        String[] dataFiles = resourceDir.list((dir, name) -> name.toLowerCase().endsWith("xml"));
-        Arrays.stream(dataFiles).map(fileName -> {
-            System.out.println(resourceDir + File.separator + fileName);
-            return new File(resourceDir, fileName);
-        }).filter(fileToCheck -> fileToCheck.isFile() && fileToCheck.exists()).forEach(consumer);
+        String resourcePath = URLDecoder.decode(resourceDir.getAbsolutePath(), "UTF-8");
+        System.out.println(resourceDir.getAbsolutePath() + " exists: " + resourceDir.exists());
+        try {
+            DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(resourcePath), (path) -> {
+                boolean result = false;
+                try {
+                    System.out.println(path.toFile().getAbsolutePath() + " -> " + path.getFileName().toString().toLowerCase().endsWith("xml"));
+                    result = path.getFileName().toString().toLowerCase().endsWith("xml");
+                } catch (Exception e) {
+                }
+                return result;
+            });
+        /*Arrays.asList(resourceDir.list()).forEach(System.out::println);
+        String[] dataFiles = resourceDir.list((dir, name) -> {
+                    System.out.println(name + " -> " + name.toLowerCase().endsWith("xml"));
+            return name.toLowerCase().endsWith("xml");
+        }
+        );*/
+            StreamSupport.stream(directoryStream.spliterator(), false).map(path -> {
+                System.out.println(path.toFile().getAbsolutePath());
+                return path.toFile();
+            }).filter(fileToCheck -> fileToCheck.isFile() && fileToCheck.exists()).forEach(consumer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Nullable
-    protected ContainerMessage createContainerMessageFromFile(DocumentLoader documentLoader, File file) throws Exception {
-        Endpoint endpoint = new Endpoint("test", ProcessType.TEST);
-        ContainerMessage containerMessage = new ContainerMessage("test", file.getAbsolutePath(), endpoint);
-        containerMessage.setDocumentInfo(documentLoader.load(file, endpoint));
-        containerMessage.getProcessingInfo().setCurrentStatus(endpoint, "unit testing");
-        return containerMessage;
-    }
+
 }

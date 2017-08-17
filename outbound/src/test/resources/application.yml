@@ -1,0 +1,23 @@
+
+peppol:
+  eventing:
+    queue:
+      in:
+        name: ignore
+  storage:
+    short: /tmp
+    long: /tmp
+
+spring:
+  profiles:
+    include: 'document_types'
+
+snc:
+  enabled: true
+  rest:
+    url: localhost
+    username: test
+    password: test
+  bsc: test
+  from: test
+  businessGroup: test
