@@ -7,6 +7,7 @@ import com.opuscapita.peppol.proxy.filters.pre.util.RequestUtils;
 import org.apache.commons.net.util.SubnetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -54,11 +55,9 @@ public class AccessCheckFilter extends ZuulFilter {
         HttpServletRequest request = requestContext.getRequest();
         logger.debug(request.getRemoteAddr());
         if (isNotAllowed(request)) {
-            try {
-                requestContext.getResponse().sendError(403, "Denied!!!");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // tell the context to stop this request and return 403
+            requestContext.unset();
+            requestContext.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
         }
         return null;
     }
