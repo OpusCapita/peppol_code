@@ -2,7 +2,11 @@
 # doing asserts for each module #
 
 - include: transport_assert.yml
+- pause:
+    seconds: 1
 - include: preprocessing_assert.yml
+- pause:
+    seconds: 1
 - include: email_notificator_assert.yml
 #- include: internal-routing_assert.yml
 #- include: validator_assert.yml
