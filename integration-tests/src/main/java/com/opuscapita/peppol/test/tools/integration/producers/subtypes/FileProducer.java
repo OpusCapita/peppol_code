@@ -1,18 +1,18 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
-import org.apache.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-
 /**
  * Created by gamanse1 on 2016.11.14..
  */
 public class FileProducer implements Producer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(FileProducer.class);
+    private final static Logger logger = LoggerFactory.getLogger(FileProducer.class);
     private String sourceFolder;
     private String destinationFolder;
     private File destination;

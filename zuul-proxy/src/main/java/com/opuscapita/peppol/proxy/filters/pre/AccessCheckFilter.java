@@ -55,7 +55,7 @@ public class AccessCheckFilter extends ZuulFilter {
         logger.debug(request.getRemoteAddr());
         if (isNotAllowed(request)) {
             try {
-                requestContext.getResponse().sendError(500, "Denied!!!");
+                requestContext.getResponse().sendError(403, "Denied!!!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -63,26 +63,11 @@ public class AccessCheckFilter extends ZuulFilter {
         return null;
     }
 
-    protected boolean isNotAllowed(HttpServletRequest request) {
+    boolean isNotAllowed(HttpServletRequest request) {
         String requestedService = RequestUtils.extractRequestedService(request, zuulServletPath);
-        String remoteAddr = request.getRemoteAddr();
-        logger.debug("remoteAddr: " + remoteAddr);
+        final String finalRemoteAddr = extractRemoteAddress(request, requestedService);
 
-        String forwardedFor = "";
-        // when working behind a proxy we get the original ip in X-Forwarded-For
-        // while remoteAddr is the ip of the proxy itself
-        if (request.getHeaders(HEADER_X_FORWARDED_FOR) != null && request.getHeaders(HEADER_X_FORWARDED_FOR).hasMoreElements()) {
-            forwardedFor = request.getHeaders(HEADER_X_FORWARDED_FOR).nextElement();
-        }
-        logger.debug("forwardedFor: " + forwardedFor);
 
-        if (!forwardedFor.isEmpty()) {
-            remoteAddr = forwardedFor;
-        }
-
-        final String finalRemoteAddr = remoteAddr;
-
-        logger.debug("Checking against address: " + remoteAddr + " and service: " + requestedService);
         if (requestedService.isEmpty()) {
             requestedService = "/";
         }
@@ -123,9 +108,15 @@ public class AccessCheckFilter extends ZuulFilter {
             }
         }
 
-        //Allow  service level settings
+        //Allow service level settings
         if (accessFilterProperties.getServicesAllowFrom() != null) {
             if (accessFilterProperties.getServicesAllowFrom().containsKey(requestedService)) {
+                // TODO fix this hack
+                if (!(accessFilterProperties.getServicesAllowFrom().get(requestedService) instanceof List)) {
+                    logger.warn("Attempting to use string as a list, hello to Daniil... allowing access for now. The value is: " +
+                            accessFilterProperties.getServicesAllowFrom().get(requestedService));
+                    return false;
+                }
                 if (accessFilterProperties.getServicesAllowFrom().get(requestedService).contains("*")) {
                     result = false;
                 } else {
@@ -135,6 +126,25 @@ public class AccessCheckFilter extends ZuulFilter {
         }
 
         return result;
+    }
+
+    private String extractRemoteAddress(HttpServletRequest request, String requestedService) {
+        String remoteAddr = request.getRemoteAddr();
+        logger.debug("remoteAddr: " + remoteAddr);
+
+        String forwardedFor = "";
+        // when working behind a proxy we get the original ip in X-Forwarded-For
+        // while remoteAddr is the ip of the proxy itself
+        if (request.getHeaders(HEADER_X_FORWARDED_FOR) != null && request.getHeaders(HEADER_X_FORWARDED_FOR).hasMoreElements()) {
+            forwardedFor = request.getHeaders(HEADER_X_FORWARDED_FOR).nextElement();
+        }
+        logger.debug("forwardedFor: " + forwardedFor);
+
+        if (!forwardedFor.isEmpty()) {
+            remoteAddr = forwardedFor;
+        }
+        logger.debug("Checking against address: " + remoteAddr + " and service: " + requestedService);
+        return remoteAddr;
     }
 
     private boolean hasProhibitedMasksNetworkOverride(String finalRemoteAddr, List<String> prohibitedMasksNetworkOverrides) {

@@ -4,7 +4,8 @@ import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class HtmlResultBuilder implements ResultBuilder{
 	private Configuration configuration;
 	private String templateDirectory;
 	private String testResultFileName;
-	private Logger logger = Logger.getLogger(HtmlResultBuilder.class);
+	private Logger logger = LoggerFactory.getLogger(HtmlResultBuilder.class);
 
 	public HtmlResultBuilder(String testResultFileName, String templateDirectory) {
 		this.testResultFileName = testResultFileName;

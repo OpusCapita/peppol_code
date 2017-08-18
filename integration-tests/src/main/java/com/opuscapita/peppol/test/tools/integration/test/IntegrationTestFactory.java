@@ -6,11 +6,10 @@ import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.opuscapita.peppol.test.tools.integration.producers.ProducerFactory;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.subscribers.SubscriberFactory;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class IntegrationTestFactory {
-    private final static Logger logger = LogManager.getLogger(IntegrationTestFactory.class);
+    private final static Logger logger = LoggerFactory.getLogger(IntegrationTestFactory.class);
     @Autowired private ProducerFactory producerFactory;
     @Autowired private SubscriberFactory subscriberFactory;
     @Autowired private ConsumerFactory consumerFactory;

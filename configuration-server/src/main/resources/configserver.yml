@@ -1,31 +1,31 @@
-info:
-  component: Peppol Config Server
-spring:
-  application:
-    name: configserver
-    profiles:
-      active: native
-  jmx:
-    default_domain: cloud.config.server
-  cloud:
-    config:
-      server:
-        native:
-          searchLocations: file:///K://configs
+#info:
+#  component: Peppol Config Server
+#spring:
+#  application:
+#    name: configserver
+#    profiles:
+#      active: native
+#  jmx:
+#    default_domain: cloud.config.server
+#  cloud:
+#    config:
+#      server:
+#        native:
+#          searchLocations: file:///K://configs
 
 
-security:
-  basic:
-    enabled: false
+#security:
+#  basic:
+#    enabled: false
 
-server:
-  port: 8888
-management:
-  context_path: /admin
+#server:
+#  port: 8888
+#management:
+#  context_path: /admin
 
-  logging:
-      level:
-          org.springframework.cloud: 'DEBUG'
+#  logging:
+#      level:
+#          org.springframework.cloud: 'DEBUG'
 
 #info:
 #  component: Peppol Config Server

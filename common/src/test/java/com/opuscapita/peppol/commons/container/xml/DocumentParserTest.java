@@ -4,7 +4,6 @@ import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
@@ -25,9 +23,24 @@ import static org.mockito.Mockito.mock;
 @SpringBootTest
 @TestPropertySource(locations="classpath:application.yml")
 public class DocumentParserTest {
-    private ErrorHandler errorHandler = mock(ErrorHandler.class);
     @Autowired
     private DocumentTemplates templates;
+
+    @Test
+    public void testNewFields() throws Exception {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentParser parser = new DocumentParser(factory, templates);
+
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/BIIXY_document_type_test.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "/valid/BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST));
+
+            assertNotNull(result);
+            assertEquals(Archetype.EHF, result.getArchetype());
+            assertEquals("11:57:14", result.getIssueTime());
+            assertEquals("5ba9b74c-292d-4382-996e-04ada2f8eb4e", result.getDocumentBusinessIdentifier());
+        }
+    }
 
     @Test
     public void testParseValid() throws Exception {

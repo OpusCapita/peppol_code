@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.document;
 
+import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +15,11 @@ public class DocumentError implements Serializable {
     private static final long serialVersionUID = 1522769757163697308L;
     public static final String ERROR_SEPARATOR = " error: ";
 
+    @Since(1.0)
     private final Endpoint source;
+    @Since(1.0)
     private final String message;
+    @Since(1.0)
     private final ValidationError validationError;
 
     public DocumentError(@NotNull Endpoint source, @NotNull String message) {

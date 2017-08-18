@@ -10,6 +10,8 @@ import com.opuscapita.peppol.commons.validation.ValidationError;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_21.*;
 import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.DescriptionType;
+import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.IssueTimeType;
+import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.NoteType;
 import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.XPathType;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -59,9 +61,9 @@ public class MessageLevelResponseCreator {
 
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
                 pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
-            drt = createDocumentResponseType("RE", di.getDocumentId(), "Validation error");
+            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "Validation error");
         } else {
-            drt = createDocumentResponseType("RE", di.getDocumentId(), reason);
+            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), reason);
         }
 
         if (!di.getErrors().isEmpty()) {
@@ -125,9 +127,13 @@ public class MessageLevelResponseCreator {
     @SuppressWarnings("ConstantConditions")
     public ApplicationResponseType reportSuccess(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
         ApplicationResponseType art = commonPart(cm);
-        DocumentInfo di = cm.getDocumentInfo();
 
-        DocumentResponseType drt = createDocumentResponseType("AP", di.getDocumentId(), null);
+        DocumentInfo di = cm.getDocumentInfo();
+        if (!di.getErrors().isEmpty()) {
+            return reportError(cm);
+        }
+
+        DocumentResponseType drt = createDocumentResponseType("AP", di.getDocumentBusinessIdentifier(), null);
         List<LineResponseType> warnings = createLineResponse(di.getWarnings(), di);
         if (!warnings.isEmpty()) {
             drt.setLineResponse(warnings);
@@ -145,9 +151,34 @@ public class MessageLevelResponseCreator {
         }
 
         ApplicationResponseType art = new ApplicationResponseType();
+        art.setNote(Collections.singletonList(new NoteType(cm.getOriginalFileName())));
         art.setID(di.getDocumentId() + "-MLR");
-        art.setIssueDate(MessageLevelResponseUtils.convertToXml(di.getIssueDate()));
-        art.setResponseDate(MessageLevelResponseUtils.convertToXml(new Date()));
+
+        Date now = new Date();
+        try {
+            // issue date
+            art.setIssueDate(MessageLevelResponseUtils.convertToXml(di.getIssueDate()));
+            // issue time must always go after issue date
+            if (StringUtils.isNotBlank(di.getIssueTime())) {
+                try {
+                    art.setIssueTime(new IssueTimeType(MessageLevelResponseUtils.convertToXmlTime(di.getIssueTime())));
+                } catch (Exception e) {
+                    logger.info("Failed to parse issue time: '" + di.getIssueTime() + "'");
+                    if (di.getErrors().isEmpty()) {
+                        cm.addError("Unable to parse issue time: '" + di.getIssueTime() + "'");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.info("Failed to parse issue date: '" + di.getIssueDate() + "', using current date instead");
+            art.setIssueDate(MessageLevelResponseUtils.convertToXml(now));
+            if (di.getErrors().isEmpty()) {
+                cm.addError("Unable to parse issue date: '" + di.getIssueDate() + "'");
+            }
+        }
+
+        art.setResponseDate(MessageLevelResponseUtils.convertToXml(now));
+        art.setResponseTime(MessageLevelResponseUtils.convertToXml(now));
         art.setSenderParty(createParty(di.getSenderId(), di.getSenderName()));
         art.setReceiverParty(createParty(di.getRecipientId(), di.getRecipientName()));
 
@@ -167,7 +198,7 @@ public class MessageLevelResponseCreator {
         return result;
     }
 
-    private DocumentResponseType createDocumentResponseType(@NotNull String responseCode, @NotNull String documentId,
+    private DocumentResponseType createDocumentResponseType(@NotNull String responseCode, @NotNull String instanceIdentifier,
                                                             @Nullable String responseText) {
         DocumentResponseType result = new DocumentResponseType();
 
@@ -181,7 +212,7 @@ public class MessageLevelResponseCreator {
         result.setResponse(rt);
 
         DocumentReferenceType drt = new DocumentReferenceType();
-        drt.setID(documentId);
+        drt.setID(instanceIdentifier);
         result.setDocumentReference(Collections.singletonList(drt));
 
         return result;

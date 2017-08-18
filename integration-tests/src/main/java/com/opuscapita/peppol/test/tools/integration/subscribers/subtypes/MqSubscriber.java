@@ -4,17 +4,17 @@ import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.MqListener;
-import org.apache.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 /**
  * Created by gamanse1 on 2016.11.17..
  */
 public class MqSubscriber extends Subscriber implements MqListener {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(MqSubscriber.class);
+    private final static Logger logger = LoggerFactory.getLogger(MqSubscriber.class);
     private final String queue;
     private List<Message> messages = new CopyOnWriteArrayList<>();
 

@@ -1,9 +1,8 @@
 package com.opuscapita.peppol.test.tools.integration.util;
 
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ import java.util.List;
  */
 public class LoggingResultBuilder implements ResultBuilder {
 
-    private final static Logger logger = LogManager.getLogger(LoggingResultBuilder.class);
+    private final static Logger logger = LoggerFactory.getLogger(LoggingResultBuilder.class);
 
     @Override
     public void processResult(List<TestResult> testResults) {

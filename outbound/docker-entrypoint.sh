@@ -48,7 +48,7 @@ if [[ "$1" == "-jar" ]]; then
     java_opts_array+=( "$item" )
   done < <([[ $JAVA_OPTS ]] && xargs printf '%s\0' <<<"$JAVA_OPTS")
 
-  exec java "${java_opts_array[@]}" "$@"
+  exec java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 "${java_opts_array[@]}" "$@"
 fi
 
 # if there are params the user is likely trying to explore the image

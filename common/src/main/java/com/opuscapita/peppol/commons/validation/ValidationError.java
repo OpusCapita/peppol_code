@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.validation;
 
+import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
@@ -14,11 +15,17 @@ import java.io.Serializable;
 public class ValidationError implements Serializable {
     private static final long serialVersionUID = -5071816172421440591L;
 
+    @Since(1.0)
     private String title;
+    @Since(1.0)
     private String identifier;
+    @Since(1.0)
     private String location;
+    @Since(1.0)
     private String flag;
+    @Since(1.0)
     private String text;
+    @Since(1.0)
     private String test;
 
     public ValidationError() {}

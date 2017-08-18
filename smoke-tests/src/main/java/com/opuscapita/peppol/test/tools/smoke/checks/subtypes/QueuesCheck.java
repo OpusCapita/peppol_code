@@ -5,8 +5,8 @@ import com.opuscapita.peppol.test.tools.smoke.checks.CheckResult;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class QueuesCheck extends Check {
 
-    private final static Logger logger = LogManager.getLogger(QueuesCheck.class);
+    private final static Logger logger = LoggerFactory.getLogger(QueuesCheck.class);
     final String _mesage = "Smoke Test MQ message";
 
     public QueuesCheck(String moduleName, Map<String, Object> params) {

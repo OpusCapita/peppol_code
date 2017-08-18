@@ -1,11 +1,9 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.3.RELEASE'
+        springBootVersion = '1.5.6.RELEASE'
     }
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -14,7 +12,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'validator'
@@ -40,6 +38,7 @@ dependencies {
     compile 'no.difi.vefa:validator-core:2.0.2'
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
+    testCompile project(':common-test')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     optional "org.springframework.boot:spring-boot-configuration-processor"
 }

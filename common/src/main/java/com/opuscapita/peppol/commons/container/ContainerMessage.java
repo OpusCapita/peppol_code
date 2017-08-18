@@ -1,9 +1,11 @@
 package com.opuscapita.peppol.commons.container;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,11 +19,19 @@ import java.io.Serializable;
  *
  * @author Sergejs.Roze
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ContainerMessage implements Serializable {
     private static final long serialVersionUID = -7283779459299141635L;
 
+    @Since(1.0)
+    private double version = 1.0;
+    @Since(1.0)
     private ProcessingInfo processingInfo;
+    @Since(1.0)
     private String fileName;
+    @Since(1.0)
+    private String originalFileName = "";
+    @Since(1.0)
     private DocumentInfo documentInfo;
 
     public ContainerMessage() {}
@@ -99,10 +109,6 @@ public class ContainerMessage implements Serializable {
         return new Gson().toJson(this);
     }
 
-    public byte[] convertToJsonByteArray() {
-        return convertToJson().getBytes();
-    }
-
     /**
      * Returns correlation ID if any or file name as correlation ID. Data is being read from processing status object.
      *
@@ -154,4 +160,19 @@ public class ContainerMessage implements Serializable {
         addError(new DocumentError(processingInfo.getCurrentEndpoint(), message));
     }
 
+    public double getVersion() {
+        return version;
+    }
+
+    @NotNull
+    public String getOriginalFileName() {
+        if (StringUtils.isBlank(originalFileName)) {
+            return FilenameUtils.getBaseName(fileName);
+        }
+        return originalFileName;
+    }
+
+    public void setOriginalFileName(@NotNull String originalFileName) {
+        this.originalFileName = FilenameUtils.getBaseName(originalFileName);
+    }
 }

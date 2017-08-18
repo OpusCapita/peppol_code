@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.internal_routing;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
@@ -36,8 +36,8 @@ public class InternalRoutingApp {
     @Bean
     AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
                                         @NotNull RoutingController controller, @NotNull MessageQueue messageQueue,
-                                        @NotNull StatusReporter reporter, @NotNull Gson gson) {
-        return new AbstractQueueListener(errorHandler, reporter, gson) {
+                                        @NotNull StatusReporter reporter, @NotNull ContainerMessageSerializer serializer) {
+        return new AbstractQueueListener(errorHandler, reporter, serializer) {
             @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {

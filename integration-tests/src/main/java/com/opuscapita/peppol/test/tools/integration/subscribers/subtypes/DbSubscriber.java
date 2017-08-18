@@ -3,8 +3,8 @@ package com.opuscapita.peppol.test.tools.integration.subscribers.subtypes;
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
-import org.apache.log4j.LogManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +16,7 @@ import java.util.Properties;
  * Created by gamanse1 on 2016.11.17..
  */
 public class DbSubscriber extends Subscriber {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(DbSubscriber.class);
+    private final static Logger logger = LoggerFactory.getLogger(DbSubscriber.class);
     private final String dbConnection;
     private final String query;
 

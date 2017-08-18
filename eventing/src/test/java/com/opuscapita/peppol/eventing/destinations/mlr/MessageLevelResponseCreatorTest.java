@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -19,16 +20,7 @@ public class MessageLevelResponseCreatorTest {
 
     @Test
     public void reportSuccess() throws Exception {
-        ContainerMessage cm = new ContainerMessage("meatdata", "test.xml", new Endpoint("xxx", ProcessType.TEST));
-
-        DocumentInfo di = new DocumentInfo();
-        di.setDocumentId("doc_id");
-        di.setIssueDate("2017-07-18");
-        di.setRecipientId("recipient_id");
-        di.setRecipientName("recipient_name");
-        di.setSenderId("sender_id");
-        di.setSenderName("sender_name");
-        cm.setDocumentInfo(di);
+        ContainerMessage cm = prepareContainerMessage();
 
         ApplicationResponseType art = new MessageLevelResponseCreator().reportSuccess(cm);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -36,6 +28,7 @@ public class MessageLevelResponseCreatorTest {
         UBL21Writer.applicationResponse().write(art, out);
 
         String result = out.toString();
+        System.out.println(result);
         assertTrue(result.contains("<cbc:ID>doc_id-MLR</cbc:ID>"));
         assertTrue(result.contains(
                 "<cac:SenderParty>" +
@@ -63,6 +56,45 @@ public class MessageLevelResponseCreatorTest {
                         "</cac:DocumentReference>" +
                 "</cac:DocumentResponse>"
         ));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void testBugWithUnparsableIssueDate() throws Exception {
+        ContainerMessage cm = prepareContainerMessage();
+
+        cm.getDocumentInfo().setIssueDate("oops");
+
+        ApplicationResponseType art = new MessageLevelResponseCreator().reportSuccess(cm);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        assertEquals(art.getIssueDate().getValue(), art.getResponseDate().getValue());
+
+        UBL21Writer.applicationResponse().write(art, out);
+
+        String result = out.toString();
+
+        System.out.println(result);
+        assertTrue(result.contains("<cbc:ResponseCode>RE</cbc:ResponseCode>"));
+        assertTrue(result.contains("<cbc:StatusReasonCode>SV</cbc:StatusReasonCode>"));
+    }
+
+    private ContainerMessage prepareContainerMessage() {
+        ContainerMessage cm = new ContainerMessage("meatdata", "test.xml", new Endpoint("xxx", ProcessType.TEST));
+
+        DocumentInfo di = new DocumentInfo();
+        di.setDocumentId("doc_id");
+        di.setIssueDate("2017-07-18");
+        di.setIssueTime("11:12:13");
+        di.setRecipientId("recipient_id");
+        di.setRecipientName("recipient_name");
+        di.setSenderId("sender_id");
+        di.setSenderName("sender_name");
+        cm.setDocumentInfo(di);
+
+        cm.setStatus(new Endpoint("test", ProcessType.TEST), "testing");
+
+        return cm;
     }
 
 }

@@ -1,14 +1,10 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.3.RELEASE'
+        springBootVersion = '1.5.6.RELEASE'
+        applicationDefaultJvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005']
     }
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-        flatDir {
-            dirs 'libs'
-        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -17,7 +13,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'outbound'
@@ -38,13 +34,14 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-amqp'
     compile 'org.springframework.boot:spring-boot-starter-mail'
 
-    compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
+    compile 'org.springframework.cloud:spring-cloud-starter-config:1.3.2.RELEASE'
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
     compile fileTree(dir: '../common-oxalis/libs', include: '*.jar')
-
+    testCompile project(':common-test')
+    testCompile group: 'mysql', name: 'mysql-connector-java', version: '5.1.26'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 

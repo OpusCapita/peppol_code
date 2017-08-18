@@ -40,7 +40,7 @@ tests:
                 source: integration-test-a2a
                 source directory: /etc/resources/events-persistence-test/ehf.xml
                 db connection: db1
-                endpoint: events-persistence-integration-test
+                endpoint: integration-test-endpoint
                 endpoint type: outbound
                 DB preprocess querry: delete from messages where invoice_number='20828'
             - mq producer:
@@ -49,7 +49,7 @@ tests:
                 source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/rejected.xml
                 db connection: db1
-                endpoint: events-persistence-integration-test
+                endpoint: integration-test-endpoint
                 endpoint type: outbound
                 DB preprocess querry: delete from messages where invoice_number='61016660'
             - mq producer:
@@ -58,26 +58,25 @@ tests:
                 endpoint type: outbound
                 source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/invalid.xml
-                endpoint: events-persistence-integration-test
+                endpoint: integration-test-endpoint
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
                 endpoint type: outbound
                 source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/invalid-snc-test.xml
-                endpoint: events-persistence-integration-test
+                endpoint: integration-test-endpoint
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
                 source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/logger_xib_test.xml
                 endpoint type: outbound
-                endpoint: events-persistence-integration-test
+                endpoint: integration-test-endpoint
         subscribers:
             - snc subscriber:
                 source directory: /peppol/data/snc-stub
                 consumers: 5
-                timeout: 1500
             - directory subscriber:
                 consumers: 6
                 source directory: /peppol/data/eventing/a2a/mlr
@@ -101,9 +100,13 @@ tests:
                 id: 8
                 expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_xib_test
             - mlr test:
-                name: IO exception in ml test
+                name: IO exception in mlr test
                 id: 9
                 expected value: invalid-er-mlr.xml
+            - snc test:
+                name: SNC ticket creation test
+                id: 5
+                expected value: 9908:937270062
    support-ui:
         producers:
             - file producer:

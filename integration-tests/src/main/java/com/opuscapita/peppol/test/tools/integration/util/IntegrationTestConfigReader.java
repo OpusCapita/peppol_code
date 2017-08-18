@@ -3,12 +3,11 @@ package com.opuscapita.peppol.test.tools.integration.util;
 import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
 import com.opuscapita.peppol.test.tools.integration.test.IntegrationTest;
 import com.opuscapita.peppol.test.tools.integration.test.IntegrationTestFactory;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ import java.util.Map;
 public class IntegrationTestConfigReader {
 @Autowired private IntegrationTestFactory integrationTestFactory;
 
-    private final static Logger logger = LogManager.getLogger(IntegrationTestConfigReader.class);
+    private final static Logger logger = LoggerFactory.getLogger(IntegrationTestConfigReader.class);
     private String configFile;
     private Map<String, Object> genericConfiguration = new HashMap<>();
 

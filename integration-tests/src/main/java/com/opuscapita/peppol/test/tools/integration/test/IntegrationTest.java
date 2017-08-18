@@ -3,16 +3,16 @@ package com.opuscapita.peppol.test.tools.integration.test;
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
 import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
-import org.apache.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Created by gamanse1 on 2016.11.16..
  */
 public class IntegrationTest {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(IntegrationTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
     private String name;
     private List<Producer> producers;
     private List<Subscriber> subscribers;

@@ -1,17 +1,17 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
-import org.apache.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.Properties;
-
 /**
  * Created by gamanse1 on 2016.11.17..
  */
 public class DbProducer implements Producer {
-    private final static org.apache.log4j.Logger logger = LogManager.getLogger(DbProducer.class);
+    private final static Logger logger = LoggerFactory.getLogger(DbProducer.class);
     private final String connection;
     private String query;
 
