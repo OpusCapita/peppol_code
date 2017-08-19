@@ -14,7 +14,7 @@ public class FileConsumer extends Consumer {
     private final static Logger logger = LoggerFactory.getLogger(FileConsumer.class);
     protected final String name;
     protected final String expectedValue;
-    protected final static int DELAY = 12000;
+    protected final static int DELAY = 16000;
     protected File file;
     protected TestResult result;
 
