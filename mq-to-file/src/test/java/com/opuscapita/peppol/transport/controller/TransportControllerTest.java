@@ -24,6 +24,9 @@ public class TransportControllerTest {
 
     @Test
     public void storeMessage() throws Exception {
+        if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+            return;
+        }
         ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", ProcessType.TEST));
 
         DocumentInfo doc = mock(DocumentInfo.class);

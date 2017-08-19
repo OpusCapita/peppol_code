@@ -33,6 +33,9 @@ public class DirectoryCheckerTest {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     public void moveOrAppendNoFiles() throws Exception {
+        if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+            return;
+        }
         File source = File.createTempFile("unittest-", ".delete.me");
         String original = source.getName();
         new FileOutputStream(source).write("ABC".getBytes());
@@ -51,6 +54,9 @@ public class DirectoryCheckerTest {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     public void moveOrAppendFileExists() throws Exception {
+        if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+            return;
+        }
         File source = File.createTempFile("unittest-", ".delete.me");
         String original = source.getName();
         new FileOutputStream(source).write("ABC\nDEF".getBytes());
@@ -75,6 +81,9 @@ public class DirectoryCheckerTest {
 
     @Test
     public void testBackupOrDelete() throws Exception {
+        if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+            return;
+        }
         File source = File.createTempFile("unittest-", ".delete" + EXT_TO);
         new FileOutputStream(source).write("ABC\nDEF".getBytes());
 
