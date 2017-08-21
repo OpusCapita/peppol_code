@@ -19,7 +19,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -67,6 +70,11 @@ public class EventPersistenceReporter {
 
         PeppolEvent result = new PeppolEvent();
         result.setFileName(cm.getFileName());
+        try {
+            result.setFileSize(Files.size(Paths.get(cm.getFileName())));
+        } catch (IOException e) {
+            logger.warn("Failed to determine size for " + cm.getFileName());
+        }
         result.setProcessType(endpoint.getType());
 
         if (cm.getDocumentInfo() == null) {
