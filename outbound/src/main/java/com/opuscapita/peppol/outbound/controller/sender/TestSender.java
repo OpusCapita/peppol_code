@@ -63,6 +63,7 @@ public class TestSender extends UblSender {
             throw new IllegalArgumentException("There is no document in message");
         }
 
+        logger.info("Sending message " + cm.getFileName() + " using test sender");
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))

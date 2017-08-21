@@ -25,6 +25,8 @@ import java.net.ConnectException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 /**
@@ -32,6 +34,13 @@ import java.util.TreeSet;
  */
 @Component
 public class PersistenceController {
+    private static final List<ProcessType> FINAL_STATUSES = new ArrayList<ProcessType>() {
+        {
+            add(ProcessType.IN_OUT);
+            add(ProcessType.OUT_PEPPOL);
+            add(ProcessType.OUT_PEPPOL_FINAL);
+        }
+    };
     private final Logger logger = LoggerFactory.getLogger(PersistenceController.class);
 
     private final AccessPointRepository accessPointRepository;
@@ -70,7 +79,7 @@ public class PersistenceController {
 
     @Transactional
     @Retryable(include = ConnectException.class, maxAttempts = 5, backoff = @Backoff(10000L))
-    public void storePeppolEvent(PeppolEvent peppolEvent) throws ConnectException {
+    public void storePeppolEvent(PeppolEvent peppolEvent) throws Exception {
         logger.info("About to process peppol event " + peppolEvent);
         if (/*peppolEvent.getProcessType() == ProcessType.IN_INBOUND ||*/
                 peppolEvent.getProcessType() == ProcessType.OUT_FILE_TO_MQ ||
@@ -107,7 +116,7 @@ public class PersistenceController {
         return fileInfo;
     }
 
-    private void setFileInfoStatus(FileInfo fileInfo, PeppolEvent peppolEvent, Message message) {
+    private void setFileInfoStatus(FileInfo fileInfo, PeppolEvent peppolEvent, Message message) throws Exception {
         boolean validationError = true;
         if (message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.reprocessed && message.getStatus() != MessageStatus.resolved) {
             message.setStatus(MessageStatus.processing);
@@ -228,11 +237,18 @@ public class PersistenceController {
         return "";
     }
 
-    private void addSentInfo(FileInfo fileInfo, PeppolEvent peppolEvent) {
+    private void addSentInfo(FileInfo fileInfo, PeppolEvent peppolEvent) throws Exception {
+        if (peppolEvent.getTransactionId() == null && FINAL_STATUSES.contains(peppolEvent.getProcessType())) {
+            //Terminal statuses imply that we do have transaction id
+            throw new Exception("For file: " + peppolEvent.getFileName() + " and status: " + peppolEvent.getProcessType() + " the transaction id is NULL!");
+        }
         SentFileInfo sentFileInfo = new SentFileInfo();
         sentFileInfo.setSentFile(fileInfo);
         String prefix = peppolEvent.getProcessType().name().split("_")[0];
-        sentFileInfo.setTransmissionId(prefix + peppolEvent.getTransactionId());
+        //Some intermediate phase events might miss the transaction id
+        if (peppolEvent.getTransactionId() != null) {
+            sentFileInfo.setTransmissionId(prefix + peppolEvent.getTransactionId());
+        }
         sentFileInfo.setApProtocol(peppolEvent.getSendingProtocol());
         if (peppolEvent.getCommonName() != null) {
             // CN example: "O=Telenor Norge AS,CN=APP_1000000030,C=NO"
