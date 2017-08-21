@@ -10,8 +10,8 @@ import java.io.IOException;
 public class WebWatchDogConsumer extends FileConsumer{
     private final static Logger logger = LoggerFactory.getLogger(WebWatchDogConsumer.class);
     private final String PREFIX = "SEMAIDPOST_PEPPOL_XIB_status_";
-    public WebWatchDogConsumer(String id, String name, String expectedValue) {
-        super(id, name, expectedValue);
+    public WebWatchDogConsumer(String id, String name, String expectedValue, Integer delay) {
+        super(id, name, expectedValue, delay);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class WebWatchDogConsumer extends FileConsumer{
     public TestResult consume(Object consumable) {
         init(consumable);
         if(!file.exists()) {
-            logger.warn("WebWatchDogConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+            logger.warn("WebWatchDogConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + delay);
             waitFixedDelay();
         }
 

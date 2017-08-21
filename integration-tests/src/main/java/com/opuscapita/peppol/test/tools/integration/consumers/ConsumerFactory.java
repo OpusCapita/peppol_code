@@ -16,6 +16,7 @@ public class ConsumerFactory {
         String name = consumerConfig.getKey().toLowerCase();
         Map<String ,Object> properties = (Map<String, Object>) consumerConfig.getValue();
         String id = String.valueOf(properties.get("id"));
+        Integer timeout = (properties.get("endpoint type") == null ) ? null :  (Integer)properties.get("endpoint type");
         switch (name){
             case "queue msg count check":
                 return new MqConsumer(id, (String) properties.get("name"), (List<String>)properties.get("subscribers"),properties.get("expected value"));
@@ -29,21 +30,21 @@ public class ConsumerFactory {
             case "snc check":
                 String sncTestName = (String) properties.get("name");
                 String expected = (String) properties.get("expected value");
-                return new SncConsumer(id, sncTestName, expected);
+                return new SncConsumer(id, sncTestName, expected, timeout);
             case "file test":
             case "file check":
                 String fileTestName = (String) properties.get("name");
                 String expectedValue = (String) properties.get("expected value");
-                return new FileConsumer(id, fileTestName, expectedValue);
+                return new FileConsumer(id, fileTestName, expectedValue, timeout);
             case "mlr test":
             case "mlr check":
                 String mlrFileTestName = (String) properties.get("name");
                 String mlrExpectedValue = (String) properties.get("expected value");
-                return new MlrConsumer(id, mlrFileTestName, mlrExpectedValue);
+                return new MlrConsumer(id, mlrFileTestName, mlrExpectedValue, timeout);
             case "wwd test":
                 String wwdFileTestName = (String) properties.get("name");
                 String wwdExpectedValue = (String) properties.get("expected value");
-                return new WebWatchDogConsumer(id, wwdFileTestName, wwdExpectedValue);
+                return new WebWatchDogConsumer(id, wwdFileTestName, wwdExpectedValue, timeout);
             case "web ui check":
             case "web ui test":
                 return new WebUiConsumer(id, (String) properties.get("name"), properties.get("expected value"));

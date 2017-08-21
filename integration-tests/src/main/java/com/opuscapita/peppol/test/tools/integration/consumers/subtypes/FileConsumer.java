@@ -14,14 +14,16 @@ public class FileConsumer extends Consumer {
     private final static Logger logger = LoggerFactory.getLogger(FileConsumer.class);
     protected final String name;
     protected final String expectedValue;
-    protected final static int DELAY = 16000;
+    protected int delay = 5000;
     protected File file;
     protected TestResult result;
 
-    public FileConsumer(String id, String name, String expectedValue) {
+    public FileConsumer(String id, String name, String expectedValue, Integer delay) {
         super(id);
         this.name = name;
         this.expectedValue = expectedValue;
+        if(delay != null)
+            this.delay = delay;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class FileConsumer extends Consumer {
         init(consumable);
 
         if(!file.exists()) {
-            logger.warn("FileConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+            logger.warn("FileConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + delay);
             waitFixedDelay();
         }
 
@@ -68,7 +70,7 @@ public class FileConsumer extends Consumer {
 
     protected void waitFixedDelay() {
         try {
-            Thread.sleep(DELAY);
+            Thread.sleep(delay);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

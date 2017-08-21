@@ -91,22 +91,27 @@ tests:
                 name: MLR a2a accepted creation test
                 id: 6
                 expected value: ehf-ap-mlr.xml
+                timeout: 16000
             - file test:
                 name: MLR xib rejected creation test
                 id: 7
                 expected value: rejected-re-mlr.xml
+                timeout: 16000
             - wwd test:
                 name: Web Watch Dog successful report test
                 id: 8
                 expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_xib_test
+                timeout: 16000
             - mlr test:
                 name: IO exception in mlr test
                 id: 9
                 expected value: invalid-er-mlr.xml
+                timeout: 16000
             - snc test:
                 name: SNC ticket creation test
                 id: 5
                 expected value: 9908:937270062
+                timeout: 16000
    support-ui:
         producers:
             - file producer:

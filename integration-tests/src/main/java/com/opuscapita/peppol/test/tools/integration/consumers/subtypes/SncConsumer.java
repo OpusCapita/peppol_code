@@ -11,8 +11,8 @@ import java.io.File;
 public class SncConsumer extends FileConsumer {
     private final static Logger logger = LoggerFactory.getLogger(SncConsumer.class);
 
-    public SncConsumer(String id, String name, String expected) {
-        super(id, name, expected);
+    public SncConsumer(String id, String name, String expected, Integer delay) {
+        super(id, name, expected, delay);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class SncConsumer extends FileConsumer {
         if(searchforFile(directory))
             return new TestResult(name, true, "Found expected file " + expectedValue);
 
-        logger.warn("SncConsumer: no files to consume in " + directory + " retry in: " + DELAY);
+        logger.warn("SncConsumer: no files to consume in " + directory + " retry in: " + delay);
         waitFixedDelay();
 
         if(searchforFile(directory))  //retry

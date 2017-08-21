@@ -57,11 +57,14 @@ tests:
                    name: Invalid container message test
                    id: 5
                    expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
+                   timeout: 16000
                - file test:
                    name: MLR accepted creation test
                    id: 6
                    expected value: ehf-ap-mlr.xml
+                   timeout: 16000
                - wwd test:
                    name: Web Watch Dog successful report test
                    id: 8
                    expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_xib_test
+                   timeout: 16000

@@ -10,15 +10,15 @@ public class MlrConsumer extends FileConsumer {
 
     private final static Logger logger = LoggerFactory.getLogger(MlrConsumer.class);
     private final String ERROR_DESCRIPTION = "<cbc:Description>This sending expected to fail I/O in test mode</cbc:Description>";
-    public MlrConsumer(String id, String fileTestName, String expectedValue) {
-        super(id, fileTestName, expectedValue);
+    public MlrConsumer(String id, String fileTestName, String expectedValue, Integer delay) {
+        super(id, fileTestName, expectedValue, delay);
     }
 
     @Override
     public TestResult consume(Object consumable) {
         init(consumable);
         if(!file.exists()) {
-            logger.warn("MlrConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + DELAY);
+            logger.warn("MlrConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + delay);
             waitFixedDelay();
         }
         try {
