@@ -175,3 +175,17 @@ tests:
                 id: 3
                 expected value: 4
                 name: validation rest check
+   inbound:
+        producers:
+            - command producer:
+                command: docker exec -it inbound-integration-latest ./send-to-peppol.sh -f /test-materials/validation_test_suite/valid/EHF_profile-bii05_creditnote.xml
+        subscribers:
+            - mq subscriber:
+                source queue: preprocessing-integration-test
+                timeout: 1500
+                consumers: 12
+        consumers:
+            - queue msg count check:
+                id: 12
+                expected value: 0
+                name: inbound Mq check

@@ -17,10 +17,16 @@ public class CommandProducer implements Producer {
     @Override
     public void run() {
         logger.info("CommandProducer: starting, command to execute:" + command);
+        Process p;
         try {
-            Runtime.getRuntime().exec(command);
+            p = Runtime.getRuntime().exec(command);
+            p.waitFor();
+            logger.info("CommandProducer: exit value: " + p.exitValue());
+            p.destroy();
         } catch (IOException e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
