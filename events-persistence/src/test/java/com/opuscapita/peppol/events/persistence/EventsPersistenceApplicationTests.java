@@ -20,7 +20,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
@@ -71,7 +70,7 @@ public class EventsPersistenceApplicationTests {
             try {
                 PeppolEvent peppolEvent = gson.fromJson(new BufferedReader(new InputStreamReader(EventsPersistenceApplicationTests.class.getResource(testDataFile).openStream())), PeppolEvent.class);
                 persistenceController.storePeppolEvent(peppolEvent);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 fail(e.getMessage());
             }

@@ -16,7 +16,7 @@ public class ConsumerFactory {
         String name = consumerConfig.getKey().toLowerCase();
         Map<String ,Object> properties = (Map<String, Object>) consumerConfig.getValue();
         String id = String.valueOf(properties.get("id"));
-        Integer timeout = (properties.get("endpoint type") == null ) ? null :  (Integer)properties.get("endpoint type");
+        Integer timeout = (Integer)properties.get("timeout");
         switch (name){
             case "queue msg count check":
                 return new MqConsumer(id, (String) properties.get("name"), (List<String>)properties.get("subscribers"),properties.get("expected value"));
