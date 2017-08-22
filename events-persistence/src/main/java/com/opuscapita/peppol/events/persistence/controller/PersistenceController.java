@@ -39,6 +39,8 @@ public class PersistenceController {
             add(ProcessType.IN_OUT);
             add(ProcessType.OUT_PEPPOL);
             add(ProcessType.OUT_PEPPOL_FINAL);
+            add(ProcessType.OUT_OUTBOUND);
+            add(ProcessType.IN_MQ_TO_FILE);
         }
     };
     private final Logger logger = LoggerFactory.getLogger(PersistenceController.class);
