@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.outbound.controller.sender;
 
 import eu.peppol.outbound.transmission.OxalisOutboundModuleWrapper;
+import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,10 @@ public class Svefaktura1Sender extends UblSender {
     @Override
     public void initialize() {
         oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
-        requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
+    }
+
+    @Override
+    protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
+        return oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
     }
 }

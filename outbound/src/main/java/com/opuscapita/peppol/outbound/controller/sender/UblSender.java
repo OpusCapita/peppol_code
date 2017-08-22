@@ -28,7 +28,6 @@ public class UblSender {
     final OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
 
     OxalisOutboundModule oxalisOutboundModule;
-    TransmissionRequestBuilder requestBuilder;
 
     @Autowired
     public UblSender(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
@@ -38,7 +37,10 @@ public class UblSender {
     @PostConstruct
     public void initialize() {
         oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
-        requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(false);
+    }
+
+    protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
+        return oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(false);
     }
 
     @SuppressWarnings("unused")
@@ -49,8 +51,10 @@ public class UblSender {
             throw new IllegalArgumentException("There is no document in message");
         }
 
+        // request builder is not reusable
+        TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
+
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
-            requestBuilder.reset();
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
                     .processType(PeppolProcessTypeId.valueOf(document.getProfileId()))
