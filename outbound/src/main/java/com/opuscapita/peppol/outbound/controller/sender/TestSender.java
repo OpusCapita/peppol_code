@@ -65,6 +65,7 @@ public class TestSender extends UblSender {
 
         logger.info("Sending message " + cm.getFileName() + " using test sender");
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
+            requestBuilder.reset();
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
                     .processType(PeppolProcessTypeId.valueOf(document.getProfileId()))
@@ -74,6 +75,7 @@ public class TestSender extends UblSender {
                     .payLoad(getUpdatedFileContent(cm, testRecipient));
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
+            logger.debug("About to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: " + transmissionRequest.getEndpointAddress().getCommonName().toString());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 

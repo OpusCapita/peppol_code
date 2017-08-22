@@ -8,6 +8,8 @@ import eu.peppol.identifier.PeppolProcessTypeId;
 import eu.peppol.outbound.OxalisOutboundModule;
 import eu.peppol.outbound.transmission.*;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,8 @@ import java.io.InputStream;
  */
 @Component
 public class UblSender {
+    private final static Logger logger = LoggerFactory.getLogger(UblSender.class);
+
     final OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
 
     OxalisOutboundModule oxalisOutboundModule;
@@ -46,6 +50,7 @@ public class UblSender {
         }
 
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
+            requestBuilder.reset();
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
                     .processType(PeppolProcessTypeId.valueOf(document.getProfileId()))
@@ -55,6 +60,7 @@ public class UblSender {
                     .payLoad(inputStream);
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
+            logger.debug("About to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: " + transmissionRequest.getEndpointAddress().getCommonName().toString());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 
