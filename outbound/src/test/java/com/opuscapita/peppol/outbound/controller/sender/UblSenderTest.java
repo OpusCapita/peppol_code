@@ -4,12 +4,12 @@ import com.google.common.io.Files;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.container.xml.DocumentParser;
 import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
 import com.opuscapita.peppol.outbound.OutboundApp;
 import com.opuscapita.peppol.outbound.controller.OutboundController;
 import com.opuscapita.peppol.test.util.ContainerMessageTestLoader;
 import eu.peppol.outbound.transmission.OxalisOutboundModuleWrapper;
+import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
 import org.apache.commons.io.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,7 +30,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)
@@ -62,6 +62,7 @@ public class UblSenderTest {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
         ContainerMessage containerMessage = ContainerMessageTestLoader.createContainerMessageFromFile(documentLoader, testFile);
+        assertNotNull(containerMessage);
 
         UblSender ublSender = new UblSenderWrapper(new OxalisOutboundModuleWrapper());
         ublSender.initialize();
@@ -77,7 +78,6 @@ public class UblSenderTest {
         try {
             ublSender.send(containerMessage);
         } catch (IllegalStateException e) {
-
             assertTrue(e.getMessage().contains("POST"));
         }
     }
@@ -95,14 +95,18 @@ public class UblSenderTest {
 
     private class UblSenderWrapper extends UblSender {
 
-        public UblSenderWrapper(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
+        UblSenderWrapper(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
             super(oxalisOutboundModuleWrapper);
         }
 
         @Override
         public void initialize() {
             oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
-            requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
+        }
+
+        @Override
+        protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
+            return oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
         }
     }
 
