@@ -95,7 +95,12 @@ public class PersistenceController {
         AccessPoint accessPoint = getAccessPoint(peppolEvent);
         Message message = getOrCreateMessage(peppolEvent);
         FileInfo fileInfo = getFileInfo(message, peppolEvent);
-        setFileInfoStatus(fileInfo, peppolEvent, message);
+        try {
+            setFileInfoStatus(fileInfo, peppolEvent, message);
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+            return;
+        }
         fileInfoRepository.save(fileInfo);
         Message persistedMessage = messageRepository.save(message);
         logger.info("Message[" + peppolEvent.getFileName() + " : AP - " + (accessPoint != null ? accessPoint : "N/A") + "] persisted with id: " + persistedMessage.getId());
