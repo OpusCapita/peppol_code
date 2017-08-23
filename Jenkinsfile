@@ -202,7 +202,7 @@ try {
                 if (release_type in ['patch_release', 'minor_release', 'major_release']) {
                     input message: 'Deploy PEPPOL Access Point to production?', ok: 'Sure'
                 }
-            }                                                                                    }
+            }                                                                                    
         }
 
         lock(resource: 'peppol-production-servers') {
