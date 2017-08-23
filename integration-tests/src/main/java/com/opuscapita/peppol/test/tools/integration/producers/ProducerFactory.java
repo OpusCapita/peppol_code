@@ -52,6 +52,8 @@ public class ProducerFactory {
             case "web ui producer":
                 String resultDirectory = (String) genericConfiguration.get("validation result folder");
                 return new WebUiProducer(properties.get("source directory"), properties.get("destination link"), resultDirectory);
+            case "command producer":
+                return new CommandProducer(properties.get("command"));
             default:
                 throw new IllegalArgumentException("invalid producer configuration, unable to create producer");
 

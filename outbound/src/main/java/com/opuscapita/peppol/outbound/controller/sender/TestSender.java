@@ -46,7 +46,11 @@ public class TestSender extends UblSender {
     @Override
     public void initialize() {
         oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
-        requestBuilder = oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
+    }
+
+    @Override
+    protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
+        return oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
     }
 
     @SuppressWarnings("unused")
@@ -65,6 +69,7 @@ public class TestSender extends UblSender {
 
         logger.info("Sending message " + cm.getFileName() + " using test sender");
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
+            TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
             requestBuilder.reset();
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
