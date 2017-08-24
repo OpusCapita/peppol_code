@@ -7,7 +7,9 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
+import java.util.Calendar;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,6 +26,10 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
         for (Map.Entry entry : envs.entrySet()) {
             System.out.println("Environment variable: " + entry.getKey() + "=" + entry.getValue());
         }
+        TimeZone tz = Calendar.getInstance().getTimeZone();
+        System.out.println("Current time Zone settings:");
+        System.out.println(tz.getDisplayName());
+        System.out.println(tz.getID());
     }
 
     @Override
