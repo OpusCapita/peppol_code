@@ -72,6 +72,8 @@
                 <td id="arrived_time" data-title="'Arrived time'"
                     ng-click="showMessageInfo(msg)">
                     {{msg.arrivedTimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
+                    {{msg.arrivedTimeStamp | date:'yyyy-MM-dd HH:mm:ss':'+0300'}}
+                    {{msg.arrivedTimeStamp | date:'yyyy-MM-dd HH:mm:ss':'UTC'}}
                 </td>
                 <td id="delivered_time" data-title="'Delivered time'" ng-show="!hasErrors"
                     ng-click="showMessageInfo(msg)">
