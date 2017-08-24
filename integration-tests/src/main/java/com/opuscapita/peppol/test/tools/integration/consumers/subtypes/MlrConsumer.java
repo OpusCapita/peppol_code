@@ -17,6 +17,8 @@ public class MlrConsumer extends FileConsumer {
     @Override
     public TestResult consume(Object consumable) {
         init(consumable);
+        if(file == null)
+            return result;
         if(!file.exists()) {
             logger.warn("MlrConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + delay);
             waitFixedDelay();

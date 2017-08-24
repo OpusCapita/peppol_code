@@ -35,13 +35,13 @@ public class FileConsumer extends Consumer {
     public TestResult consume(Object consumable) {
         init(consumable);
 
+        if(file == null)
+            return result;
         if(!file.exists()) {
             logger.warn("FileConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + delay);
             waitFixedDelay();
         }
-
-
-            if(file.exists()) {
+        if(file.exists()) {
             clean();
             return new TestResult(name, true, "Found expected file " + file.getAbsolutePath());
         }
@@ -59,7 +59,6 @@ public class FileConsumer extends Consumer {
             result = new TestResult(name, false, "FileConsumer: Directory not found " + directory);
             return;
         }
-
         result = new TestResult(name, false, "FileConsumer: expected file: " + expectedValue + " not found in: " + directory);
         file = new File(directory,expectedValue);
     }
