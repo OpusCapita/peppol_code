@@ -142,6 +142,7 @@ public class PersistenceController {
             case OUT_PREPROCESS:
             case IN_ROUTING:
             case OUT_ROUTING:
+            case OUT_PEPPOL_RETRY:
             case IN_TEST:
             case OUT_TEST:
             case TEST:

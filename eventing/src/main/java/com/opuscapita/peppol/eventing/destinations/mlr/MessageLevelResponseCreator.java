@@ -74,6 +74,30 @@ public class MessageLevelResponseCreator {
         return result;
     }
 
+    public ApplicationResponseType reportRetry(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
+        ApplicationResponseType result = commonPart(cm);
+
+        DocumentInfo di = cm.getDocumentInfo();
+        if (di == null || !di.getErrors().isEmpty()) {
+            return reportError(cm);
+        }
+
+        ProcessingInfo pi = cm.getProcessingInfo();
+        if (pi == null) {
+            throw new IllegalArgumentException("Missing processing info from the document");
+        }
+
+        DocumentResponseType documentResponse = createDocumentResponseType("AB", di.getDocumentBusinessIdentifier(), null);
+        List<LineResponseType> warnings = createLineResponse(di.getWarnings(), di);
+        if (!warnings.isEmpty()) {
+            documentResponse.setLineResponse(warnings);
+        }
+
+        result.setDocumentResponse(Collections.singletonList(documentResponse));
+
+        return result;
+    }
+
     private List<LineResponseType> createLineResponse(List<? extends DocumentError> errors, DocumentInfo di) {
         List<LineResponseType> list = new ArrayList<>();
 
