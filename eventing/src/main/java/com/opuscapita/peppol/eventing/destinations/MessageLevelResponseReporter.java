@@ -69,6 +69,18 @@ public class MessageLevelResponseReporter {
             return;
         }
 
+        // report retries in outbound
+        if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_RETRY) {
+            if (di.getErrors().isEmpty()) {
+                logger.info("Creating MLR for message queued for retry");
+                storeResponse(creator.reportRetry(cm), cm, "ab");
+            } else {
+                logger.info("Creating MLR for message with errors: " + cm.getFileName());
+                storeResponse(creator.reportError(cm), cm, "re");
+            }
+            return;
+        }
+
         // report successfull end of the flow
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
             if (di.getErrors().isEmpty()) {
@@ -76,7 +88,7 @@ public class MessageLevelResponseReporter {
                     logger.info("Creating MLR for successfully sent message: " + cm.getFileName());
                     storeResponse(creator.reportSuccess(cm), cm, "ap");
                 } else {
-                    logger.info("Skipping MLR creation for " + cm.getFileName() + ", seems to be sending retry");
+                    logger.warn("Skipping MLR creation for " + cm.getFileName() + ", seems to be sending retry");
                 }
             } else {
                 logger.info("Creating MLR for message with errors: " + cm.getFileName());

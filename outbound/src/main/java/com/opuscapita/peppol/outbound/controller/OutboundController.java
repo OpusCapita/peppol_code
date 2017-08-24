@@ -116,6 +116,7 @@ public class OutboundController {
             String next = cm.popRoute();
             if (StringUtils.isNotBlank(next)) {
                 messageQueue.convertAndSend(next, cm);
+                cm.setStatus(new Endpoint(next, ProcessType.OUT_PEPPOL_RETRY), "Retry: " + next);
                 logger.info("Message " + cm.getFileName() + " queued for retry to the queue " + next);
                 return;
             }
@@ -124,6 +125,12 @@ public class OutboundController {
         logger.info("No (more) retries possible for " + cm.getFileName() + ", reporting IO error");
         cm.getProcessingInfo().setProcessingException(e.getMessage());
         throw e;
+    }
+
+    // for unit tests
+    @SuppressWarnings("SameParameterValue")
+    void setComponentName(@NotNull String componentName) {
+        this.componentName = componentName;
     }
 
 }

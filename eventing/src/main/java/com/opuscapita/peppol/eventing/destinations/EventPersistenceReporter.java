@@ -62,7 +62,7 @@ public class EventPersistenceReporter {
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
-    protected PeppolEvent convert(@NotNull ContainerMessage cm) {
+    PeppolEvent convert(@NotNull ContainerMessage cm) {
         logger.debug("Message received");
 
         ProcessingInfo ps = cm.getProcessingInfo();
@@ -103,11 +103,14 @@ public class EventPersistenceReporter {
         return result;
     }
 
+    @SuppressWarnings("ConstantConditions")
     private boolean shouldExtractCommonNameFromMetadata(@NotNull ContainerMessage cm) {
-        return (cm.getProcessingInfo().getCommonName() == null || !cm.getProcessingInfo().getCommonName().contains(",")) && hasCommonNameInMetadata(cm);
+        return (cm.getProcessingInfo().getCommonName() == null || !cm.getProcessingInfo().getCommonName().contains(","))
+                && hasCommonNameInMetadata(cm);
     }
 
 
+    @SuppressWarnings("ConstantConditions")
     private String extractCommonNameFromMetadata(ContainerMessage containerMessage) {
         String result = null;
         try {
@@ -122,7 +125,9 @@ public class EventPersistenceReporter {
         return result;
     }
 
-    protected boolean hasCommonNameInMetadata(ContainerMessage containerMessage) {
-        return (containerMessage.isInbound() && containerMessage.getProcessingInfo().getSourceMetadata().contains("sendingAccessPoint")) || (!containerMessage.isInbound() && containerMessage.getProcessingInfo().getSourceMetadata().contains("receivingAccessPoint"));
+    @SuppressWarnings("ConstantConditions")
+    private boolean hasCommonNameInMetadata(ContainerMessage containerMessage) {
+        return (containerMessage.isInbound() && containerMessage.getProcessingInfo().getSourceMetadata().contains("sendingAccessPoint"))
+                || (!containerMessage.isInbound() && containerMessage.getProcessingInfo().getSourceMetadata().contains("receivingAccessPoint"));
     }
 }

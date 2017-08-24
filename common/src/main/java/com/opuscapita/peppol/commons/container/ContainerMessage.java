@@ -125,11 +125,14 @@ public class ContainerMessage implements Serializable {
     @Override
     @NotNull
     public String toString() {
-        String result = fileName + " from " + processingInfo.getSource();
+        String result = fileName;
+        if (processingInfo != null) {
+            result += " from " + processingInfo.getSource();
+        }
         if (documentInfo != null) {
             result += " [" + documentInfo.getClass().getName() + "]";
         }
-        if (processingInfo.getRoute() != null) {
+        if (processingInfo != null && processingInfo.getRoute() != null) {
             result += ": " + processingInfo.getRoute();
         }
 
