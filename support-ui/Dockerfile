@@ -34,8 +34,8 @@ ENV JAVA_OPTS "\
     -Dhttps.proxyHost=10.202.9.33 \
     -Dhttps.proxyPort=8080 \
     -Dhttp.nonProxyHosts=\"*.local|10.164.1.146\" \
-    -Dums.server.url=https://ums.itella.com//itella-ums-server/services/BasicUms \
-    -Duser.timezone=Europe/Helsinki"
+    -Duser.timezone=Europe/Helsinki \
+    -Dums.server.url=https://ums.itella.com//itella-ums-server/services/BasicUms"
 
 CMD ["catalina.sh", "run"]
 
