@@ -64,7 +64,7 @@ public class UblSender {
                     .payLoad(inputStream);
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
-            logger.debug("About to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: " + transmissionRequest.getEndpointAddress().getCommonName().toString());
+            logger.debug("About to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + " and endpoint: " + transmissionRequest.getEndpointAddress().getCommonName().toString());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 
