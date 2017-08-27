@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 /**
  * @author Sergejs.Roze
  */
@@ -95,16 +93,10 @@ public class OutboundController {
             cm.getProcessingInfo().setTransactionId(transmissionResponse.getTransmissionId().toString());
             cm.getProcessingInfo().setCommonName(transmissionResponse.getCommonName() != null ? transmissionResponse.getCommonName().toString() : "N/A");
             cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol() != null ? transmissionResponse.getProtocol().toString() : "N/A");
-        } catch (IOException ioe) {
-            logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + ioe.getMessage());
-            whatAboutRetry(cm, messageQueue, ioe, endpoint);
         } catch (Exception e) {
-            logger.warn("Sending of the message " + cm.getFileName() + " failed with error: " + e.getMessage());
-            cm.getProcessingInfo().setProcessingException(e.getMessage());
-            cm.setStatus(endpoint, "message delivery failure");
-            throw e;
+            logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + e.getMessage());
+            whatAboutRetry(cm, messageQueue, e, endpoint);
         }
-
     }
 
     // will try to re-send the message to the delayed queue only for I/O exceptions
