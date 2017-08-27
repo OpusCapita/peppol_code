@@ -87,7 +87,7 @@ public class MessageLevelResponseCreator {
             throw new IllegalArgumentException("Missing processing info from the document");
         }
 
-        DocumentResponseType documentResponse = createDocumentResponseType("AB", di.getDocumentBusinessIdentifier(), null);
+        DocumentResponseType documentResponse = createDocumentResponseType("AB", di.getDocumentBusinessIdentifier(), pi.getCurrentStatus());
         List<LineResponseType> warnings = createLineResponse(di.getWarnings(), di);
         if (!warnings.isEmpty()) {
             documentResponse.setLineResponse(warnings);
