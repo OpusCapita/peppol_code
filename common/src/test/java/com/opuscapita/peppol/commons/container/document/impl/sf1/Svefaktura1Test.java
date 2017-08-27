@@ -43,7 +43,7 @@ public class Svefaktura1Test {
         assertEquals("SE", document.getSenderCountryCode());
         assertEquals("SE", document.getRecipientCountryCode());
         assertEquals("urn:sfti:services:documentprocessing:BasicInvoice:1:0", document.getProfileId());
-        assertEquals("urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0", document.getCustomizationId());
+        assertEquals("urn:sfti:documents:BasicInvoice:1:0", document.getCustomizationId());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class Svefaktura1Test {
         assertEquals("SE", document.getSenderCountryCode());
         assertEquals("SE", document.getRecipientCountryCode());
         assertEquals("urn:sfti:services:documentprocessing:BasicInvoice:1:0", document.getProfileId());
-        assertEquals("urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0",
+        assertEquals("urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0",
                 document.getCustomizationId());
     }
 }

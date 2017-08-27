@@ -77,7 +77,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              constant: urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0
+              constant: urn:sfti:documents:BasicInvoice:1:0
 
           - name: SVEFAKTURA1.Invoice
             root: "$SBD/Invoice"
@@ -153,7 +153,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              constant: urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0
+              constant: urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0
 
           - name: EHF.CreditNote
             root: "$SBD/CreditNote"
