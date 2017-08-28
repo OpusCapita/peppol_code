@@ -232,7 +232,7 @@ public class DocumentParserTest {
         }
     }
 
-    @Test
+  /*  @Test
     public void testParseNetClientSender() throws Exception{
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -263,6 +263,6 @@ public class DocumentParserTest {
             ));
             assertEquals(Archetype.INVALID, result.getArchetype());
         }
-    }
+    }*/
 
 }
