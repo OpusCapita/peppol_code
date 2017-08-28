@@ -71,13 +71,14 @@ public class MessageLevelResponseReporter {
 
         // report retries in outbound
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_RETRY) {
-            if (di.getErrors().isEmpty()) {
-                logger.info("Creating MLR for message queued for retry");
-                storeResponse(creator.reportRetry(cm), cm, "ab");
-            } else {
-                logger.info("Creating MLR for message with errors: " + cm.getFileName());
-                storeResponse(creator.reportError(cm), cm, "re");
-            }
+            // FIXME MLRs for retries temporary disabled due to Swedish people being unable to provide specification
+//            if (di.getErrors().isEmpty()) {
+//                logger.info("Creating MLR for message queued for retry");
+//                storeResponse(creator.reportRetry(cm), cm, "ab");
+//            } else {
+//                logger.info("Creating MLR for message with errors: " + cm.getFileName());
+//                storeResponse(creator.reportError(cm), cm, "re");
+//            }
             return;
         }
 
