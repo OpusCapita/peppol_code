@@ -14,7 +14,6 @@ import org.apache.commons.io.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@Ignore("Test goes crazy, has to review it")
+//@Ignore("Test goes crazy, has to review it")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)
 @TestPropertySource(locations = "classpath:application.yml", properties = {"OXALIS_HOME:src/test/resources/oxalis"})

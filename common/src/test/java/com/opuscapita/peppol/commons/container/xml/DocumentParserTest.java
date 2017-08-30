@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,6 +26,8 @@ import static org.junit.Assert.*;
 public class DocumentParserTest {
     @Autowired
     private DocumentTemplates templates;
+    @Value("${peppol.common.consistency_check_enabled}")
+    private boolean shouldFailOnInconsistency;
 
     @Test
     public void testNewFields() throws Exception {
@@ -33,7 +36,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/BIIXY_document_type_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "/valid/BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "/valid/BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -49,7 +52,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/ehf.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "ehf.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "ehf.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -81,7 +84,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/ehf_no_issue_date.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "ehf_no_issue_date.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "ehf_no_issue_date.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.INVALID, result.getArchetype());
@@ -113,7 +116,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/BIIXY_document_type_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -144,7 +147,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/Catalogue_document_type_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_test.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -172,7 +175,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/Catalogue_document_type_seller_supplier_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_seller_supplier_test.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_seller_supplier_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -200,7 +203,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-no-sbdh.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-no-sbdh.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-no-sbdh.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
             assertNotNull(result);
             assertEquals(Archetype.INVALID, result.getArchetype());
         }
@@ -213,7 +216,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
             assertNotNull(result);
             assertEquals(Archetype.INVALID, result.getArchetype());
         }
@@ -226,7 +229,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
             assertNotNull(result);
             assertEquals(Archetype.SVEFAKTURA1, result.getArchetype());
         }

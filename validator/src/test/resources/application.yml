@@ -8,6 +8,7 @@ peppol:
     long: /tmp
 
   common:
+    consistency_check_enabled: true
     document_templates:
       templates:
         - name: SVEFAKTURA1.Invoice

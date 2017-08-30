@@ -35,8 +35,8 @@ public class DocumentParser {
     }
 
     @NotNull
-    public DocumentInfo parse(@NotNull InputStream inputStream, @NotNull String fileName, @NotNull Endpoint endpoint) throws Exception {
-        DocumentParserHandler handler = new DocumentParserHandler(fileName, templates, endpoint);
+    public DocumentInfo parse(@NotNull InputStream inputStream, @NotNull String fileName, @NotNull Endpoint endpoint, boolean shouldFailOnInconsistency) throws Exception {
+        DocumentParserHandler handler = new DocumentParserHandler(fileName, templates, endpoint, shouldFailOnInconsistency);
         try {
             getSAXParser().parse(inputStream, handler);
         } catch (Exception e) {

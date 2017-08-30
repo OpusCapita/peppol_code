@@ -7,6 +7,8 @@ peppol:
   storage:
     short: /tmp
     long: /tmp
+  common:
+    consistency_check_enabled: true
 
 spring:
   profiles:

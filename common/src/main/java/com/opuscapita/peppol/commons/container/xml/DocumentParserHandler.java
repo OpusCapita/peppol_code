@@ -39,10 +39,12 @@ public class DocumentParserHandler extends DefaultHandler {
 
     private String value;
     private boolean checkSBDH = true;
+    private final boolean shouldFailOnInconsistency;
 
-    DocumentParserHandler(@Nullable String fileName, @NotNull DocumentTemplates templates, @NotNull Endpoint endpoint) {
+    DocumentParserHandler(@Nullable String fileName, @NotNull DocumentTemplates templates, @NotNull Endpoint endpoint, boolean shouldFailOnInconsistency) {
         this.fileName = fileName;
         this.endpoint = endpoint;
+        this.shouldFailOnInconsistency = shouldFailOnInconsistency;
         if(endpoint.getType().equals(ProcessType.REST) || endpoint.getType().equals(ProcessType.WEB)) //skipping sbdh for validator module
             checkSBDH = false;
         for (DocumentTemplate dt : templates.getTemplates()) {
@@ -173,7 +175,11 @@ public class DocumentParserHandler extends DefaultHandler {
                      for (String path : field.getPaths()) {
                          errorText += "  " + path + System.lineSeparator();
                      }
-                     template.addError(errorText);
+                     if (shouldFailOnInconsistency) {
+                         template.addError(errorText);
+                     } else {
+                         logger.warn(errorText);
+                     }
                  }
             }
 

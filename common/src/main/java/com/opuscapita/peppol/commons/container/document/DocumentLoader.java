@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -21,10 +22,12 @@ public class DocumentLoader {
     private static final Logger logger = LoggerFactory.getLogger(DocumentLoader.class);
 
     private final DocumentParser parser;
+    private final boolean shouldFailOnInconsistency;
 
     @Autowired
-    public DocumentLoader(@NotNull DocumentParser parser) {
+    public DocumentLoader(@NotNull DocumentParser parser, @Value("${peppol.common.consistency_check_enabled}") boolean shouldFailOnInconsistency) {
         this.parser = parser;
+        this.shouldFailOnInconsistency = shouldFailOnInconsistency;
     }
 
     @NotNull
@@ -42,7 +45,7 @@ public class DocumentLoader {
     @NotNull
     public DocumentInfo load(@NotNull InputStream inputStream, @NotNull String fileName, @NotNull Endpoint endpoint) throws Exception {
         logger.info("Start parsing file: " + fileName);
-        return parser.parse(inputStream, fileName, endpoint);
+        return parser.parse(inputStream, fileName, endpoint, shouldFailOnInconsistency);
     }
 
 }
