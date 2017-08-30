@@ -88,6 +88,9 @@ public class FileInfoServiceImpl implements FileInfoService {
 
     @Override
     public void reprocessFile(Integer fileId, boolean outbound) throws Exception {
+        logger.info("FileInfoServiceImpl: isOutbound: " + outbound);
+        logger.info("FileInfoServiceImpl: reprocessOutboundDir " + reprocessOutboundDir);
+        logger.info("FileInfoServiceImpl: reprocessInboundDir " + reprocessInboundDir);
         FileInfo fileInfo = fileInfoDAO.getById(fileId);
         byte[] fileData = util.findMessage(fileInfo.getFilename());
         Message message = fileInfo.getMessage();

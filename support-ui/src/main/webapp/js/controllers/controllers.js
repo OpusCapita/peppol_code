@@ -247,7 +247,7 @@ app.controller('MessageCtrl', ['$scope', '$resource', '$location', '$timeout', '
                         $route.reload();
                     }, 300);
                 });
-            } else {
+            } else if ($location.path().indexOf("/outbound") === 0) {
                 ReprocessFactory.reprocess_outbound({file_ids: fileIds}, function () {
                     $timeout(function () {
                         $route.reload();
