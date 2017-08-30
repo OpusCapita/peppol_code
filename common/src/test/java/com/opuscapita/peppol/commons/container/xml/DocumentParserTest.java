@@ -242,7 +242,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/netclient_as_sender.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
             assertNotNull(result);
             assertTrue(result.getErrors().get(0).getMessage().contains(
                     "There are different conflicting values in the document for the field 'sender_id: [9908:995483254, 991723145, 991723145]"
@@ -259,7 +259,7 @@ public class DocumentParserTest {
         DocumentParser parser = new DocumentParser(factory, templates);
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/9908_989170325MVA-9908_890164072-20170825.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", new Endpoint("test", ProcessType.TEST));
+            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
             assertNotNull(result);
             assertTrue(result.getErrors().get(0).getMessage().contains(
                     "There are different conflicting values in the document for the field 'sender_id: [9908:989170325MVA, 989170325, 989170325]"
