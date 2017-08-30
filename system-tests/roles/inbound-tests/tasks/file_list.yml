@@ -17,5 +17,8 @@
     - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_OC_zero_values.xml"
     - "{{test_data_path}}/validation_test_suite/valid/EHF_peppol-bis-5a_invoice.xml"
     - "{{test_data_path}}/validation_test_suite/valid/peppol-bis-svefaktura2.xml"
+#temporary invalid SBDH samples are meant to be valid->
+    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice-SBDH-senderID-different-EndPointId.xml"
+    - "{{test_data_path}}/validation_test_suite/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml"
 ...
 
