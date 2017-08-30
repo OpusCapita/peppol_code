@@ -166,7 +166,8 @@ public class DocumentParserHandler extends DefaultHandler {
             if (field.values != null && field.values.size() > 1) {
                 // the first value should have been read from the header, count how many others have this value
                 String first = field.values.get(0);
-                //if we need to check for SBDH or the SBDH is anyway present letsh check for corectenes
+                //if we need to check for SBDH or the SBDH is anyway present lets check
+                //== 1 because we are also comparing all values with the first one we have already, so if the first one will match only with itself, this is an error
                  if ((checkSBDH || field.getPaths().get(0).contains("$SBDH")) && field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
                      String errorText = "There are different conflicting values in the document for the field '"
                              + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator());
