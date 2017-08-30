@@ -218,7 +218,7 @@ public class DocumentParserTest {
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml")) {
             DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
             assertNotNull(result);
-            assertEquals(Archetype.INVALID, result.getArchetype());
+            assertEquals(Archetype.INVALID.equals(result.getArchetype()), shouldFailOnInconsistency);
         }
     }
 
@@ -241,13 +241,21 @@ public class DocumentParserTest {
         factory.setNamespaceAware(true);
         DocumentParser parser = new DocumentParser(factory, templates);
 
+        //consistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/netclient_as_sender.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", new Endpoint("test", ProcessType.TEST), true);
             assertNotNull(result);
             assertTrue(result.getErrors().get(0).getMessage().contains(
-                    "There are different conflicting values in the document for the field 'sender_id: [9908:995483254, 991723145, 991723145]"
-            ));
+                        "There are different conflicting values in the document for the field 'sender_id: [9908:995483254, 991723145, 991723145]"
+                ));
             assertEquals(Archetype.INVALID, result.getArchetype());
+        }
+        //inconsistent check
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/netclient_as_sender.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", new Endpoint("test", ProcessType.TEST), false);
+            assertNotNull(result);
+            assertTrue(result.getErrors().isEmpty());
+            assertNotEquals(Archetype.INVALID, result.getArchetype());
         }
     }
 
@@ -257,14 +265,21 @@ public class DocumentParserTest {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentParser parser = new DocumentParser(factory, templates);
-
+        //consistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/9908_989170325MVA-9908_890164072-20170825.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", new Endpoint("test", ProcessType.TEST), true);
             assertNotNull(result);
             assertTrue(result.getErrors().get(0).getMessage().contains(
-                    "There are different conflicting values in the document for the field 'sender_id: [9908:989170325MVA, 989170325, 989170325]"
+                        "There are different conflicting values in the document for the field 'sender_id: [9908:989170325MVA, 989170325, 989170325]"
             ));
             assertEquals(Archetype.INVALID, result.getArchetype());
+        }
+        //inconsistent check
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/9908_989170325MVA-9908_890164072-20170825.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", new Endpoint("test", ProcessType.TEST), false);
+            assertNotNull(result);
+            assertTrue(result.getErrors().isEmpty());
+            assertNotEquals(Archetype.INVALID, result.getArchetype());
         }
     }
 
