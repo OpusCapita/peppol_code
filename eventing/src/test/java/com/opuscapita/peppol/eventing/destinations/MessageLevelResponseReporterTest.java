@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.*;
  */
 @SuppressWarnings("ConstantConditions")
 public class MessageLevelResponseReporterTest {
+    private Storage storage = mock(Storage.class);
 
     @Test
     public void testIgnoreInbound() throws Exception {
@@ -30,7 +32,7 @@ public class MessageLevelResponseReporterTest {
 
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator);
+        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage);
         reporter.process(cm);
         verify(creator, never()).reportError(any());
         verify(creator, never()).reportSuccess(any());
@@ -48,7 +50,7 @@ public class MessageLevelResponseReporterTest {
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
         when(creator.reportError(any())).thenReturn(new ApplicationResponseType());
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator);
+        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage);
         reporter.process(cm);
         verify(creator).reportError(cm);
         verify(creator, never()).reportSuccess(any());
@@ -67,7 +69,7 @@ public class MessageLevelResponseReporterTest {
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
         when(creator.reportSuccess(any())).thenReturn(new ApplicationResponseType());
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator);
+        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage);
         reporter.process(cm);
         verify(creator, never()).reportError(any());
         verify(creator).reportSuccess(cm);
@@ -84,7 +86,7 @@ public class MessageLevelResponseReporterTest {
 
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator);
+        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage);
         reporter.process(cm);
         verify(creator, never()).reportError(any());
         verify(creator, never()).reportSuccess(any());
@@ -96,7 +98,7 @@ public class MessageLevelResponseReporterTest {
         ContainerMessage cm = new ContainerMessage("metadata", "test.txt", ep);
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator);
+        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage);
         reporter.process(cm);
         verify(creator, never()).reportError(any());
         verify(creator, never()).reportSuccess(any());

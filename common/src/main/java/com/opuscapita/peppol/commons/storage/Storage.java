@@ -79,4 +79,16 @@ public interface Storage {
     @NotNull
     String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File input) throws IOException;
 
+    /**
+     * Stores input stream data in a long term storage with a desired file name.
+     *
+     * @param senderId the sender ID, use empty line when missing
+     * @param recipientId the recipient ID, use empty line when missing
+     * @param fileName the desired name of the file
+     * @param inputStream the data to store
+     * @return the file ID
+     */
+    @NotNull
+    String storeLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName, @NotNull InputStream inputStream) throws IOException;
+
 }

@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.storage;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -100,6 +101,29 @@ public class StorageImpl implements Storage {
     @NotNull
     @Override
     public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
+        File dir = prepareDirectory(senderId, recipientId);
+
+        File result = StorageUtils.prepareUnique(dir, file.getName());
+        FileUtils.moveFile(file, result);
+        if (!result.exists()) {
+            throw new IOException("Failed to move file " + file + " to " + result);
+        }
+
+        return result.getAbsolutePath();
+    }
+
+    @NotNull
+    @Override
+    public String storeLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName, @NotNull InputStream inputStream) throws IOException {
+        File dir = prepareDirectory(senderId, recipientId);
+
+        File result = StorageUtils.prepareUnique(dir, FilenameUtils.getName(fileName));
+        IOUtils.copy(inputStream, new FileOutputStream(result));
+
+        return result.getAbsolutePath();
+    }
+
+    private File prepareDirectory(@NotNull String senderId, @NotNull String recipientId) throws IOException {
         senderId = normalizeFilename(senderId);
         recipientId = normalizeFilename(recipientId);
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
@@ -111,13 +135,7 @@ public class StorageImpl implements Storage {
             }
         }
 
-        File result = StorageUtils.prepareUnique(dir, file.getName());
-        FileUtils.moveFile(file, result);
-        if (!result.exists()) {
-            throw new IOException("Failed to move file " + file + " to " + result);
-        }
-
-        return result.getAbsolutePath();
+        return dir;
     }
 
     // for use without Spring context, sorry
