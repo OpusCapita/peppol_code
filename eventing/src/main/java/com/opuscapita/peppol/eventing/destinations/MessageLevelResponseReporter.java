@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.storage.StorageUtils;
 import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.apache.commons.io.FilenameUtils;
@@ -36,6 +37,8 @@ public class MessageLevelResponseReporter {
     private String destinationA2A;
     @Value("${peppol.eventing.mlr.xib}")
     private String destinationXiB;
+    @Value("${peppol.eventing.mlr.backup.enabled:false}")
+    private boolean backupEnabled;
 
     private final MessageLevelResponseCreator creator;
 
@@ -108,6 +111,13 @@ public class MessageLevelResponseReporter {
             storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
                     "-" + result + "-mlr.xml");
         }
+        if (backupEnabled) {
+            try {
+                storeBackup(art, cm, result);
+            } catch (Exception e) {
+                logger.warn("Failed to create MLR backup file: " + e.getMessage());
+            }
+        }
     }
 
     private void storeResponse(@NotNull ApplicationResponseType art, @NotNull String fileName) throws IOException {
@@ -119,6 +129,18 @@ public class MessageLevelResponseReporter {
             logger.info("MLR successfully stored as " + fileName);
         } else {
             throw new IOException("Failed to create MLR file named " + fileName);
+        }
+    }
+
+    private void storeBackup(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
+        File directory = new File(FilenameUtils.getPathNoEndSeparator(cm.getFileName()));
+        String fileName = FilenameUtils.getBaseName(cm.getFileName()) + "-" + result + "-mlr.xml";
+
+        File backupFile = StorageUtils.prepareUnique(directory, fileName);
+
+        ESuccess rc = UBL21Writer.applicationResponse().write(art, backupFile);
+        if (!rc.isSuccess()) {
+            throw new IOException("Failed to save MLR backup file " + backupFile.getAbsolutePath());
         }
     }
 }
