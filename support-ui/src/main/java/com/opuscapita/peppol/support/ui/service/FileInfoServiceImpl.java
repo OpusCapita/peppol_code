@@ -3,10 +3,7 @@ package com.opuscapita.peppol.support.ui.service;
 
 import com.opuscapita.peppol.support.ui.common.Util;
 import com.opuscapita.peppol.support.ui.dao.FileInfoDAO;
-import com.opuscapita.peppol.support.ui.domain.FileInfo;
-import com.opuscapita.peppol.support.ui.domain.Message;
-import com.opuscapita.peppol.support.ui.domain.MessageStatus;
-import com.opuscapita.peppol.support.ui.domain.ReprocessFileInfo;
+import com.opuscapita.peppol.support.ui.domain.*;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +84,8 @@ public class FileInfoServiceImpl implements FileInfoService {
     }
 
     @Override
-    public void reprocessFile(Integer fileId, boolean outbound) throws Exception {
+    public void reprocessFile(Integer fileId, @Deprecated boolean outbound) throws Exception {
+        //outbound we get from client and can not trust to it anyway
         FileInfo fileInfo = fileInfoDAO.getById(fileId);
         byte[] fileData = util.findMessage(fileInfo.getFilename());
         Message message = fileInfo.getMessage();
@@ -96,7 +94,9 @@ public class FileInfoServiceImpl implements FileInfoService {
         addReprocessInfo(fileInfo);
         fileInfoDAO.update(fileInfo);
         File f = new File(fileInfo.getFilename());
-        final Path filePath = Paths.get(outbound ? reprocessOutboundDir : reprocessInboundDir, f.getName());
+        boolean isOutbound = message.getDirection().equals(Direction.OUT);
+        logger.info("FileInfoServiceImpl fileId: " + fileId + " message.getDirection(): " +  message.getDirection());
+        final Path filePath = Paths.get(isOutbound ? reprocessOutboundDir : reprocessInboundDir, f.getName());
         logger.info("Reprocessing, file moved to:  " + filePath);
         Files.write(filePath, fileData);
     }
