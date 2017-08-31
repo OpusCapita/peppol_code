@@ -36,7 +36,7 @@ public class ReportingManager {
 
     @SuppressWarnings("ConstantConditions")
     public void process(ContainerMessage cm, @Nullable ErrorHandler errorHandler) {
-        Map<String, Exception> failures = new HashMap<>();
+        Map<String, Exception> processingExceptions = new HashMap<>();
         try {
             logger.info("Received message about " + cm.getFileName() + ", current endpoint: " +
                     cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
@@ -47,14 +47,14 @@ public class ReportingManager {
             eventPersistenceReporter.process(cm);
         } catch (Exception ex) {
             logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
-            failures.put("Exception during reporting to Events persistence", ex);
+            processingExceptions.put("Exception during reporting to Events persistence", ex);
         }
 
         try {
             webWatchDogReporter.process(cm);
         } catch (Exception ex1) {
             logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
-            failures.put("Exception during reporting to Web Watch Dog", ex1);
+            processingExceptions.put("Exception during reporting to Web Watch Dog", ex1);
         }
 
         try {
@@ -62,10 +62,10 @@ public class ReportingManager {
         } catch (Exception ex2) {
             ex2.printStackTrace();
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
-            failures.put("Exception during reporting to MLR", ex2);
+            processingExceptions.put("Exception during reporting to MLR", ex2);
         }
         if (errorHandler != null) {
-            failures.entrySet().forEach(entry -> errorHandler.reportWithContainerMessage(cm, entry.getValue(), entry.getKey()));
+            processingExceptions.entrySet().forEach(entry -> errorHandler.reportWithContainerMessage(cm, entry.getValue(), entry.getKey()));
         }
     }
 }
