@@ -86,8 +86,6 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Override
     public void reprocessFile(Integer fileId, @Deprecated boolean outbound) throws Exception {
         //outbound we get from client and can not trust to it anyway
-        logger.info("FileInfoServiceImpl: reprocessOutboundDir " + reprocessOutboundDir);
-        logger.info("FileInfoServiceImpl: reprocessInboundDir " + reprocessInboundDir);
         FileInfo fileInfo = fileInfoDAO.getById(fileId);
         byte[] fileData = util.findMessage(fileInfo.getFilename());
         Message message = fileInfo.getMessage();
@@ -97,9 +95,7 @@ public class FileInfoServiceImpl implements FileInfoService {
         fileInfoDAO.update(fileInfo);
         File f = new File(fileInfo.getFilename());
         boolean isOutbound = message.getDirection().equals(Direction.OUT);
-        logger.info("FileInfoServiceImpl: isOutbound: " + outbound);
-        logger.info("message.getDirection(): " +  message.getDirection());
-        //final Path filePath = Paths.get(outbound ? reprocessOutboundDir : reprocessInboundDir, f.getName());
+        logger.info("FileInfoServiceImpl fileId: " + fileId + " message.getDirection(): " +  message.getDirection());
         final Path filePath = Paths.get(isOutbound ? reprocessOutboundDir : reprocessInboundDir, f.getName());
         logger.info("Reprocessing, file moved to:  " + filePath);
         Files.write(filePath, fileData);
