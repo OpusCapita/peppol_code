@@ -7,7 +7,7 @@ import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
-import com.opuscapita.peppol.commons.storage.StorageUtils;
+import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.apache.commons.io.FilenameUtils;
@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.xml.datatype.DatatypeConfigurationException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -41,10 +43,12 @@ public class MessageLevelResponseReporter {
     private boolean backupEnabled;
 
     private final MessageLevelResponseCreator creator;
+    private final Storage storage;
 
     @Autowired
-    public MessageLevelResponseReporter(@NotNull MessageLevelResponseCreator creator) {
+    public MessageLevelResponseReporter(@NotNull MessageLevelResponseCreator creator, @NotNull Storage storage) {
         this.creator = creator;
+        this.storage = storage;
     }
 
     // only messages about errors and successfull delivery must get through
@@ -133,14 +137,18 @@ public class MessageLevelResponseReporter {
     }
 
     private void storeBackup(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
-        File directory = new File(FilenameUtils.getPathNoEndSeparator(cm.getFileName()));
-        String fileName = FilenameUtils.getBaseName(cm.getFileName()) + "-" + result + "-mlr.xml";
-
-        File backupFile = StorageUtils.prepareUnique(directory, fileName);
-
-        ESuccess rc = UBL21Writer.applicationResponse().write(art, backupFile);
+        ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+        ESuccess rc = UBL21Writer.applicationResponse().write(art, tmp);
         if (!rc.isSuccess()) {
-            throw new IOException("Failed to save MLR backup file " + backupFile.getAbsolutePath());
+            throw new IOException("Failed to save MLR backup file");
         }
+
+        String fileName = cm.getFileName() + "-" + result + "-mlr.xml";
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(tmp.toByteArray());
+        if (cm.getDocumentInfo() == null) {
+            throw new IllegalArgumentException("Document info cannot be null");
+        }
+        storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(), fileName, inputStream);
     }
 }
