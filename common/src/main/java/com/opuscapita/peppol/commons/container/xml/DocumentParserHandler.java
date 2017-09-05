@@ -168,20 +168,22 @@ public class DocumentParserHandler extends DefaultHandler {
                 String first = field.values.get(0);
                 //if we need to check for SBDH or the SBDH is anyway present lets check
                 //== 1 because we are also comparing all values with the first one we have already, so if the first one will match only with itself, this is an error
-                 if ((checkSBDH || field.getPaths().get(0).contains("$SBDH")) && field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
-                     String errorText = "There are different conflicting values in the document for the field '"
-                             + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator());
-                     errorText += "There should be at least one match in the document body for the " + field.getId() + " specified in SBDH" + System.lineSeparator();
-                     errorText += "Paths: " + System.lineSeparator();
-                     for (String path : field.getPaths()) {
-                         errorText += "  " + path + System.lineSeparator();
-                     }
-                     if (shouldFailOnInconsistency) {
-                         template.addError(errorText);
-                     } else {
-                         logger.warn(errorText);
-                     }
-                 }
+                 if (checkSBDH || field.getPaths().get(0).contains("$SBDH") ){
+                    if (field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
+                        String errorText = "There are different conflicting values in the document for the field '"
+                                + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator());
+                        errorText += "There should be at least one match in the document body for the " + field.getId() + " specified in SBDH" + System.lineSeparator();
+                        errorText += "Paths: " + System.lineSeparator();
+                        for (String path : field.getPaths()) {
+                            errorText += "  " + path + System.lineSeparator();
+                        }
+                        if (shouldFailOnInconsistency) {
+                            template.addError(errorText);
+                        } else {
+                            logger.warn(errorText);
+                        }
+                    }
+                }
             }
 
             // process constants
