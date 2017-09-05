@@ -1,0 +1,20 @@
+{
+  "transportType":"IN_MQ_TO_FILE",
+  "fileName":"/peppol/data/storage/9908_995483254/9908_915141668/20170904/804b67da-1c78-4b40-afa1-5c93b2411697.xml",
+  "fileSize":348384,
+  "errorFilePath":"null",
+  "invoiceId":"103459",
+  "senderId":"9908:995483254",
+  "senderName":"Sahaga AS",
+  "senderCountryCode":"NO",
+  "recipientId":"9908:915141668",
+  "recipientName":"GUSTAV PEDERSEN AS NORENGROS",
+  "recipientCountryCode":"NO",
+  "invoiceDate":"2017-08-30",
+  "dueDate":"2017-09-19",
+  "errorMessage":"",
+  "transactionId":"null",
+  "documentType":"EHF Invoice",
+  "commonName":"null",
+  "sendingProtocol":"null"
+}
