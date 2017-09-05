@@ -1,4 +1,16 @@
 ---
 #- include: set-up.yml
+- name: Clean storage path
+  become: true
+  become_user: peppol
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /peppol/data/storage/unknown/
+    - /peppol/data/storage/9908_987987987/
+    - /peppol/data/storage/9908:998877665/
+    - /peppol/data/storage/9908:789789789/
+
 - include: file_list.yml
 ...
