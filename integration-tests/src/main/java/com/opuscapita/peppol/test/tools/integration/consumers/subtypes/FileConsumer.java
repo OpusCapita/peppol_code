@@ -35,8 +35,9 @@ public class FileConsumer extends Consumer {
     public TestResult consume(Object consumable) {
         init(consumable);
 
-        if(file == null)
+        if(file == null) {
             return result;
+        }
         if(!file.exists()) {
             logger.warn("FileConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + delay);
             waitFixedDelay();

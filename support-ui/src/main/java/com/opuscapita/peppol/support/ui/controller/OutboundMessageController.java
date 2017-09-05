@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +156,7 @@ public class OutboundMessageController {
         try {
             final byte[] data = util.findMessage(fileName);
             response.setHeader("Content-Length", String.valueOf(data.length));
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + new File(fileName).getName() + "\"");
             response.setContentType("application/xml");
             response.getOutputStream().write(data);
             response.flushBuffer();

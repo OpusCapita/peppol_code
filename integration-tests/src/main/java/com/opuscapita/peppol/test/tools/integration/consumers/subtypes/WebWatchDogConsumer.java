@@ -22,6 +22,9 @@ public class WebWatchDogConsumer extends FileConsumer{
     @Override
     public TestResult consume(Object consumable) {
         init(consumable);
+        if(file == null) {
+            return result;
+        }
         if(!file.exists()) {
             logger.warn("WebWatchDogConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + delay);
             waitFixedDelay();
@@ -29,18 +32,18 @@ public class WebWatchDogConsumer extends FileConsumer{
 
         if(file.exists()) {
             try {
-                String[] result = Files.readLines(file, Charsets.UTF_8).get(0).split(";");
-                if(result.length < 3) {
+                String[] watchDogResult = Files.readLines(file, Charsets.UTF_8).get(0).split(";");
+                if(watchDogResult.length < 3) {
                     clean();
-                    return new TestResult(name, false, "content length read from WWD report file doesn't match! " + file.getName() + " " + result);
+                    return new TestResult(name, false, "content length read from WWD report file doesn't match! " + file.getName() + " " + watchDogResult);
                 }
-                if(!result[0].contains(expectedValue.replaceAll(PREFIX,""))) {
+                if(!watchDogResult[0].contains(expectedValue.replaceAll(PREFIX,""))) {
                     clean();
-                    return new TestResult(name, false, expectedValue.replaceAll(PREFIX, "") + " not found in WWD report file: " + file.getName() + " " + result[0]);
+                    return new TestResult(name, false, expectedValue.replaceAll(PREFIX, "") + " not found in WWD report file: " + file.getName() + " " + watchDogResult[0]);
                 }
-                if(!result[1].toUpperCase().equals("OK")) {
+                if(!watchDogResult[1].toUpperCase().equals("OK")) {
                     clean();
-                    return new TestResult(name, false, "OK not found in WWD report file: " + file.getName() + " " + result[1]);
+                    return new TestResult(name, false, "OK not found in WWD report file: " + file.getName() + " " + watchDogResult[1]);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
