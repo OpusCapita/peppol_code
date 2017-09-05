@@ -283,4 +283,24 @@ public class DocumentParserTest {
         }
     }
 
+    @Test
+    public void testParseSiNoSbdh() throws Exception{
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentParser parser = new DocumentParser(factory, templates);
+        //consistent check
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/simpler_invoicing_files/Valid5_no_sbdh.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "Valid5_no_sbdh.xml", new Endpoint("test", ProcessType.TEST), true);
+            assertNotNull(result);
+            assertTrue(result.getErrors().isEmpty());
+            assertEquals(Archetype.PEPPOL_SI, result.getArchetype());
+        }
+        //inconsistent check
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/simpler_invoicing_files/Valid5_no_sbdh.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "Valid5_no_sbdh.xml", new Endpoint("test", ProcessType.TEST), false);
+            assertNotNull(result);
+            assertTrue(result.getErrors().isEmpty());
+            assertEquals(Archetype.PEPPOL_SI, result.getArchetype());
+        }
+    }
 }
