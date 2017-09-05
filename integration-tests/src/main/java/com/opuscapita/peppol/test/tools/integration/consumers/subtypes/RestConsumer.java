@@ -35,7 +35,7 @@ public class RestConsumer extends Consumer {
     @Override
     public TestResult consume(Object consumable) {
         int passed = 0;
-        List<String> linedResult = null;
+        List<String> linedResult;
         try {
             ValidationResult result;
             linedResult = Files.readLines(new File((String)consumable), Charsets.UTF_8);

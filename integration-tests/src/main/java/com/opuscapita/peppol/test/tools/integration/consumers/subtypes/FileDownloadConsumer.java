@@ -41,7 +41,7 @@ public class FileDownloadConsumer extends Consumer {
     @Override
     public TestResult consume(Object consumable) {
         logger.info("FileDownloadConsumer: starting!");
-        TestResult testResult = null;
+        TestResult testResult;
         CloseableHttpClient httpclient = HttpClients.custom().build();
         File consumableFile = new File((String)consumable);
         String fileToCheck = consumableFile.getName();
@@ -62,11 +62,13 @@ public class FileDownloadConsumer extends Consumer {
             }
 
             BufferedReader br = new BufferedReader(new FileReader(IntegrationTestApp.tempDir + "download_test.xml"));
-            if ( (br.readLine() != null) != expectedValue)
+            if ( (br.readLine() != null) != expectedValue) {
                 testResult = new TestResult(name, false, "File download test failed!" +
-                " Expected value: "+ expectedValue);
-            else
+                        " Expected value: " + expectedValue);
+            }
+            else {
                 testResult = new TestResult(name, true, "File download test successful!");
+            }
             br.close();
         } catch (Throwable th) {
             logger.error("Error running web ui producer: ", th);
