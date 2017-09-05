@@ -95,7 +95,7 @@ try {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/outbound*.txt'
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
                 }
             }
         }
