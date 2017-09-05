@@ -128,6 +128,12 @@ public class PersistenceController {
         if (message.getStatus() != MessageStatus.sent && message.getStatus() != MessageStatus.reprocessed && message.getStatus() != MessageStatus.resolved) {
             message.setStatus(MessageStatus.processing);
         }
+
+        //Workaround for reprocessing
+        if (peppolEvent.getProcessType() == ProcessType.IN_MQ_TO_FILE && peppolEvent.getTransactionId() == null) {
+            peppolEvent.setTransactionId(FilenameUtils.getBaseName(peppolEvent.getFileName()));
+        }
+
         switch (peppolEvent.getProcessType()) {
             case OUT_REPROCESS:
             case IN_REPROCESS:
