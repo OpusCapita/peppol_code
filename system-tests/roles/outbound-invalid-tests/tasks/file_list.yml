@@ -10,7 +10,6 @@
     - "{{test_data_path}}/validation_test_suite/invalid/Svefaktura2_profile-bii05_invoice.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/AT-UBL-Austria-profile-bii04-invoice.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_2.0.9.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_no_SBDH_invalid.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_OC_zero_values_structural-error.xml" 
 #disabled until decided otherwise    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice-SBDH-senderID-different-EndPointId.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/empty.xml"
@@ -20,4 +19,5 @@
     - "{{test_data_path}}/validation_test_suite/invalid/random.xml"
 #disabled until decided otherwise     - "{{test_data_path}}/validation_test_suite/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/SI-UBL-Netherlands-profile-bii04_invoice.xml"
+    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_creditnote-no-SBDH.xml"
 ...
