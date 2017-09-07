@@ -178,7 +178,7 @@ tests:
    inbound:
         producers:
             - command producer:
-                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/invalid_svefaktura_removed_sensetive_info.xml
+                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/invalid_svefaktura_removed_sensetive_info.xml -u http://inbound:8080/peppol-ap-inbound/as2
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-integration-test
