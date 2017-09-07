@@ -3,6 +3,7 @@ LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV INTEGRATION_TESTS_HOME "/opt/local/services/peppol2.0/integration-tests"
 ENV INTEGRATION_TESTS_CONFIG "/etc/peppol2.0/integration-tests"
+ENV OXALIS_HOME "/peppol/config/oxalis"
 
 RUN \
     mkdir -p "${INTEGRATION_TESTS_HOME}" && \
