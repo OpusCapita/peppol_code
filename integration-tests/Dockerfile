@@ -13,5 +13,10 @@ WORKDIR "${INTEGRATION_TESTS_HOME}"
 ADD ["build/libs/integration-tests.jar", "integration-tests.jar"]
 
 ADD ["src/main/resources", "/etc/resources"]
+# oxalis-standalone for testing
+ADD ["bin/oxalis-standalone.jar", "oxalis-standalone.jar"]
+ADD ["bin/send-to-peppol.sh", "send-to-peppol.sh"]
+
+RUN set -x && chmod 500 "${INTEGRATION_TESTS_HOME}/send-to-peppol.sh"
 
 CMD java -jar -Dspring.profiles.active=development integration-tests.jar /etc/resources/configuration-stage.yaml /etc/integration-test.result /etc/resources/html /tmp/

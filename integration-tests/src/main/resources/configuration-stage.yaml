@@ -178,7 +178,7 @@ tests:
    inbound:
         producers:
             - command producer:
-                command: docker exec -it inbound-integration-latest ./send-to-peppol.sh -f /test-materials/validation_test_suite/valid/EHF_profile-bii05_creditnote.xml
+                command: ./send-to-peppol.sh -f /test-materials/validation_test_suite/valid/EHF_profile-bii05_creditnote.xml
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-integration-test
