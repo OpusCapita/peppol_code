@@ -18,6 +18,7 @@ ADD ["src/main/resources", "/etc/resources"]
 ADD ["bin/oxalis-standalone.jar", "oxalis-standalone.jar"]
 ADD ["bin/send-to-peppol.sh", "send-to-peppol.sh"]
 
-RUN set -x && chmod 500 "${INTEGRATION_TESTS_HOME}/send-to-peppol.sh"
+RUN set -x && chmod 500 "${INTEGRATION_TESTS_HOME}/send-to-peppol.sh"\
+&& chown -R peppol:elmaci "${INTEGRATION_TESTS_HOME}" "${INTEGRATION_TESTS_CONFIG}"
 
 CMD java -jar -Dspring.profiles.active=development integration-tests.jar /etc/resources/configuration-stage.yaml /etc/integration-test.result /etc/resources/html /tmp/
