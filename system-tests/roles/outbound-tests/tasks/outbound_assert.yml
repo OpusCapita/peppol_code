@@ -1,9 +1,18 @@
 ---
-- name: Show outbound log, search for fileName "{{ fileName }}"
+#- name: Show outbound log, search for fileName "{{ fileName }}"
+#  shell: docker logs outbound
+#  register: log
+
+- name: get outbound log & check if fileName "{{ fileName }}" is found in outbound log 
   shell: docker logs outbound
   register: log
+  until: log.stdout | search(".*Message.*"+fileName+".*sent with")
+  retries: 10
+  delay: 1
+#  register: search-result
+#- debug: var=search-result
 
-- name: fileName "{{ fileName }}" is found in outbound log 
+- name: assert for real
   ignore_errors: yes
   assert:
     that:
