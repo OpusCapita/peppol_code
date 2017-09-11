@@ -5,7 +5,7 @@ configurations:
     queues:
         mq1:
             host: rabbitmq
-            port: 5672
+            port: 45672
             username: guest
             password: guest
             virtual host: /
