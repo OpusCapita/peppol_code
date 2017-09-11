@@ -7,6 +7,7 @@ import com.opuscapita.peppol.support.ui.domain.TableParameters;
 import com.opuscapita.peppol.support.ui.dto.MessageDTO;
 import com.opuscapita.peppol.support.ui.service.FileInfoService;
 import com.opuscapita.peppol.support.ui.service.MessageService;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +156,7 @@ public class OutboundMessageController {
         try {
             final byte[] data = util.findMessage(fileName);
             response.setHeader("Content-Length", String.valueOf(data.length));
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + new File(fileName).getName() + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + FilenameUtils.getName(fileName)+ "\"");
             response.setContentType("application/xml");
             response.getOutputStream().write(data);
             response.flushBuffer();

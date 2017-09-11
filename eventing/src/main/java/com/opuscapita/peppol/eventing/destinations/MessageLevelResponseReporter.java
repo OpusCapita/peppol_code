@@ -64,14 +64,14 @@ public class MessageLevelResponseReporter {
 
         // report errors
         if (di.getArchetype() == Archetype.INVALID && !cm.isInbound()) {
-            logger.info("Creating MLR for invalid message: " + cm.getFileName());
+            logger.info("Creating MLR (re) for: invalid message: " + cm.getFileName());
             storeResponse(creator.reportError(cm), cm, "re");
             return;
         }
 
         // processing exception
         if (pi.getProcessingException() != null) {
-            logger.info("Creating MLR for message failed due to processing error: " + cm.getFileName());
+            logger.info("Creating MLR (er) for: message in error because of processing exception: " + cm.getFileName());
             storeResponse(creator.reportError(cm), cm, "er");
             return;
         }
@@ -93,13 +93,13 @@ public class MessageLevelResponseReporter {
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
             if (di.getErrors().isEmpty()) {
                 if (StringUtils.isNotBlank(pi.getTransactionId())) {
-                    logger.info("Creating MLR for successfully sent message: " + cm.getFileName());
+                    logger.info("Creating MLR (ap) for: successfully sent message: " + cm.getFileName());
                     storeResponse(creator.reportSuccess(cm), cm, "ap");
                 } else {
-                    logger.warn("Skipping MLR creation for " + cm.getFileName() + ", seems to be sending retry");
+                    logger.warn("Skipping MLR creation for: " + cm.getFileName() + ", seems to be sending retry");
                 }
             } else {
-                logger.info("Creating MLR for message with errors: " + cm.getFileName());
+                logger.info("Creating MLR (re) for: message with errors: " + cm.getFileName());
                 storeResponse(creator.reportError(cm), cm, "re");
             }
         }

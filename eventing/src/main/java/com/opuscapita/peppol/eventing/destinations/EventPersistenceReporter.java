@@ -99,6 +99,11 @@ public class EventPersistenceReporter {
         result.setErrorMessage(
                 cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining(", ")));
 
+        if(cm.getProcessingInfo().getProcessingException() != null) {
+            String oldError = result.getErrorMessage() == null? "" : result.getErrorMessage();
+            result.setErrorMessage(oldError + cm.getProcessingInfo().getProcessingException());
+        }
+
         logger.debug("Peppol event prepared");
         return result;
     }
