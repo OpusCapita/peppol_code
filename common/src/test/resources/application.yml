@@ -9,6 +9,13 @@ peppol:
     long: /tmp
   common:
     consistency_check_enabled: true
+    errors:
+      oxalis:
+        list:
+          - type: UNKNOWN_RECIPIENT
+            mask: ""
+          - type: RECEIVING_AP_ERROR
+            mask: Request failed with rc=500
 
 spring:
   profiles:

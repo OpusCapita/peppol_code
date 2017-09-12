@@ -1,0 +1,26 @@
+peppol:
+  eventing:
+    queue:
+      in:
+        name: eventing
+      out:
+        name: persistence
+  storage:
+    short: /tmp
+    long: /tmp
+
+snc:
+  enabled: true
+  bcs: test
+  from: peppol@opuscapita.com
+  businessGroup: test
+  rest:
+    url: localhost
+    username: test
+    password: test
+
+spring:
+  rabbitmq:
+    host: localhost
+
+
