@@ -25,7 +25,9 @@ public class CommandProducer implements Producer {
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String s;
             while((s = stdInput.readLine()) != null){
-                logger.info("Script says: " + s);
+                if(!s.contains("[org.apache.http.wire] http-outgoing-0")) {
+                    logger.info("Script says: " + s);
+                }
             }
             p.waitFor();
             logger.info("CommandProducer: exit value: " + p.exitValue());

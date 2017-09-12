@@ -27,6 +27,7 @@ public class MlrConsumer extends FileConsumer {
         try {
             if (file.exists()) {
                 String content = Files.toString(file, Charsets.UTF_8);
+                logger.info("mlr content found: " + content);
                 if(content.contains(ERROR_DESCRIPTION))
                     result = new TestResult(name, true, "IO exception found in " + file.getAbsolutePath());
                 else
