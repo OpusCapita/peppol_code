@@ -13,9 +13,9 @@ peppol:
       oxalis:
         list:
           - type: UNKNOWN_RECIPIENT
-            mask: ""
+            mask: ".*Problem with SMP lookup for participant .* and document type.*"
           - type: RECEIVING_AP_ERROR
-            mask: Request failed with rc=500
+            mask: ".*Request failed with rc=500.*"
 
 spring:
   profiles:
