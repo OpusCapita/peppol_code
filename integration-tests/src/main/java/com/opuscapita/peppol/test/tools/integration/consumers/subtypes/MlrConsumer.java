@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public class MlrConsumer extends FileConsumer {
 
     private final static Logger logger = LoggerFactory.getLogger(MlrConsumer.class);
-    private final String ERROR_DESCRIPTION = "<cbc:Description>This sending expected to fail I/O in test mode</cbc:Description>";
+    private final String ERROR_DESCRIPTION = "<cbc:Description>DOCUMENT_ERROR: This sending expected to fail I/O in test mode</cbc:Description>";
     public MlrConsumer(String id, String fileTestName, String expectedValue, Integer delay) {
         super(id, fileTestName, expectedValue, delay);
     }
