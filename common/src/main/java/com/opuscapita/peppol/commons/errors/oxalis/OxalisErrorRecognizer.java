@@ -27,10 +27,12 @@ public class OxalisErrorRecognizer {
 
     @NotNull
     public SendingErrors recognize(@NotNull String message) {
-        for (OxalisError known: oxalisErrorsList.getList()) {
-            if (StringUtils.isNotBlank(known.getMask())) {
-                if (message.matches(known.getMask())) {
-                    return known.getType();
+        if (oxalisErrorsList.getList() != null) {
+            for (OxalisError known : oxalisErrorsList.getList()) {
+                if (StringUtils.isNotBlank(known.getMask())) {
+                    if (message.matches(known.getMask())) {
+                        return known.getType();
+                    }
                 }
             }
         }
