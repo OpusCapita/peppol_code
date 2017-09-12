@@ -26,9 +26,8 @@ import java.util.stream.Collectors;
 public class DocumentParserHandler extends DefaultHandler {
     private final static String SBD = "/StandardBusinessDocument";
     private final static String SBDH = SBD + "/StandardBusinessDocumentHeader";
-
     private final static Logger logger = LoggerFactory.getLogger(DocumentParserHandler.class);
-
+    private final Map<String, Boolean> sbdhMandatoryFields;
     private final Endpoint endpoint;
     private final String fileName;
     private final List<Template> templates = new ArrayList<>();
@@ -59,6 +58,12 @@ public class DocumentParserHandler extends DefaultHandler {
         }
 
         paths.addLast("");
+
+        sbdhMandatoryFields = new HashMap<String, Boolean>() {{
+            put("sender_id", false);
+            put("recipient_id", false);
+        }};
+
     }
 
     private boolean shouldCheckSBDH(@NotNull Endpoint endpoint) {
@@ -109,6 +114,10 @@ public class DocumentParserHandler extends DefaultHandler {
                                 // add another value here
                                 logger.debug(field.getId() + " matched by " + template.name +
                                         ", value = " + value + ", path = " + path);
+                                if (sbdhMandatoryFields.containsKey(field.getId()) && path.contains("SBDH/")) {
+                                    System.out.println("Path: " + path + ", name: " + field.getId() + ", value: " + value);
+                                    sbdhMandatoryFields.replace(field.getId(), true);
+                                }
                                 field.addValue(value);
                             }
                             break;
@@ -134,6 +143,8 @@ public class DocumentParserHandler extends DefaultHandler {
      */
     @NotNull
     public DocumentInfo getResult() {
+        DocumentInfo result;
+
         //SBDH missing and it's not WEB or REST endpoint
         if (checkSBDH && !sbdhPresent) {
             errors.add(new DocumentError(endpoint, "No SBDH present in file: " + fileName));
@@ -156,20 +167,55 @@ public class DocumentParserHandler extends DefaultHandler {
         // process constants, check mandatory fields, check possible overwritten fields in remaining templates
         templates.forEach(this::checkFields);
 
+
         // select what to return if there are still more than one template left
         if (templates.size() != 1) {
             //Template bestTemplate = templates.stream().min(Comparator.comparingInt(Template::errorsCount)).orElse(null);
             //trying to find best template according to which one has less errors
             Collections.sort(templates, Comparator.comparingInt(Template::errorsCount));
             if (templates.get(0).errorsCount() < templates.get(1).errorsCount()) {
-                return oneResult(templates.get(0));
+                result = oneResult(templates.get(0));
+            } else {
+                // sorry, no luck, return all matching templates
+                return manyResults(templates);
             }
-            // sorry, no luck, return all matching templates
-            return manyResults(templates);
+        } else {
+            // OK, only one template left, use it as result
+            result = oneResult(templates.get(0));
         }
 
-        // OK, only one template left, return it
-        return oneResult(templates.get(0));
+        //Perform checks on SBDH field values
+        if (checkSBDH && sbdhPresent) {
+            checkMandatorySbdhFields(result);
+        }
+
+
+        return result;
+    }
+
+    private void checkMandatorySbdhFields(DocumentInfo result) {
+        if (result.getCustomizationId().trim().length() == 0) {
+            result.getErrors().add(new DocumentError(endpoint, "Customization id is missing in file: " + fileName));
+        }
+
+        if (result.getProfileId().trim().length() == 0) {
+            result.getErrors().add(new DocumentError(endpoint, "Profile id is missing in file: " + fileName));
+        }
+
+        if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifier(result.getSenderId())) {
+            result.getErrors().add(new DocumentError(endpoint, "Invalid or missing sender id[" + result.getSenderId() + "] in file: " + fileName));
+        }
+
+        if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifier(result.getRecipientId())) {
+            result.getErrors().add(new DocumentError(endpoint, "Invalid or missing recipient id[" + result.getRecipientId() + "] in file: " + fileName));
+        }
+
+        sbdhMandatoryFields
+                .entrySet()
+                .stream()
+                .filter(entry -> !entry.getValue())
+                .forEach(entry -> result.getErrors().add(new DocumentError(endpoint, "SBDH is missing " + entry.getKey() + " field for file: " + fileName)));
+
     }
 
     private void checkFields(Template template) {
