@@ -119,7 +119,7 @@ public class OutboundController {
         if (cm.getProcessingInfo() != null && cm.getProcessingInfo().getRoute() != null) {
             String next = cm.popRoute();
             if (StringUtils.isNotBlank(next)) {
-                cm.setStatus(new Endpoint(next, ProcessType.OUT_PEPPOL_RETRY), "retry: " + next);
+                cm.setStatus(new Endpoint(next, ProcessType.OUT_PEPPOL_RETRY), "RETRY: " + next);
                 messageQueue.convertAndSend(next, cm);
                 logger.info("Message " + cm.getFileName() + " queued for retry to the queue " + next);
                 return;

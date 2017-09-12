@@ -61,9 +61,9 @@ public class MessageLevelResponseCreator {
 
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
                 pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
-            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "Validation error");
+            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "VALIDATION_ERROR");
         } else {
-            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), reason);
+            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "DOCUMENT_ERROR: " + reason);
         }
 
         if (!di.getErrors().isEmpty()) {
