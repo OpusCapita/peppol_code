@@ -3,6 +3,8 @@ package com.opuscapita.peppol.outbound.controller;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
+import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.outbound.controller.sender.FakeSender;
 import com.opuscapita.peppol.outbound.controller.sender.Svefaktura1Sender;
@@ -30,6 +32,7 @@ public class OutboundController {
     private final FakeSender fakeSender;
     private final MessageQueue messageQueue;
     private final TestSender testSender;
+    private final OxalisErrorRecognizer oxalisErrorRecognizer;
 
     @Value("${peppol.outbound.sending.enabled:false}")
     private boolean sendingEnabled;
@@ -41,12 +44,13 @@ public class OutboundController {
     @Autowired
     public OutboundController(@NotNull MessageQueue messageQueue,
                               @NotNull UblSender ublSender, @Nullable FakeSender fakeSender, @NotNull Svefaktura1Sender svefaktura1Sender,
-                              @Nullable TestSender testSender) {
+                              @Nullable TestSender testSender, @NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
         this.ublSender = ublSender;
         this.fakeSender = fakeSender;
         this.svefaktura1Sender = svefaktura1Sender;
         this.messageQueue = messageQueue;
         this.testSender = testSender;
+        this.oxalisErrorRecognizer = oxalisErrorRecognizer;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -100,14 +104,22 @@ public class OutboundController {
     }
 
     // will try to re-send the message to the delayed queue only for I/O exceptions
+    @SuppressWarnings("ConstantConditions")
     private void whatAboutRetry(@NotNull ContainerMessage cm, @NotNull MessageQueue messageQueue,
-            @NotNull Exception e, @NotNull Endpoint endpoint) throws Exception {
+                                @NotNull Exception e, @NotNull Endpoint endpoint) throws Exception {
         cm.setStatus(endpoint, "message delivery failure");
+
+        SendingErrors errorType = oxalisErrorRecognizer.recognize(e);
+        if (!errorType.isTemporary()) {
+            logger.info("Exception of type " + errorType + " registered as non-retriable, rejecting message " + cm.getFileName());
+            cm.getProcessingInfo().setProcessingException(e.getMessage());
+            throw e;
+        }
 
         if (cm.getProcessingInfo() != null && cm.getProcessingInfo().getRoute() != null) {
             String next = cm.popRoute();
             if (StringUtils.isNotBlank(next)) {
-                cm.setStatus(new Endpoint(next, ProcessType.OUT_PEPPOL_RETRY), "retry: " + next);
+                cm.setStatus(new Endpoint(next, ProcessType.OUT_PEPPOL_RETRY), "RETRY: " + next);
                 messageQueue.convertAndSend(next, cm);
                 logger.info("Message " + cm.getFileName() + " queued for retry to the queue " + next);
                 return;

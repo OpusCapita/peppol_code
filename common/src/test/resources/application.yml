@@ -9,6 +9,15 @@ peppol:
     long: /tmp
   common:
     consistency_check_enabled: true
+    errors:
+      oxalis:
+        list:
+          - type: UNKNOWN_RECIPIENT
+            mask: ".*Problem with SMP lookup for participant .* and document type.*"
+          - type: RECEIVING_AP_ERROR
+            mask: ".*Request failed with rc=50.*"
+          - type: DATA_ERROR
+            mask: "Your are not allowed to override [DocumentTypeIdentifier, ProfileTypeIdentifier] in production mode, makes sure headers match the ones in the document.*"
 
 spring:
   profiles:

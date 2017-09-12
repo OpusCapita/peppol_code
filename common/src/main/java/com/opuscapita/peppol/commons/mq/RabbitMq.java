@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeoutException;
  * @author Sergejs.Roze
  */
 @Component
+@Lazy
 public class RabbitMq implements MessageQueue {
     private final RabbitTemplate rabbitTemplate;
     private final ContainerMessageSerializer serializer;
