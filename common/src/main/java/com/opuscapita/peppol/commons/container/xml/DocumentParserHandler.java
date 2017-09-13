@@ -39,6 +39,9 @@ public class DocumentParserHandler extends DefaultHandler {
     private String value;
     private boolean checkSBDH = true;
     private boolean sbdhPresent = false;
+    private String documentIdFromSbdh = "";
+    private String processIdFromSbdh = "";
+    private String previousValue;
 
     DocumentParserHandler(@Nullable String fileName, @NotNull DocumentTemplates templates, @NotNull Endpoint endpoint, boolean shouldFailOnInconsistency) {
         this.fileName = fileName;
@@ -90,7 +93,16 @@ public class DocumentParserHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (StringUtils.isNotBlank(value)) {
             String path = paths.getLast();
-
+            if (path.contains("Scope/InstanceIdentifier")) {
+                switch (previousValue) {
+                    case "DOCUMENTID":
+                        documentIdFromSbdh = value;
+                        break;
+                    case "PROCESSID":
+                        processIdFromSbdh = value;
+                        break;
+                }
+            }
             // for each known template
             Iterator<Template> iterator = templates.iterator();
             while (iterator.hasNext()) {
@@ -125,6 +137,7 @@ public class DocumentParserHandler extends DefaultHandler {
                     }
                 }
             }
+            previousValue = value;
             value = null;
         }
         paths.removeLast();
@@ -215,6 +228,14 @@ public class DocumentParserHandler extends DefaultHandler {
                 .stream()
                 .filter(entry -> !entry.getValue())
                 .forEach(entry -> result.getErrors().add(new DocumentError(endpoint, "SBDH is missing " + entry.getKey() + " field for file: " + fileName)));
+
+        if (processIdFromSbdh == null || processIdFromSbdh.isEmpty()) {
+            result.getErrors().add(new DocumentError(endpoint, "PROCESSID is missing or empty in SBDH for file: " + fileName));
+        }
+
+        if (documentIdFromSbdh == null || documentIdFromSbdh.isEmpty()) {
+            result.getErrors().add(new DocumentError(endpoint, "DOCUMENTID is missing or empty in SBDH for file: " + fileName));
+        }
 
     }
 
