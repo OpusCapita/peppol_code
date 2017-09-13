@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_21.*;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +40,13 @@ import java.util.List;
 public class MessageLevelResponseCreator {
     private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseCreator.class);
 
+    private final OxalisErrorRecognizer oxalisErrorRecognizer;
+
+    @Autowired
+    public MessageLevelResponseCreator(@NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
+        this.oxalisErrorRecognizer = oxalisErrorRecognizer;
+    }
+
     /**
      * Creates MLR file about an error.
      *
@@ -52,18 +61,20 @@ public class MessageLevelResponseCreator {
             throw new IllegalArgumentException("Missing processing info from the document");
         }
 
-        String reason = "Document parse error";
-
         DocumentResponseType drt;
         if (StringUtils.isNotBlank(pi.getProcessingException())) {
-            reason = pi.getProcessingException();
-        }
-
-        if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
-                pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
-            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "VALIDATION_ERROR");
+            // processing exception at any step
+            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(),
+                    oxalisErrorRecognizer.recognize(pi.getProcessingException()) + ": " + pi.getProcessingException());
         } else {
-            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "DOCUMENT_ERROR: " + reason);
+            if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
+                    pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
+                // validation issue
+                drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "VALIDATION_ERROR");
+            } else {
+                // document errors on some other step, probably preprocessing
+                drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "DOCUMENT_ERROR");
+            }
         }
 
         if (!di.getErrors().isEmpty()) {

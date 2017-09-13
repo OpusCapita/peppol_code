@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.junit.Test;
 
@@ -12,17 +13,19 @@ import java.io.ByteArrayOutputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
  */
 public class MessageLevelResponseCreatorTest {
+    private OxalisErrorRecognizer oxalisErrorRecognizer = mock(OxalisErrorRecognizer.class);
 
     @Test
     public void reportSuccess() throws Exception {
         ContainerMessage cm = prepareContainerMessage();
 
-        ApplicationResponseType art = new MessageLevelResponseCreator().reportSuccess(cm);
+        ApplicationResponseType art = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         UBL21Writer.applicationResponse().write(art, out);
@@ -65,7 +68,7 @@ public class MessageLevelResponseCreatorTest {
 
         cm.getDocumentInfo().setIssueDate("oops");
 
-        ApplicationResponseType art = new MessageLevelResponseCreator().reportSuccess(cm);
+        ApplicationResponseType art = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         assertEquals(art.getIssueDate().getValue(), art.getResponseDate().getValue());
