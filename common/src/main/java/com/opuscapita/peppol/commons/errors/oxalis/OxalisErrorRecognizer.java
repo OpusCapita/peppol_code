@@ -42,6 +42,7 @@ public class OxalisErrorRecognizer {
             }
         }
 
+        logger.info("Failed to recognize error message: " + message);
         return SendingErrors.OTHER_ERROR;
     }
 }
