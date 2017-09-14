@@ -27,6 +27,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.io.File;
 import java.util.Arrays;
 
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -44,6 +45,8 @@ public class EmailControllerTest {
     //constants
     private static final String CUSTOMER_ID = "customer_id";
     private static final String OUTPUT_DIRECTORY = "/tmp" + File.separator;
+    private static final String INVALID_ERROR_MESSAGE = "INVALID error message";
+    private static final String TRANSPORT_ERROR_MESSAGE = "Problem with SMP lookup for participant TEST and document type TEST";
     //mocks
     private CustomerRepository customerRepository = mock(CustomerRepository.class);
     private Customer customer  = mock(Customer.class);
@@ -63,7 +66,7 @@ public class EmailControllerTest {
     private OxalisErrorRecognizer oxalisErrorRecognizer;
 
     @Test
-    public void storeDocumentOutLookupError() throws Exception {
+    public void processDocumentOutLookupError() throws Exception {
         System.out.println("Outbound look up error test");
 
         when(customer.getInboundEmails()).thenReturn("test_inbound@test.com");
@@ -77,25 +80,33 @@ public class EmailControllerTest {
         ReflectionTestUtils.setField(controller,"outLookupErrorEmailSubject", outLookupErrorEmailSubject);
 
         ContainerMessage cm = createTestContainerMessage();
-        cm.getDocumentInfo().getErrors().add(new DocumentError( new Endpoint("test", ProcessType.OUT_OUTBOUND), "Problem with SMP lookup for participant TEST and document type TEST" ));
+        cm.getProcessingInfo().setProcessingException(TRANSPORT_ERROR_MESSAGE);
         controller.processMessage(cm);
 
         File subjectFile = new File(OUTPUT_DIRECTORY + File.separator + CUSTOMER_ID + EmailController.EXT_SUBJECT);
         File toFile = new File(OUTPUT_DIRECTORY + File.separator + CUSTOMER_ID + EmailController.EXT_TO);
         File bodyFile = new File(OUTPUT_DIRECTORY + File.separator + CUSTOMER_ID + EmailController.EXT_BODY);
+
+        //files created
         assertTrue(subjectFile.exists());
         assertTrue(toFile.exists());
         assertTrue(bodyFile.exists());
+
+        //check content
         String content = Files.toString(subjectFile, Charsets.UTF_8);
         assertTrue(content.contains(outLookupErrorEmailSubject));
         content = Files.toString(toFile, Charsets.UTF_8);
         assertEquals(content,"test_outbound@test.com"); //should be the one used for outbound
-        //clean ??
+
+        content = Files.toString(bodyFile, Charsets.UTF_8);
+        assertTrue(content.contains(TRANSPORT_ERROR_MESSAGE));
+
+        //clean
         cleanFiles(subjectFile,toFile,bodyFile);
     }
 
     @Test
-    public void storeDocumentInValidationError() throws Exception {
+    public void processDocumentInValidationError() throws Exception {
         System.out.println("Inbound invalid error test");
 
         when(customer.getInboundEmails()).thenReturn("test_inbound_email@test.com");
@@ -109,22 +120,98 @@ public class EmailControllerTest {
         ReflectionTestUtils.setField(controller,"outLookupErrorEmailSubject", outLookupErrorEmailSubject);
 
         ContainerMessage cm = createTestContainerMessage();
-        cm.getDocumentInfo().getErrors().add(new DocumentError( new Endpoint("test", ProcessType.IN_IN), "Random error message" ));
+        cm.getDocumentInfo().getErrors().add(new DocumentError( new Endpoint("test", ProcessType.IN_IN), INVALID_ERROR_MESSAGE ));
         cm.setProcessingInfo(new ProcessingInfo(new Endpoint("test", ProcessType.IN_IN),"metadata"));
         controller.processMessage(cm);
 
         File subjectFile = new File(OUTPUT_DIRECTORY + File.separator + "recipient_id" + EmailController.EXT_SUBJECT);
         File toFile = new File(OUTPUT_DIRECTORY + File.separator + "recipient_id" + EmailController.EXT_TO);
         File bodyFile = new File(OUTPUT_DIRECTORY + File.separator + "recipient_id" + EmailController.EXT_BODY);
+
+        //files created
         assertTrue(subjectFile.exists());
         assertTrue(toFile.exists());
         assertTrue(bodyFile.exists());
+
+        //check content
         String content = Files.toString(subjectFile, Charsets.UTF_8);
         assertTrue(content.contains(inInvalidEmailSubject));
         content = Files.toString(toFile, Charsets.UTF_8);
-        assertEquals(content,"test_inbound_email@test.com"); //should be the one used for outbound
+        assertEquals(content,"test_inbound_email@test.com"); //should be the one used for inbound
+
+        content = Files.toString(bodyFile, Charsets.UTF_8);
+        assertTrue(content.contains(INVALID_ERROR_MESSAGE));
+
         //clean
         cleanFiles(subjectFile,toFile,bodyFile);
+    }
+
+    @Test
+    public void processDocumentMultipleErrors() throws Exception {
+        System.out.println("Multiple Errors test");
+
+        when(customer.getInboundEmails()).thenReturn("test_inbound_email@test.com");
+        when(customer.getOutboundEmails()).thenReturn("test_outbound@test.com");
+        when(customerRepository.findByIdentifier(any())).thenReturn(customer);
+
+        EmailController controller = new EmailController(customerRepository,errorHandler,bodyFormatter, oxalisErrorRecognizer);
+        ReflectionTestUtils.setField(controller,"directory", OUTPUT_DIRECTORY);
+        ReflectionTestUtils.setField(controller,"outInvalidEmailSubject", outInvalidEmailSubject);
+        ReflectionTestUtils.setField(controller,"inInvalidEmailSubject", inInvalidEmailSubject);
+        ReflectionTestUtils.setField(controller,"outLookupErrorEmailSubject", outLookupErrorEmailSubject);
+
+        //setting different errors
+        ContainerMessage cm = createTestContainerMessage();
+        cm.getDocumentInfo().getErrors().add(new DocumentError( new Endpoint("test", ProcessType.OUT_FILE_TO_MQ), INVALID_ERROR_MESSAGE + "#1"));
+        cm.getDocumentInfo().getErrors().add(new DocumentError( new Endpoint("test", ProcessType.OUT_OUTBOUND), INVALID_ERROR_MESSAGE + "#2"));
+        cm.getProcessingInfo().setProcessingException(TRANSPORT_ERROR_MESSAGE);
+
+        controller.processMessage(cm);
+
+        File subjectFile = new File(OUTPUT_DIRECTORY + File.separator + CUSTOMER_ID + EmailController.EXT_SUBJECT);
+        File toFile = new File(OUTPUT_DIRECTORY + File.separator + CUSTOMER_ID + EmailController.EXT_TO);
+        File bodyFile = new File(OUTPUT_DIRECTORY + File.separator + CUSTOMER_ID + EmailController.EXT_BODY);
+
+        //files created
+        assertTrue(subjectFile.exists());
+        assertTrue(toFile.exists());
+        assertTrue(bodyFile.exists());
+
+        //check content
+        String content = Files.toString(subjectFile, Charsets.UTF_8);
+        assertTrue(content.contains(outLookupErrorEmailSubject));
+        content = Files.toString(toFile, Charsets.UTF_8);
+        assertEquals(content,"test_outbound@test.com"); //should be the one used for outbound
+
+        content = Files.toString(bodyFile, Charsets.UTF_8);
+        assertTrue(content.contains(INVALID_ERROR_MESSAGE + "#1"));
+        assertTrue(content.contains(INVALID_ERROR_MESSAGE + "#2"));
+        assertTrue(content.contains(TRANSPORT_ERROR_MESSAGE));
+        assertTrue(content.contains("ERRORS"));
+
+        //clean
+        cleanFiles(subjectFile,toFile,bodyFile);
+    }
+
+    @Test
+    public void processDocumentNoErrors() {
+        System.out.println("Inbound no errors test");
+
+        when(customer.getInboundEmails()).thenReturn("test_inbound_email@test.com");
+        when(customer.getOutboundEmails()).thenReturn("test_outbound@test.com");
+        when(customerRepository.findByIdentifier(any())).thenReturn(customer);
+
+        EmailController controller = new EmailController(customerRepository,errorHandler,bodyFormatter, oxalisErrorRecognizer);
+        ContainerMessage cm = createTestContainerMessage();
+
+        try {
+            controller.processMessage(cm);
+            fail("Exception not thrown when processing message");
+        }
+        catch (IllegalArgumentException good) {}
+        catch (Exception ex){
+            fail("Different exception expected!");
+        }
     }
     //outbound
     private ContainerMessage createTestContainerMessage() {

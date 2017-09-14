@@ -1,7 +1,6 @@
 package com.opuscapita.peppol.email.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.stream.Collectors;
 
 
 /**
@@ -107,7 +105,8 @@ public class EmailController {
             throw new IllegalStateException(msg);
         }
 
-        if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) {
+       // if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) {
+        if(!cm.isFaulty()) {
             throw new IllegalArgumentException("Document received by email-notificator has no errors: " + cm.getFileName());
         }
 
@@ -152,9 +151,9 @@ public class EmailController {
 
     private String getSubjectForContainerMessage(ContainerMessage cm) {
         String subject = cm.isInbound() ? inInvalidEmailSubject : outInvalidEmailSubject;
-        if(cm.getDocumentInfo()!= null) {
-            String errors = cm.getDocumentInfo().getErrors().stream().map(DocumentError::getMessage).collect(Collectors.joining(", "));
-            if (oxalisErrorRecognizer.recognize(errors).equals(SendingErrors.UNKNOWN_RECIPIENT)) {
+        String errorMessage;
+        if (cm.getProcessingInfo() != null && (errorMessage = cm.getProcessingInfo().getProcessingException()) != null) {
+            if (oxalisErrorRecognizer.recognize(errorMessage).equals(SendingErrors.UNKNOWN_RECIPIENT)) {
                 return outLookupErrorEmailSubject;
             }
         }

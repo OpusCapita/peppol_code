@@ -2,10 +2,12 @@ package com.opuscapita.peppol.email.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
-import com.opuscapita.peppol.commons.container.document.DocumentError;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Moved to a separate class in order to have the possibility to introduce templates later.
@@ -27,21 +29,32 @@ public class BodyFormatter {
 
     private String formatErrors(ContainerMessage cm) {
         StringBuilder result = new StringBuilder();
-        if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getErrors().size() > 0) {
-            if (cm.getDocumentInfo().getErrors().size() == 1) {
-                result.append("\n- ERROR               : ");
-                result.append(cm.getDocumentInfo().getErrors().get(0).toString());
-            } else {
-                result.append("\n- ERRORS              : ");
-                for (DocumentError error : cm.getDocumentInfo().getErrors()) {
-                    result.append("\n\t").append(error.toString());
-                }
-            }
+        List<String> errorList = collectErrors(cm);
+
+        if (errorList.isEmpty() ) {
+            result.append("\n- ERROR               : Unspecified error");
+        }
+        else if (errorList.size() == 1) {
+            result.append("\n- ERROR               : ");
+            result.append(errorList.get(0));
         } else {
-            result.append("\n- ERROR               : Unspecified validation error");
+            result.append("\n- ERRORS              : ");
+            errorList.forEach(er -> result.append("\n\t").append(er));
+        }
+        return result.toString();
+    }
+
+    private List<String> collectErrors(ContainerMessage cm) {
+        List<String> errors = new ArrayList<>();
+        String errorText;
+        if (cm.getProcessingInfo()!= null && (errorText = cm.getProcessingInfo().getProcessingException()) != null) {
+            errors.add(errorText);
         }
 
-        return result.toString();
+        if (cm.getDocumentInfo() != null) {
+            cm.getDocumentInfo().getErrors().forEach(er -> errors.add(er.toString()));
+        }
+        return errors;
     }
 
     @SuppressWarnings("ConstantConditions")
