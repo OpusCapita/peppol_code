@@ -127,7 +127,6 @@ public class DocumentParserHandler extends DefaultHandler {
                                 logger.debug(field.getId() + " matched by " + template.name +
                                         ", value = " + value + ", path = " + path);
                                 if (sbdhMandatoryFields.containsKey(field.getId()) && path.contains("SBDH/")) {
-                                    System.out.println("Path: " + path + ", name: " + field.getId() + ", value: " + value);
                                     sbdhMandatoryFields.replace(field.getId(), true);
                                 }
                                 field.addValue(value);
