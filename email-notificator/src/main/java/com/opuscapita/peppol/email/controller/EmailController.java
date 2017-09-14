@@ -1,7 +1,10 @@
 package com.opuscapita.peppol.email.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
+import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.model.Customer;
 import com.opuscapita.peppol.email.model.CustomerRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +20,8 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.stream.Collectors;
+
 
 /**
  * Prepares files for e-mail sender from received messages.
@@ -34,17 +39,26 @@ public class EmailController {
     private final CustomerRepository customerRepository;
     private final ErrorHandler errorHandler;
     private final BodyFormatter bodyFormatter;
+    private final OxalisErrorRecognizer oxalisErrorRecognizer;
+
 
     @Value("${peppol.email-notificator.directory}")
     private String directory;
+    @Value("${peppol.email-notificator.out.invalid.subject}")
+    private String outInvalidEmailSubject;
+    @Value("${peppol.email-notificator.in.invalid.subject}")
+    private String inInvalidEmailSubject;
+    @Value("${peppol.email-notificator.out.lookup-error.subject}")
+    private String outLookupErrorEmailSubject;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     public EmailController(@NotNull CustomerRepository customerRepository, @Nullable ErrorHandler errorHandler,
-                           @NotNull BodyFormatter bodyFormatter) {
+                           @NotNull BodyFormatter bodyFormatter, @NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
         this.customerRepository = customerRepository;
         this.errorHandler = errorHandler;
         this.bodyFormatter = bodyFormatter;
+        this.oxalisErrorRecognizer = oxalisErrorRecognizer;
     }
 
     public void processMessage(@NotNull ContainerMessage cm) throws Exception {
@@ -119,7 +133,9 @@ public class EmailController {
 
     @SuppressWarnings("ConstantConditions")
     private void storeDocument(ContainerMessage cm, String fileName) throws IOException {
-        storeSubject("Validation errors in document", fileName);
+
+        //storeSubject("Validation errors in document", fileName);
+        storeSubject(getSubjectForContainerMessage(cm), fileName);
 
         File body = new File(fileName + EXT_BODY);
 
@@ -132,6 +148,17 @@ public class EmailController {
         }
         Files.write(new File(fileName + EXT_BODY).toPath(), bodyFormatter.format(cm).getBytes(), StandardOpenOption.APPEND);
         logger.info("Message about file " + cm.getFileName() + " stored");
+    }
+
+    private String getSubjectForContainerMessage(ContainerMessage cm) {
+        String subject = cm.isInbound() ? inInvalidEmailSubject : outInvalidEmailSubject;
+        if(cm.getDocumentInfo()!= null) {
+            String errors = cm.getDocumentInfo().getErrors().stream().map(DocumentError::getMessage).collect(Collectors.joining(", "));
+            if (oxalisErrorRecognizer.recognize(errors).equals(SendingErrors.UNKNOWN_RECIPIENT)) {
+                return outLookupErrorEmailSubject;
+            }
+        }
+        return subject;
     }
 
     @SuppressWarnings("SameParameterValue")

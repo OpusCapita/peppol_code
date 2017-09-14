@@ -1,0 +1,64 @@
+peppol:
+    common:
+        consistency_check_enabled: false
+        errors:
+            oxalis:
+                list:
+                -   mask: .*Problem with SMP lookup for participant .* and document type.*
+                    type: UNKNOWN_RECIPIENT
+                -   mask: .*Request failed with rc=50.*
+                    type: RECEIVING_AP_ERROR
+                -   mask: Your are not allowed to override [DocumentTypeIdentifier, ProfileTypeIdentifier] in production mode, makes sure headers match the ones in the document.*.common.peppol.common.errors.oxalis.`
+                    type: DATA_ERROR
+    component:
+        name: email-notificator
+    email-notificator:
+        directory: /tmp
+        failed:
+            directory: /tmp
+        in:
+            invalid:
+                subject: 'Peppol PROD: Invalid incoming invoices report'
+        out:
+            invalid:
+                subject: 'Peppol PROD: Invalid outgoing invoices report'
+            lookup-error:
+                subject: 'Peppol PROD: Outgoing participant lookup error report'
+        queue:
+            in:
+                name: email-notificator
+        sender: peppol@opuscapita.com
+        sent:
+            directory: /tmp/trash
+        wait:
+            seconds: 120
+    eventing:
+        queue:
+            in:
+                name: eventing
+    storage:
+        long: /tmp
+        short: /tmp
+snc:
+    bsc: test
+    businessGroup: test
+    enabled: true
+    from: test
+    rest:
+        password: test
+        url: localhost
+        username: test
+spring:
+    datasource:
+        driver-class-name: org.hsqldb.jdbcDriver
+        platform: hsqldb
+        url: jdbc:hsqldb:file:/tmp/testdb
+        username: sa
+    jpa:
+        database: HSQL
+        database-platform: org.hibernate.dialect.HSQLDialect
+        hibernate:
+            ddl-auto: create-drop
+        show-sql: true
+    mail:
+        host: localhost

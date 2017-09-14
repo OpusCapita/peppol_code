@@ -1,0 +1,42 @@
+peppol.component.name=email-notificator
+peppol.email-notificator.queue.in.name=email-notificator
+peppol.email-notificator.directory=/tmp
+peppol.email-notificator.sent.directory=/tmp/trash
+peppol.email-notificator.wait.seconds=120
+peppol.email-notificator.sender=peppol@opuscapita.com
+peppol.email-notificator.failed.directory=/tmp
+peppol.email-notificator.out.invalid.subject=Peppol PROD: Invalid outgoing invoices report
+peppol.email-notificator.in.invalid.subject=Peppol PROD: Invalid incoming invoices report
+peppol.email-notificator.out.lookup-error.subject=Peppol PROD: Outgoing participant lookup error report
+spring.mail.host=localhost
+
+snc.enabled=true
+snc.rest.url=localhost
+snc.rest.username=test
+snc.rest.password=test
+snc.bsc=test
+snc.from=test
+snc.businessGroup=test
+
+spring.datasource.url=jdbc:hsqldb:file:/tmp/testdb
+spring.datasource.username=sa
+
+spring.datasource.platform=hsqldb
+spring.jpa.database-platform=org.hibernate.dialect.HSQLDialect
+spring.jpa.database=HSQL
+spring.datasource.driver-class-name=org.hsqldb.jdbcDriver
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=create-drop
+
+peppol.storage.short=/tmp
+peppol.storage.long=/tmp
+
+peppol.eventing.queue.in.name=eventing
+
+peppol.common.consistency_check_enabled=false
+peppol.common.errors.oxalis.list.0.type=UNKNOWN_RECIPIENT
+peppol.common.errors.oxalis.list.0.mask=.*Problem with SMP lookup for participant .* and document type.*
+peppol.common.errors.oxalis.list.1.type=RECEIVING_AP_ERROR
+peppol.common.errors.oxalis.list.1.mask=.*Request failed with rc=50.*
+peppol.common.errors.oxalis.list.2.type=DATA_ERROR
+peppol.common.errors.oxalis.list.2.mask=Your are not allowed to override [DocumentTypeIdentifier, ProfileTypeIdentifier] in production mode, makes sure headers match the ones in the document.*.common.peppol.common.errors.oxalis.`
