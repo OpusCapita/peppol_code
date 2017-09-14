@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -42,7 +43,7 @@ import static org.mockito.Mockito.when;
 public class EmailControllerTest {
     //constants
     private static final String CUSTOMER_ID = "customer_id";
-    private static final String OUTPUT_DIRECTORY = "/tmp" + File.separator + "email";
+    private static final String OUTPUT_DIRECTORY = "/tmp" + File.separator;
     //mocks
     private CustomerRepository customerRepository = mock(CustomerRepository.class);
     private Customer customer  = mock(Customer.class);
@@ -90,6 +91,7 @@ public class EmailControllerTest {
         content = Files.toString(toFile, Charsets.UTF_8);
         assertEquals(content,"test_outbound@test.com"); //should be the one used for outbound
         //clean ??
+        cleanFiles(subjectFile,toFile,bodyFile);
     }
 
     @Test
@@ -122,6 +124,7 @@ public class EmailControllerTest {
         content = Files.toString(toFile, Charsets.UTF_8);
         assertEquals(content,"test_inbound_email@test.com"); //should be the one used for outbound
         //clean
+        cleanFiles(subjectFile,toFile,bodyFile);
     }
     //outbound
     private ContainerMessage createTestContainerMessage() {
@@ -136,5 +139,9 @@ public class EmailControllerTest {
         di.setSenderName("sender_name");
         cm.setDocumentInfo(di);
         return cm;
+    }
+
+    private void cleanFiles(File... files){
+        Arrays.stream(files).forEach(f -> f.delete());
     }
 }
