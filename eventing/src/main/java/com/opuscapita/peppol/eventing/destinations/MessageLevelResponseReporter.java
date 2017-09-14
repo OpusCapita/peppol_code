@@ -59,11 +59,16 @@ public class MessageLevelResponseReporter {
             return;
         }
 
+        // ignoring inbound
+        if (cm.isInbound()) {
+            return;
+        }
+
         ProcessingInfo pi = cm.getProcessingInfo();
         DocumentInfo di = cm.getDocumentInfo();
 
         // report errors
-        if (di.getArchetype() == Archetype.INVALID && !cm.isInbound()) {
+        if (di.getArchetype() == Archetype.INVALID) {
             logger.info("Creating MLR (re) for: invalid message: " + cm.getFileName());
             storeResponse(creator.reportError(cm), cm, "re");
             return;
