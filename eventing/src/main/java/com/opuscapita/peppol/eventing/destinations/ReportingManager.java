@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 @Lazy
 public class ReportingManager {
-    private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseReporter.class);
+    private final static Logger logger = LoggerFactory.getLogger(ReportingManager.class);
 
     private WebWatchDogReporter webWatchDogReporter;
     private MessageLevelResponseReporter messageLevelResponseReporter;
