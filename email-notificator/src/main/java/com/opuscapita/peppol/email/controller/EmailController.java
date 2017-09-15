@@ -105,8 +105,8 @@ public class EmailController {
             throw new IllegalStateException(msg);
         }
 
-       // if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) {
-        if(!cm.isFaulty()) {
+        // if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) {
+        if (!cm.isFaulty()) {
             throw new IllegalArgumentException("Document received by email-notificator has no errors: " + cm.getFileName());
         }
 
@@ -127,7 +127,8 @@ public class EmailController {
     private void deleteSilently(@NotNull String fileName) {
         try {
             new File(fileName).delete();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -140,9 +141,9 @@ public class EmailController {
 
         if (!body.exists()) {
             Files.write(body.toPath(), ("This is an automatically redirected electronic invoice rejection message:\n\n" +
-                    "The following PEPPOL invoice(s) have been rejected by the operator (see Subject).\n\n" +
-                    "Please correct invoice(s) and resend.\n\n" +
-                    "If you have any questions concerning the rejection, please reply directly to this e-mail.").getBytes(),
+                            "The following PEPPOL invoice(s) have been rejected by the operator (see Subject).\n\n" +
+                            "Please correct invoice(s) and resend.\n\n" +
+                            "If you have any questions concerning the rejection, please reply directly to this e-mail.").getBytes(),
                     StandardOpenOption.CREATE);
         }
         Files.write(new File(fileName + EXT_BODY).toPath(), bodyFormatter.format(cm).getBytes(), StandardOpenOption.APPEND);
@@ -151,8 +152,8 @@ public class EmailController {
 
     private String getSubjectForContainerMessage(ContainerMessage cm) {
         String subject = cm.isInbound() ? inInvalidEmailSubject : outInvalidEmailSubject;
-        String errorMessage;
-        if (cm.getProcessingInfo() != null && (errorMessage = cm.getProcessingInfo().getProcessingException()) != null) {
+        String errorMessage = cm.getProcessingInfo() == null ? null : cm.getProcessingInfo().getProcessingException();
+        if (cm.getProcessingInfo() != null && errorMessage != null) {
             if (oxalisErrorRecognizer.recognize(errorMessage).equals(SendingErrors.UNKNOWN_RECIPIENT)) {
                 return outLookupErrorEmailSubject;
             }

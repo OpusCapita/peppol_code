@@ -10,7 +10,10 @@ import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
+import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorsList;
 import com.opuscapita.peppol.commons.model.Customer;
+import com.opuscapita.peppol.commons.mq.RabbitMq;
+import com.opuscapita.peppol.email.EmailNotificatorApp;
 import com.opuscapita.peppol.email.controller.BodyFormatter;
 import com.opuscapita.peppol.email.controller.EmailController;
 import com.opuscapita.peppol.email.model.CustomerRepository;
@@ -18,8 +21,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -38,9 +43,10 @@ import static org.mockito.Mockito.when;
  * @author Sergejs.Gamans
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = TestConfig.class)
 @TestPropertySource(locations = "classpath:application.yml")
-@ComponentScan(basePackages = {"com.opuscapita.peppol.email" , "com.opuscapita.peppol.commons.errors.oxalis" })
+@ComponentScan(basePackages = {"com.opuscapita.peppol.email", "com.opuscapita.peppol.commons.errors.oxalis"}, excludeFilters = @ComponentScan.Filter(value = {EmailNotificatorApp.class, RabbitMq.class}, type = FilterType.ASSIGNABLE_TYPE))
+@EnableConfigurationProperties(OxalisErrorsList.class)
 public class EmailControllerTest {
     //constants
     private static final String CUSTOMER_ID = "customer_id";
@@ -49,7 +55,7 @@ public class EmailControllerTest {
     private static final String TRANSPORT_ERROR_MESSAGE = "Problem with SMP lookup for participant TEST and document type TEST";
     //mocks
     private CustomerRepository customerRepository = mock(CustomerRepository.class);
-    private Customer customer  = mock(Customer.class);
+    private Customer customer = mock(Customer.class);
     private ErrorHandler errorHandler = mock(ErrorHandler.class);
     //from config
     @Value("${peppol.email-notificator.out.invalid.subject}")
@@ -73,11 +79,11 @@ public class EmailControllerTest {
         when(customer.getOutboundEmails()).thenReturn("test_outbound@test.com");
         when(customerRepository.findByIdentifier(any())).thenReturn(customer);
 
-        EmailController controller = new EmailController(customerRepository,errorHandler,bodyFormatter, oxalisErrorRecognizer);
-        ReflectionTestUtils.setField(controller,"directory", OUTPUT_DIRECTORY);
-        ReflectionTestUtils.setField(controller,"outInvalidEmailSubject", outInvalidEmailSubject);
-        ReflectionTestUtils.setField(controller,"inInvalidEmailSubject", inInvalidEmailSubject);
-        ReflectionTestUtils.setField(controller,"outLookupErrorEmailSubject", outLookupErrorEmailSubject);
+        EmailController controller = new EmailController(customerRepository, errorHandler, bodyFormatter, oxalisErrorRecognizer);
+        ReflectionTestUtils.setField(controller, "directory", OUTPUT_DIRECTORY);
+        ReflectionTestUtils.setField(controller, "outInvalidEmailSubject", outInvalidEmailSubject);
+        ReflectionTestUtils.setField(controller, "inInvalidEmailSubject", inInvalidEmailSubject);
+        ReflectionTestUtils.setField(controller, "outLookupErrorEmailSubject", outLookupErrorEmailSubject);
 
         ContainerMessage cm = createTestContainerMessage();
         cm.getProcessingInfo().setProcessingException(TRANSPORT_ERROR_MESSAGE);
@@ -96,13 +102,13 @@ public class EmailControllerTest {
         String content = Files.toString(subjectFile, Charsets.UTF_8);
         assertTrue(content.contains(outLookupErrorEmailSubject));
         content = Files.toString(toFile, Charsets.UTF_8);
-        assertEquals(content,"test_outbound@test.com"); //should be the one used for outbound
+        assertEquals(content, "test_outbound@test.com"); //should be the one used for outbound
 
         content = Files.toString(bodyFile, Charsets.UTF_8);
         assertTrue(content.contains(TRANSPORT_ERROR_MESSAGE));
 
         //clean
-        cleanFiles(subjectFile,toFile,bodyFile);
+        cleanFiles(subjectFile, toFile, bodyFile);
     }
 
     @Test
@@ -113,15 +119,15 @@ public class EmailControllerTest {
         when(customer.getOutboundEmails()).thenReturn("test_outbound@test.com");
         when(customerRepository.findByIdentifier(any())).thenReturn(customer);
 
-        EmailController controller = new EmailController(customerRepository,errorHandler,bodyFormatter, oxalisErrorRecognizer);
-        ReflectionTestUtils.setField(controller,"directory", OUTPUT_DIRECTORY);
-        ReflectionTestUtils.setField(controller,"outInvalidEmailSubject", outInvalidEmailSubject);
-        ReflectionTestUtils.setField(controller,"inInvalidEmailSubject", inInvalidEmailSubject);
-        ReflectionTestUtils.setField(controller,"outLookupErrorEmailSubject", outLookupErrorEmailSubject);
+        EmailController controller = new EmailController(customerRepository, errorHandler, bodyFormatter, oxalisErrorRecognizer);
+        ReflectionTestUtils.setField(controller, "directory", OUTPUT_DIRECTORY);
+        ReflectionTestUtils.setField(controller, "outInvalidEmailSubject", outInvalidEmailSubject);
+        ReflectionTestUtils.setField(controller, "inInvalidEmailSubject", inInvalidEmailSubject);
+        ReflectionTestUtils.setField(controller, "outLookupErrorEmailSubject", outLookupErrorEmailSubject);
 
         ContainerMessage cm = createTestContainerMessage();
-        cm.getDocumentInfo().getErrors().add(new DocumentError( new Endpoint("test", ProcessType.IN_IN), INVALID_ERROR_MESSAGE ));
-        cm.setProcessingInfo(new ProcessingInfo(new Endpoint("test", ProcessType.IN_IN),"metadata"));
+        cm.getDocumentInfo().getErrors().add(new DocumentError(new Endpoint("test", ProcessType.IN_IN), INVALID_ERROR_MESSAGE));
+        cm.setProcessingInfo(new ProcessingInfo(new Endpoint("test", ProcessType.IN_IN), "metadata"));
         controller.processMessage(cm);
 
         File subjectFile = new File(OUTPUT_DIRECTORY + File.separator + "recipient_id" + EmailController.EXT_SUBJECT);
@@ -137,13 +143,13 @@ public class EmailControllerTest {
         String content = Files.toString(subjectFile, Charsets.UTF_8);
         assertTrue(content.contains(inInvalidEmailSubject));
         content = Files.toString(toFile, Charsets.UTF_8);
-        assertEquals(content,"test_inbound_email@test.com"); //should be the one used for inbound
+        assertEquals(content, "test_inbound_email@test.com"); //should be the one used for inbound
 
         content = Files.toString(bodyFile, Charsets.UTF_8);
         assertTrue(content.contains(INVALID_ERROR_MESSAGE));
 
         //clean
-        cleanFiles(subjectFile,toFile,bodyFile);
+        cleanFiles(subjectFile, toFile, bodyFile);
     }
 
     @Test
@@ -154,16 +160,16 @@ public class EmailControllerTest {
         when(customer.getOutboundEmails()).thenReturn("test_outbound@test.com");
         when(customerRepository.findByIdentifier(any())).thenReturn(customer);
 
-        EmailController controller = new EmailController(customerRepository,errorHandler,bodyFormatter, oxalisErrorRecognizer);
-        ReflectionTestUtils.setField(controller,"directory", OUTPUT_DIRECTORY);
-        ReflectionTestUtils.setField(controller,"outInvalidEmailSubject", outInvalidEmailSubject);
-        ReflectionTestUtils.setField(controller,"inInvalidEmailSubject", inInvalidEmailSubject);
-        ReflectionTestUtils.setField(controller,"outLookupErrorEmailSubject", outLookupErrorEmailSubject);
+        EmailController controller = new EmailController(customerRepository, errorHandler, bodyFormatter, oxalisErrorRecognizer);
+        ReflectionTestUtils.setField(controller, "directory", OUTPUT_DIRECTORY);
+        ReflectionTestUtils.setField(controller, "outInvalidEmailSubject", outInvalidEmailSubject);
+        ReflectionTestUtils.setField(controller, "inInvalidEmailSubject", inInvalidEmailSubject);
+        ReflectionTestUtils.setField(controller, "outLookupErrorEmailSubject", outLookupErrorEmailSubject);
 
         //setting different errors
         ContainerMessage cm = createTestContainerMessage();
-        cm.getDocumentInfo().getErrors().add(new DocumentError( new Endpoint("test", ProcessType.OUT_FILE_TO_MQ), INVALID_ERROR_MESSAGE + "#1"));
-        cm.getDocumentInfo().getErrors().add(new DocumentError( new Endpoint("test", ProcessType.OUT_OUTBOUND), INVALID_ERROR_MESSAGE + "#2"));
+        cm.getDocumentInfo().getErrors().add(new DocumentError(new Endpoint("test", ProcessType.OUT_FILE_TO_MQ), INVALID_ERROR_MESSAGE + "#1"));
+        cm.getDocumentInfo().getErrors().add(new DocumentError(new Endpoint("test", ProcessType.OUT_OUTBOUND), INVALID_ERROR_MESSAGE + "#2"));
         cm.getProcessingInfo().setProcessingException(TRANSPORT_ERROR_MESSAGE);
 
         controller.processMessage(cm);
@@ -181,7 +187,7 @@ public class EmailControllerTest {
         String content = Files.toString(subjectFile, Charsets.UTF_8);
         assertTrue(content.contains(outLookupErrorEmailSubject));
         content = Files.toString(toFile, Charsets.UTF_8);
-        assertEquals(content,"test_outbound@test.com"); //should be the one used for outbound
+        assertEquals(content, "test_outbound@test.com"); //should be the one used for outbound
 
         content = Files.toString(bodyFile, Charsets.UTF_8);
         assertTrue(content.contains(INVALID_ERROR_MESSAGE + "#1"));
@@ -190,7 +196,7 @@ public class EmailControllerTest {
         assertTrue(content.contains("ERRORS"));
 
         //clean
-        cleanFiles(subjectFile,toFile,bodyFile);
+        cleanFiles(subjectFile, toFile, bodyFile);
     }
 
     @Test
@@ -201,18 +207,18 @@ public class EmailControllerTest {
         when(customer.getOutboundEmails()).thenReturn("test_outbound@test.com");
         when(customerRepository.findByIdentifier(any())).thenReturn(customer);
 
-        EmailController controller = new EmailController(customerRepository,errorHandler,bodyFormatter, oxalisErrorRecognizer);
+        EmailController controller = new EmailController(customerRepository, errorHandler, bodyFormatter, oxalisErrorRecognizer);
         ContainerMessage cm = createTestContainerMessage();
 
         try {
             controller.processMessage(cm);
             fail("Exception not thrown when processing message");
-        }
-        catch (IllegalArgumentException good) {}
-        catch (Exception ex){
+        } catch (IllegalArgumentException good) {
+        } catch (Exception ex) {
             fail("Different exception expected!");
         }
     }
+
     //outbound
     private ContainerMessage createTestContainerMessage() {
         ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", ProcessType.TEST));
@@ -228,7 +234,7 @@ public class EmailControllerTest {
         return cm;
     }
 
-    private void cleanFiles(File... files){
+    private void cleanFiles(File... files) {
         Arrays.stream(files).forEach(f -> f.delete());
     }
 }
