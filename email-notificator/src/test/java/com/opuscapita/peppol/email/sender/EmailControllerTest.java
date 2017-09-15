@@ -5,6 +5,7 @@ import com.google.common.io.Files;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
@@ -226,6 +227,7 @@ public class EmailControllerTest {
         di.setDocumentId("doc_id");
         di.setIssueDate("2017-07-18");
         di.setIssueTime("11:12:13");
+        di.setArchetype(Archetype.EHF);
         di.setRecipientId("recipient_id");
         di.setRecipientName("recipient_name");
         di.setSenderId(CUSTOMER_ID);
