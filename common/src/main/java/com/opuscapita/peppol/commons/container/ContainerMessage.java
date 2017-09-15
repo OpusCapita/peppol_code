@@ -179,10 +179,11 @@ public class ContainerMessage implements Serializable {
         this.originalFileName = FilenameUtils.getBaseName(originalFileName);
     }
 
-    public boolean isFaulty() {
-        if (documentInfo != null && !documentInfo.getErrors().isEmpty()){
+    @SuppressWarnings("SimplifiableIfStatement")
+    public boolean hasErrors() {
+        if (documentInfo != null && !documentInfo.getErrors().isEmpty()) {
             return true;
         }
-        return (processingInfo != null && processingInfo.getProcessingException()!= null);
+        return (processingInfo != null && processingInfo.getProcessingException() != null);
     }
 }

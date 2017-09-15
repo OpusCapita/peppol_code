@@ -106,7 +106,7 @@ public class EmailController {
         }
 
         // if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) {
-        if (!cm.isFaulty()) {
+        if (!cm.hasErrors()) {
             throw new IllegalArgumentException("Document received by email-notificator has no errors: " + cm.getFileName());
         }
 
