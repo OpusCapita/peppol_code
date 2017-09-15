@@ -163,9 +163,8 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
                         logger.info("got message from the MQ!, consuming queue is: " + consumerQueue);
                         //routing messages to specific listeners
                         for(MqListener listener : mqListeners){
-                            logger.info("listener subscribed for: " + listener.getConsumerQueue());
                             if(consumerQueue.equals(listener.getConsumerQueue())){
-                                logger.info("Found listener for the mq message: " + listener.getClass());
+                                logger.info("Found listener for the mq message ");
                                 listener.onMessage(message);
                             }
                         }
