@@ -178,7 +178,7 @@ tests:
    inbound:
         producers:
             - command producer:
-                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/EHF_profile-bii05_creditnote.xml -u http://inbound:8080/peppol-ap-inbound/as2
+                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/inbound_valid_test_ehf.xml -u http://inbound:8080/peppol-ap-inbound/as2
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-integration-test
