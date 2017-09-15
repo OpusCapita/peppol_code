@@ -224,7 +224,7 @@ def getReleaseVersion(this_version, release_type) {
 def emailNotify(String whom, String message) {
     def changes = getChangeString()
 
-    mail to: whom, cc: recipients.testers,
+    mail to: recipients.developers , cc: recipients.testers, cc: recipients.devops,
         subject: "Job '${JOB_NAME}': build ${BUILD_NUMBER} has failed!",
         body: """
 ${message}

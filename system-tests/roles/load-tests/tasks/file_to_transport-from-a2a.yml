@@ -1,12 +1,12 @@
 ---
 - name: Copy file to outbound from-a2a dir
-  become: no
+  become: "{{sudo}}"
 #  copy:
 #    remote_src: True
 #    src: "{{file}}"
 #    dest: /peppol-a2a-nfs/out/test/data
 
-  shell: cp "{{file}}" /peppol-a2a-nfs/out/test/data/
+  shell: cp "{{file}}" "{{transport_from_a2a_path}}"
   async: 1
   poll: 0
 
