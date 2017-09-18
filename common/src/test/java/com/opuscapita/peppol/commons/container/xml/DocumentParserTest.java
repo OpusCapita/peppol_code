@@ -36,7 +36,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/BIIXY_document_type_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "/valid/BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());

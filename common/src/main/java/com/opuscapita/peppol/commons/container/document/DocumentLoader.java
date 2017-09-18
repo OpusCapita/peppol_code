@@ -45,7 +45,8 @@ public class DocumentLoader {
     @NotNull
     public DocumentInfo load(@NotNull InputStream inputStream, @NotNull String fileName, @NotNull Endpoint endpoint) throws Exception {
         logger.info("Start parsing file: " + fileName);
-        return parser.parse(inputStream, fileName, endpoint, shouldFailOnInconsistency);
+        String shortFileName = new File(fileName).getName();
+        return parser.parse(inputStream, shortFileName, endpoint, shouldFailOnInconsistency);
     }
 
 }
