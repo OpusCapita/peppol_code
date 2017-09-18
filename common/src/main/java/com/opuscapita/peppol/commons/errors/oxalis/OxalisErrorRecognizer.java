@@ -34,7 +34,7 @@ public class OxalisErrorRecognizer {
             for (OxalisError known : oxalisErrorsList.getList()) {
                 logger.info("Trying " + known.getMask() + " as " + known.getType());
                 if (StringUtils.isNotBlank(known.getMask())) {
-                    if (message.matches(known.getMask())) {
+                    if (message.replaceAll("\n", " ").replaceAll("\r", " ").matches(known.getMask())) {
                         logger.info("Exception message '" + StringUtils.substring(message, 0, 64) +
                                 "...' recognized as " + known.getType());
                         return known.getType();
