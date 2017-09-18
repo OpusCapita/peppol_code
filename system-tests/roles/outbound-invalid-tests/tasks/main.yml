@@ -3,7 +3,7 @@
 
 - name: Clean storage path
   become: true
-  become_user: peppol
+#  become_user: peppol
   file:
     state: absent
     path: "{{ item }}"
