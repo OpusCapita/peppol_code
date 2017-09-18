@@ -32,10 +32,10 @@ public class OxalisErrorRecognizer {
     public SendingErrors recognize(@NotNull String message) {
         if (oxalisErrorsList.getList() != null) {
             for (OxalisError known : oxalisErrorsList.getList()) {
-                logger.info("Trying " + known.getMask() + " as " + known.getType());
+                logger.debug("Trying " + known.getMask() + " as " + known.getType());
                 if (StringUtils.isNotBlank(known.getMask())) {
                     if (message.replaceAll("\n", " ").replaceAll("\r", " ").matches(known.getMask())) {
-                        logger.info("Exception message '" + StringUtils.substring(message, 0, 64) +
+                        logger.debug("Exception message '" + StringUtils.substring(message, 0, 64) +
                                 "...' recognized as " + known.getType());
                         return known.getType();
                     }
@@ -43,7 +43,7 @@ public class OxalisErrorRecognizer {
             }
         }
 
-        logger.info("Failed to recognize error message: " + StringUtils.substring(message, 0, 64));
+        logger.warn("Failed to recognize error message: " + StringUtils.substring(message, 0, 64));
         return SendingErrors.OTHER_ERROR;
     }
 }
