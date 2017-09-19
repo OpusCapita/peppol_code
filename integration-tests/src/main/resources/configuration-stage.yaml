@@ -70,7 +70,7 @@ tests:
                 mq connection: mq1
                 destination queue: eventing
                 source: integration-test-xib
-                source directory: /etc/resources/events-persistence-test/eventing_xib_test.xml
+                source directory: /etc/resources/events-persistence-test/logger_eventing_xib_test.xml
                 endpoint type: outbound
                 endpoint: integration-test-endpoint
         subscribers:
@@ -95,12 +95,12 @@ tests:
             - file test:
                 name: MLR xib rejected creation test
                 id: 7
-                expected value: reventing_ejected-re-mlr.xml
+                expected value: eventing_rejected-re-mlr.xml
                 timeout: 16000
             - wwd test:
                 name: Web Watch Dog successful report test
                 id: 8
-                expected value: SEMAIDPOST_PEPPOL_XIB_status_eventing_xib_test
+                expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_eventing_xib_test
                 timeout: 16000
             - mlr test:
                 name: IO exception in mlr test
