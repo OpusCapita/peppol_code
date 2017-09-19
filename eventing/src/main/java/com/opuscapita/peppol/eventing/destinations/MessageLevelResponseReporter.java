@@ -67,7 +67,7 @@ public class MessageLevelResponseReporter {
         ProcessingInfo pi = cm.getProcessingInfo();
         DocumentInfo di = cm.getDocumentInfo();
 
-        // report errors
+        // report invalid files
         if (di.getArchetype() == Archetype.INVALID) {
             logger.info("Creating MLR (re) for: invalid message: " + cm.getFileName());
             storeResponse(creator.reportError(cm), cm, "re");
@@ -81,31 +81,27 @@ public class MessageLevelResponseReporter {
             return;
         }
 
+        // errors reported in file
+        if (!di.getErrors().isEmpty()) {
+            logger.info("Creating MLR (re) for: message with errors: " + cm.getFileName());
+            storeResponse(creator.reportError(cm), cm, "re");
+            return;
+        }
+
         // report retries in outbound
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_RETRY) {
-            // FIXME MLRs for retries temporary disabled due to Swedish people being unable to provide specification
-//            if (di.getErrors().isEmpty()) {
-//                logger.info("Creating MLR for message queued for retry");
-//                storeResponse(creator.reportRetry(cm), cm, "ab");
-//            } else {
-//                logger.info("Creating MLR for message with errors: " + cm.getFileName());
-//                storeResponse(creator.reportError(cm), cm, "re");
-//            }
+            logger.info("Creating MLR (ab) for: message queued for retry: " + cm.getFileName());
+            storeResponse(creator.reportRetry(cm), cm, "ab");
             return;
         }
 
         // report successfull end of the flow
         if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
-            if (di.getErrors().isEmpty()) {
-                if (StringUtils.isNotBlank(pi.getTransactionId())) {
-                    logger.info("Creating MLR (ap) for: successfully sent message: " + cm.getFileName());
-                    storeResponse(creator.reportSuccess(cm), cm, "ap");
-                } else {
-                    logger.warn("Skipping MLR creation for: " + cm.getFileName() + ", seems to be sending retry");
-                }
+            if (StringUtils.isNotBlank(pi.getTransactionId())) {
+                logger.info("Creating MLR (ap) for: successfully sent message: " + cm.getFileName());
+                storeResponse(creator.reportSuccess(cm), cm, "ap");
             } else {
-                logger.info("Creating MLR (re) for: message with errors: " + cm.getFileName());
-                storeResponse(creator.reportError(cm), cm, "re");
+                logger.error("Message " + cm.getFileName() + " reported as successfully sent out but there is no transmission ID");
             }
         }
     }
