@@ -160,6 +160,7 @@ public class DocumentParserHandler extends DefaultHandler {
         //SBDH missing and it's not WEB or REST endpoint
         if (checkSBDH && !sbdhPresent) {
             errors.add(new DocumentError(endpoint, "No SBDH present in file: " + fileName));
+            logger.warn("No SBDH present in file: " + fileName);
         }
 
         // check if there are some results left after all
