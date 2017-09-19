@@ -202,6 +202,9 @@ public class DocumentParserHandler extends DefaultHandler {
             checkMandatorySbdhFields(result);
         }
 
+        if (!result.getErrors().isEmpty()) {
+            result.setArchetype(Archetype.INVALID);
+        }
 
         return result;
     }
@@ -311,9 +314,7 @@ public class DocumentParserHandler extends DefaultHandler {
         setFields(template, result);
         addErrorsAndWarnings(result, template);
 
-        if (!result.getErrors().isEmpty()) {
-            result.setArchetype(Archetype.INVALID);
-        }
+
         return result;
     }
 

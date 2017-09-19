@@ -319,4 +319,15 @@ public class DocumentParserTest {
             assertEquals(Archetype.PEPPOL_SI, result.getArchetype());
         }
     }
+
+    @Test
+    public void testCorruptDocumentIdentifier() throws Exception {
+        DocumentParser parser = createDocumentParser();
+        //consistent check
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/EHF_peppol-bis-5a_invoice-SBDH-DocumentTypeIdentifier-corrupted.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "EHF_peppol-bis-5a_invoice-SBDH-DocumentTypeIdentifier-corrupted.xml", new Endpoint("test", ProcessType.UNKNOWN), false);
+            assertNotNull(result);
+            assertTrue(result.getErrors().isEmpty());
+        }
+    }
 }
