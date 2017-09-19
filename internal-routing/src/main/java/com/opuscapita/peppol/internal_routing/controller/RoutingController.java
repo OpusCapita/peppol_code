@@ -48,11 +48,11 @@ public class RoutingController {
         DocumentInfo documentInfo = cm.getDocumentInfo();
 
         if (documentInfo.getArchetype() == Archetype.INVALID) {
-            Route error = new Route();
-            error.setDescription("ERROR");
-            error.setEndpoints(Collections.singletonList(errorQueue));
-            error.setSource(cm.getProcessingInfo().getSource().getName());
-            cm.getProcessingInfo().setRoute(error);
+            Route errorRoute = new Route();
+            errorRoute.setDescription("ERROR");
+            errorRoute.setEndpoints(Collections.singletonList(errorQueue));
+            errorRoute.setSource(cm.getProcessingInfo().getSource().getName());
+            cm.getProcessingInfo().setRoute(errorRoute);
             return cm;
         }
 
