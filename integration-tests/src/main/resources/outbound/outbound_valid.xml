@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<StandardBusinessDocument xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"> 
+	<StandardBusinessDocumentHeader>
+		<HeaderVersion>1.0</HeaderVersion>
+		<Sender>
+			<Identifier Authority="iso6523-actorid-upis">0088:7381034999991</Identifier>
+		</Sender>
+		<Receiver>
+			<Identifier Authority="iso6523-actorid-upis">0088:737987987</Identifier>
+		</Receiver>
+		<DocumentIdentification>
+			<Standard>urn:sfti:documents:BasicInvoice:1:0</Standard>
+			<TypeVersion>1.0</TypeVersion>
+			<InstanceIdentifier>0c43a2be-41af-415c-9d22-4b600788ea79</InstanceIdentifier>
+			<Type>Invoice</Type>
+			<CreationDateAndTime>2017-09-06T03:58:49Z</CreationDateAndTime>
+		</DocumentIdentification>
+		<BusinessScope>
+			<Scope>
+				<Type>DOCUMENTID</Type>
+				<InstanceIdentifier>urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0</InstanceIdentifier>
+			</Scope>
+			<Scope>
+				<Type>PROCESSID</Type>
+				<InstanceIdentifier>urn:sfti:services:documentprocessing:BasicInvoice:1:0</InstanceIdentifier>
+			</Scope>
+		</BusinessScope>
+	</StandardBusinessDocumentHeader>
+	<Invoice xmlns="urn:sfti:documents:BasicInvoice:1:0" xmlns:cac="urn:sfti:CommonAggregateComponents:1:0" xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0" xmlns:ccts="urn:oasis:names:tc:ubl:CoreComponentParameters:1:0" xmlns:cur="urn:oasis:names:tc:ubl:codelist:CurrencyCode:1:0" xmlns:sdt="urn:oasis:names:tc:ubl:SpecializedDatatypes:1:0" xmlns:udt="urn:oasis:names:tc:ubl:UnspecializedDatatypes:1:0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<ID>62796072</ID>
+		<cbc:IssueDate>2017-09-06</cbc:IssueDate>
+		<InvoiceTypeCode>380</InvoiceTypeCode>
+		<cbc:Note/>
+		<InvoiceCurrencyCode codeListID="ISO 4217 Alpha" codeListAgencyID="6" codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Currency" codeListVersionID="0.3" codeListURI="http://www.bsi-global.com/Technical%2BInformation/Publications/_Publications/tig90x.doc" codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:CurrencyCode:1:0" languageID="en">SEK</InvoiceCurrencyCode>
+		<LineItemCountNumeric>11</LineItemCountNumeric>
+		<AdditionalDocumentReference>
+			<cac:ID identificationSchemeID="CT">175612</cac:ID>
+		</AdditionalDocumentReference>
+		<AdditionalDocumentReference>
+			<cac:ID identificationSchemeID="DQ">18113470</cac:ID>
+		</AdditionalDocumentReference>
+		<cac:BuyerParty>
+			<cac:Party>
+				<cac:PartyName>
+					<cbc:Name>LÄNSSTYRELSEN</cbc:Name>
+				</cac:PartyName>
+				<cac:Address>
+					<cbc:StreetName>FE 99</cbc:StreetName>
+					<cbc:CityName>FRÖSÖN</cbc:CityName>
+					<cbc:PostalZone>83873</cbc:PostalZone>
+				</cac:Address>
+				<cac:PartyTaxScheme>
+					<cac:CompanyID>737987987</cac:CompanyID>
+					<cac:TaxScheme>
+						<cac:ID>SWT</cac:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+			</cac:Party>
+		</cac:BuyerParty>
+		<cac:SellerParty>
+			<cac:Party>
+				<cac:PartyIdentification>
+					<cac:ID identificationSchemeAgencyID="9">7381034999991</cac:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>Martin &amp; Servera AB</cbc:Name>
+				</cac:PartyName>
+				<cac:Address>
+					<cbc:Postbox>Box 704</cbc:Postbox>
+					<cbc:StreetName>Blygatan 25</cbc:StreetName>
+					<cbc:CityName>Norrköping</cbc:CityName>
+					<cbc:PostalZone>60116</cbc:PostalZone>
+					<cac:Country>
+						<cac:IdentificationCode codeListID="ISO3166-1" codeListAgencyID="6" codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Country" codeListVersionID="0.3" codeListURI="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1-semic.txt" codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:CountryIdentificationCode:1:0" languageID="en">SE</cac:IdentificationCode>
+					</cac:Country>
+				</cac:Address>
+				<cac:PartyTaxScheme>
+					<cac:CompanyID>5562332451</cac:CompanyID>
+					<cbc:ExemptionReason>F-skattebevis finns</cbc:ExemptionReason>
+					<cac:RegistrationAddress>
+						<cac:ID>5562332451</cac:ID>
+						<cbc:CityName>Stockholm</cbc:CityName>
+						<cac:Country>
+							<cac:IdentificationCode codeListID="ISO3166-1" codeListAgencyID="6" codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Country" codeListVersionID="0.3" codeListURI="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1-semic.txt" codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:CountryIdentificationCode:1:0" languageID="en">SE</cac:IdentificationCode>
+						</cac:Country>
+					</cac:RegistrationAddress>
+					<cac:TaxScheme>
+						<cac:ID>SWT</cac:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyTaxScheme>
+					<cac:CompanyID>SE556233245101</cac:CompanyID>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+			</cac:Party>
+			<cac:AccountsContact>
+				<cbc:Telephone>035183000</cbc:Telephone>
+			</cac:AccountsContact>
+		</cac:SellerParty>
+		<cac:Delivery>
+			<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			<cac:DeliveryAddress>
+				<cbc:StreetName>OTTERHÄLLEGATAN 3</cbc:StreetName>
+				<cbc:Department>LÄNSSTYRELSEN  VÄSTRA GÖTALAND</cbc:Department>
+				<cbc:CityName> GÖTEBORG</cbc:CityName>
+				<cbc:PostalZone>41121</cbc:PostalZone>
+			</cac:DeliveryAddress>
+		</cac:Delivery>
+		<cac:PaymentMeans>
+			<cac:PaymentMeansTypeCode codeListID="UN/ECE 4461" codeListAgencyID="6" codeListAgencyName="United Nations Economic Commission for Europe" codeListName="Payment Means" codeListVersionID="D03A" codeListURI="http://www.unece.org/trade/untdid/d03a/tred/tred4461.htm" codeListSchemeURI="urn:oasis:names:tc:ubl:codelist:PaymentMeansCode:1:0">1</cac:PaymentMeansTypeCode>
+			<cbc:DuePaymentDate>2017-10-11</cbc:DuePaymentDate>
+			<cac:PayeeFinancialAccount>
+				<cac:ID>58264631</cac:ID>
+				<cac:FinancialInstitutionBranch>
+					<cac:FinancialInstitution>
+						<cac:ID>BGABSESS</cac:ID>
+					</cac:FinancialInstitution>
+				</cac:FinancialInstitutionBranch>
+				<cac:PaymentInstructionID>62796072</cac:PaymentInstructionID>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:TaxTotal>
+			<cbc:TotalTaxAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">409.96</cbc:TotalTaxAmount>
+			<cac:TaxSubTotal>
+				<cbc:TaxableAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">3416.37</cbc:TaxableAmount>
+				<cbc:TaxAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">409.96</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubTotal>
+		</cac:TaxTotal>
+		<cac:LegalTotal>
+			<cbc:LineExtensionTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">3416.37</cbc:LineExtensionTotalAmount>
+			<cbc:TaxExclusiveTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">3416.37</cbc:TaxExclusiveTotalAmount>
+			<cbc:TaxInclusiveTotalAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">3826.33</cbc:TaxInclusiveTotalAmount>
+		</cac:LegalTotal>
+		<cac:InvoiceLine>
+			<cac:ID>1</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="KG">1.00</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">60.74</cbc:LineExtensionAmount>
+			<cbc:Note>Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>SKINKA RÖ SK      1KG      GUD</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>431536</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">60.74</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>2</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">211.57</cbc:LineExtensionAmount>
+			<cbc:Note>EU Ekologisk</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>LEVERPASTEJ SKIVB EKO 1,7KGM/S</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>632505</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">211.57</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>3</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">753.65</cbc:LineExtensionAmount>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>GOUDA FRUKOSTSKIV 7,5G/1KG LIN</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>497487</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">753.65</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>4</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">60.78</cbc:LineExtensionAmount>
+			<cbc:Note>Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>LÄTTA SMÖRGÅSMARG 2,5KG    UBF</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>185728</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">60.78</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>5</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">6</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">451.74</cbc:LineExtensionAmount>
+			<cbc:Note>Kravmärkt</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>BREGOTT NORMALSALT KRAV600GARA</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>638361</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">75.29</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>6</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">14</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">946.82</cbc:LineExtensionAmount>
+			<cbc:Note>Kravmärkt, Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>EKO MELLANMJÖLK 6X1L KRAV  ARA</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>528141</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">67.63</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>7</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">87.16</cbc:LineExtensionAmount>
+			<cbc:Note>Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>YOGGI DRÖM RÖ/BL BÄR 4X125GARA</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>612671</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">87.16</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>8</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">24.73</cbc:LineExtensionAmount>
+			<cbc:Note>Kravmärkt</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>YOGH LÄ MI NAT 0,5%KRAV 1KGARA</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>592303</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">24.73</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>9</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">84.84</cbc:LineExtensionAmount>
+			<cbc:Note>Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>RISIFRUTTI HALLON 175G     PCF</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>100917</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">84.84</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>10</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">384.34</cbc:LineExtensionAmount>
+			<cbc:Note>Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>PAJ OST SKINKA 220G        PCF</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>455493</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">384.34</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine>
+			<cac:ID>11</cac:ID>
+			<cbc:InvoicedQuantity quantityUnitCode="">1</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">350.00</cbc:LineExtensionAmount>
+			<cbc:Note>Pristyp:Avtal</cbc:Note>
+			<cac:OrderLineReference>
+				<cac:OrderReference>
+					<cac:BuyersID>EDI REF. SAKNAS</cac:BuyersID>
+				</cac:OrderReference>
+			</cac:OrderLineReference>
+			<cac:Delivery>
+				<cbc:ActualDeliveryDateTime>2017-09-05T00:00:00</cbc:ActualDeliveryDateTime>
+			</cac:Delivery>
+			<cac:Item>
+				<cbc:Description>PAJ TACO MEXIKANSK 220G    PCF</cbc:Description>
+				<cac:SellersItemIdentification>
+					<cac:ID>455626</cac:ID>
+				</cac:SellersItemIdentification>
+				<cac:TaxCategory>
+					<cac:ID>S</cac:ID>
+					<cbc:Percent>12.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cac:ID>VAT</cac:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				<cac:BasePrice>
+					<cbc:PriceAmount amountCurrencyID="SEK" amountCurrencyCodeListVersionID="0.3">350.00</cbc:PriceAmount>
+				</cac:BasePrice>
+			</cac:Item>
+		</cac:InvoiceLine>
+		<RequisitionistDocumentReference>
+			<cac:ID>EVA-LENA LANDQVIST</cac:ID>
+		</RequisitionistDocumentReference>
+	</Invoice>
+</StandardBusinessDocument>

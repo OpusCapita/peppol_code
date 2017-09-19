@@ -189,3 +189,22 @@ tests:
                 id: 12
                 expected value: 1
                 name: inbound Mq check
+   internal-routing:
+        producers:
+            - mq producer:
+                mq connection: mq1
+                destination queue: internal-routing
+                source: peppol-integration
+                source directory: /etc/resources/internal-routing/internal-routing_valid_bis.xml
+                endpoint: integration-test-endpoint
+                endpoint type: inbound
+        subscribers:
+            - mq subscriber:
+                source queue: transport-to-xib
+                timeout: 1500
+                consumers: 13
+        consumers:
+            - queue msg count check:
+                id: 13
+                expected value: 1
+                name: internal-routing Mq check
