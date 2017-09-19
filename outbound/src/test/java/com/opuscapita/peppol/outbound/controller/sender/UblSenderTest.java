@@ -29,10 +29,11 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Ignore("Test goes crazy, has to review it")
 @RunWith(SpringRunner.class)
@@ -46,33 +47,50 @@ public class UblSenderTest {
 
     @Before
     public void setUp() throws Exception {
-
+        System.out.println(new File(".").getAbsolutePath());
+        System.setProperty("OXALIS_HOME", "src/test/resources/oxalis");
+        System.out.println("OXALIS_HOME: " + System.getenv("OXALIS_HOME"));
     }
 
     @After
     public void tearDown() throws Exception {
     }
 
+    @Ignore
     @Test
     public void send() throws Exception {
-        System.out.println(new File(".").getAbsolutePath());
-        System.setProperty("OXALIS_HOME","src/test/resources/oxalis");
-        System.out.println(System.getenv("OXALIS_HOME"));
-        URL testFileUrl = this.getClass().getResource("/EHF_profile-bii05_invoice.xml");
-        System.out.println(testFileUrl.toString());
-        File testFile = getResourceFile(testFileUrl);
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        ContainerMessage containerMessage = ContainerMessageTestLoader.createContainerMessageFromFile(documentLoader, testFile);
-        assertNotNull(containerMessage);
 
+        List<String> resourceFiles = new ArrayList<String>() {
+            {
+                add("/EHF_profile-bii05_invoice.xml");
+                add("/inconsistent_sender.xml");
+            }
+        };
         UblSender ublSender = new UblSenderWrapper(new OxalisOutboundModuleWrapper());
         ublSender.initialize();
-        try {
-            ublSender.send(containerMessage);
-        } catch (IllegalStateException e) {
-            assertTrue(e.getMessage().contains("POST"));
-        }
+
+        resourceFiles.forEach(file -> {
+            try {
+                ContainerMessage containerMessage = createContainerMessageFromResourceFile(file);
+
+
+                try {
+                    ublSender.send(containerMessage);
+                } catch (IllegalStateException e) {
+                    assertTrue(e.getMessage().contains("POST"));
+                }
+            } catch (Exception e) {
+
+            }
+        });
+    }
+
+    @Ignore
+    @Test
+    public void testSendWithJsonFromRabbitMq() throws Exception {
+        UblSender ublSender = new UblSenderWrapper(new OxalisOutboundModuleWrapper());
+        ublSender.initialize();
+        ContainerMessage containerMessage = null;
         File jsonFileFromStage = getResourceFile(this.getClass().getResource("/msg-to-outbound.json.json"));
         String jsonContent = Files.readLines(jsonFileFromStage, Charsets.UTF_8).stream().collect(Collectors.joining());
         containerMessage = new ContainerMessageSerializer().fromJson(jsonContent);
@@ -82,6 +100,18 @@ public class UblSenderTest {
         } catch (IllegalStateException e) {
             assertTrue(e.getMessage().contains("POST"));
         }
+    }
+
+    @NotNull
+    private ContainerMessage createContainerMessageFromResourceFile(String resourceFile) throws Exception {
+        URL testFileUrl = this.getClass().getResource(resourceFile);
+        System.out.println(testFileUrl.toString());
+        File testFile = getResourceFile(testFileUrl);
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        ContainerMessage containerMessage = ContainerMessageTestLoader.createContainerMessageFromFile(documentLoader, testFile);
+        assertNotNull(containerMessage);
+        return containerMessage;
     }
 
     @NotNull
