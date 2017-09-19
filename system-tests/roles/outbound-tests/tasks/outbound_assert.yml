@@ -3,10 +3,10 @@
 #  shell: docker logs outbound
 #  register: log
 
-- name: get outbound log & check if fileName "{{ fileName }}" is found in outbound log 
+- name: get outbound log & check if uuid "{{ uuid }}" is found in outbound log 
   shell: docker logs outbound
   register: log
-  until: log.stdout | search(".*Message.*"+fileName+".*sent with")
+  until: log.stdout | search(".*Message.*"+uuid+".*sent with")
   retries: 10
   delay: 1
 #  register: search-result
@@ -16,17 +16,17 @@
   ignore_errors: yes
   assert:
     that:
-      - log.stdout | search(".*Message.*"+fileName+".*sent with")
+      - log.stdout | search(".*Message.*"+uuid+".*sent with")
     msg: "Failed"
   register: result
 
 - set_fact: outbound_result="outbound={{result.msg}}"
-#- debug: var=outbound_result
+- debug: var=outbound_result
 
 #check for failures as well and adjust report accordingly->
-- name: check if outbound sending has failed
-  set_fact: outbound_result="outbound=Failed"
-  when:
-    - log.stdout | search(".*Message processing failed.*"+fileName)
+#- name: check if outbound sending has failed
+#  set_fact: outbound_result="outbound=Failed"
+#  when:
+#    - log.stdout | search(".*Message processing failed.*"+fileName)
 
 ...

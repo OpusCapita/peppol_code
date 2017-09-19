@@ -1,6 +1,7 @@
 ---
-report_path: /home/berzima1/git/peppol2.0/system-tests/reports
-transport_from_a2a_path: /peppol/data/transport/from-a2a
+report_path: /home/berzima1/git/peppol2.0/system-tests/reports/
+transport_from_a2a_path: /peppol/data/transport/from-a2a/
 sudo: yes
-user: "{{ansible_user_id}}"
+user: root
+#user: "{{ansible_user_id}}"
 ...

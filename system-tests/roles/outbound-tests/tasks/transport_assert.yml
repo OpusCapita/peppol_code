@@ -8,11 +8,11 @@
   shell: docker logs transport-from-xib
   register: xibLog
 
-- name: fileName '{{ fileName }}' is found in transports logs
+- name: uuid "{{ uuid }}" is found in transports logs
   ignore_errors: yes
   assert:
     that:
-      - ("fileName in a2aLog.stdout") or ("fileName in xibLog.stdout")
+      - ("uuid in a2aLog.stdout") or ("uuid in xibLog.stdout")
     msg: "Failed"
   register: result
 

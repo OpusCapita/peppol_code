@@ -16,7 +16,7 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source directory: /etc/resources/events-persistence-test/ehf.xml
+                source directory: /etc/resources/events-persistence-test/events-persistence_valid.xml
                 db connection: db1
                 endpoint: events-persistence-integration-test
                 DB preprocess querry: delete from messages where invoice_number='20828'
@@ -38,16 +38,16 @@ tests:
                 mq connection: mq1
                 destination queue: eventing
                 source: integration-test-a2a
-                source directory: /etc/resources/events-persistence-test/ehf.xml
+                source directory: /etc/resources/events-persistence-test/eventing_valid.xml
                 db connection: db1
                 endpoint: integration-test-endpoint
                 endpoint type: outbound
-                DB preprocess querry: delete from messages where invoice_number='20828'
+                DB preprocess querry: delete from messages where invoice_number='20830'
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
                 source: integration-test-xib
-                source directory: /etc/resources/events-persistence-test/rejected.xml
+                source directory: /etc/resources/events-persistence-test/eventing_rejected.xml
                 db connection: db1
                 endpoint: integration-test-endpoint
                 endpoint type: outbound
@@ -57,20 +57,20 @@ tests:
                 destination queue: eventing
                 endpoint type: outbound
                 source: integration-test-xib
-                source directory: /etc/resources/events-persistence-test/invalid.xml
+                source directory: /etc/resources/events-persistence-test/eventing_invalid.xml
                 endpoint: integration-test-endpoint
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
                 endpoint type: outbound
                 source: integration-test-xib
-                source directory: /etc/resources/events-persistence-test/invalid-snc-test.xml
+                source directory: /etc/resources/events-persistence-test/eventing_invalid-snc-test.xml
                 endpoint: integration-test-endpoint
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
                 source: integration-test-xib
-                source directory: /etc/resources/events-persistence-test/logger_xib_test.xml
+                source directory: /etc/resources/events-persistence-test/logger_eventing_xib_test.xml
                 endpoint type: outbound
                 endpoint: integration-test-endpoint
         subscribers:
@@ -90,32 +90,32 @@ tests:
             - file test:
                 name: MLR a2a accepted creation test
                 id: 6
-                expected value: ehf-ap-mlr.xml
+                expected value: eventing_valid-ap-mlr.xml
                 timeout: 16000
             - file test:
                 name: MLR xib rejected creation test
                 id: 7
-                expected value: rejected-re-mlr.xml
+                expected value: eventing_rejected-re-mlr.xml
                 timeout: 16000
             - wwd test:
                 name: Web Watch Dog successful report test
                 id: 8
-                expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_xib_test
+                expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_eventing_xib_test
                 timeout: 16000
             - mlr test:
                 name: IO exception in mlr test
                 id: 9
-                expected value: invalid-er-mlr.xml
+                expected value: eventing_invalid-er-mlr.xml
                 timeout: 16000
             - snc test:
                 name: SNC ticket creation test
                 id: 5
-                expected value: 9908:937270062
+                expected value: 9908:937270067
                 timeout: 16000
    support-ui:
         producers:
             - file producer:
-                source directory: /etc/resources/support-ui-test/d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
+                source directory: /etc/resources/support-ui-test/support-ui.xml
                 destination directory: /peppol/data/storage/support-ui-test.xml
         subscribers:
             - file subscriber:
