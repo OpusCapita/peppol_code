@@ -134,7 +134,6 @@ public class EmailController {
     @SuppressWarnings("ConstantConditions")
     private void storeDocument(ContainerMessage cm, String fileName) throws IOException {
 
-        //storeSubject("Validation errors in document", fileName);
         storeSubject(getSubjectForContainerMessage(cm), fileName);
 
         File body = new File(fileName + EXT_BODY);
