@@ -22,8 +22,8 @@
     create: no
     dest: "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
-    regexp: "^{{counter}}|{{file}}|{{fileName}}"
-    line: "{{counter}}|{{file}}|{{fileName}}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
+    regexp: "^{{counter}}|{{file}}|{{ uuid }}"
+    line: "{{counter}}|{{file}}|{{ uuid }}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
 #report update END -----------------------
 
 #checking for failures in report- test has to fail if any asseert has failed #
