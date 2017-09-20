@@ -130,8 +130,8 @@ public class TestSender extends UblSender {
                         return new byte[0];
                     }
                 };
+                logger.info("created fake TransmissionResponse for integration test with transmission id: " + fakeResult.getTransmissionId());
                 return fakeResult;
-
             }
 
             TransmissionResponse result = transmitter.transmit(transmissionRequest);
