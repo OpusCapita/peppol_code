@@ -3,9 +3,13 @@ package com.opuscapita.peppol.outbound.controller.sender;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.outbound.util.OxalisUtils;
+import eu.peppol.BusDoxProtocol;
+import eu.peppol.PeppolStandardBusinessHeader;
 import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.PeppolProcessTypeId;
+import eu.peppol.identifier.TransmissionId;
 import eu.peppol.outbound.transmission.*;
+import eu.peppol.security.CommonName;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.net.URL;
 
 /**
  * More advanced test sender that the {@link FakeSender}.
@@ -91,6 +96,42 @@ public class TestSender extends UblSender {
             }
             if (cm.getFileName().contains("-fail-me-")) {
                 throw new IllegalStateException("This sending expected to fail in test mode");
+            }
+
+            if (cm.getFileName().contains("-integration-test-")) {
+                TransmissionResponse fakeResult = new TransmissionResponse() {
+                    @Override
+                    public TransmissionId getTransmissionId() {
+                        return new TransmissionId(cm.getFileName());
+                    }
+
+                    @Override
+                    public PeppolStandardBusinessHeader getStandardBusinessHeader() {
+                        return null;
+                    }
+
+                    @Override
+                    public URL getURL() {
+                        return null;
+                    }
+
+                    @Override
+                    public BusDoxProtocol getProtocol() {
+                        return null;
+                    }
+
+                    @Override
+                    public CommonName getCommonName() {
+                        return new CommonName("fake ap");
+                    }
+
+                    @Override
+                    public byte[] getEvidenceBytes() {
+                        return new byte[0];
+                    }
+                };
+                return fakeResult;
+
             }
 
             TransmissionResponse result = transmitter.transmit(transmissionRequest);
