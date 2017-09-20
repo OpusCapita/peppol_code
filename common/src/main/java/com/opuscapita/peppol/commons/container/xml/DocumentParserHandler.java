@@ -212,32 +212,41 @@ public class DocumentParserHandler extends DefaultHandler {
     private void checkMandatorySbdhFields(DocumentInfo result) {
         if (result.getCustomizationId().trim().length() == 0) {
             result.getErrors().add(new DocumentError(endpoint, "Customization id is missing in file: " + fileName));
+            logger.warn("Customization id is missing in file: " + fileName);
         }
 
         if (result.getProfileId().trim().length() == 0) {
             result.getErrors().add(new DocumentError(endpoint, "Profile id is missing in file: " + fileName));
+            logger.warn("Profile id is missing in file: " + fileName);
         }
 
         if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifier(result.getSenderId())) {
             result.getErrors().add(new DocumentError(endpoint, "Invalid or missing sender id[" + result.getSenderId() + "] in file: " + fileName));
+            logger.warn("Invalid or missing sender id[" + result.getSenderId() + "] in file: " + fileName);
         }
 
         if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifier(result.getRecipientId())) {
             result.getErrors().add(new DocumentError(endpoint, "Invalid or missing recipient id[" + result.getRecipientId() + "] in file: " + fileName));
+            logger.warn("Invalid or missing recipient id[" + result.getRecipientId() + "] in file: " + fileName);
         }
 
         sbdhMandatoryFields
                 .entrySet()
                 .stream()
                 .filter(entry -> !entry.getValue())
-                .forEach(entry -> result.getErrors().add(new DocumentError(endpoint, "SBDH is missing " + entry.getKey() + " field for file: " + fileName)));
+                .forEach(entry -> {
+                    result.getErrors().add(new DocumentError(endpoint, "SBDH is missing " + entry.getKey() + " field for file: " + fileName));
+                    logger.warn("SBDH is missing " + entry.getKey() + " field for file: " + fileName);
+                });
 
         if (processIdFromSbdh == null || processIdFromSbdh.isEmpty()) {
             result.getErrors().add(new DocumentError(endpoint, "PROCESSID is missing or empty in SBDH for file: " + fileName));
+            logger.warn("PROCESSID is missing or empty in SBDH for file: " + fileName);
         }
 
         if (documentIdFromSbdh == null || documentIdFromSbdh.isEmpty()) {
             result.getErrors().add(new DocumentError(endpoint, "DOCUMENTID is missing or empty in SBDH for file: " + fileName));
+            logger.warn("DOCUMENTID is missing or empty in SBDH for file: " + fileName);
         }
 
     }
