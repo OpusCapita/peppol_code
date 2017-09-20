@@ -17,8 +17,8 @@ tests:
                 mq connection: mq1
                 destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/events-persistence_valid.xml
-                db connection: db1
                 endpoint: events-persistence-integration-test
+                db connection: db1
                 DB preprocess querry: delete from messages where invoice_number='20828'
         subscribers:
             - db subscriber:
@@ -30,7 +30,6 @@ tests:
             - DB test:
                 id: 4
                 name: Message persisted into DB positive test
-                connection string: db1
                 expected value: 1
    eventing:
         producers:
@@ -213,15 +212,18 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: outbound
-                source directory: /etc/resources/outbound/outbound_valid.xml
+                source directory: /etc/resources/outbound/outbound-integration-test-valid.xml
                 endpoint: events-persistence-integration-test
+                db connection: db1
+                DB preprocess querry: delete from sent where transmission_id = "outbound-integration-test-valid.xml"
         subscribers:
-            - mq subscriber:
-                source queue: transport-to-a2a
-                timeout: 1500
-                consumers: 12
+            - db subscriber:
+                db connection: db1
+                timeout: 5000
+                query: select count(*) from sent where transmission_id = "outbound-integration-test-valid.xml"
+                consumers: 14
         consumers:
-            - queue msg count check:
-                id: 12
+            - DB test:
+                id: 14
+                name: Outbound transmission id persisted into DB positive test
                 expected value: 0
-                name: inbound Mq check
