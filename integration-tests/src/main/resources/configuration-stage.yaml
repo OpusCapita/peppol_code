@@ -208,3 +208,20 @@ tests:
                 id: 13
                 expected value: 1
                 name: internal-routing Mq check
+      outbound:
+           producers:
+               - mq producer:
+                   mq connection: mq1
+                   destination queue: outbound
+                   source directory: /etc/resources/outbound/outbound_valid.xml
+                   endpoint: events-persistence-integration-test
+           subscribers:
+               - mq subscriber:
+                   source queue: preprocessing-integration-test
+                   timeout: 1500
+                   consumers: 12
+           consumers:
+               - queue msg count check:
+                   id: 12
+                   expected value: 1
+                   name: inbound Mq check
