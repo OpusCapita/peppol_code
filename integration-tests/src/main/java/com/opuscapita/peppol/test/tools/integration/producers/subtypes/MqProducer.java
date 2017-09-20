@@ -175,6 +175,9 @@ public class MqProducer implements Producer {
             case "test":
                 processType = ProcessType.TEST;
                 return;
+            case "inbound":
+                processType = ProcessType.IN_INBOUND;
+                return;
             default:
                 throw new IllegalArgumentException("process type not recognized!");
         }

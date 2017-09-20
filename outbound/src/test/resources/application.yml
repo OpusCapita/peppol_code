@@ -23,3 +23,5 @@ snc:
   bsc: test
   from: test
   businessGroup: test
+
+OXALIS_HOME: src/test/resources/oxalis
