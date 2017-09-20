@@ -70,7 +70,11 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     private boolean shouldCheckSBDH(@NotNull Endpoint endpoint) {
-        return !(endpoint.getType().equals(ProcessType.TEST) || endpoint.getType().equals(ProcessType.REST) || endpoint.getType().equals(ProcessType.WEB));
+        boolean shouldCheck = !(endpoint.getType().equals(ProcessType.TEST) || endpoint.getType().equals(ProcessType.REST) || endpoint.getType().equals(ProcessType.WEB));
+        if(!shouldCheck){
+            logger.warn("endpoint type recognized as " + endpoint.getType() + " SBDH check will be skipped !");
+        }
+        return shouldCheck;
     }
 
     @Override
