@@ -40,6 +40,8 @@ public class OutboundController {
     private String testRecipient;
     @Value("${peppol.component.name}")
     private String componentName;
+    @Value("${peppol.email-notificator.queue.in.name}")
+    private String emailNotificatorQueue;
 
     @Autowired
     public OutboundController(@NotNull MessageQueue messageQueue,
@@ -113,6 +115,16 @@ public class OutboundController {
         if (!errorType.isTemporary()) {
             logger.info("Exception of type " + errorType + " registered as non-retriable, rejecting message " + cm.getFileName());
             cm.getProcessingInfo().setProcessingException(e.getMessage());
+
+            if (errorType == SendingErrors.DATA_ERROR) {
+                logger.info("Sending an e-mail to customer about invalid data");
+                messageQueue.convertAndSend(emailNotificatorQueue, cm);
+            }
+            if (errorType == SendingErrors.UNKNOWN_RECIPIENT || errorType == SendingErrors.UNSUPPORTED_DATA_FORMAT) {
+                logger.info("Sending an e-mail to customer about unknown recipient or unsupported data format");
+                messageQueue.convertAndSend(emailNotificatorQueue, cm);
+            }
+
             throw e;
         }
 
@@ -135,6 +147,11 @@ public class OutboundController {
     @SuppressWarnings("SameParameterValue")
     void setComponentName(@NotNull String componentName) {
         this.componentName = componentName;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    void setEmailNotificatorQueue(@NotNull String emailNotificatorQueue) {
+        this.emailNotificatorQueue = emailNotificatorQueue;
     }
 
 }
