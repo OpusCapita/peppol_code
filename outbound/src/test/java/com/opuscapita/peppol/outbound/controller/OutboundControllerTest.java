@@ -64,6 +64,7 @@ public class OutboundControllerTest {
 
         OutboundController controller =
                 new OutboundController(messageQueue, ublSender, fakeSender, svefaktura1Sender, testSender, oxalisErrorRecognizer);
+        controller.setEmailNotificatorQueue("email_notificator");
         controller.setComponentName("component_name");
         when(oxalisErrorRecognizer.recognize(any(Exception.class))).thenReturn(SendingErrors.UNKNOWN_RECIPIENT);
 
@@ -88,6 +89,6 @@ public class OutboundControllerTest {
         verifyZeroInteractions(ublSender);
         verifyZeroInteractions(testSender);
         verifyZeroInteractions(svefaktura1Sender);
-        verifyZeroInteractions(messageQueue);
+        verify(messageQueue).convertAndSend(eq("email_notificator"), any());
     }
 }
