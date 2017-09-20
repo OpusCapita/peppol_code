@@ -6,7 +6,7 @@
 			<Identifier Authority="iso6523-actorid-upis">0088:7381034999991</Identifier>
 		</Sender>
 		<Receiver>
-			<Identifier Authority="iso6523-actorid-upis">0088:737987987</Identifier>
+			<Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
 		</Receiver>
 		<DocumentIdentification>
 			<Standard>urn:sfti:documents:BasicInvoice:1:0</Standard>
@@ -42,7 +42,7 @@
 		<cac:BuyerParty>
 			<cac:Party>
 				<cac:PartyName>
-					<cbc:Name>LÄNSSTYRELSEN</cbc:Name>
+					<cbc:Name>Integration test</cbc:Name>
 				</cac:PartyName>
 				<cac:Address>
 					<cbc:StreetName>FE 99</cbc:StreetName>
@@ -50,7 +50,7 @@
 					<cbc:PostalZone>83873</cbc:PostalZone>
 				</cac:Address>
 				<cac:PartyTaxScheme>
-					<cac:CompanyID>737987987</cac:CompanyID>
+					<cac:CompanyID>9908:987987987</cac:CompanyID>
 					<cac:TaxScheme>
 						<cac:ID>SWT</cac:ID>
 					</cac:TaxScheme>
@@ -63,7 +63,7 @@
 					<cac:ID identificationSchemeAgencyID="9">7381034999991</cac:ID>
 				</cac:PartyIdentification>
 				<cac:PartyName>
-					<cbc:Name>Martin &amp; Servera AB</cbc:Name>
+					<cbc:Name>Integration test</cbc:Name>
 				</cac:PartyName>
 				<cac:Address>
 					<cbc:Postbox>Box 704</cbc:Postbox>

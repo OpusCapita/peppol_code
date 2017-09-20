@@ -22,10 +22,8 @@ public class FileProducer implements Producer {
         this.destinationFolder = (String) destinationFolder;
     }
 
-    /*takes files from directory -> uploads via web -> takes page html result -> stores it into folder */
     @Override
     public void run() {
-        logger.info("FileProducer: starting, sourceFolder: " + sourceFolder + " destinationFolder: " + destinationFolder);
         try {
             File source = new File(this.sourceFolder);
             destination = new File(this.destinationFolder);
