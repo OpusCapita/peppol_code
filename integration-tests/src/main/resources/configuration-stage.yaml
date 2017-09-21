@@ -223,10 +223,10 @@ tests:
             - db subscriber:
                 db connection: db1
                 timeout: 5000
-                query: select count(*) from sent where transmission_id = "outbound-integration-test-valid.xml"
+                query: select count(*) from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
                 consumers: 14
         consumers:
             - DB test:
                 id: 14
                 name: Outbound transmission id persisted into DB positive test
-                expected value: 1
+                expected value: 1`
