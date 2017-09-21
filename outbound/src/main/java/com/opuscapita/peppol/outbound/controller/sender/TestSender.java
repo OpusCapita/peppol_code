@@ -102,7 +102,7 @@ public class TestSender extends UblSender {
                 TransmissionResponse fakeResult = new TransmissionResponse() {
                     @Override
                     public TransmissionId getTransmissionId() {
-                        return new TransmissionId(cm.getFileName());
+                        return new TransmissionId(new File(cm.getFileName()).getName());
                     }
 
                     @Override
