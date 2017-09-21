@@ -229,4 +229,4 @@ tests:
             - DB test:
                 id: 14
                 name: Outbound transmission id persisted into DB positive test
-                expected value: 1`
+                expected value: 1
