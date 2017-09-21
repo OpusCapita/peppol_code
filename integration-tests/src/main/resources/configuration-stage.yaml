@@ -218,7 +218,7 @@ tests:
                 source directory: /peppol/data/storage/outbound-integration-test-valid.xml
                 endpoint: events-persistence-integration-test
                 db connection: db1
-                DB preprocess querry: delete from sent where transmission_id = "outbound-integration-test-valid.xml"
+                DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
         subscribers:
             - db subscriber:
                 db connection: db1
