@@ -65,4 +65,8 @@ public class TransportController {
         this.template = template;
     }
 
+    @SuppressWarnings("SameParameterValue")
+    public void setBackupDir(String backupDir) {
+        this.backupDir = backupDir;
+    }
 }
