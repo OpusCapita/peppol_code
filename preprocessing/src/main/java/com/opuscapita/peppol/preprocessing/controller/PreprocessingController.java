@@ -70,14 +70,14 @@ public class PreprocessingController {
 
         document = documentLoader.load(cm.getFileName(), endpoint);
 
-        String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
+        String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getProcessingInfo().getOriginalSource(), cm.getFileName());
         logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
         cm.setDocumentInfo(document).setFileName(longTerm);
         cm.setStatus(endpoint, "parsed");
         return cm;
     }
 
-    protected PeppolMessageMetadata getInboundMetadata(String rawMetadata) {
+    private PeppolMessageMetadata getInboundMetadata(String rawMetadata) {
         PeppolMessageMetadata result = null;
         if (rawMetadata != null) {
             try {

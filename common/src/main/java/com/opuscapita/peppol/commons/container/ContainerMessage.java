@@ -24,7 +24,7 @@ public class ContainerMessage implements Serializable {
     private static final long serialVersionUID = -7283779459299141635L;
 
     @Since(1.0)
-    private double version = 1.0;
+    private double version = 1.1;
     @Since(1.0)
     private ProcessingInfo processingInfo;
     @Since(1.0)
