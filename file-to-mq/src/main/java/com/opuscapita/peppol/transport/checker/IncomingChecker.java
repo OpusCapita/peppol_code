@@ -121,9 +121,6 @@ public class IncomingChecker {
                 fileName, source);
         cm.setStatus(source, "received");
         cm.setOriginalFileName(file.getAbsolutePath());
-        if (reprocess) {
-            addOriginalSourceInfo(cm);
-        }
 
         logger.info("Sending message: " + new Gson().toJson(cm));
         messageQueue.convertAndSend(queue, cm);
@@ -132,14 +129,6 @@ public class IncomingChecker {
         if (statusReporter != null) {
             statusReporter.report(cm);
         }
-    }
-
-    private void addOriginalSourceInfo(@NotNull ContainerMessage cm) {
-        // TODO add read from the database here
-//        String originalSourceName = StorageUtils.extractOriginalSourceName(cm.getFileName());
-//        if (cm.getProcessingInfo() != null && StringUtils.isNotBlank(originalSourceName)) {
-//            cm.getProcessingInfo().setOriginalSource(originalSourceName);
-//        }
     }
 
     private ProcessType getProcessType() {
