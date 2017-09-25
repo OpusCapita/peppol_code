@@ -108,17 +108,27 @@ public class MessageLevelResponseReporter {
 
     @SuppressWarnings("ConstantConditions")
     private void storeResponse(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
+        boolean created = false;
         if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getOriginalSource(), "a2a")) {
             storeResponse(art, destinationA2A + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
                     "-" + result + "-mlr.xml");
+            created = true;
         }
         if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getOriginalSource(), "xib")) {
             storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
                     "-" + result + "-mlr.xml");
+            created = true;
         }
+        if (!created) {
+            logger.warn("Failed to define where to send MLR for " + cm.getFileName() + ", original source = " + cm.getProcessingInfo().getOriginalSource());
+        }
+
         if (backupEnabled) {
             try {
-                storeBackup(art, cm, result);
+                String backupMlr = storeBackup(art, cm, result);
+                if (!created) {
+                    logger.info("Backup MLR stored as " + backupMlr);
+                }
             } catch (Exception e) {
                 logger.warn("Failed to create MLR backup file: " + e.getMessage());
             }
@@ -138,7 +148,7 @@ public class MessageLevelResponseReporter {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void storeBackup(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
+    private String storeBackup(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         ByteArrayOutputStream tmp = new ByteArrayOutputStream();
         ESuccess rc = UBL21Writer.applicationResponse().write(art, tmp);
         if (!rc.isSuccess()) {
@@ -151,6 +161,6 @@ public class MessageLevelResponseReporter {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document info cannot be null");
         }
-        storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(), fileName, inputStream);
+        return storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(), fileName, inputStream);
     }
 }
