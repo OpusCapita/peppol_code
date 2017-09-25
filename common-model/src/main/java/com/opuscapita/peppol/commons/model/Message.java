@@ -47,8 +47,10 @@ public class Message {
 
     @Column(name = "resolved_comment")
     private String resolvedComment;
+
     @Column(name = "origin")
     private String originalSource;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private MessageStatus status;

@@ -55,6 +55,9 @@ public class Message {
     @Column(name = "resolved_comment")
     private String resolvedComment;
 
+    @Column(name = "origin")
+    private String originalSource;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private MessageStatus status;
@@ -66,6 +69,14 @@ public class Message {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "message")
     @Sort(type = SortType.NATURAL)
     private SortedSet<FileInfo> files;
+
+    public String getOriginalSource() {
+        return originalSource;
+    }
+
+    public void setOriginalSource(String originalSource) {
+        this.originalSource = originalSource;
+    }
 
     public Integer getId() {
         return id;
