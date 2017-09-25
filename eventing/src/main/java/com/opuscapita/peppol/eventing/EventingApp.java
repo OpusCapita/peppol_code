@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * Gets messages from different modules and produces messages for events-persistence.
@@ -27,7 +29,9 @@ import org.springframework.context.annotation.Bean;
  * @author Sergejs.Roze
  */
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing", "com.opuscapita.peppol.eventing.destinations.webwatchdog"})
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing", "com.opuscapita.peppol.eventing.destinations.webwatchdog", "com.opuscapita.peppol.eventing.destinations.mlr.model"})
+@EnableJpaRepositories(basePackages = "com.opuscapita.peppol.eventing.destinations.mlr.model")
+@EntityScan(basePackages = {"com.opuscapita.peppol.eventing.destinations.mlr.model", "com.opuscapita.peppol.commons.model"})
 @EnableDiscoveryClient
 public class EventingApp {
 
