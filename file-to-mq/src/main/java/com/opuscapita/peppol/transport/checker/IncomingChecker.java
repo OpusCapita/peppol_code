@@ -52,8 +52,8 @@ public class IncomingChecker {
     private String mask;
     @Value("${peppol.file-to-mq.queue.out.name:preprocessing}")
     private String queue;
-    @Value("${peppol.file-to-mq.backup.directory:}")
-    private String backupDir;
+    @Value("${peppol.file-to-mq.copy.directory:}")
+    private String copyDir;
     @Value("${peppol.file-to-mq.reprocess:false}")
     private boolean reprocess;
     @Value("${peppol.file-to-mq.direction:OUT}")
@@ -113,7 +113,7 @@ public class IncomingChecker {
 
     // send file info to MQ if found
     private void send(File file) throws Exception {
-        String fileName = storage.moveToTemporary(file, backupDir);
+        String fileName = storage.moveToTemporary(file, copyDir);
         logger.info("File moved to: " + fileName);
         Endpoint source = new Endpoint(componentName, getProcessType());
 

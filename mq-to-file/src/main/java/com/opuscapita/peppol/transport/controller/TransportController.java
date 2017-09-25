@@ -26,8 +26,8 @@ public class TransportController {
     private String directory;
     @Value("${peppol.mq-to-file.output.template:%FILENAME%}")
     private String template;
-    @Value("${peppol.mq-to-file.backup.directory:}")
-    private String backupDir;
+    @Value("${peppol.mq-to-file.copy.directory:}")
+    private String copyDir;
 
     public void storeMessage(@NotNull ContainerMessage cm) throws IOException {
         File input = new File(cm.getFileName());
@@ -49,9 +49,9 @@ public class TransportController {
         new File(output.getParent()).mkdirs();
         FileUtils.copyFile(input, result);
 
-        if (StringUtils.isNotBlank(backupDir)) {
-            FileUtils.copyFileToDirectory(result, new File(backupDir));
-            logger.info("Backup created as " + backupDir + File.separator + result.getName());
+        if (StringUtils.isNotBlank(copyDir)) {
+            FileUtils.copyFileToDirectory(result, new File(copyDir));
+            logger.info("Backup created as " + copyDir + File.separator + result.getName());
         }
     }
 
@@ -66,7 +66,7 @@ public class TransportController {
     }
 
     @SuppressWarnings("SameParameterValue")
-    public void setBackupDir(String backupDir) {
-        this.backupDir = backupDir;
+    public void setCopyDir(String copyDir) {
+        this.copyDir = copyDir;
     }
 }
