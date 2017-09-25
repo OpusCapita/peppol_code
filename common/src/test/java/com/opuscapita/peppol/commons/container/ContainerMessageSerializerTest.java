@@ -40,6 +40,7 @@ public class ContainerMessageSerializerTest {
         ProcessingInfo pi = cm.getProcessingInfo();
         assertNotNull(pi);
         pi.setTransactionId("transaction_id");
+        pi.setOriginalSource("original_source");
         pi.setRoute(route);
 
         ContainerMessageSerializer cms = new ContainerMessageSerializer();
@@ -63,6 +64,7 @@ public class ContainerMessageSerializerTest {
         assertEquals(2, cm2.getProcessingInfo().getRoute().getEndpoints().size());
         assertTrue(cm2.getProcessingInfo().getRoute().getEndpoints().contains("endpoint_a"));
         assertTrue(cm2.getProcessingInfo().getRoute().getEndpoints().contains("endpoint_b"));
+        assertEquals("original_source", cm2.getProcessingInfo().getOriginalSource());
 
         assertEquals("transaction_id", cm2.getProcessingInfo().getTransactionId());
     }

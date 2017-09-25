@@ -62,33 +62,37 @@ public interface Storage {
      *
      * @param senderId the sender ID, use empty line when missing
      * @param recipientId the recipient ID, use empty line when missing
+     * @param source the originator of the message, like transport name
      * @param fileName the name of the file to store
      * @return the file ID
      */
     @NotNull
-    String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName) throws IOException;
+    String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String source, @NotNull String fileName) throws IOException;
 
     /**
      * Stores data to long-term storage.
      *
      * @param senderId the sender ID, use empty line when missing
      * @param recipientId the recipient ID, use empty line when missing
+     * @param source the originator of the message, like transport name
      * @param input the file to store
      * @return the file ID
      */
     @NotNull
-    String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File input) throws IOException;
+    String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String source, @NotNull File input) throws IOException;
 
     /**
      * Stores input stream data in a long term storage with a desired file name.
      *
      * @param senderId the sender ID, use empty line when missing
      * @param recipientId the recipient ID, use empty line when missing
+     * @param source the originator of the message, like transport name
      * @param fileName the desired name of the file
      * @param inputStream the data to store
      * @return the file ID
      */
+    @SuppressWarnings("UnusedReturnValue")
     @NotNull
-    String storeLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName, @NotNull InputStream inputStream) throws IOException;
+    String storeLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String source, @NotNull String fileName, @NotNull InputStream inputStream) throws IOException;
 
 }

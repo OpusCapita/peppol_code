@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.container;
 import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.Route;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +14,7 @@ import java.io.Serializable;
  *
  * @author Sergejs.Roze
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class ProcessingInfo implements Serializable {
     private static final long serialVersionUID = -556566093311452295L;
 
@@ -37,6 +38,8 @@ public class ProcessingInfo implements Serializable {
     private String commonName;
     @Since(1.0)
     private String sendingProtocol;
+    @Since(1.1)
+    private String originalSource;
 
     /**
      * @param source the initial endpoint
@@ -109,7 +112,6 @@ public class ProcessingInfo implements Serializable {
         return sourceMetadata;
     }
 
-    @SuppressWarnings("unused")
     public void setSourceMetadata(@NotNull String sourceMetadata) {
         this.sourceMetadata = sourceMetadata;
     }
@@ -132,5 +134,17 @@ public class ProcessingInfo implements Serializable {
 
     public String getSendingProtocol() {
         return sendingProtocol;
+    }
+
+    @NotNull
+    public String getOriginalSource() {
+        if (StringUtils.isBlank(originalSource)) {
+            return source.getName();
+        }
+        return originalSource;
+    }
+
+    public void setOriginalSource(String originalSource) {
+        this.originalSource = originalSource;
     }
 }
