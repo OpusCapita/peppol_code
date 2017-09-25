@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd ">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:CustomizationID>
+        urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0
+    </cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+    <cbc:ID>3180003317</cbc:ID>
+    <cbc:IssueDate>2017-09-17</cbc:IssueDate>
+    <cbc:InvoiceTypeCode listAgencyID="6" listID="UNCL1001">380</cbc:InvoiceTypeCode>
+    <cbc:DocumentCurrencyCode listAgencyID="6" listID="ISO4217">EUR</cbc:DocumentCurrencyCode>
+    <cac:OrderReference>
+        <cbc:ID>N/A</cbc:ID>
+        <cbc:SalesOrderID>I-2601625-3180003317</cbc:SalesOrderID>
+    </cac:OrderReference>
+    <cac:AdditionalDocumentReference>
+        <cbc:ID>TIMPEX_LH</cbc:ID>
+        <cbc:DocumentType>ATS</cbc:DocumentType>
+    </cac:AdditionalDocumentReference>
+    <cac:AdditionalDocumentReference>
+        <cbc:ID>BEL2449A5F29E6311E7A4D3371AB1B8DE82.pdf</cbc:ID>
+        <cbc:DocumentType>Commercial Invoice</cbc:DocumentType>
+    </cac:AdditionalDocumentReference>
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="NO:ORGNR">862259092</cbc:EndpointID>
+            <cac:PartyName>
+                <cbc:Name>Bring Linehaul AS</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Gjefsenmyrvegen 5</cbc:StreetName>
+                <cbc:CityName>Jaren</cbc:CityName>
+                <cbc:PostalZone>2770</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT">862259092MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5153">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>Bring Linehaul AS</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:ORGNR">862259092</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>N/A</cbc:ID>
+                <cbc:Telephone>+47 23 17 50 00</cbc:Telephone>
+                <cbc:ElectronicMail>invoice.bl@bring.com</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="NO:ORGNR">982813085</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="ZZZ">94983111</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Bring Cargo As</cbc:Name>
+            </cac:PartyName>
+            <cac:Language>
+                <cbc:ID>NO</cbc:ID>
+            </cac:Language>
+            <cac:PostalAddress>
+                <cbc:StreetName>c/o Fakturamottak</cbc:StreetName>
+                <cbc:AdditionalStreetName>Postboks 4490</cbc:AdditionalStreetName>
+                <cbc:CityName>MO I RANA</cbc:CityName>
+                <cbc:PostalZone>8608</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID schemeID="NO:VAT">982813085MVA</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5153">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>Bring Cargo As</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="NO:ORGNR">982813085</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>N/A</cbc:ID>
+                <cbc:Name>N/A</cbc:Name>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+        <cac:DeliveryLocation>
+            <cbc:Name>Bring Cargo As</cbc:Name>
+            <cac:Address>
+                <cbc:AdditionalStreetName>Biskop Gunnerus Gate 14A</cbc:AdditionalStreetName>
+                <cbc:CityName>Oslo</cbc:CityName>
+                <cbc:PostalZone>0185</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+    </cac:Delivery>
+    <cac:PaymentMeans>
+        <cbc:PaymentMeansCode listAgencyID="NES" listID="UNCL4461">31</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>2017-10-09</cbc:PaymentDueDate>
+        <cbc:PaymentID>31800033172</cbc:PaymentID>
+        <cac:PayeeFinancialAccount>
+            <cbc:ID schemeID="IBAN">NO1360030635992</cbc:ID>
+            <cac:FinancialInstitutionBranch>
+                <cac:FinancialInstitution>
+                    <cbc:ID schemeID="BIC">NDEANOKK</cbc:ID>
+                </cac:FinancialInstitution>
+            </cac:FinancialInstitutionBranch>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:PaymentTerms>
+        <cbc:Note>20 dager</cbc:Note>
+    </cac:PaymentTerms>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="EUR">502.52</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">Z</cbc:ID>
+                <cbc:Percent>0.000</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5153">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="EUR">502.52</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="EUR">502.52</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="EUR">502.52</cbc:TaxInclusiveAmount>
+        <cbc:PayableAmount currencyID="EUR">502.52</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">2</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="EUR">502.52</cbc:LineExtensionAmount>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Name>Frakt Eksport</cbc:Name>
+            <cac:SellersItemIdentification>
+                <cbc:ID>100683</cbc:ID>
+            </cac:SellersItemIdentification>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID schemeAgencyID="6" schemeID="UNCL5305">Z</cbc:ID>
+                <cbc:Percent>0.000</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyID="6" schemeID="UNCL5153">VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="EUR">251.26</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+</Invoice>
