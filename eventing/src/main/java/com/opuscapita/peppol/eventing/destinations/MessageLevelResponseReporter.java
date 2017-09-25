@@ -15,6 +15,7 @@ import com.opuscapita.peppol.eventing.destinations.mlr.model.CustomerRepository;
 import com.opuscapita.peppol.eventing.destinations.mlr.model.MessageRepository;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -24,10 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 
 /**
@@ -146,7 +144,7 @@ public class MessageLevelResponseReporter {
         }
     }
 
-    protected String fetchOriginalSourceFromDb(ContainerMessage cm) {
+    private String fetchOriginalSourceFromDb(ContainerMessage cm) {
         Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
         if (customer == null) {
             logger.warn("Unable to create standard MLR. Could not fetch customer id for file: " + cm.getFileName());
@@ -167,29 +165,30 @@ public class MessageLevelResponseReporter {
     private void storeResponse(@NotNull ApplicationResponseType art, @NotNull String fileName) throws IOException {
         logger.info("Storing MLR as " + fileName);
 
-        ESuccess result = UBL21Writer.applicationResponse().write(art, new File(fileName));
-
-        if (result.isSuccess()) {
-            logger.info("MLR successfully stored as " + fileName);
-        } else {
-            throw new IOException("Failed to create MLR file named " + fileName);
-        }
+        //ESuccess result = UBL21Writer.applicationResponse().write(art, new File(fileName));
+        ByteArrayInputStream inputStream = applicationResponseTypeToByteArrayOutputStream(art);
+        IOUtils.copy(inputStream, new FileOutputStream(new File(fileName)));
+        logger.info("MLR successfully stored as " + fileName);
     }
 
     @SuppressWarnings("ConstantConditions")
     private String storeBackup(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
-        ByteArrayOutputStream tmp = new ByteArrayOutputStream();
-        ESuccess rc = UBL21Writer.applicationResponse().write(art, tmp);
-        if (!rc.isSuccess()) {
-            throw new IOException("Failed to save MLR backup file");
-        }
-
         String fileName = cm.getFileName() + "-" + result + "-mlr.xml";
-
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(tmp.toByteArray());
+        ByteArrayInputStream inputStream = applicationResponseTypeToByteArrayOutputStream(art);
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document info cannot be null");
         }
         return storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(), fileName, inputStream);
+    }
+
+    @NotNull
+    private ByteArrayInputStream applicationResponseTypeToByteArrayOutputStream(@NotNull ApplicationResponseType art) throws IOException {
+        ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+        ESuccess rc = UBL21Writer.applicationResponse().write(art, tmp);
+        if (!rc.isSuccess()) {
+            throw new IOException("Failed to serialize ApplicationResponse");
+        }
+
+        return new ByteArrayInputStream(tmp.toByteArray());
     }
 }
