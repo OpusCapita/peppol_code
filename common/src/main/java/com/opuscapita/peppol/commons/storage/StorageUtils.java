@@ -3,7 +3,6 @@ package com.opuscapita.peppol.commons.storage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -12,22 +11,6 @@ import java.io.File;
  */
 @SuppressWarnings("WeakerAccess")
 public class StorageUtils {
-
-    /**
-     * Returns original source from the full file path whenever possible.
-     *
-     * @param fileName the full file path
-     * @return the file path part that contains original source information if present, else null.
-     */
-    @Nullable
-    public static String extractOriginalSourceName(@NotNull String fileName) {
-        String path = FilenameUtils.getPathNoEndSeparator(fileName);
-        String suspect = StringUtils.substringAfterLast(path, File.separator);
-        if (suspect.contains("_")) {
-            return StringUtils.substringBeforeLast(suspect,"_");
-        }
-        return null;
-    }
 
     /**
      * Creates unique file name by adding suffixes when necessary. Will not work properly if multi-threaded.

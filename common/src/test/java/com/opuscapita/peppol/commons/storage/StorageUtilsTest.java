@@ -5,7 +5,8 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Sergejs.Roze
@@ -58,10 +59,4 @@ public class StorageUtilsTest {
         assertEquals(expected, next.getAbsolutePath());
     }
 
-    @Test
-    public void testExtractOriginalSource() throws Exception {
-        assertEquals("endpoint_name",
-                StorageUtils.extractOriginalSourceName("/dev/null/not_this/endpoint_name_20170922/file_name.xml"));
-        assertNull(StorageUtils.extractOriginalSourceName("/dev/null/not_this/20170922/file_name.xml"));
-    }
 }

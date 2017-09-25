@@ -70,7 +70,7 @@ public class PreprocessingController {
 
         document = documentLoader.load(cm.getFileName(), endpoint);
 
-        String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getProcessingInfo().getOriginalSource(), cm.getFileName());
+        String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
         logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
         cm.setDocumentInfo(document).setFileName(longTerm);
         cm.setStatus(endpoint, "parsed");

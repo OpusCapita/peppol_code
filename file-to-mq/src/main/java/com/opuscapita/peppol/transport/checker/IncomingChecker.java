@@ -8,11 +8,9 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.storage.Storage;
-import com.opuscapita.peppol.commons.storage.StorageUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -137,10 +135,11 @@ public class IncomingChecker {
     }
 
     private void addOriginalSourceInfo(@NotNull ContainerMessage cm) {
-        String originalSourceName = StorageUtils.extractOriginalSourceName(cm.getFileName());
-        if (cm.getProcessingInfo() != null && StringUtils.isNotBlank(originalSourceName)) {
-            cm.getProcessingInfo().setOriginalSource(originalSourceName);
-        }
+        // TODO add read from the database here
+//        String originalSourceName = StorageUtils.extractOriginalSourceName(cm.getFileName());
+//        if (cm.getProcessingInfo() != null && StringUtils.isNotBlank(originalSourceName)) {
+//            cm.getProcessingInfo().setOriginalSource(originalSourceName);
+//        }
     }
 
     private ProcessType getProcessType() {

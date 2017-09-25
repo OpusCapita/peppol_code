@@ -151,7 +151,6 @@ public class MessageLevelResponseReporter {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document info cannot be null");
         }
-        storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(),
-                cm.getProcessingInfo().getOriginalSource(), fileName, inputStream);
+        storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(), fileName, inputStream);
     }
 }
