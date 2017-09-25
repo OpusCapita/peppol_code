@@ -184,7 +184,8 @@ public class MessageLevelResponseReporter {
     @NotNull
     private ByteArrayInputStream applicationResponseTypeToByteArrayOutputStream(@NotNull ApplicationResponseType art) throws IOException {
         ByteArrayOutputStream tmp = new ByteArrayOutputStream();
-        ESuccess rc = UBL21Writer.applicationResponse().write(art, tmp);
+        ClassLoader oscl = sun.misc.Launcher.getLauncher().getClassLoader();
+        ESuccess rc = UBL21Writer.applicationResponse().setClassLoader(oscl).write(art, tmp);
         if (!rc.isSuccess()) {
             throw new IOException("Failed to serialize ApplicationResponse");
         }
