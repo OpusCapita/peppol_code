@@ -16,6 +16,7 @@ import java.util.Properties;
 public class InboundProperties {
     public final static String INBOUND_OUTPUT_DIR = "peppol.storage.short";
     public final static String COMPONENT_NAME = "peppol.component.name";
+    public final static String INBOUND_COPY_DIR = "peppol.inbound.copy.directory";
     final static String INBOUND_MQ_EXCHANGE = "peppol.inbound.queue.exchange";
     final static String INBOUND_MQ_QUEUE = "peppol.inbound.queue.name";
     final static String INBOUND_MQ_HOST = "peppol.inbound.queue.host";
