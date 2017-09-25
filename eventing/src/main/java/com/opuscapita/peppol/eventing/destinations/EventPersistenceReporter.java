@@ -80,6 +80,7 @@ public class EventPersistenceReporter {
         if (cm.getDocumentInfo() == null) {
             cm.setDocumentInfo(new DocumentInfo());
         }
+        result.setOriginalSource(cm.getProcessingInfo().getOriginalSource());
         result.setInvoiceId(cm.getDocumentInfo().getDocumentId());
         result.setDocumentType(cm.getDocumentInfo().getArchetype() + " " + cm.getDocumentInfo().getDocumentType());
         result.setInvoiceDate(cm.getDocumentInfo().getIssueDate());

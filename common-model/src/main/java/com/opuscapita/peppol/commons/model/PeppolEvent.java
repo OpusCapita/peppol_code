@@ -35,6 +35,8 @@ public class PeppolEvent {
     private String commonName;
     private String sendingProtocol;
 
+    private String originalSource;
+
 
     public ProcessType getProcessType() {
         return processType;
@@ -182,10 +184,18 @@ public class PeppolEvent {
         this.documentType = documentType;
     }
 
+    public String getOriginalSource() {
+        return originalSource;
+    }
+
+    public void setOriginalSource(String originalSource) {
+        this.originalSource = originalSource;
+    }
+
     @Override
     public String toString() {
         return "PeppolEvent{" +
-                "transportType=" + processType +
+                "processType=" + processType +
                 ", fileName='" + fileName + '\'' +
                 ", fileSize=" + fileSize +
                 ", errorFilePath='" + errorFilePath + '\'' +
@@ -203,6 +213,7 @@ public class PeppolEvent {
                 ", documentType='" + documentType + '\'' +
                 ", commonName='" + commonName + '\'' +
                 ", sendingProtocol='" + sendingProtocol + '\'' +
+                ", originalSource='" + originalSource + '\'' +
                 '}';
     }
 }

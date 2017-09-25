@@ -36,6 +36,8 @@ public class PeppolEvent {
     private String commonName;
     private String sendingProtocol;
 
+    private String originalSource;
+
 
     public TransportType getTransportType() {
         return transportType;
@@ -179,5 +181,9 @@ public class PeppolEvent {
 
     public void setDocumentType(String documentType) {
         this.documentType = documentType;
+    }
+
+    public String getOriginalSource() {
+        return originalSource;
     }
 }
