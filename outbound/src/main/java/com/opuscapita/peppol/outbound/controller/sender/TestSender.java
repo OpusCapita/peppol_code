@@ -102,7 +102,7 @@ public class TestSender extends UblSender {
                 TransmissionResponse fakeResult = new TransmissionResponse() {
                     @Override
                     public TransmissionId getTransmissionId() {
-                        return new TransmissionId(cm.getFileName());
+                        return new TransmissionId(new File(cm.getFileName()).getName());
                     }
 
                     @Override
@@ -130,8 +130,8 @@ public class TestSender extends UblSender {
                         return new byte[0];
                     }
                 };
+                logger.info("created fake TransmissionResponse for integration test with transmission id: " + fakeResult.getTransmissionId());
                 return fakeResult;
-
             }
 
             TransmissionResponse result = transmitter.transmit(transmissionRequest);

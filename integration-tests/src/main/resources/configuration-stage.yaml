@@ -17,8 +17,8 @@ tests:
                 mq connection: mq1
                 destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/events-persistence_valid.xml
-                db connection: db1
                 endpoint: events-persistence-integration-test
+                db connection: db1
                 DB preprocess querry: delete from messages where invoice_number='20828'
         subscribers:
             - db subscriber:
@@ -30,7 +30,6 @@ tests:
             - DB test:
                 id: 4
                 name: Message persisted into DB positive test
-                connection string: db1
                 expected value: 1
    eventing:
         producers:
@@ -208,20 +207,26 @@ tests:
                 id: 13
                 expected value: 1
                 name: internal-routing Mq check
-      outbound:
-           producers:
-               - mq producer:
-                   mq connection: mq1
-                   destination queue: outbound
-                   source directory: /etc/resources/outbound/outbound_valid.xml
-                   endpoint: events-persistence-integration-test
-           subscribers:
-               - mq subscriber:
-                   source queue: preprocessing-integration-test
-                   timeout: 1500
-                   consumers: 12
-           consumers:
-               - queue msg count check:
-                   id: 12
-                   expected value: 1
-                   name: inbound Mq check
+   outbound:
+        producers:
+            - file producer:
+                source directory: /etc/resources/outbound/outbound-integration-test-valid.xml
+                destination directory: /peppol/data/storage/outbound-integration-test-valid.xml
+            - mq producer:
+                mq connection: mq1
+                destination queue: outbound
+                source directory: /peppol/data/storage/outbound-integration-test-valid.xml
+                endpoint: events-persistence-integration-test
+                db connection: db1
+                DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+        subscribers:
+            - db subscriber:
+                db connection: db1
+                timeout: 5000
+                query: select count(*) from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+                consumers: 14
+        consumers:
+            - DB test:
+                id: 14
+                name: Outbound transmission id persisted into DB positive test
+                expected value: 1

@@ -91,8 +91,8 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
         }
         logger.info("IntegrationTestApp : Ended!");
         int fails = (int)testResults.stream().filter(res -> !res.isPassed()).count();
-       // System.exit(fails);
-        System.exit(0);  //disabling fail for a moment
+        System.exit(fails);
+        //System.exit(0);  //disabling fail for a moment
     }
 
     private List<TestResult> runTests(String configFile) {
@@ -126,8 +126,9 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();
+            //creating integration-tests specific queues
             for (String queue: props.getQueues()) {
-                channel.queueDeclare(queue, false, false, true, null);       //integration-tests queue
+                channel.queueDeclare(queue, false, false, true, null);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -172,7 +173,7 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
                 };
             }
         };
-        listenerEndpoint.setQueueNames(props.getQueues().toArray(new String[0])); //Get them form configuration properties
+        listenerEndpoint.setQueueNames(props.getListeners().toArray(new String[0])); //Get them form configuration properties
         listenerEndpoint.setId("endpoint1"); //You can keep it this way
         registrar.registerEndpoint(listenerEndpoint);
     }

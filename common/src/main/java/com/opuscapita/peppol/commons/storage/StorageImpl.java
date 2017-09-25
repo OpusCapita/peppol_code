@@ -94,14 +94,14 @@ public class StorageImpl implements Storage {
 
     @NotNull
     @Override
-    public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName) throws IOException {
-        return moveToLongTerm(senderId, recipientId, new File(fileName));
+    public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String source, @NotNull String fileName) throws IOException {
+        return moveToLongTerm(senderId, recipientId, source, new File(fileName));
     }
 
     @NotNull
     @Override
-    public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
-        File dir = prepareDirectory(senderId, recipientId);
+    public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String source, @NotNull File file) throws IOException {
+        File dir = prepareDirectory(senderId, recipientId, source);
 
         File result = StorageUtils.prepareUnique(dir, file.getName());
         FileUtils.moveFile(file, result);
@@ -114,8 +114,8 @@ public class StorageImpl implements Storage {
 
     @NotNull
     @Override
-    public String storeLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName, @NotNull InputStream inputStream) throws IOException {
-        File dir = prepareDirectory(senderId, recipientId);
+    public String storeLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String source, @NotNull String fileName, @NotNull InputStream inputStream) throws IOException {
+        File dir = prepareDirectory(senderId, recipientId, source);
 
         File result = StorageUtils.prepareUnique(dir, FilenameUtils.getName(fileName));
         IOUtils.copy(inputStream, new FileOutputStream(result));
@@ -123,12 +123,12 @@ public class StorageImpl implements Storage {
         return result.getAbsolutePath();
     }
 
-    private File prepareDirectory(@NotNull String senderId, @NotNull String recipientId) throws IOException {
+    private File prepareDirectory(@NotNull String senderId, @NotNull String recipientId, @NotNull String source) throws IOException {
         senderId = normalizeFilename(senderId);
         recipientId = normalizeFilename(recipientId);
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
-        File dir = new File(longTerm + File.separator + senderId + File.separator + recipientId + File.separator + date);
+        File dir = new File(longTerm + File.separator + senderId + File.separator + recipientId + File.separator + source + "_" + date);
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 throw new IOException("Failed to create directory: " + dir);

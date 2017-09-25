@@ -14,14 +14,15 @@ import java.util.List;
 @RefreshScope
 public class IntegrationTestProperties {
     private List<String> queues;
-
+    private List<String> listeners;
     private Rabbitmq rabbitmq;
 
     public IntegrationTestProperties() {
     }
 
-    public IntegrationTestProperties(List<String> queues) {
+    public IntegrationTestProperties(List<String> queues, List<String> listeners) {
         this.queues = queues;
+        this.listeners = listeners;
     }
 
     public List<String> getQueues() {
@@ -38,6 +39,14 @@ public class IntegrationTestProperties {
 
     public void setRabbitmq(Rabbitmq rabbitmq) {
         this.rabbitmq = rabbitmq;
+    }
+
+    public List<String> getListeners() {
+        return listeners;
+    }
+
+    public void setListeners(List<String> listeners) {
+        this.listeners = listeners;
     }
 
     public static class Rabbitmq{

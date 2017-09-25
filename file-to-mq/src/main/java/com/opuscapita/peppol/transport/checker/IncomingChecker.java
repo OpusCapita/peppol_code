@@ -8,9 +8,11 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.storage.Storage;
+import com.opuscapita.peppol.commons.storage.StorageUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,8 +54,8 @@ public class IncomingChecker {
     private String mask;
     @Value("${peppol.file-to-mq.queue.out.name:preprocessing}")
     private String queue;
-    @Value("${peppol.file-to-mq.backup.directory:}")
-    private String backupDir;
+    @Value("${peppol.file-to-mq.copy.directory:}")
+    private String copyDir;
     @Value("${peppol.file-to-mq.reprocess:false}")
     private boolean reprocess;
     @Value("${peppol.file-to-mq.direction:OUT}")
@@ -113,7 +115,7 @@ public class IncomingChecker {
 
     // send file info to MQ if found
     private void send(File file) throws Exception {
-        String fileName = storage.moveToTemporary(file, backupDir);
+        String fileName = storage.moveToTemporary(file, copyDir);
         logger.info("File moved to: " + fileName);
         Endpoint source = new Endpoint(componentName, getProcessType());
 
@@ -121,6 +123,9 @@ public class IncomingChecker {
                 fileName, source);
         cm.setStatus(source, "received");
         cm.setOriginalFileName(file.getAbsolutePath());
+        if (reprocess) {
+            addOriginalSourceInfo(cm);
+        }
 
         logger.info("Sending message: " + new Gson().toJson(cm));
         messageQueue.convertAndSend(queue, cm);
@@ -131,15 +136,23 @@ public class IncomingChecker {
         }
     }
 
-    private ProcessType getProcessType() {
-        if(direction.toUpperCase().equals("OUT")){
-            if(reprocess)
-                return ProcessType.OUT_REPROCESS;
-            return ProcessType.OUT_FILE_TO_MQ;
+    private void addOriginalSourceInfo(@NotNull ContainerMessage cm) {
+        String originalSourceName = StorageUtils.extractOriginalSourceName(cm.getFileName());
+        if (cm.getProcessingInfo() != null && StringUtils.isNotBlank(originalSourceName)) {
+            cm.getProcessingInfo().setOriginalSource(originalSourceName);
         }
-        else { //IN
-            if(reprocess)
+    }
+
+    private ProcessType getProcessType() {
+        if (direction.toUpperCase().equals("OUT")) {
+            if (reprocess) {
+                return ProcessType.OUT_REPROCESS;
+            }
+            return ProcessType.OUT_FILE_TO_MQ;
+        } else { //IN
+            if (reprocess) {
                 return ProcessType.IN_REPROCESS;
+            }
             throw new UnsupportedOperationException(componentName + " is not supposed to handle inbound messages");
         }
     }

@@ -108,11 +108,11 @@ public class MessageLevelResponseReporter {
 
     @SuppressWarnings("ConstantConditions")
     private void storeResponse(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
-        if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getSource().getName(), "a2a")) {
+        if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getOriginalSource(), "a2a")) {
             storeResponse(art, destinationA2A + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
                     "-" + result + "-mlr.xml");
         }
-        if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getSource().getName(), "xib")) {
+        if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getOriginalSource(), "xib")) {
             storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
                     "-" + result + "-mlr.xml");
         }
@@ -137,6 +137,7 @@ public class MessageLevelResponseReporter {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void storeBackup(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         ByteArrayOutputStream tmp = new ByteArrayOutputStream();
         ESuccess rc = UBL21Writer.applicationResponse().write(art, tmp);
@@ -150,6 +151,7 @@ public class MessageLevelResponseReporter {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document info cannot be null");
         }
-        storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(), fileName, inputStream);
+        storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(),
+                cm.getProcessingInfo().getOriginalSource(), fileName, inputStream);
     }
 }
