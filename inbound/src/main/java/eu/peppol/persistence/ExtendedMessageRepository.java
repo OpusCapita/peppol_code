@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import static com.opuscapita.peppol.inbound.InboundProperties.COMPONENT_NAME;
+import static com.opuscapita.peppol.inbound.InboundProperties.INBOUND_COPY_DIR;
 import static com.opuscapita.peppol.inbound.InboundProperties.INBOUND_OUTPUT_DIR;
 
 
@@ -46,7 +47,9 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
         try {
             dataFile = new StorageImpl()
                     .setShortTermDirectory(properties.getProperty(INBOUND_OUTPUT_DIR))
-                    .storeTemporary(inputStream, normalizeFilename(metadata.getTransmissionId().toString()) + ".xml");
+                    .storeTemporary(inputStream,
+                            normalizeFilename(metadata.getTransmissionId().toString()) + ".xml",
+                            properties.getProperty(INBOUND_COPY_DIR));
             logger.info("Message stored as: " + dataFile);
         } catch (Exception e) {
             logger.error("Failed to store incoming message", e);
