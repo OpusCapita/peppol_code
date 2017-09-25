@@ -80,7 +80,9 @@ public class EventPersistenceReporter {
         if (cm.getDocumentInfo() == null) {
             cm.setDocumentInfo(new DocumentInfo());
         }
-        result.setOriginalSource(cm.getProcessingInfo().getOriginalSource());
+        if (isNotReprocess(cm)) {
+            result.setOriginalSource(cm.getProcessingInfo().getOriginalSource());
+        }
         result.setInvoiceId(cm.getDocumentInfo().getDocumentId());
         result.setDocumentType(cm.getDocumentInfo().getArchetype() + " " + cm.getDocumentInfo().getDocumentType());
         result.setInvoiceDate(cm.getDocumentInfo().getIssueDate());
@@ -107,6 +109,10 @@ public class EventPersistenceReporter {
 
         logger.debug("Peppol event prepared");
         return result;
+    }
+
+    private boolean isNotReprocess(@NotNull ContainerMessage cm) {
+        return cm.getProcessingInfo().getSource().getType() != ProcessType.OUT_REPROCESS && cm.getProcessingInfo().getSource().getType() != ProcessType.IN_REPROCESS;
     }
 
     @SuppressWarnings("ConstantConditions")

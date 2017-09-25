@@ -7,8 +7,12 @@ import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.model.Customer;
+import com.opuscapita.peppol.commons.model.Message;
 import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
+import com.opuscapita.peppol.eventing.destinations.mlr.model.CustomerRepository;
+import com.opuscapita.peppol.eventing.destinations.mlr.model.MessageRepository;
 import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +38,10 @@ import java.text.ParseException;
 @Component
 public class MessageLevelResponseReporter {
     private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseReporter.class);
-
+    private final MessageLevelResponseCreator creator;
+    private final Storage storage;
+    private final CustomerRepository customerRepository;
+    private final MessageRepository messageRepository;
     @Value("${peppol.eventing.mlr.a2a}")
     private String destinationA2A;
     @Value("${peppol.eventing.mlr.xib}")
@@ -42,13 +49,12 @@ public class MessageLevelResponseReporter {
     @Value("${peppol.eventing.mlr.backup.enabled:false}")
     private boolean backupEnabled;
 
-    private final MessageLevelResponseCreator creator;
-    private final Storage storage;
-
     @Autowired
-    public MessageLevelResponseReporter(@NotNull MessageLevelResponseCreator creator, @NotNull Storage storage) {
+    public MessageLevelResponseReporter(@NotNull MessageLevelResponseCreator creator, @NotNull Storage storage, CustomerRepository customerRepository, MessageRepository messageRepository) {
         this.creator = creator;
         this.storage = storage;
+        this.customerRepository = customerRepository;
+        this.messageRepository = messageRepository;
     }
 
     // only messages about errors and successfull delivery must get through
@@ -109,18 +115,23 @@ public class MessageLevelResponseReporter {
     @SuppressWarnings("ConstantConditions")
     private void storeResponse(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         boolean created = false;
-        if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getOriginalSource(), "a2a")) {
+        String originalSource = cm.getProcessingInfo().getOriginalSource();
+        if (isReprocess(cm)) {
+            originalSource = fetchOriginalSourceFromDb(cm);
+        }
+
+        if (StringUtils.containsIgnoreCase(originalSource, "a2a")) {
             storeResponse(art, destinationA2A + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
                     "-" + result + "-mlr.xml");
             created = true;
         }
-        if (StringUtils.containsIgnoreCase(cm.getProcessingInfo().getOriginalSource(), "xib")) {
+        if (StringUtils.containsIgnoreCase(originalSource, "xib")) {
             storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
                     "-" + result + "-mlr.xml");
             created = true;
         }
         if (!created) {
-            logger.warn("Failed to define where to send MLR for " + cm.getFileName() + ", original source = " + cm.getProcessingInfo().getOriginalSource());
+            logger.warn("Failed to define where to send MLR for " + cm.getFileName() + ", original source = " + originalSource);
         }
 
         if (backupEnabled) {
@@ -133,6 +144,24 @@ public class MessageLevelResponseReporter {
                 logger.warn("Failed to create MLR backup file: " + e.getMessage());
             }
         }
+    }
+
+    protected String fetchOriginalSourceFromDb(ContainerMessage cm) {
+        Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
+        if (customer == null) {
+            logger.warn("Unable to create standard MLR. Could not fetch customer id for file: " + cm.getFileName());
+            return null;
+        }
+        Message message = messageRepository.findBySenderAndInvoiceNumber(customer, cm.getDocumentInfo().getDocumentId());
+        if (message == null) {
+            logger.warn("Unable to create standard MLR. Could not fetch original event message for file: " + cm.getFileName());
+            return null;
+        }
+        return message.getOriginalSource();
+    }
+
+    private boolean isReprocess(ContainerMessage cm) {
+        return cm.getProcessingInfo().getSource().getType() == ProcessType.IN_REPROCESS || cm.getProcessingInfo().getSource().getType() == ProcessType.OUT_REPROCESS;
     }
 
     private void storeResponse(@NotNull ApplicationResponseType art, @NotNull String fileName) throws IOException {
