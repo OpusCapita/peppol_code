@@ -224,12 +224,12 @@ public class DocumentParserHandler extends DefaultHandler {
             logger.warn("Profile id is missing in file: " + fileName);
         }
 
-        if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifier(result.getSenderId())) {
+        if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifierSyntax(result.getSenderId())) {
             result.getErrors().add(new DocumentError(endpoint, "Invalid or missing sender id[" + result.getSenderId() + "] in file: " + fileName));
             logger.warn("Invalid or missing sender id[" + result.getSenderId() + "] in file: " + fileName);
         }
 
-        if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifier(result.getRecipientId())) {
+        if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifierSyntax(result.getRecipientId())) {
             result.getErrors().add(new DocumentError(endpoint, "Invalid or missing recipient id[" + result.getRecipientId() + "] in file: " + fileName));
             logger.warn("Invalid or missing recipient id[" + result.getRecipientId() + "] in file: " + fileName);
         }
@@ -313,6 +313,7 @@ public class DocumentParserHandler extends DefaultHandler {
 
     private DocumentInfo oneResult(Template template) {
         DocumentInfo result = new DocumentInfo();
+        //TODO: provide more information on recognized document
         logger.info("Document recognized as " + template.originalRoot);
         result.setRootNodeName(template.originalRoot);
         result.setRootNameSpace(template.rootNameSpace);
