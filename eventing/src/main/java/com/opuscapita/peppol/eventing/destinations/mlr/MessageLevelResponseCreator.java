@@ -83,7 +83,7 @@ public class MessageLevelResponseCreator {
                 description = replace(description, "description", "DOCUMENT_ERROR");
             }
         }
-        template = replace(template, "#DESCRIPTION#", description);
+        template = StringUtils.replace(template, "#DESCRIPTION#", description);
         return replace(template, "response_code", "RE");
     }
 

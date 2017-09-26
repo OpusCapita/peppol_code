@@ -69,6 +69,7 @@ public class MessageLevelResponseCreatorTest {
         System.out.println(result);
         assertTrue(result.contains("<cbc:ResponseCode>RE</cbc:ResponseCode>"));
         assertTrue(result.contains("<cbc:StatusReasonCode>SV</cbc:StatusReasonCode>"));
+        assertTrue(result.contains("DOCUMENT_ERROR"));
     }
 
     private ContainerMessage prepareContainerMessage() {
