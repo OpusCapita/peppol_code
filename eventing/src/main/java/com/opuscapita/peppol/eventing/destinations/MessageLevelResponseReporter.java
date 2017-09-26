@@ -1,7 +1,5 @@
 package com.opuscapita.peppol.eventing.destinations;
 
-import com.helger.commons.state.ESuccess;
-import com.helger.ubl21.UBL21Writer;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
@@ -13,9 +11,7 @@ import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
 import com.opuscapita.peppol.eventing.destinations.mlr.model.CustomerRepository;
 import com.opuscapita.peppol.eventing.destinations.mlr.model.MessageRepository;
-import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -25,7 +21,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 
 /**
@@ -110,8 +111,8 @@ public class MessageLevelResponseReporter {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private void storeResponse(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
+
+    private void storeResponse(@NotNull String art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         boolean created = false;
         String originalSource = cm.getProcessingInfo().getOriginalSource();
         if (isReprocess(cm)) {
@@ -162,34 +163,21 @@ public class MessageLevelResponseReporter {
         return cm.getProcessingInfo().getSource().getType() == ProcessType.IN_REPROCESS || cm.getProcessingInfo().getSource().getType() == ProcessType.OUT_REPROCESS;
     }
 
-    private void storeResponse(@NotNull ApplicationResponseType art, @NotNull String fileName) throws IOException {
+    private void storeResponse(@NotNull String art, @NotNull String fileName) throws IOException {
         logger.info("Storing MLR as " + fileName);
 
-        //ESuccess result = UBL21Writer.applicationResponse().write(art, new File(fileName));
-        ByteArrayInputStream inputStream = applicationResponseTypeToByteArrayOutputStream(art);
-        IOUtils.copy(inputStream, new FileOutputStream(new File(fileName)));
+        Files.write(Paths.get(fileName), art.getBytes(StandardCharsets.UTF_8));
         logger.info("MLR successfully stored as " + fileName);
     }
 
     @SuppressWarnings("ConstantConditions")
-    private String storeBackup(@NotNull ApplicationResponseType art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
+    private String storeBackup(@NotNull String art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         String fileName = cm.getFileName() + "-" + result + "-mlr.xml";
-        ByteArrayInputStream inputStream = applicationResponseTypeToByteArrayOutputStream(art);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(art.getBytes(StandardCharsets.UTF_8));
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document info cannot be null");
         }
         return storage.storeLongTerm(cm.getDocumentInfo().getSenderId(), cm.getDocumentInfo().getRecipientId(), fileName, inputStream);
     }
 
-    @NotNull
-    private ByteArrayInputStream applicationResponseTypeToByteArrayOutputStream(@NotNull ApplicationResponseType art) throws IOException {
-        ByteArrayOutputStream tmp = new ByteArrayOutputStream();
-        ClassLoader oscl = sun.misc.Launcher.getLauncher().getClassLoader();
-        ESuccess rc = UBL21Writer.applicationResponse().setClassLoader(oscl).write(art, tmp);
-        if (!rc.isSuccess()) {
-            throw new IOException("Failed to serialize ApplicationResponse");
-        }
-
-        return new ByteArrayInputStream(tmp.toByteArray());
-    }
 }

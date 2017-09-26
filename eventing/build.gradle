@@ -34,8 +34,8 @@ dependencies {
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.helger:ph-ubl21:5.1.0'
-    compile 'com.helger:ph-ubl21-codelists:5.1.0'
+    // compile 'com.helger:ph-ubl21:5.1.0'
+    // compile 'com.helger:ph-ubl21-codelists:5.1.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'

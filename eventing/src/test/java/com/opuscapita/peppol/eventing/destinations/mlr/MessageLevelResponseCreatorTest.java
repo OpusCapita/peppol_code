@@ -1,18 +1,14 @@
 package com.opuscapita.peppol.eventing.destinations.mlr;
 
-import com.helger.commons.state.ESuccess;
-import com.helger.ubl21.UBL21Writer;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
-import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -26,17 +22,11 @@ public class MessageLevelResponseCreatorTest {
     public void reportSuccess() throws Exception {
         ContainerMessage cm = prepareContainerMessage();
 
-        ApplicationResponseType art = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
+        String result = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        ClassLoader oscl = sun.misc.Launcher.getLauncher().getClassLoader();
-        ESuccess rc = UBL21Writer.applicationResponse().setClassLoader(oscl).write(art, out);
-
-        //UBL21Writer.applicationResponse().write(art, out);
-        String result = out.toString();
         System.out.println(result);
 
-        assertTrue(rc.isSuccess());
         assertTrue(result.contains("<cbc:ID>doc_id-MLR</cbc:ID>"));
         assertTrue(result.contains(
                 "<cac:SenderParty>" +
@@ -73,21 +63,10 @@ public class MessageLevelResponseCreatorTest {
 
         cm.getDocumentInfo().setIssueDate("oops");
 
-        ApplicationResponseType art = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
+        String result = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        assertEquals(art.getIssueDate().getValue(), art.getResponseDate().getValue());
-
-
-        ClassLoader oscl = sun.misc.Launcher.getLauncher().getClassLoader();
-        //UBL21Writer.applicationResponse().write(art, out);
-        ESuccess rc = UBL21Writer.applicationResponse().setClassLoader(oscl).write(art, out);
-
-        String result = out.toString();
-
         System.out.println(result);
-        assertTrue(rc.isSuccess());
-
         assertTrue(result.contains("<cbc:ResponseCode>RE</cbc:ResponseCode>"));
         assertTrue(result.contains("<cbc:StatusReasonCode>SV</cbc:StatusReasonCode>"));
     }

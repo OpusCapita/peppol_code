@@ -12,7 +12,6 @@ import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
 import com.opuscapita.peppol.eventing.destinations.mlr.model.CustomerRepository;
 import com.opuscapita.peppol.eventing.destinations.mlr.model.MessageRepository;
-import oasis.names.specification.ubl.schema.xsd.applicationresponse_21.ApplicationResponseType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,7 +61,7 @@ public class MessageLevelResponseReporterTest {
         cm.setProcessingInfo(pi);
 
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
-        when(creator.reportError(any())).thenReturn(new ApplicationResponseType());
+        when(creator.reportError(any())).thenReturn("");
 
         MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage, customerRepository, messageRepository);
         reporter.process(cm);
@@ -81,7 +80,7 @@ public class MessageLevelResponseReporterTest {
         pi.setTransactionId("transaction id");
 
         MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
-        when(creator.reportSuccess(any())).thenReturn(new ApplicationResponseType());
+        when(creator.reportSuccess(any())).thenReturn("");
 
         MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage, customerRepository, messageRepository);
         reporter.process(cm);
