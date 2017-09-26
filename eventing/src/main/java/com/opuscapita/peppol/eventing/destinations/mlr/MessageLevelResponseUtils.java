@@ -40,6 +40,20 @@ class MessageLevelResponseUtils {
         return convertedTime;
     }
 
+    static String convertDateToXml(Date date) throws ParseException, DatatypeConfigurationException {
+        String convertedDate = convertToXml(date).toString();
+        convertedDate = convertedDate.split("T")[0];
+        return convertedDate;
+    }
+
+    static String convertTimeToXml(Date date) throws ParseException, DatatypeConfigurationException {
+        String convertedTime = convertToXml(date).toString();
+        convertedTime = convertedTime.split("T")[1];
+        convertedTime = convertedTime.split("\\.")[0];
+        return convertedTime;
+    }
+
+
     static XMLGregorianCalendar convertToXmlTime(String time) throws ParseException, DatatypeConfigurationException {
         return convertToXml(new SimpleDateFormat("HH:mm:ss").parse(time));
     }
