@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.eventing.destinations.mlr;
 
+import com.helger.commons.state.ESuccess;
 import com.helger.ubl21.UBL21Writer;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
@@ -28,10 +29,14 @@ public class MessageLevelResponseCreatorTest {
         ApplicationResponseType art = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        UBL21Writer.applicationResponse().write(art, out);
+        ClassLoader oscl = sun.misc.Launcher.getLauncher().getClassLoader();
+        ESuccess rc = UBL21Writer.applicationResponse().setClassLoader(oscl).write(art, out);
 
+        //UBL21Writer.applicationResponse().write(art, out);
         String result = out.toString();
         System.out.println(result);
+
+        assertTrue(rc.isSuccess());
         assertTrue(result.contains("<cbc:ID>doc_id-MLR</cbc:ID>"));
         assertTrue(result.contains(
                 "<cac:SenderParty>" +
@@ -73,11 +78,16 @@ public class MessageLevelResponseCreatorTest {
 
         assertEquals(art.getIssueDate().getValue(), art.getResponseDate().getValue());
 
-        UBL21Writer.applicationResponse().write(art, out);
+
+        ClassLoader oscl = sun.misc.Launcher.getLauncher().getClassLoader();
+        //UBL21Writer.applicationResponse().write(art, out);
+        ESuccess rc = UBL21Writer.applicationResponse().setClassLoader(oscl).write(art, out);
 
         String result = out.toString();
 
         System.out.println(result);
+        assertTrue(rc.isSuccess());
+
         assertTrue(result.contains("<cbc:ResponseCode>RE</cbc:ResponseCode>"));
         assertTrue(result.contains("<cbc:StatusReasonCode>SV</cbc:StatusReasonCode>"));
     }
