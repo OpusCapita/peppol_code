@@ -224,14 +224,14 @@ public class DocumentParserHandler extends DefaultHandler {
             logger.warn("Profile id is missing in file: " + fileName);
         }
 
-        if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifierSyntax(result.getSenderId())) {
-            result.getErrors().add(new DocumentError(endpoint, "Invalid or missing sender id[" + result.getSenderId() + "] in file: " + fileName));
-            logger.warn("Invalid or missing sender id[" + result.getSenderId() + "] in file: " + fileName);
+        if (sbdhMandatoryFields.get("sender_id") && !eu.peppol.identifier.ParticipantId.isValidParticipantIdentifierSyntax(result.getSenderId())) {
+            result.getErrors().add(new DocumentError(endpoint, "Invalid  sender id[" + result.getSenderId() + "] in file: " + fileName));
+            logger.warn("Invalid sender id[" + result.getSenderId() + "] in file: " + fileName);
         }
 
-        if (!eu.peppol.identifier.ParticipantId.isValidParticipantIdentifierSyntax(result.getRecipientId())) {
-            result.getErrors().add(new DocumentError(endpoint, "Invalid or missing recipient id[" + result.getRecipientId() + "] in file: " + fileName));
-            logger.warn("Invalid or missing recipient id[" + result.getRecipientId() + "] in file: " + fileName);
+        if (sbdhMandatoryFields.get("recipient_id") && !eu.peppol.identifier.ParticipantId.isValidParticipantIdentifierSyntax(result.getRecipientId())) {
+            result.getErrors().add(new DocumentError(endpoint, "Invalid recipient id[" + result.getRecipientId() + "] in file: " + fileName));
+            logger.warn("Invalid recipient id[" + result.getRecipientId() + "] in file: " + fileName);
         }
 
         sbdhMandatoryFields
