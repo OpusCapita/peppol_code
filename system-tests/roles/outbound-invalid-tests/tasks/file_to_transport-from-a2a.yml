@@ -1,22 +1,26 @@
 ---
 #sending file to outbound, then doing asserts for each module
 
+- set_fact: uuid="{{99999 | random | to_uuid}}"
+- debug: var=uuid
+
 - name: Copy file to outbound from-a2a dir
   become: "{{sudo}}"
   become_user: "{{user}}"
   copy:
     remote_src: True
     src: "{{file}}"
-    dest: "{{transport_from_a2a_path}}"
+    dest: "{{transport_from_a2a_path}}/{{ file| basename }}-{{ uuid }}.xml"
 
-- set_fact: file="{{file}}"
-- debug: var=file
+#- set_fact: file="{{file}}"
+#- debug: var=file
 
-- name: find fileName
-  shell: echo "{{file}}" | grep .xml |xargs -L 1 basename
-  register: fileName
-- set_fact: fileName="{{fileName.stdout}}"
-- debug: var=fileName
+#- name: find fileName
+#  shell: echo "{{file_uuid}}" | grep .xml |xargs -L 1 basename
+#  register: fileName
+#- set_fact: fileName="{{fileName.stdout}}"
+#- debug: var=fileName
+
 
 #report START ------:
 - set_fact: counter="{{counter| int +1 }}"
@@ -28,9 +32,9 @@
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.txt"
+    dest: "{{report_path}}outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
-    line: '{{counter}}|{{file}}|{{fileName}}'
+    line: '{{counter}}|{{file}}|{{uuid}}'
 #report END -------
 
 - pause:
