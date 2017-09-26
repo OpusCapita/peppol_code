@@ -40,7 +40,7 @@ public class MessageLevelResponseCreatorTest {
                 "<cac:ReceiverParty>" +
                         "<cbc:EndpointID>recipient_id</cbc:EndpointID>" +
                         "<cac:PartyName>" +
-                                "<cbc:Name>recipient_name</cbc:Name>" +
+                                "<cbc:Name>recipient_name&lt;&gt;</cbc:Name>" +
                         "</cac:PartyName>" +
                 "</cac:ReceiverParty>"
         ));
@@ -80,7 +80,7 @@ public class MessageLevelResponseCreatorTest {
         di.setIssueDate("2017-07-18");
         di.setIssueTime("11:12:13");
         di.setRecipientId("recipient_id");
-        di.setRecipientName("recipient_name");
+        di.setRecipientName("recipient_name<>");
         di.setSenderId("sender_id");
         di.setSenderName("sender_name");
         cm.setDocumentInfo(di);

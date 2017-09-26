@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -193,6 +194,7 @@ public class MessageLevelResponseCreator {
         if (value == null) {
             value = "";
         }
+        value = StringEscapeUtils.escapeXml11(value);
         return StringUtils.replace(original, "${" + key + "}", value);
     }
 
