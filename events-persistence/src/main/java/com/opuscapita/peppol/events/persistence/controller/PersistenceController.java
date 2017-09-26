@@ -290,7 +290,7 @@ public class PersistenceController {
             message.setInvoiceNumber(peppolEvent.getInvoiceId());
             message.setDocumentType(peppolEvent.getDocumentType());
             message.setStatus(MessageStatus.processing);
-            if (message.getOriginalSource() != null) {
+            if (peppolEvent.getOriginalSource() != null) {
                 message.setOriginalSource(peppolEvent.getOriginalSource());
             }
 
