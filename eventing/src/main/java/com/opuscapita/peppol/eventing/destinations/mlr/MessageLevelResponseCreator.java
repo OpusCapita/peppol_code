@@ -63,6 +63,8 @@ public class MessageLevelResponseCreator {
         String description = templates.getDescriptionTemplate();
         if (!cm.hasErrors() && cm.getProcessingInfo().getProcessingException() == null) {
             if (cm.getProcessingInfo().getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_RETRY) {
+                description = replace(description, "description", cm.getProcessingInfo().getCurrentStatus());
+                template = StringUtils.replace(template, "#DESCRIPTION#", description);
                 return replace(template, "response_code", "AB");
             } else {
                 template = StringUtils.replace(template, "#DESCRIPTION#", "");
