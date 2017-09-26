@@ -27,6 +27,19 @@ class MessageLevelResponseUtils {
         return convertToXml(new SimpleDateFormat("yyyy-MM-dd").parse(date));
     }
 
+    static String convertDateToXml(String date) throws ParseException, DatatypeConfigurationException {
+        String convertedDate = convertToXml(new SimpleDateFormat("yyyy-MM-dd").parse(date)).toString();
+        convertedDate = convertedDate.split("T")[0];
+        return convertedDate;
+    }
+
+    static String convertTimeToXml(String time) throws ParseException, DatatypeConfigurationException {
+        String convertedTime = convertToXml(new SimpleDateFormat("HH:mm:ss").parse(time)).toString();
+        convertedTime = convertedTime.split("T")[1];
+        convertedTime = convertedTime.split("\\.")[0];
+        return convertedTime;
+    }
+
     static XMLGregorianCalendar convertToXmlTime(String time) throws ParseException, DatatypeConfigurationException {
         return convertToXml(new SimpleDateFormat("HH:mm:ss").parse(time));
     }
