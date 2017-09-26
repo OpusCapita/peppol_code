@@ -233,15 +233,14 @@ public class DocumentParserTest {
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/ehf_no_sbdh_fields.xml")) {
             DocumentInfo result = parser.parse(inputStream, "ehf_no_sbdh_fields.xml", new Endpoint("test", ProcessType.UNKNOWN), false);
             assertNotNull(result);
-            assertEquals(6, result.getErrors().size());
             List<String> expectedErrorMessages = List.of(
-                    "Invalid or missing sender id",
-                    "Invalid or missing recipient id",
                     "SBDH is missing sender_id field",
                     "SBDH is missing recipient_id field",
                     "PROCESSID is missing or empty",
                     "DOCUMENTID is missing or empty"
             );
+            assertEquals(expectedErrorMessages.length(), result.getErrors().size());
+
             long matchedErrors = result
                     .getErrors()
                     .stream()
