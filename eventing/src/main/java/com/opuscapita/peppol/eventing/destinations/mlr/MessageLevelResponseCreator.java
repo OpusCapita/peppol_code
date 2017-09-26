@@ -59,13 +59,31 @@ public class MessageLevelResponseCreator {
 
     @SuppressWarnings("ConstantConditions")
     private String setResponseCode(@NotNull ContainerMessage cm, @NotNull String template) {
+        String description = templates.getDescriptionTemplate();
         if (!cm.hasErrors() && cm.getProcessingInfo().getProcessingException() == null) {
             if (cm.getProcessingInfo().getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_RETRY) {
                 return replace(template, "response_code", "AB");
             } else {
+                template = StringUtils.replace(template, "#DESCRIPTION#", "");
                 return replace(template, "response_code", "AP");
             }
         }
+
+        if (StringUtils.isNotBlank(cm.getProcessingInfo().getProcessingException())) {
+            // processing exception
+            String msg = cm.getProcessingInfo().getProcessingException();
+            description = replace(description, "description",oxalisErrorRecognizer.recognize(msg) + ": " + msg);
+        } else {
+            if (cm.getProcessingInfo().getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
+                    cm.getProcessingInfo().getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
+                // validation issue
+                description = replace(description, "description", "VALIDATION_ERROR");
+            } else {
+                // other document issue probably on preprocessing
+                description = replace(description, "description", "DOCUMENT_ERROR");
+            }
+        }
+        template = replace(template, "#DESCRIPTION#", description);
         return replace(template, "response_code", "RE");
     }
 

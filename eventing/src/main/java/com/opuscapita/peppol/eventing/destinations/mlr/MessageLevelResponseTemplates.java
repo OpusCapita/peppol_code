@@ -49,6 +49,7 @@ public class MessageLevelResponseTemplates {
                     "<cac:DocumentResponse>" +
                         "<cac:Response>" +
                             "<cbc:ResponseCode>${response_code}</cbc:ResponseCode>" +
+                            "#DESCRIPTION#" +
                         "</cac:Response>" +
                         "<cac:DocumentReference><cbc:ID>${doc_reference}</cbc:ID></cac:DocumentReference>" +
                         "#LINES#" +
@@ -56,6 +57,7 @@ public class MessageLevelResponseTemplates {
             "</ApplicationResponse>";
 
     private static final String ISSUE_TIME_TEMPLATE = "<cbc:IssueTime>${issue_time}</cbc:IssueTime>";
+    private static final String DESCRIPTION_TEMPLATE = "<cbc:Description>${description}</cbc:Description>";
     private static final String LINE_TEMPLATE =
             "<cac:LineResponse>" +
                 "<cac:LineReference><cbc:LineID>NA</cbc:LineID>" +
@@ -80,5 +82,9 @@ public class MessageLevelResponseTemplates {
 
     @NotNull String getLineTemplate() {
         return LINE_TEMPLATE;
+    }
+
+    @NotNull String getDescriptionTemplate() {
+        return DESCRIPTION_TEMPLATE;
     }
 }
