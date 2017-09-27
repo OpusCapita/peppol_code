@@ -178,16 +178,25 @@ tests:
         producers:
             - command producer:
                 command: ./send-to-peppol.sh -f /etc/resources/inbound-test/inbound_valid_test_ehf.xml -u http://inbound:8080/peppol-ap-inbound/as2
+                preprocessing cleanup dir: /peppol/data/tmp/
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-integration-test
                 timeout: 1500
                 consumers: 12
+            - directory subscriber:
+                consumers: 15
+                source directory: /peppol/data/tmp/
         consumers:
             - queue msg count check:
                 id: 12
                 expected value: 1
                 name: inbound Mq check
+            - inbound message check:
+                id: 15
+                expected value: 1
+                name: inbound message check
+                timeout: 16000
    internal-routing:
         producers:
             - mq producer:

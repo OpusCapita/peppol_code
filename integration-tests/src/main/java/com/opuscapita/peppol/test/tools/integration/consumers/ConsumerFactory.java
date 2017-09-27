@@ -17,42 +17,41 @@ public class ConsumerFactory {
         Map<String ,Object> properties = (Map<String, Object>) consumerConfig.getValue();
         String id = String.valueOf(properties.get("id"));
         Integer timeout = (Integer)properties.get("timeout");
+        String testName = (String) properties.get("name");
         switch (name){
             case "queue msg count check":
-                return new MqConsumer(id, (String) properties.get("name"), (List<String>)properties.get("subscribers"),properties.get("expected value"));
+                return new MqConsumer(id, testName, (List<String>)properties.get("subscribers"),properties.get("expected value"));
             case "db check":
             case "db test":
-                String consumerName = (String) properties.get("name");
-                return new DbConsumer(id, consumerName, properties.get("expected value"));
+                return new DbConsumer(id, testName, properties.get("expected value"));
             case "file download test":
                 return new FileDownloadConsumer(id, properties.get("name"), properties.get("action"), properties.get("link"), properties.get("expected value"));
             case "snc test":
             case "snc check":
-                String sncTestName = (String) properties.get("name");
                 String expected = (String) properties.get("expected value");
-                return new SncConsumer(id, sncTestName, expected, timeout);
+                return new SncConsumer(id, testName, expected, timeout);
             case "file test":
             case "file check":
-                String fileTestName = (String) properties.get("name");
                 String expectedValue = (String) properties.get("expected value");
-                return new FileConsumer(id, fileTestName, expectedValue, timeout);
+                return new FileConsumer(id, testName, expectedValue, timeout);
             case "mlr test":
             case "mlr check":
-                String mlrFileTestName = (String) properties.get("name");
                 String mlrExpectedValue = (String) properties.get("expected value");
-                return new MlrConsumer(id, mlrFileTestName, mlrExpectedValue, timeout);
+                return new MlrConsumer(id, testName, mlrExpectedValue, timeout);
             case "wwd test":
-                String wwdFileTestName = (String) properties.get("name");
                 String wwdExpectedValue = (String) properties.get("expected value");
-                return new WebWatchDogConsumer(id, wwdFileTestName, wwdExpectedValue, timeout);
+                return new WebWatchDogConsumer(id, testName, wwdExpectedValue, timeout);
             case "web ui check":
             case "web ui test":
-                return new WebUiConsumer(id, (String) properties.get("name"), properties.get("expected value"));
+                return new WebUiConsumer(id, testName, properties.get("expected value"));
             case "rest test":
             case "rest check":
-                return new RestConsumer(id, (String)properties.get("name"), properties.get("expected value"));
+                return new RestConsumer(id, testName, properties.get("expected value"));
+            case "inbound message check":
+            case "inbound message test":
+                return new InboundMessageConsumer(id, testName,String.valueOf(properties.get("expected value")), timeout);
             default:
-                throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + name);
+                throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + testName);
         }
     }
 }
