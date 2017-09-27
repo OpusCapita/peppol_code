@@ -5,30 +5,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Sergejs.Roze
  */
-public class MessageLevelResponseTemplates {
-    private static final String SUCCESS_RESPONSE_TEMPLATE =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
-            "<ApplicationResponse xmlns:cbc=\"urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2\" xmlns:cec=\"urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2\" xmlns:cac=\"urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2\" xmlns=\"urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2\">" +
-                    "<cbc:ID>${id}</cbc:ID>" +
-                    "<cbc:IssueDate>${issue_date}</cbc:IssueDate>" +
-                    "#ISSUE_TIME#" +
-                    "<cbc:ResponseDate>${response_date}</cbc:ResponseDate>" +
-                    "<cbc:ResponseTime>${response_time}</cbc:ResponseTime>" +
-                    "<cbc:Note>${note}</cbc:Note>" +
-                    "<cac:SenderParty>" +
-                        "<cbc:EndpointID>${sender_id}</cbc:EndpointID>" +
-                        "<cac:PartyName><cbc:Name>${sender_name}</cbc:Name></cac:PartyName>" +
-                    "</cac:SenderParty>" +
-                    "<cac:ReceiverParty>" +
-                        "<cbc:EndpointID>${recipient_id}</cbc:EndpointID>" +
-                        "<cac:PartyName><cbc:Name>${recipient_name}</cbc:Name></cac:PartyName>" +
-                    "</cac:ReceiverParty>" +
-                    "<cac:DocumentResponse>" +
-                        "<cac:Response><cbc:ResponseCode>AP</cbc:ResponseCode></cac:Response>" +
-                        "<cac:DocumentReference><cbc:ID>${doc_reference}</cbc:ID></cac:DocumentReference>" +
-                    "</cac:DocumentResponse>" +
-            "</ApplicationResponse>";
-
+class MessageLevelResponseTemplates {
     private static final String RESPONSE_TEMPLATE =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
             "<ApplicationResponse xmlns:cbc=\"urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2\" xmlns:cec=\"urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2\" xmlns:cac=\"urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2\" xmlns=\"urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2\">" +

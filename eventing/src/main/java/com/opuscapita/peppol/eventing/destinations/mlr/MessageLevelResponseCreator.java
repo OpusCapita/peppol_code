@@ -196,7 +196,8 @@ public class MessageLevelResponseCreator {
         if (value == null) {
             value = "";
         }
-        value = StringEscapeUtils.escapeXml11(value);
+        value = StringEscapeUtils.escapeXml10(value);
+        value = StringUtils.replace(value, "&apos;", "'"); // requested by Sweden
         return StringUtils.replace(original, "${" + key + "}", value);
     }
 
