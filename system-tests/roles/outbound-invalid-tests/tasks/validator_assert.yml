@@ -1,16 +1,23 @@
 ---
-- name: Show validator log, search for fileName "{{ fileName }}"
+- name: Show validator log
   shell: docker logs validator
   register: log
 
-- name: fileName "{{ fileName }}" is found in validator log 
+- name: Check if uuid "{{ uuid }}" is found in validator log 
   ignore_errors: yes
   assert:
     that:
-      - "fileName in log.stdout"
+      - "uuid in log.stdout"
     msg: "Failed"
   register: result
 
 - set_fact: validator_result="validator={{result.msg}}"
 - debug: var=validator_result
+
+#check for failures as well and adjust report accordingly->
+- name: Check if validation failed for uuid "{{ uuid }}"
+  set_fact: validator_result="validator=Failed"
+  when:
+    - log.stdout | search(".*Validation failed for.*"+uuid)
+
 ...

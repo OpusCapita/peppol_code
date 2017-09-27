@@ -1,13 +1,13 @@
 ---
-- name: Show log, search for fileName "{{ fileName }}"
+- name: Show log, search for uuid "{{ uuid }}"
   shell: docker logs internal-routing
   register: log
 
-- name: fileName "{{ fileName }}" is found in internal-routing log 
+- name: uuid "{{ uuid }}" is found in internal-routing log 
   ignore_errors: yes
   assert:
     that:
-      - "fileName in log.stdout"
+      - "uuid in log.stdout"
     msg: "Failed"
   register: result
 

@@ -145,15 +145,15 @@ public class MessageLevelResponseCreator {
         }
 
         StringBuilder result = new StringBuilder();
-        if (cm.getProcessingInfo().getProcessingException() != null) {
-            String template = templates.getLineTemplate();
-            template = replace(template, "doc_reference", di.getDocumentId());
-            template = replace(template, "xpath", "NA");
-            template = replace(template, "reference_id", cm.getProcessingInfo().getCurrentEndpoint().getName());
-            template = replace(template, "description", cm.getProcessingInfo().getProcessingException());
-            template = replace(template, "status_code", "SV");
-            result.append(template);
-        }
+//        if (cm.getProcessingInfo().getProcessingException() != null) {
+//            String template = templates.getLineTemplate();
+//            template = replace(template, "doc_reference", di.getDocumentId());
+//            template = replace(template, "xpath", "NA");
+//            template = replace(template, "reference_id", cm.getProcessingInfo().getCurrentEndpoint().getName());
+//            template = replace(template, "description", cm.getProcessingInfo().getProcessingException());
+//            template = replace(template, "status_code", "SV");
+//            result.append(template);
+//        }
 
         for (DocumentError error : di.getErrors()) {
             String template = templates.getLineTemplate();
@@ -196,7 +196,8 @@ public class MessageLevelResponseCreator {
         if (value == null) {
             value = "";
         }
-        value = StringEscapeUtils.escapeXml11(value);
+        value = StringEscapeUtils.escapeXml10(value);
+        value = StringUtils.replace(value, "&apos;", "'"); // requested by Sweden
         return StringUtils.replace(original, "${" + key + "}", value);
     }
 
