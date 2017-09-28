@@ -57,7 +57,7 @@ public class ContainerMessageCreator {
     }
 
     public ProcessType getProcessType() {
-        String type = properties.get("process type");
+        String type = properties.get("endpoint type");
         if (type == null || type.isEmpty()) {
             return ProcessType.TEST;  //default
         }

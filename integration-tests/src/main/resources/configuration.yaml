@@ -248,7 +248,7 @@ tests:
                 container message:
                   source endpoint: integration-test-a2a
                   endpoint: integration-test-endpoint
-                  process type: outbound
+                  endpoint type: outbound
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-error
