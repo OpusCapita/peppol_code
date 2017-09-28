@@ -113,8 +113,6 @@ public class MessageLevelResponseCreator {
                     }
                 }
                 template = StringUtils.replace(template, "#ISSUE_TIME#", issue_time);
-            } else {
-                template = StringUtils.replace(template, "#ISSUE_TIME#", "");
             }
         } catch (Exception e) {
             logger.info("Failed to parse issue date: '" + di.getIssueDate() + "', using current date instead");
@@ -123,6 +121,9 @@ public class MessageLevelResponseCreator {
                 cm.addError("Unable to parse issue date: '" + di.getIssueDate() + "'");
             }
         }
+        // if not replaced - remove placeholders
+        template = StringUtils.replace(template, "#ISSUE_DATE#", "");
+        template = StringUtils.replace(template, "#ISSUE_TIME#", "");
 
         template = replace(template, "response_date", MessageLevelResponseUtils.convertDateToXml(now));
         template = replace(template, "response_time", MessageLevelResponseUtils.convertTimeToXml(now));
@@ -198,6 +199,7 @@ public class MessageLevelResponseCreator {
         }
         value = StringEscapeUtils.escapeXml10(value);
         value = StringUtils.replace(value, "&apos;", "'"); // requested by Sweden
+        value = StringUtils.replace(value, "&quot;", "\"");
         return StringUtils.replace(original, "${" + key + "}", value);
     }
 
