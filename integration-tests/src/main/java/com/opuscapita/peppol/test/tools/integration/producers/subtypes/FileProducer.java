@@ -1,13 +1,14 @@
 package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+
 /**
  * Created by gamanse1 on 2016.11.14..
  */
@@ -16,6 +17,7 @@ public class FileProducer implements Producer {
     private String sourceFolder;
     private String destinationFolder;
     private File destination;
+    private File source;
 
     public FileProducer(Object sourceFolder, Object destinationFolder) {
         this.sourceFolder = (String) sourceFolder;
@@ -25,7 +27,7 @@ public class FileProducer implements Producer {
     @Override
     public void run() {
         try {
-            File source = new File(this.sourceFolder);
+            source = new File(this.sourceFolder);
             destination = new File(this.destinationFolder);
             if (!source.exists()) {
                 logger.warn("File producer: " + this.sourceFolder + " doesn't exist, exiting!");
@@ -36,15 +38,14 @@ public class FileProducer implements Producer {
                 logger.warn("File producer: " + this.destinationFolder + " doesn't exist, creating");
                 Files.createDirectories(destination.toPath());
             }
-            if(source.isDirectory()) {
+            if (source.isDirectory()) {
                 File[] files = source.listFiles();
                 for (File file : files) {
                     if (file.isFile()) {
                         processFile(file);
                     }
                 }
-            }
-            else{
+            } else {
                 processFile(source);
             }
         } catch (Exception ex) {
@@ -52,20 +53,19 @@ public class FileProducer implements Producer {
         }
     }
 
-    private void processFile(File file) { //testing hack for snc stub
+    private void processFile(File file) throws IOException { //testing hack for snc stub
         File destinationFile;
         //check if destination is already specified as file or just directory
-        if(destination.isDirectory())
+        if (destination.isDirectory()) {
             destinationFile = new File(destinationFolder + "/" + file.getName());
-        else
-            destinationFile = destination;
-        if(destinationFile.getName().contains("file_not_stored.xml"))
-            return;
-        logger.info("FileProducer: moving " + file.getAbsolutePath()  + " -> " + destinationFile);
-        try (FileOutputStream fos = new FileOutputStream(destinationFile)) {
-            fos.write(Files.readAllBytes(file.toPath()));
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
+        else {
+            destinationFile = destination;
+        }
+        if (destinationFile.getName().contains("file_not_stored")) {
+            return;
+        }
+        logger.info("FileProducer: moving " + file.getAbsolutePath() + " -> " + destinationFile);
+        FileUtils.copyFile(file, destinationFile);
     }
 }
