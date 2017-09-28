@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.test.tools.integration.util;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
@@ -10,6 +11,8 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import static com.opuscapita.peppol.commons.container.document.Archetype.INVALID;
 
 public class ContainerMessageCreator {
     private Map<String, String> properties;
@@ -21,35 +24,33 @@ public class ContainerMessageCreator {
     }
 
     public ContainerMessage createContainerMessage(File file) throws Exception {
-        return file.getName().contains("invalid") ? createInvalidContainerMessage(file) : createValidContainerMessage(file);
-    }
-
-    private ContainerMessage createValidContainerMessage(File file) throws Exception {
         Endpoint source = new Endpoint(getSourceEndPoint(), ProcessType.TEST);
-        ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(), source)
-                .setDocumentInfo(documentLoader.load(file, getLoaderEndpoint()));
+        ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(), source);
+        //loading document info
+        cm.setDocumentInfo(documentLoader.load(file, getLoaderEndpoint()));
         //final endpoint current status
-        cm.setStatus(getCurrentEndpoint(), "delivered");
-        List<String> endpoints = Collections.singletonList(getRouteEndpoint()); //new queue for integration tests
-        cm.getProcessingInfo().setTransactionId("transactionId");
-        Route route = new Route();
-        route.setEndpoints(endpoints);
-        cm.getProcessingInfo().setRoute(route);
-        return cm;
-    }
-
-
-    private ContainerMessage createInvalidContainerMessage(File file) throws Exception {
-        Endpoint source = new Endpoint(getSourceEndPoint(), ProcessType.TEST);
-        ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(), source)
-                .setDocumentInfo(documentLoader.load(file, getLoaderEndpoint()));
+        if (!nullStatus()) //for SNC we need current status to be null to raise exception
+            cm.setStatus(getCurrentEndpoint(), "delivered");
+        //processing exception for
         if (properties.containsKey("processing exception")) {
             cm.getProcessingInfo().setProcessingException(properties.get("processing exception"));
         }
-        if (!nullStatus()) //for SNC we need current status to be null to raise exception
-            cm.setStatus(getCurrentEndpoint(), "delivered");
+
+        if(!file.getName().contains("invalid")) {
+            List<String> endpoints = Collections.singletonList(getRouteEndpoint()); //new queue for integration tests
+            cm.getProcessingInfo().setTransactionId("transactionId");
+            Route route = new Route();
+            route.setEndpoints(endpoints);
+            cm.getProcessingInfo().setRoute(route);
+        }
+
+        if(properties.containsKey("archetype")){
+            cm.getDocumentInfo().setArchetype(getArchetype());
+        }
+
         return cm;
     }
+
 
     private boolean nullStatus() {
         return properties.containsKey("null status");
@@ -87,4 +88,14 @@ public class ContainerMessageCreator {
     public Endpoint getLoaderEndpoint() {
         return new Endpoint("integration-tests", ProcessType.TEST);
     }
+
+    private Archetype getArchetype() {
+        String type = properties.get("archetype").toLowerCase();
+        switch (type){
+            case "invalid" :
+                return INVALID;
+            default : throw new IllegalArgumentException("unrecognized archetype: " + type);
+        }
+    }
+
 }

@@ -261,6 +261,7 @@ tests:
                   source endpoint: integration-test-a2a
                   endpoint: integration-test-endpoint
                   endpoint type: outbound
+                  archetype: invalid
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-error
@@ -269,5 +270,5 @@ tests:
         consumers:
             - queue msg count check:
                 id: 13
-                expected value: 0
+                expected value: 1
                 name: internal-routing error queue check
