@@ -205,7 +205,7 @@ tests:
             - inbound message check:
                 id: 15
                 expected value: 1
-                name: inbound message check
+                name: inbound stored files check
                 timeout: 16000
    internal-routing:
         producers:

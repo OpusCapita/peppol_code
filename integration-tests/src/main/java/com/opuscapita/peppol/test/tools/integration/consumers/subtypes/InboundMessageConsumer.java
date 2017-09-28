@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class InboundMessageConsumer extends FileConsumer {
     private final static Logger logger = LoggerFactory.getLogger(InboundMessageConsumer.class);
@@ -23,9 +24,8 @@ public class InboundMessageConsumer extends FileConsumer {
         if(!directory.isDirectory()) {
             return new TestResult(name, false, "not a directory " + directory.getAbsolutePath());
         }
-        return new TestResult(name, true, "Expected value: " + expectedValue + " real: " + directory.list().length);
-       /* if(directory.list().length != Integer.valueOf(expectedValue) {
-            return new TestResult(name, false, "Expected value: " + expectedValue + " real: " + directory.list().length);
-        }*/
+        int matchedDirsCount = (int) Arrays.stream(directory.list()).filter(x -> !x.startsWith("9")).count();
+        boolean result =  matchedDirsCount == Integer.valueOf(expectedValue);
+        return new TestResult(name, result, "Expected value: " + expectedValue + " real: " + matchedDirsCount);
     }
 }

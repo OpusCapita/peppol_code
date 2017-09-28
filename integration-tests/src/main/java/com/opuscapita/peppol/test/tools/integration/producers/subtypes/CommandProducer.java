@@ -23,6 +23,7 @@ public class CommandProducer implements Producer {
     @Override
     public void run() {
         logger.info("CommandProducer: starting, command to execute:" + command);
+        logger.info("CommandProducer: cleaning directory" + dir);
         try {
             FileUtils.cleanDirectory(new File(dir));
         } catch (IOException e) {
@@ -33,7 +34,7 @@ public class CommandProducer implements Producer {
             p = Runtime.getRuntime().exec(command);
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String s;
-            while((s = stdInput.readLine()) != null){
+            while ((s = stdInput.readLine()) != null) {
                 /*if(!s.contains("[org.apache.http.wire] http-outgoing-0")) {
                     logger.info("Script says: " + s);
                 }*/
