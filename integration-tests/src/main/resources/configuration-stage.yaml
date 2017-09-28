@@ -17,9 +17,10 @@ tests:
                 mq connection: mq1
                 destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/events-persistence_valid.xml
-                endpoint: events-persistence-integration-test
                 db connection: db1
                 DB preprocess querry: delete from messages where invoice_number='20828'
+                container message:
+                  endpoint: events-persistence-integration-test
         subscribers:
             - db subscriber:
                 db connection: db1
@@ -36,42 +37,48 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source: integration-test-a2a
                 source directory: /etc/resources/events-persistence-test/eventing_valid.xml
                 db connection: db1
-                endpoint: integration-test-endpoint
-                endpoint type: outbound
                 DB preprocess querry: delete from messages where invoice_number='20830'
+                container message:
+                  source: integration-test-a2a
+                  endpoint: integration-test-endpoint
+                  endpoint type: outbound
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/eventing_rejected.xml
                 db connection: db1
-                endpoint: integration-test-endpoint
-                endpoint type: outbound
                 DB preprocess querry: delete from messages where invoice_number='61016660'
+                container message:
+                  source: integration-test-xib
+                  endpoint: integration-test-endpoint
+                  endpoint type: outbound
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                endpoint type: outbound
-                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/eventing_invalid.xml
-                endpoint: integration-test-endpoint
+                container message:
+                  source: integration-test-xib
+                  endpoint type: outbound
+                  endpoint: integration-test-endpoint
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                endpoint type: outbound
-                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/eventing_invalid-snc-test.xml
-                endpoint: integration-test-endpoint
+                container message:
+                  source: integration-test-xib
+                  endpoint type: outbound
+                  endpoint: integration-test-endpoint
+                  null status: true
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/logger_eventing_xib_test.xml
-                endpoint type: outbound
-                endpoint: integration-test-endpoint
+                container message:
+                  source: integration-test-xib
+                  endpoint type: outbound
+                  endpoint: integration-test-endpoint
         subscribers:
             - snc subscriber:
                 source directory: /peppol/data/snc-stub
@@ -137,7 +144,8 @@ tests:
                 mq connection: mq1
                 source directory: /peppol/data/storage/integration-test
                 destination queue: validator
-                endpoint: validation-integration-test
+                container message:
+                  endpoint: validation-integration-test
             - web ui producer:
                 source directory: /etc/resources/validation-xml-test
                 destination link: http://validator:8080/validator/
@@ -202,10 +210,11 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: internal-routing
-                source: peppol-integration
                 source directory: /etc/resources/internal-routing/internal-routing_valid_bis.xml
-                endpoint: integration-test-endpoint
-                endpoint type: inbound
+                container message:
+                  source: peppol-integration
+                  endpoint: integration-test-endpoint
+                  endpoint type: inbound
         subscribers:
             - mq subscriber:
                 source queue: transport-to-xib
@@ -225,9 +234,10 @@ tests:
                 mq connection: mq1
                 destination queue: outbound
                 source directory: /peppol/data/storage/outbound-integration-test-valid.xml
-                endpoint: events-persistence-integration-test
                 db connection: db1
                 DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+                container message:
+                  endpoint: events-persistence-integration-test
         subscribers:
             - db subscriber:
                 db connection: db1
@@ -239,3 +249,23 @@ tests:
                 id: 14
                 name: Outbound transmission id persisted into DB positive test
                 expected value: 1
+   preprocessing:
+        producers:
+            - mq producer:
+                mq connection: mq1
+                destination queue: preprocessing
+                source directory: /etc/resources/preprocessing/preprocessing_invalid.xml
+                container message:
+                  source endpoint: integration-test-a2a
+                  endpoint: integration-test-endpoint
+                  endpoint type: outbound
+        subscribers:
+            - mq subscriber:
+                source queue: preprocessing-error
+                timeout: 1500
+                consumers: 13
+        consumers:
+            - queue msg count check:
+                id: 13
+                expected value: 0
+                name: internal-routing error queue check
