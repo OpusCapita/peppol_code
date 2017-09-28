@@ -266,9 +266,9 @@ tests:
             - mq subscriber:
                 source queue: preprocessing-error
                 timeout: 1500
-                consumers: 13
+                consumers: 16
         consumers:
             - queue msg count check:
-                id: 13
+                id: 16
                 expected value: 1
-                name: internal-routing error queue check
+                name: preprocessing error queue check
