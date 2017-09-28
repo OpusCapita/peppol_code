@@ -62,6 +62,7 @@ tests:
                   source: integration-test-xib
                   endpoint type: outbound
                   endpoint: integration-test-endpoint
+                  processing exception: This sending expected to fail I/O in test mode
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
@@ -111,7 +112,8 @@ tests:
             - mlr test:
                 name: IO exception in mlr test
                 id: 9
-                expected value: eventing_invalid-er-mlr.xml
+                expected value: '<cbc:Description>OTHER_ERROR: This sending expected to fail I/O in test mode</cbc:Description>'
+                expected file: eventing_invalid-er-mlr.xml
                 timeout: 16000
             - snc test:
                 name: SNC ticket creation test

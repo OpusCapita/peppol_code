@@ -43,7 +43,9 @@ public class ContainerMessageCreator {
         Endpoint source = new Endpoint(getSourceEndPoint(), ProcessType.TEST);
         ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(), source)
                 .setDocumentInfo(documentLoader.load(file, getLoaderEndpoint()));
-        cm.getProcessingInfo().setProcessingException("This sending expected to fail I/O in test mode");
+        if (properties.containsKey("processing exception")) {
+            cm.getProcessingInfo().setProcessingException(properties.get("processing exception"));
+        }
         if (!nullStatus()) //for SNC we need current status to be null to raise exception
             cm.setStatus(getCurrentEndpoint(), "delivered");
         return cm;
