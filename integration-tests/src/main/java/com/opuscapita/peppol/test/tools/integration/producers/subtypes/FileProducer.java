@@ -66,6 +66,9 @@ public class FileProducer implements Producer {
             return;
         }
         logger.info("FileProducer: moving " + file.getAbsolutePath() + " -> " + destinationFile);
+        destinationFile.setExecutable(true, false);
+        destinationFile.setReadable(true, false);
+        destinationFile.setWritable(true, false);
         FileUtils.copyFile(file, destinationFile);
     }
 }
