@@ -34,6 +34,17 @@ tests:
                 expected value: 1
    eventing:
         producers:
+            - file producer:
+                source directory: /etc/resources/events-persistence-test/eventing-valid-mlr-backup.xml
+                destination directory: /peppol/data/storage/eventing-valid-mlr-backup.xml
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source directory: /peppol/data/storage/eventing-valid-mlr-backup.xml
+                db connection: db1
+                DB preprocess querry: delete from messages where invoice_number='12345678'
+                container message:
+                  endpoint: integration-test-endpoint
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing

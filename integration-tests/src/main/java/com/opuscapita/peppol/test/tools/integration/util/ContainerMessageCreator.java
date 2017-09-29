@@ -6,6 +6,8 @@ import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.process.route.Route;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collections;
@@ -15,6 +17,8 @@ import java.util.Map;
 import static com.opuscapita.peppol.commons.container.document.Archetype.INVALID;
 
 public class ContainerMessageCreator {
+    private final static Logger logger = LoggerFactory.getLogger(ContainerMessageCreator.class);
+
     private Map<String, String> properties;
     private DocumentLoader documentLoader;
 
@@ -46,6 +50,7 @@ public class ContainerMessageCreator {
 
         if(properties.containsKey("archetype")){
             cm.getDocumentInfo().setArchetype(getArchetype());
+            logger.info("ContainerMessageCreator: archetype set to: " + cm.getDocumentInfo().getArchetype());
         }
 
         return cm;
