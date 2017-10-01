@@ -3,8 +3,8 @@ package com.opuscapita.peppol.validator.validations.difi;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.commons.validation.ValidationError;
-import no.difi.vefa.validator.DifiValidatorBuilder;
 import no.difi.vefa.validator.Validator;
+import no.difi.vefa.validator.ValidatorBuilder;
 import no.difi.vefa.validator.api.Validation;
 import no.difi.vefa.validator.api.ValidatorException;
 import no.difi.vefa.validator.source.SimpleDirectorySource;
@@ -28,14 +28,15 @@ import java.util.function.Consumer;
  */
 public class DifiValidator implements BasicValidator {
     private final static Logger logger = LoggerFactory.getLogger(DifiValidator.class);
-    private final Validator validator;
+    private final ThreadLocal<Validator> validator = new ThreadLocal<>();
+    private final Path pathToArtifacts;
 
     public DifiValidator(@NotNull DifiValidatorConfig difiValidatorConfig)
             throws ValidatorException {
-        Path pathToArtifacts = Paths.get(difiValidatorConfig.getDifiValidationArtifactsPath());
+        pathToArtifacts = Paths.get(difiValidatorConfig.getDifiValidationArtifactsPath());
         logger.info("Path to artifacts: " + pathToArtifacts.toString());
 
-        validator = DifiValidatorBuilder.getValidatorInstance(new SimpleDirectorySource(pathToArtifacts));
+        //DifiValidatorBuilder.getValidatorInstance(new SimpleDirectorySource(pathToArtifacts));
 
         // validator.getPackages().forEach(pack -> System.out.println(pack.getUrl()+"-->"+pack.getValue()));
     }
@@ -43,9 +44,24 @@ public class DifiValidator implements BasicValidator {
     @NotNull
     @Override
     public ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull byte[] data) {
-        Validation validation = validator.validate(new ByteArrayInputStream(data));
-        parseErrors(validation.getReport(), cm);
+        try {
+            Validation validation = getValidator().validate(new ByteArrayInputStream(data));
+            getValidator().close();
+            this.validator.remove();
+            parseErrors(validation.getReport(), cm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            cm.addError("Failed to get validator: " + e.getMessage());
+        }
+
         return cm;
+    }
+
+    synchronized protected Validator getValidator() throws ValidatorException {
+        if(this.validator.get() == null) {
+            this.validator.set(ValidatorBuilder.newValidator().setSource(new SimpleDirectorySource(pathToArtifacts)).build());
+        }
+        return this.validator.get();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -78,6 +94,5 @@ public class DifiValidator implements BasicValidator {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        validator.close();
     }
 }

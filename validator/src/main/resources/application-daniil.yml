@@ -7,7 +7,7 @@ spring:
 
 # rabbitmq
   rabbitmq:
-    host: 192.168.1.104
+    host: 192.168.1.220
     port: 5672
     username: woot
     password: woot
@@ -53,20 +53,21 @@ peppol:
 
 # validation artifacts
     artifacts:
-      at.path: /opt/projects/peppol2.0/validator/src/test/resources/austrian_artifacts
-      difi.path: /opt/projects/peppol2.0/validator/src/test/resources/difi_artifacts
-      si.path: /opt/projects/peppol2.0/validator/src/test/resources/simpler_invoicing_artifacts
+      at.path: "C:/Users/Daniil Kalnin/IdeaProjects/peppol2.0/validator/src/test/resources/austrian_artifacts"
+      difi.path: "C:/Users/Daniil Kalnin/IdeaProjects/peppol2.0/validator/src/test/resources/difi_artifacts"
+      si.path: "C:/Users/Daniil Kalnin/IdeaProjects/peppol2.0/validator/src/test/resources/simpler_invoicing_artifacts"
   validator:
-    sbdh.xsd: /opt/projects/peppol2.0/validator/src/test/resources/sbdh_artifacts/StandardBusinessDocumentHeader.xsd
+    sbdh.xsd: "C:/Users/Daniil Kalnin/IdeaProjects/peppol2.0/validator/src/test/resources/sbdh_artifacts/StandardBusinessDocumentHeader.xsd"
 
 # svefaktura1 artifacts
     svefaktura1:
       schematron:
         enabled: true
-        path: /opt/projects/peppol2.0/validator/src/test/resources/svefaktura1_artifacts/rules_svefaktura_2016-08-16.xsl
-      xsd.path: /opt/projects/peppol2.0/validator/src/test/resources/svefaktura1_artifacts/maindoc/SFTI-BasicInvoice-1.0.xsd
+        path: "C:/Users/Daniil Kalnin/IdeaProjects/peppol2.0/validator/src/test/resources/svefaktura1_artifacts/rules_svefaktura_2016-08-16.xsl"
+      xsd.path: "C:/Users/Daniil Kalnin/IdeaProjects/peppol2.0/validator/src/test/resources/svefaktura1_artifacts/maindoc/SFTI-BasicInvoice-1.0.xsd"
 
   common:
+    consistency_check_enabled: true
     document_templates:
       templates:
         - name: SVEFAKTURA1.Invoice

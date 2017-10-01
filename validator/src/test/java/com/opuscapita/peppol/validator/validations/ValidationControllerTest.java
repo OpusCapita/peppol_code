@@ -42,8 +42,8 @@ public class ValidationControllerTest extends TestCommon {
     @SuppressWarnings("ConstantConditions")
     private void testDocumentProfileValidation(final String documentProfile) {
         Consumer<? super File> consumer = (File file) -> {
-            if (file.getAbsolutePath().contains("Valids-D.56980-BEL2449A5F29E6311E7A4D3371AB1B8DE82.xml")) {
-                return;
+            if (!file.getAbsolutePath().contains("Valids-D.56980-BEL2449A5F29E6311E7A4D3371AB1B8DE82.xml")) {
+                //return;
             }
             try {
                 ContainerMessage containerMessage = ContainerMessageTestLoader.createContainerMessageFromFile(documentLoader, file);
