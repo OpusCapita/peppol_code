@@ -45,8 +45,9 @@ public class DifiValidator implements BasicValidator {
     @Override
     public ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull byte[] data) {
         try {
-            Validation validation = getValidator().validate(new ByteArrayInputStream(data));
-            getValidator().close();
+            Validator localValidator = getValidator();
+            Validation validation = localValidator.validate(new ByteArrayInputStream(data));
+            localValidator.close();
             this.validator.remove();
             parseErrors(validation.getReport(), cm);
         } catch (Exception e) {
