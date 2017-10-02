@@ -2,26 +2,23 @@ package com.opuscapita.peppol.test.tools.integration.producers.subtypes;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
-import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.mq.ConnectionString;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.test.tools.integration.producers.Producer;
+import com.opuscapita.peppol.test.tools.integration.util.ContainerMessageCreator;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.io.File;
-import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -33,15 +30,13 @@ import java.util.Properties;
 @Scope("prototype")
 public class MqProducer implements Producer {
     private final static Logger logger = LoggerFactory.getLogger(MqProducer.class);
-    private String endpoint;
+    private Map<String, String> containerMessageProperties;
     private MessageQueue mq;
     private String dbConnection = null;
     private String dbPreprocessQuery = null;
     private Map<String, String> mqSettings;
-    private String sourceDirectory;
     private String destinationQueue;
-    private ProcessType processType = ProcessType.TEST;  //default
-    private String sourceEndpoint = "integration-tests"; //default
+    private String sourceDirectory;
 
     @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
@@ -50,11 +45,11 @@ public class MqProducer implements Producer {
     public MqProducer() {
     }
 
-    public MqProducer(Map<String, String> mqSettings, String sourceDirectory, String destinationQueue, String endpoint, String dbConnection, String dbPreprocessQuery, MessageQueue mq) {
+    public MqProducer(Map<String, String> mqSettings, String destinationQueue, String sourceDirectory, @NotNull Map<String, String> containerMessageProperties, MessageQueue mq, String dbConnection, String dbPreprocessQuery) {
         this.mqSettings = mqSettings;
-        this.sourceDirectory = sourceDirectory;
         this.destinationQueue = destinationQueue;
-        this.endpoint = endpoint;
+        this.sourceDirectory = sourceDirectory;
+        this.containerMessageProperties = containerMessageProperties;
         this.dbConnection = dbConnection;
         this.dbPreprocessQuery = dbPreprocessQuery;
         this.mq = mq;
@@ -71,6 +66,7 @@ public class MqProducer implements Producer {
         Connection connection = null;
         Channel channel = null;
         File folder;
+
         try {
             folder = new File(sourceDirectory);
         } catch (Exception ex) {
@@ -78,6 +74,7 @@ public class MqProducer implements Producer {
             return;
         }
 
+        /* should be moved to separate preprocessor*/
         try {
             if (dbPreprocessNeeded())
                 executeDbPreprocess();
@@ -110,8 +107,9 @@ public class MqProducer implements Producer {
     }
 
     private void processSingleFile(File file) throws Exception {
-        ContainerMessage cm = createContainerMessageFromFile(file);
-        logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue + " -> " + endpoint);
+        ContainerMessageCreator cmc = new ContainerMessageCreator(documentLoader, containerMessageProperties);
+        ContainerMessage cm = cmc.createContainerMessage(file);
+        logger.info("MqProducer: Sending message via MessageQueue to " + destinationQueue);
         mq.convertAndSend(destinationQueue + ConnectionString.QUEUE_SEPARATOR + "", cm);
         logger.info("MqProducer: published to MQ: " + cm.getFileName());
     }
@@ -135,55 +133,4 @@ public class MqProducer implements Producer {
         return (dbConnection != null && !dbConnection.isEmpty() && dbPreprocessQuery != null && !dbPreprocessQuery.isEmpty());
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private ContainerMessage createContainerMessageFromFile(File file) throws Exception {
-        if(file.getName().contains("invalid"))
-            return createInvalidContainerMessage(file);
-        return createValidContainerMessage(file);
-    }
-
-    private ContainerMessage createValidContainerMessage(File file) throws Exception {
-        Endpoint source = new Endpoint(sourceEndpoint, ProcessType.TEST);
-        ContainerMessage cm =  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
-                .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
-        //final endpoint current status
-        cm.setStatus(new Endpoint("integration-tests", processType), "delivered");
-        List<String> endpoints = Collections.singletonList(endpoint); //new queue for integration tests
-        cm.getProcessingInfo().setTransactionId("transactionId");
-        Route route = new Route();
-        route.setEndpoints(endpoints);
-        cm.getProcessingInfo().setRoute(route);
-        return cm;
-    }
-
-    private ContainerMessage createInvalidContainerMessage(File file) throws Exception {
-        Endpoint source = new Endpoint(sourceEndpoint, ProcessType.TEST);
-        ContainerMessage cm =  new ContainerMessage("integration-tests", file.getAbsolutePath(),source)
-                .setDocumentInfo(documentLoader.load(file, new Endpoint("integration-tests", ProcessType.TEST)));
-        Exception ex = new IOException("This sending expected to fail I/O in test mode");
-        cm.getProcessingInfo().setProcessingException(ex.getMessage());
-        if(!file.getName().contains("snc")) //for SNC we need current status to be null to raise exception
-            cm.setStatus(new Endpoint("integration-tests", processType), "delivered");
-        return cm;
-    }
-
-    public void setProcessType(String type){
-        switch (type){
-            case "outbound":
-                processType = ProcessType.OUT_OUTBOUND;
-                return;
-            case "test":
-                processType = ProcessType.TEST;
-                return;
-            case "inbound":
-                processType = ProcessType.IN_INBOUND;
-                return;
-            default:
-                throw new IllegalArgumentException("process type not recognized!");
-        }
-    }
-
-    public void setSourceEndpoint(String sourceEndpoint) {
-        this.sourceEndpoint = sourceEndpoint;
-    }
 }

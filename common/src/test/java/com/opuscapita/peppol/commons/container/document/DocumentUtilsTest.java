@@ -16,7 +16,7 @@ public class DocumentUtilsTest {
 
     @Test
     public void testValidDocument() throws Exception {
-        try (InputStream inputStream = DocumentUtilsTest.class.getResourceAsStream("/valid/ehf_2.0_bii4_no.xml")) {
+        try (InputStream inputStream = DocumentUtilsTest.class.getResourceAsStream("/valid/532c79be-8738-4b35-8257-b9efacb1e7fe.xml")) {
             Document document = DocumentUtils.getDocument(IOUtils.toByteArray(inputStream));
             assertNotNull(document);
 
@@ -24,9 +24,9 @@ public class DocumentUtilsTest {
             assertNotNull(root);
             assertEquals("Invoice", root.getLocalName());
 
-            Node id = DocumentUtils.searchForXPath(root, "PaymentMeans", "ID");
+            Node id = DocumentUtils.searchForXPath(root, "PaymentMeans", "PaymentID");
             assertNotNull(id);
-            assertEquals("2", id.getTextContent());
+            assertEquals("205852817", id.getTextContent());
 
             Node notFound = DocumentUtils.searchForXPath(id, "something");
             assertNull(notFound);
