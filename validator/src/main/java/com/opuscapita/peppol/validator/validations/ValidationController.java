@@ -78,7 +78,6 @@ public class ValidationController {
             dom = DocumentUtils.getDocument(cm);
             Document rootDocument = getRootDocument(cm, dom);
             data = DocumentContentUtils.getDocumentBytes(rootDocument);
-            System.out.println("About to validate: \n" + new String(data));
         } catch (Exception e) {
             throw new IllegalArgumentException("Validation failed during XML transformation", e);
         }
