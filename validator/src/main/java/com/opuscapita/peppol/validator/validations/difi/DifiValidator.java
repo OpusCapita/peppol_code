@@ -3,8 +3,8 @@ package com.opuscapita.peppol.validator.validations.difi;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.commons.validation.ValidationError;
+import no.difi.vefa.validator.DifiValidatorBuilder;
 import no.difi.vefa.validator.Validator;
-import no.difi.vefa.validator.ValidatorBuilder;
 import no.difi.vefa.validator.api.Validation;
 import no.difi.vefa.validator.api.ValidatorException;
 import no.difi.vefa.validator.source.SimpleDirectorySource;
@@ -59,7 +59,8 @@ public class DifiValidator implements BasicValidator {
 
     synchronized protected Validator getValidator() throws ValidatorException {
         if(this.validator.get() == null) {
-            this.validator.set(ValidatorBuilder.newValidator().setSource(new SimpleDirectorySource(pathToArtifacts)).build());
+            //this.validator.set(ValidatorBuilder.newValidator().setSource(new SimpleDirectorySource(pathToArtifacts)).build());
+            this.validator.set(DifiValidatorBuilder.getValidatorInstance(new SimpleDirectorySource(pathToArtifacts)));
         }
         return this.validator.get();
     }
