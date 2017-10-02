@@ -44,22 +44,21 @@ public class DifiValidator implements BasicValidator {
     @NotNull
     @Override
     public ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull byte[] data) {
-        try {
-            Validator localValidator = getValidator();
+        try (Validator localValidator = getValidator()) {
             Validation validation = localValidator.validate(new ByteArrayInputStream(data));
-            localValidator.close();
-            this.validator.remove();
             parseErrors(validation.getReport(), cm);
         } catch (Exception e) {
             e.printStackTrace();
             cm.addError("Failed to get validator: " + e.getMessage());
+        } finally {
+            this.validator.set(null);
         }
 
         return cm;
     }
 
     synchronized protected Validator getValidator() throws ValidatorException {
-        if(this.validator.get() == null) {
+        if (this.validator.get() == null) {
             //this.validator.set(ValidatorBuilder.newValidator().setSource(new SimpleDirectorySource(pathToArtifacts)).build());
             this.validator.set(DifiValidatorBuilder.getValidatorInstance(new SimpleDirectorySource(pathToArtifacts)));
         }
