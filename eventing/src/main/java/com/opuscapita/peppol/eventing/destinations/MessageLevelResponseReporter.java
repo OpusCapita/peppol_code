@@ -111,7 +111,7 @@ public class MessageLevelResponseReporter {
         }
     }
 
-
+    @SuppressWarnings("ConstantConditions")
     private void storeResponse(@NotNull String art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         boolean created = false;
         String originalSource = cm.getProcessingInfo().getOriginalSource();
@@ -145,6 +145,7 @@ public class MessageLevelResponseReporter {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private String fetchOriginalSourceFromDb(ContainerMessage cm) {
         Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
         if (customer == null) {
@@ -159,6 +160,7 @@ public class MessageLevelResponseReporter {
         return message.getOriginalSource();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private boolean isReprocess(ContainerMessage cm) {
         return cm.getProcessingInfo().getSource().getType() == ProcessType.IN_REPROCESS || cm.getProcessingInfo().getSource().getType() == ProcessType.OUT_REPROCESS;
     }
@@ -172,7 +174,7 @@ public class MessageLevelResponseReporter {
 
     @SuppressWarnings("ConstantConditions")
     private String storeBackup(@NotNull String art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
-        String fileName = cm.getFileName() + "-" + result + "-mlr.xml";
+        String fileName = FilenameUtils.getBaseName(cm.getFileName()) + "-" + result + "-mlr.xml";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(art.getBytes(StandardCharsets.UTF_8));
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document info cannot be null");
