@@ -60,8 +60,7 @@ public class DifiValidator implements BasicValidator {
                 return null;
             }).get(2, TimeUnit.MINUTES);
         } catch (Exception e) {
-            e.printStackTrace();
-            cm.addError("Validation timed out: " + e.getMessage());
+            throw new RuntimeException("Validation failed due to technical reasons", e);
         }
 
         return cm;
