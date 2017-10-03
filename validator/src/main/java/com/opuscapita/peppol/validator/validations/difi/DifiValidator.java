@@ -21,6 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -28,25 +30,42 @@ import java.util.function.Consumer;
  */
 public class DifiValidator implements BasicValidator {
     private final static Logger logger = LoggerFactory.getLogger(DifiValidator.class);
+    private static SimpleDirectorySource artifactsSource;
+    private final Path pathToArtifacts;
     private final Validator validator;
 
     public DifiValidator(@NotNull DifiValidatorConfig difiValidatorConfig)
             throws ValidatorException {
-        Path pathToArtifacts = Paths.get(difiValidatorConfig.getDifiValidationArtifactsPath());
+        pathToArtifacts = Paths.get(difiValidatorConfig.getDifiValidationArtifactsPath());
         logger.info("Path to artifacts: " + pathToArtifacts.toString());
+        synchronized (this) {
+            if (artifactsSource == null) {
+                artifactsSource = new SimpleDirectorySource(pathToArtifacts);
+            }
+            validator = DifiValidatorBuilder.getValidatorInstance(artifactsSource);
+        }
 
-        validator = DifiValidatorBuilder.getValidatorInstance(new SimpleDirectorySource(pathToArtifacts));
+        //DifiValidatorBuilder.getValidatorInstance(new SimpleDirectorySource(pathToArtifacts));
 
         // validator.getPackages().forEach(pack -> System.out.println(pack.getUrl()+"-->"+pack.getValue()));
     }
 
     @NotNull
     @Override
-    public ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull byte[] data) {
-        Validation validation = validator.validate(new ByteArrayInputStream(data));
-        parseErrors(validation.getReport(), cm);
+    synchronized public ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull byte[] data) {
+        try {
+            CompletableFuture.supplyAsync(() -> {
+                Validation validation = validator.validate(new ByteArrayInputStream(data));
+                parseErrors(validation.getReport(), cm);
+                return null;
+            }).get(2, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            throw new RuntimeException("Validation failed due to technical reasons", e);
+        }
+
         return cm;
     }
+
 
     @SuppressWarnings("ConstantConditions")
     private void parseErrors(Report report, ContainerMessage cm) {
@@ -73,11 +92,5 @@ public class DifiValidator implements BasicValidator {
                 }
             }
         }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        validator.close();
     }
 }

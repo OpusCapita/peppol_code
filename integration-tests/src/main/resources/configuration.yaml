@@ -1,152 +1,261 @@
-#local complete configuration
+#complete configuration for stage
 configurations:
     databases:
-        db1: jdbc:mysql://localhost:442/oxalis?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
+        db1: jdbc:mysql://mysql:3306/peppol?user=oxalis&password=grAm0f0n_1982-X_&allowMultiQueries=true
     queues:
         mq1:
-            host: localhost
+            host: rabbitmq
             port: 5672
             username: guest
             password: guest
             virtual host: /
-    validation result folder: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result
+    validation result folder: /etc/resources/validation-result
 tests:
-   validation:
-     producers:
-       web ui producer:
-         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination link: http://localhost:441/validator/
-         result directory: validation result folder
-       file producer:
-         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination directory: C:\Peppol\tmp\tmp\integration-test
-       mq producer:
-         mq connection: mq1
-         source directory: C:\Peppol\tmp\tmp\integration-test
-         destination queue: validator
-         endpoint: validation-integration-test
-       rest producer:
-         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-xml-test
-         destination link: http://localhost:441/validator/validate
-         result directory: validation result folder
-         rest method: post
-     subscribers:
-        - mq subscriber:
-            source queue: validation-integration-test
-            timeout: 1500
-            consumers: 1
-        - snc subscriber:
-            consumers: 2
-            timeout: 1500
-        - file subscriber:
-            source file:  C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result\restResult
-            consumers: 3
-        - file subscriber:
-            source file:  C:\Peppol\peppol2.0\integration-tests\src\main\resources\validation-result\webUiResult
-            consumers: 2
-     consumers:
-        - queue msg count check:
-            id: 1
-            expected value: 5
-        - web ui check:
-            id: 2
-            expected value: 5
-        - rest check:
-            id: 3
-            name: validation rest check
    events-persistence:
-     producers:
-       mq producer:
-         mq connection: mq1
-         destination queue: eventing
-         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\events-persistence-test
-         db connection: db1
-         endpoint: events-persistence-integration-test
-         DB preprocess querry: delete from messages where invoice_number='60445647'; delete from access_points where ap_id='123456' and ap_name='TEST'
-     subscribers:
-       - mq subscriber:
-          source queue: events-persistence-integration-test
-          timeout: 1500
-       - snc subscriber:
-          source directory: C:/var/lib/peppol2.0/events-persistence/error
-          consumers: 7 8
-          timeout: 1500
-       - snc subscriber:
-           source directory: C:/var/lib/peppol2.0/events-persistence/invalid
-           consumers: 9 10
-           timeout: 1500
-       - db subscriber:
-           db connection: db1
-           query: select count(*) from messages where invoice_number="60445647"
-           consumers: 4
-       - db subscriber:
-           db connection: db1
-           query: select count(*) from access_points where ap_id="123456" and ap_name="TEST"
-           consumers: 5
-     consumers:
-       - DB test:
-          id: 4
-          name: Message "status" can be seen in DB- positive test
-          connection string: db1
-          expected value: 1
-       - DB test:
-          id: 5
-          name: New access point -> new entry in DB- positive
-          connection string: db1
-          expected value: 1
-       - SNC test:
-          name: Invalid message error case- ticket is sent to SNC (snc stub)
-          id: 7
-          expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
-       - SNC test:
-          name: Not JSON file in input- Error case -> ticket to SNC
-          id: 8
-          expected value: nojson
-       - SNC test:
-          name: Invalid msg field lenghts and corrupted contents- negative test
-          id: 9
-          expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8.xml
-       - SNC test:
-          name: correlationID start with invoice file name for SNC tickets- positive test
-          id: 10
-          expected value: 7ecd16db-bfc1-4374-9be7-3ec00a56e9f8
+        producers:
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source directory: /etc/resources/events-persistence-test/events-persistence_valid.xml
+                endpoint: events-persistence-integration-test
+                db connection: db1
+                DB preprocess querry: delete from messages where invoice_number='20828'
+        subscribers:
+            - db subscriber:
+                db connection: db1
+                timeout: 5000
+                query: select count(*) from messages where invoice_number="20828"
+                consumers: 4
+        consumers:
+            - DB test:
+                id: 4
+                name: Message persisted into DB positive test
+                expected value: 1
+   eventing:
+        producers:
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source: integration-test-a2a
+                source directory: /etc/resources/events-persistence-test/eventing_valid.xml
+                db connection: db1
+                endpoint: integration-test-endpoint
+                endpoint type: outbound
+                DB preprocess querry: delete from messages where invoice_number='20830'
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source: integration-test-xib
+                source directory: /etc/resources/events-persistence-test/eventing_rejected.xml
+                db connection: db1
+                endpoint: integration-test-endpoint
+                endpoint type: outbound
+                DB preprocess querry: delete from messages where invoice_number='61016660'
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                endpoint type: outbound
+                source: integration-test-xib
+                source directory: /etc/resources/events-persistence-test/eventing_invalid.xml
+                endpoint: integration-test-endpoint
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                endpoint type: outbound
+                source: integration-test-xib
+                source directory: /etc/resources/events-persistence-test/eventing_invalid-snc-test.xml
+                endpoint: integration-test-endpoint
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
+                source: integration-test-xib
+                source directory: /etc/resources/events-persistence-test/logger_eventing_xib_test.xml
+                endpoint type: outbound
+                endpoint: integration-test-endpoint
+        subscribers:
+            - snc subscriber:
+                source directory: /peppol/data/snc-stub
+                consumers: 5
+            - directory subscriber:
+                consumers: 6
+                source directory: /peppol/data/eventing/a2a/mlr
+            - directory subscriber:
+                consumers: 7 9
+                source directory: /peppol/data/eventing/xib/mlr
+            - directory subscriber:
+                consumers: 8
+                source directory: /peppol/data/eventing/xib/wwd
+        consumers:
+            - file test:
+                name: MLR a2a accepted creation test
+                id: 6
+                expected value: eventing_valid-ap-mlr.xml
+                timeout: 16000
+            - file test:
+                name: MLR xib rejected creation test
+                id: 7
+                expected value: eventing_rejected-re-mlr.xml
+                timeout: 16000
+            - wwd test:
+                name: Web Watch Dog successful report test
+                id: 8
+                expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_eventing_xib_test
+                timeout: 16000
+            - mlr test:
+                name: IO exception in mlr test
+                id: 9
+                expected value: eventing_invalid-er-mlr.xml
+                timeout: 16000
+            - snc test:
+                name: SNC ticket creation test
+                id: 5
+                expected value: 9908:937270067
+                timeout: 16000
    support-ui:
-      producers:
-        file producer:
-          source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\support-ui-test\d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
-          destination directory: C:\support-ui\peppol-ap-test\out\sent\support-ui-test.xml
-      subscribers:
-          - file subscriber:
-              consumers: 11
-              timeout: 500
-              source file: C:\support-ui\peppol-ap-test\out\sent\support-ui-test.xml
-      consumers:
-         - file download test:
-            id: 11
-            name: support ui download test
-            action: download
-            link: http://localhost:8080/rest/outbound/download/
-            expected value: true
+        producers:
+            - file producer:
+                source directory: /etc/resources/support-ui-test/support-ui.xml
+                destination directory: /peppol/data/storage/support-ui-test.xml
+        subscribers:
+            - file subscriber:
+                consumers: 11
+                timeout: 500
+                source file: /peppol/data/storage/support-ui-test.xml
+        consumers:
+            - file download test:
+                id: 11
+                name: support ui download test
+                action: download
+                link: http://support-ui:8080/rest/outbound/download/
+                expected value: true
+   validation:
+        producers:
+            - file producer:
+                source directory: /etc/resources/validation-xml-test
+                destination directory: /peppol/data/storage/integration-test
+            - mq producer:
+                mq connection: mq1
+                source directory: /peppol/data/storage/integration-test
+                destination queue: validator
+                endpoint: validation-integration-test
+            - web ui producer:
+                source directory: /etc/resources/validation-xml-test
+                destination link: http://validator:8080/validator/
+                result directory: validation result folder
+            - rest producer:
+                source directory: /etc/resources/validation-xml-test
+                destination link: http://validator:8080/validator/validate
+                result directory: validation result folder
+                rest method: post
+        subscribers:
+            - mq subscriber:
+                source queue: validation-integration-test
+                timeout: 1500
+                consumers: 1
+            - snc subscriber:
+                consumers: 2
+                timeout: 500
+            - file subscriber:
+                source file:  /etc/resources/validation-result/restResult
+                consumers: 3
+            - file subscriber:
+                source file:  /etc/resources/validation-result/webUiResult
+                consumers: 2
+        consumers:
+            - queue msg count check:
+                id: 1
+                expected value: 4
+                name: validation Mq check
+            - web ui check:
+                id: 2
+                expected value: 4
+                name: validation web ui check
+            - rest check:
+                id: 3
+                expected value: 4
+                name: validation rest check
    inbound:
-     producers:
-       file producer:
-         source directory: C:\Peppol\peppol2.0\integration-tests\src\main\resources\inbound-test
-         destination directory: C:\tmp\
-         commandline: docker exec -it inbound ./send-to-peppol.sh -f /tmp/*svefaktura_removed_sensetive_info.xml
-     subscribers:
-        - file subscriber:
-            timeout: 500
-            source file: C:\peppol-ap-testout\failed
-        - snc subscriber:
-            source directory: C:\test
-            timeout: 500
-     consumers:
-      - snc test:
-          id: 12
-          name: Invalid message error case- ticket is sent to SNC (snc stub)
-          expected value: d78a50b0-eafa-41e2-b5ed-3f74989b1ced.xml
-      - file test:
-          id: 13
-          name: Look for inbound files in long term storage
-          dir: /var/lib/docker/volumes/peppol2.0/data/storage
-          expected value: valid_svefaktura_removed_sensetive_info.xml
+        producers:
+            - command producer:
+                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/inbound_valid_test_ehf.xml -u http://inbound:8080/peppol-ap-inbound/as2
+                preprocessing cleanup dir: /peppol/data/tmp/
+        subscribers:
+            - mq subscriber:
+                source queue: preprocessing-integration-test
+                timeout: 1500
+                consumers: 12
+            - directory subscriber:
+                consumers: 15
+                source directory: /peppol/data/tmp/
+        consumers:
+            - queue msg count check:
+                id: 12
+                expected value: 1
+                name: inbound Mq check
+            - inbound message check:
+                id: 15
+                expected value: 1
+                name: inbound message check
+                timeout: 16000
+   internal-routing:
+        producers:
+            - mq producer:
+                mq connection: mq1
+                destination queue: internal-routing
+                source: peppol-integration
+                source directory: /etc/resources/internal-routing/internal-routing_valid_bis.xml
+                endpoint: integration-test-endpoint
+                endpoint type: inbound
+        subscribers:
+            - mq subscriber:
+                source queue: transport-to-xib
+                timeout: 1500
+                consumers: 13
+        consumers:
+            - queue msg count check:
+                id: 13
+                expected value: 1
+                name: internal-routing Mq check
+   outbound:
+        producers:
+            - file producer:
+                source directory: /etc/resources/outbound/outbound-integration-test-valid.xml
+                destination directory: /peppol/data/storage/outbound-integration-test-valid.xml
+            - mq producer:
+                mq connection: mq1
+                destination queue: outbound
+                source directory: /peppol/data/storage/outbound-integration-test-valid.xml
+                endpoint: events-persistence-integration-test
+                db connection: db1
+                DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+        subscribers:
+            - db subscriber:
+                db connection: db1
+                timeout: 5000
+                query: select count(*) from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+                consumers: 14
+        consumers:
+            - DB test:
+                id: 14
+                name: Outbound transmission id persisted into DB positive test
+                expected value: 1
+   preprocessing:
+        producers:
+            - mq producer:
+                mq connection: mq1
+                destination queue: preprocessing
+                source directory: /etc/resources/preprocessing/preprocessing_invalid.xml
+                container message:
+                  source endpoint: integration-test-a2a
+                  endpoint: integration-test-endpoint
+                  endpoint type: outbound
+        subscribers:
+            - mq subscriber:
+                source queue: preprocessing-error
+                timeout: 1500
+                consumers: 13
+        consumers:
+            - queue msg count check:
+                id: 13
+                expected value: 0
+                name: internal-routing error queue check

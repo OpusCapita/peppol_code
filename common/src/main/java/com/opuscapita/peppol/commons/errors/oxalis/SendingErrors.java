@@ -17,7 +17,7 @@ public enum SendingErrors {
     UNKNOWN_RECIPIENT(false),
     UNSUPPORTED_DATA_FORMAT(false),
     /** Security issue - expired, invalid, or unknown certificates */
-    SECURITY_ERROR(true),
+    SECURITY_ERROR(false),
     /** All other errors */
     OTHER_ERROR(false);
 

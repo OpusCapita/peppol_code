@@ -66,6 +66,7 @@ public class ValidationController {
         try {
             validator = validatorFactory.getValidatorByArchetype(archetype);
         } catch (Exception e) {
+            e.printStackTrace();
             String validatorFetchingError = e.getMessage();
             throw new IllegalArgumentException(
                     "No validator defined for archetype " + archetype + ", error: " + validatorFetchingError);
@@ -75,7 +76,8 @@ public class ValidationController {
         Document dom;
         try {
             dom = DocumentUtils.getDocument(cm);
-            data = DocumentContentUtils.getDocumentBytes(getRootDocument(cm, dom));
+            Document rootDocument = getRootDocument(cm, dom);
+            data = DocumentContentUtils.getDocumentBytes(rootDocument);
         } catch (Exception e) {
             throw new IllegalArgumentException("Validation failed during XML transformation", e);
         }
@@ -87,6 +89,7 @@ public class ValidationController {
             cm.getDocumentInfo().setArchetype(Archetype.INVALID);
             cm.getDocumentInfo().getErrors().forEach(error -> logger.warn(error.toString()));
         }
+
         return cm;
     }
 

@@ -113,8 +113,6 @@ public class MessageLevelResponseCreator {
                     }
                 }
                 template = StringUtils.replace(template, "#ISSUE_TIME#", issue_time);
-            } else {
-                template = StringUtils.replace(template, "#ISSUE_TIME#", "");
             }
         } catch (Exception e) {
             logger.info("Failed to parse issue date: '" + di.getIssueDate() + "', using current date instead");
@@ -123,6 +121,9 @@ public class MessageLevelResponseCreator {
                 cm.addError("Unable to parse issue date: '" + di.getIssueDate() + "'");
             }
         }
+        // if not replaced - remove placeholders
+        template = StringUtils.replace(template, "#ISSUE_DATE#", "");
+        template = StringUtils.replace(template, "#ISSUE_TIME#", "");
 
         template = replace(template, "response_date", MessageLevelResponseUtils.convertDateToXml(now));
         template = replace(template, "response_time", MessageLevelResponseUtils.convertTimeToXml(now));
@@ -145,15 +146,15 @@ public class MessageLevelResponseCreator {
         }
 
         StringBuilder result = new StringBuilder();
-        if (cm.getProcessingInfo().getProcessingException() != null) {
-            String template = templates.getLineTemplate();
-            template = replace(template, "doc_reference", di.getDocumentId());
-            template = replace(template, "xpath", "NA");
-            template = replace(template, "reference_id", cm.getProcessingInfo().getCurrentEndpoint().getName());
-            template = replace(template, "description", cm.getProcessingInfo().getProcessingException());
-            template = replace(template, "status_code", "SV");
-            result.append(template);
-        }
+//        if (cm.getProcessingInfo().getProcessingException() != null) {
+//            String template = templates.getLineTemplate();
+//            template = replace(template, "doc_reference", di.getDocumentId());
+//            template = replace(template, "xpath", "NA");
+//            template = replace(template, "reference_id", cm.getProcessingInfo().getCurrentEndpoint().getName());
+//            template = replace(template, "description", cm.getProcessingInfo().getProcessingException());
+//            template = replace(template, "status_code", "SV");
+//            result.append(template);
+//        }
 
         for (DocumentError error : di.getErrors()) {
             String template = templates.getLineTemplate();
@@ -196,7 +197,9 @@ public class MessageLevelResponseCreator {
         if (value == null) {
             value = "";
         }
-        value = StringEscapeUtils.escapeXml11(value);
+        value = StringEscapeUtils.escapeXml10(value);
+        value = StringUtils.replace(value, "&apos;", "'"); // requested by Sweden
+        value = StringUtils.replace(value, "&quot;", "\"");
         return StringUtils.replace(original, "${" + key + "}", value);
     }
 

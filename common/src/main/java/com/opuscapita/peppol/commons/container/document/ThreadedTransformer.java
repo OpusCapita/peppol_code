@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.container.document;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Created by bambr on 17.25.2.
@@ -30,6 +31,12 @@ public class ThreadedTransformer {
         }
 
         transformer.reset();
-        return bos.toByteArray();
+        byte[] resultingData = bos.toByteArray();
+        try {
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resultingData;
     }
 }

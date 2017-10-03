@@ -31,7 +31,7 @@ public class MqConsumer extends Consumer {
     public TestResult consume(Object consumable) {
         List<Object> messages = (List<Object>) consumable;
         logger.info("MqConsumer: " + name + " starting!");
-        boolean  success = (expectedValue == messages.size());
+        boolean success = (expectedValue == messages.size());
         return new TestResult(name, success, "expected message count: " + expectedValue + " got messages: " + messages.size());
     }
 }

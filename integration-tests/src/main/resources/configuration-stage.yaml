@@ -17,9 +17,10 @@ tests:
                 mq connection: mq1
                 destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/events-persistence_valid.xml
-                endpoint: events-persistence-integration-test
                 db connection: db1
                 DB preprocess querry: delete from messages where invoice_number='20828'
+                container message:
+                  endpoint: events-persistence-integration-test
         subscribers:
             - db subscriber:
                 db connection: db1
@@ -33,45 +34,63 @@ tests:
                 expected value: 1
    eventing:
         producers:
+            - file producer:
+                source directory: /etc/resources/events-persistence-test/eventing-valid-mlr-backup.xml
+                destination directory: /peppol/data/storage/eventing-valid-mlr-backup.xml
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source: integration-test-a2a
+                source directory: /peppol/data/storage/eventing-valid-mlr-backup.xml
+                db connection: db1
+                DB preprocess querry: delete from messages where invoice_number='12345678'
+                container message:
+                  endpoint: integration-test-endpoint
+            - mq producer:
+                mq connection: mq1
+                destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/eventing_valid.xml
                 db connection: db1
-                endpoint: integration-test-endpoint
-                endpoint type: outbound
                 DB preprocess querry: delete from messages where invoice_number='20830'
+                container message:
+                  source endpoint: integration-test-a2a
+                  endpoint: integration-test-endpoint
+                  endpoint type: outbound
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/eventing_rejected.xml
                 db connection: db1
-                endpoint: integration-test-endpoint
-                endpoint type: outbound
                 DB preprocess querry: delete from messages where invoice_number='61016660'
+                container message:
+                  source endpoint: integration-test-xib
+                  endpoint: integration-test-endpoint
+                  endpoint type: outbound
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                endpoint type: outbound
-                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/eventing_invalid.xml
-                endpoint: integration-test-endpoint
+                container message:
+                  source endpoint: integration-test-xib
+                  endpoint type: outbound
+                  endpoint: integration-test-endpoint
+                  processing exception: This sending expected to fail I/O in test mode
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                endpoint type: outbound
-                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/eventing_invalid-snc-test.xml
-                endpoint: integration-test-endpoint
+                container message:
+                  source endpoint: integration-test-xib
+                  endpoint type: outbound
+                  endpoint: integration-test-endpoint
+                  null status: true
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source: integration-test-xib
                 source directory: /etc/resources/events-persistence-test/logger_eventing_xib_test.xml
-                endpoint type: outbound
-                endpoint: integration-test-endpoint
+                container message:
+                  source endpoint: integration-test-xib
+                  endpoint type: outbound
+                  endpoint: integration-test-endpoint
         subscribers:
             - snc subscriber:
                 source directory: /peppol/data/snc-stub
@@ -104,7 +123,8 @@ tests:
             - mlr test:
                 name: IO exception in mlr test
                 id: 9
-                expected value: eventing_invalid-er-mlr.xml
+                expected value: '<cbc:Description>OTHER_ERROR: This sending expected to fail I/O in test mode</cbc:Description>'
+                expected file: eventing_invalid-er-mlr.xml
                 timeout: 16000
             - snc test:
                 name: SNC ticket creation test
@@ -137,7 +157,8 @@ tests:
                 mq connection: mq1
                 source directory: /peppol/data/storage/integration-test
                 destination queue: validator
-                endpoint: validation-integration-test
+                container message:
+                  endpoint: validation-integration-test
             - web ui producer:
                 source directory: /etc/resources/validation-xml-test
                 destination link: http://validator:8080/validator/
@@ -178,25 +199,35 @@ tests:
         producers:
             - command producer:
                 command: ./send-to-peppol.sh -f /etc/resources/inbound-test/inbound_valid_test_ehf.xml -u http://inbound:8080/peppol-ap-inbound/as2
+                preprocessing cleanup dir: /peppol/data/tmp/
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-integration-test
                 timeout: 1500
                 consumers: 12
+            - directory subscriber:
+                consumers: 15
+                source directory: /peppol/data/tmp/
         consumers:
             - queue msg count check:
                 id: 12
                 expected value: 1
                 name: inbound Mq check
+            - inbound message check:
+                id: 15
+                expected value: 1
+                name: inbound stored files check
+                timeout: 16000
    internal-routing:
         producers:
             - mq producer:
                 mq connection: mq1
                 destination queue: internal-routing
-                source: peppol-integration
                 source directory: /etc/resources/internal-routing/internal-routing_valid_bis.xml
-                endpoint: integration-test-endpoint
-                endpoint type: inbound
+                container message:
+                  source endpoint: peppol-integration
+                  endpoint: integration-test-endpoint
+                  endpoint type: inbound
         subscribers:
             - mq subscriber:
                 source queue: transport-to-xib
@@ -216,9 +247,10 @@ tests:
                 mq connection: mq1
                 destination queue: outbound
                 source directory: /peppol/data/storage/outbound-integration-test-valid.xml
-                endpoint: events-persistence-integration-test
                 db connection: db1
                 DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+                container message:
+                  endpoint: events-persistence-integration-test
         subscribers:
             - db subscriber:
                 db connection: db1
@@ -230,3 +262,27 @@ tests:
                 id: 14
                 name: Outbound transmission id persisted into DB positive test
                 expected value: 1
+   preprocessing:
+        producers:
+            - file producer:
+                source directory: /etc/resources/preprocessing/preprocessing_invalid.xml
+                destination directory: /peppol/data/storage/preprocessing-integration/preprocessing_invalid.xml
+            - mq producer:
+                mq connection: mq1
+                destination queue: preprocessing
+                source directory: /peppol/data/storage/preprocessing-integration/preprocessing_invalid.xml
+                container message:
+                  source endpoint: integration-test-a2a
+                  endpoint: integration-test-endpoint
+                  endpoint type: outbound
+                  archetype: invalid
+        subscribers:
+            - mq subscriber:
+                source queue: preprocessing-error
+                timeout: 1500
+                consumers: 16
+        consumers:
+            - queue msg count check:
+                id: 16
+                expected value: 1
+                name: preprocessing error queue check
