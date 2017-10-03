@@ -40,9 +40,9 @@ public class ValidatorFactory {
                 case PEPPOL_SI:
                 case PEPPOL_BIS:
                 case EHF:
-                    //if (difiValidator == null) {
+                    if (difiValidator == null) {
                         difiValidator = new DifiValidator(difiValidatorConfig);
-                    //}
+                    }
                     result = difiValidator;
                     break;
                 case SVEFAKTURA1:
