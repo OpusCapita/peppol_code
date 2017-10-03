@@ -87,6 +87,9 @@ public class SbdhRemover {
                         if ("Invoice".equals(name)) {
                             collecting = true;
                         }
+                        if ("Attachment".equals(name)) {
+                            collecting = false;
+                        }
                     }
 
                     if (collecting) {
@@ -98,6 +101,9 @@ public class SbdhRemover {
                         String name = end.getName().getLocalPart();
                         if ("Invoice".equals(name)) {
                             break;
+                        }
+                        if ("Attachment".equals(name)) {
+                            collecting = true;
                         }
                     }
                 }
