@@ -21,6 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -28,13 +30,20 @@ import java.util.function.Consumer;
  */
 public class DifiValidator implements BasicValidator {
     private final static Logger logger = LoggerFactory.getLogger(DifiValidator.class);
-    private final ThreadLocal<Validator> validator = new ThreadLocal<>();
+    private static SimpleDirectorySource artifactsSource;
     private final Path pathToArtifacts;
+    private final Validator validator;
 
     public DifiValidator(@NotNull DifiValidatorConfig difiValidatorConfig)
             throws ValidatorException {
         pathToArtifacts = Paths.get(difiValidatorConfig.getDifiValidationArtifactsPath());
         logger.info("Path to artifacts: " + pathToArtifacts.toString());
+        synchronized (this) {
+            if (artifactsSource == null) {
+                artifactsSource = new SimpleDirectorySource(pathToArtifacts);
+            }
+            validator = DifiValidatorBuilder.getValidatorInstance(artifactsSource);
+        }
 
         //DifiValidatorBuilder.getValidatorInstance(new SimpleDirectorySource(pathToArtifacts));
 
@@ -43,27 +52,21 @@ public class DifiValidator implements BasicValidator {
 
     @NotNull
     @Override
-    public ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull byte[] data) {
-        try (Validator localValidator = getValidator()) {
-            Validation validation = localValidator.validate(new ByteArrayInputStream(data));
-            parseErrors(validation.getReport(), cm);
+    synchronized public ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull byte[] data) {
+        try {
+            CompletableFuture.supplyAsync(() -> {
+                Validation validation = validator.validate(new ByteArrayInputStream(data));
+                parseErrors(validation.getReport(), cm);
+                return null;
+            }).get(2, TimeUnit.MINUTES);
         } catch (Exception e) {
             e.printStackTrace();
-            cm.addError("Failed to get validator: " + e.getMessage());
-        } finally {
-            this.validator.set(null);
+            cm.addError("Validation timed out: " + e.getMessage());
         }
 
         return cm;
     }
 
-    synchronized protected Validator getValidator() throws ValidatorException {
-        if (this.validator.get() == null) {
-            //this.validator.set(ValidatorBuilder.newValidator().setSource(new SimpleDirectorySource(pathToArtifacts)).build());
-            this.validator.set(DifiValidatorBuilder.getValidatorInstance(new SimpleDirectorySource(pathToArtifacts)));
-        }
-        return this.validator.get();
-    }
 
     @SuppressWarnings("ConstantConditions")
     private void parseErrors(Report report, ContainerMessage cm) {
@@ -90,10 +93,5 @@ public class DifiValidator implements BasicValidator {
                 }
             }
         }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
     }
 }

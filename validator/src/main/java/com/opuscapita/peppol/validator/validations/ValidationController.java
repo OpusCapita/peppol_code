@@ -89,6 +89,7 @@ public class ValidationController {
             cm.getDocumentInfo().setArchetype(Archetype.INVALID);
             cm.getDocumentInfo().getErrors().forEach(error -> logger.warn(error.toString()));
         }
+
         return cm;
     }
 
