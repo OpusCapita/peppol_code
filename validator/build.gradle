@@ -35,12 +35,11 @@ dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-eureka'
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile("org.springframework.hateoas:spring-hateoas:0.12.0.RELEASE")
-    compile group: 'net.sf.saxon', name: 'Saxon-HE', version: '9.4'
+    compile 'net.sf.saxon:Saxon-HE:9.6.0-10'
 
     compile 'no.difi.vefa:validator-core:2.0.2'
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
-    compile 'net.sf.saxon:Saxon-HE:9.8.0-4'
     testCompile project(':common-test')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     optional "org.springframework.boot:spring-boot-configuration-processor"
