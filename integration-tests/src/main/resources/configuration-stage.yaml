@@ -277,7 +277,7 @@ tests:
                 container message:
                   source endpoint: integration-test-a2a
                   endpoint: integration-test-endpoint
-                  load file: false
+                  load file: 'false'
             - mq producer:
                 mq connection: mq1
                 destination queue: preprocessing
