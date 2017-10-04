@@ -3,7 +3,7 @@
   shell: docker logs validator
   register: log
 
-- name: Check if uuid "{{ uuid }}" is found in validator log 
+- name: Check if uuid "{{ uuid }}" "{{ file }}" is found in validator log 
   ignore_errors: yes
   assert:
     that:
@@ -15,9 +15,13 @@
 - debug: var=validator_result
 
 #check for failures as well and adjust report accordingly->
-- name: Check if validation failed for uuid "{{ uuid }}"
+- name: Check if validation failed for uuid "{{ uuid }}" "{{ file }}"
   set_fact: validator_result="validator=Failed"
   when:
-    - log.stdout | search(".*Validation failed for.*"+uuid)
+    - log.stdout | search(".*Validation failed for.*{{ uuid }}")
 
+#final validator result->
+- debug: var=validator_result
+
+  
 ...

@@ -1,9 +1,9 @@
 ---
-- name: Show email-notificator log, search for uuid "{{ uuid }}"
+- name: Show email-notificator log, search for uuid "{{ uuid }}" "{{ file }}"
   shell: docker logs email-notificator
   register: log
 
-- name: Assert if uuid "{{ uuid }}" is found in email-notificator log 
+- name: Assert if uuid "{{ uuid }}" "{{ file }}" is found in email-notificator log 
   ignore_errors: yes
   assert:
     that:

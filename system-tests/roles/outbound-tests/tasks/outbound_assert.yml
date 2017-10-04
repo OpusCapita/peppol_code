@@ -1,9 +1,6 @@
 ---
-#- name: Show outbound log, search for fileName "{{ fileName }}"
-#  shell: docker logs outbound
-#  register: log
-
-- name: get outbound log & check if uuid "{{ uuid }}" is found in outbound log 
+- name: get outbound log & check if uuid "{{ uuid }}" "{{ file }}" is found in outbound log 
+  ignore_errors: yes
   shell: docker logs outbound
   register: log
   until: log.stdout | search(".*Message.*"+uuid+".*sent with")
@@ -12,7 +9,7 @@
 #  register: search-result
 #- debug: var=search-result
 
-- name: assert for real
+- name: assert for real "{{ uuid }}"  "{{ file }}"
   ignore_errors: yes
   assert:
     that:

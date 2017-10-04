@@ -3,7 +3,7 @@
   shell: docker logs validator
   register: log
 
-- name: Check if uuid "{{ uuid }}" is found in validator log 
+- name: Check if uuid "{{ uuid }}" "{{ file }}" is found in validator log 
   ignore_errors: yes
   assert:
     that:

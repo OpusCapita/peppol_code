@@ -1,9 +1,9 @@
 ---
-- name: Show preprocessing log, search for uuid "{{ uuid }}"
+- name: Show preprocessing log, search for uuid "{{ uuid }}" "{{ file }}"
   shell: docker logs preprocessing
   register: log
 
-- name: Assert if uuid "{{ uuid }}" is found in preprocessing log 
+- name: Assert if uuid "{{ uuid }}" "{{ file }}" is found in preprocessing log 
   ignore_errors: yes
   assert:
     that:
