@@ -1,9 +1,13 @@
 ---
-- name: Show validator log, search for transmissionID "{{ transmissionId }}"
+- name: get validator log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found
+  ignore_errors: yes
   shell: docker logs validator
   register: log
+  until: transmissionId in log.stdout
+  retries: 60
+  delay: 1
 
-- name: Assert if transmissionID "{{ transmissionId }}" is found in validator log 
+- name: Assert if transmissionID "{{ transmissionId }}" "{{ file }}" is found in validator log 
   ignore_errors: yes
   assert:
     that:

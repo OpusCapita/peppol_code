@@ -1,7 +1,10 @@
 ---
-- name: Show validator log
+- name: get validator log & check if uuid "{{ uuid }}" "{{ file }}" is found
   shell: docker logs validator
   register: log
+  until: uuid in log.stdout
+  retries: 60
+  delay: 1
 
 - name: Check if uuid "{{ uuid }}" "{{ file }}" is found in validator log 
   ignore_errors: yes

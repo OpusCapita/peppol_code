@@ -1,7 +1,11 @@
 ---
-- name: Show log, search for uuid "{{ uuid }}" "{{ file }}"
+- name: get internal-routing log & check if uuid "{{ uuid }}" "{{ file }}" is found in internal-routing
+  ignore_errors: yes
   shell: docker logs internal-routing
   register: log
+  until: "uuid in log.stdout"
+  retries: 60
+  delay: 1
 
 - name: uuid "{{ uuid }}" "{{ file }}" is found in internal-routing log 
   ignore_errors: yes

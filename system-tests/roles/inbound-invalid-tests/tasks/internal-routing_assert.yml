@@ -1,9 +1,13 @@
 ---
-- name: Show internal-routing log, search for transmissionID "{{ transmissionId }}"
+- name: get internal-routing log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found in internal-routing
+  ignore_errors: yes
   shell: docker logs internal-routing
   register: log
+  until: "transmissionId in log.stdout"
+  retries: 60
+  delay: 1
 
-- name: Assert if transmissionID "{{ transmissionId }}" is found in internal-routing log 
+- name: Assert if transmissionID "{{ transmissionId }}" "{{ file }}" is found in internal-routing log 
   ignore_errors: yes
   assert:
     that:

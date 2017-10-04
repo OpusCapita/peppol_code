@@ -19,7 +19,7 @@ spike-test-inbound-t:
 inbound-tests-s:
 	ansible-playbook -i stage.hosts inbound-tests.yml
 inbound-tests-l:
-	ansible-playbook -i local.hosts inbound-tests.yml
+	ansible-playbook -i local.hosts inbound-tests.yml -K
 outbound-tests-s:
 	ansible-playbook -i stage.hosts -K outbound-tests.yml
 outbound-tests-l:
@@ -27,7 +27,7 @@ outbound-tests-l:
 inbound-invalid-tests-s:
 	ansible-playbook -i stage.hosts inbound-invalid-tests.yml
 inbound-invalid-tests-l:
-	ansible-playbook -i local.hosts inbound-invalid-tests.yml
+	ansible-playbook -i local.hosts inbound-invalid-tests.yml -K
 outbound-invalid-tests-s:
 	ansible-playbook -i stage.hosts -K outbound-invalid-tests.yml
 outbound-invalid-tests-l:

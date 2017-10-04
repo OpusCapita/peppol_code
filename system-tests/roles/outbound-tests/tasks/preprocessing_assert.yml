@@ -1,7 +1,10 @@
 ---
-- name: Show preprocessing log, search for uuid "{{ uuid }}" "{{ file }}"
+- name: get preprocessing log & check if uuid "{{ uuid }}" "{{ file }}" is found
   shell: docker logs preprocessing
   register: log
+  until: uuid in log.stdout
+  retries: 60
+  delay: 1
 
 - name: Assert if uuid "{{ uuid }}" "{{ file }}" is found in preprocessing log 
   ignore_errors: yes
