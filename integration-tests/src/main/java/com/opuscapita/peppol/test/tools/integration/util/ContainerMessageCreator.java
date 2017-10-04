@@ -31,7 +31,9 @@ public class ContainerMessageCreator {
         Endpoint source = new Endpoint(getSourceEndPoint(), ProcessType.TEST);
         ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(), source);
         //loading document info
-        cm.setDocumentInfo(documentLoader.load(file, getLoaderEndpoint()));
+        if(loadFile()) {
+            cm.setDocumentInfo(documentLoader.load(file, getLoaderEndpoint()));
+        }
         //final endpoint current status
         if (!nullStatus()) //for SNC we need current status to be null to raise exception
             cm.setStatus(getCurrentEndpoint(), "delivered");
@@ -54,6 +56,11 @@ public class ContainerMessageCreator {
         }
 
         return cm;
+    }
+
+    /*check if document info needs to be loaded from file, default: true/yes*/
+    private boolean loadFile() {
+        return Boolean.valueOf(properties.getOrDefault("load file", "true"));
     }
 
 

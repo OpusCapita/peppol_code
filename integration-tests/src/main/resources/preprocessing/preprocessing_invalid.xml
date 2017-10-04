@@ -288,9 +288,9 @@ Pj4NCnN0YXJ0eHJlZg0KMTIxNTENCiUlRU9GDQo=
     </cac:AdditionalDocumentReference>
     <cac:AccountingSupplierParty>
       <cac:Party>
-        <cbc:EndpointID schemeID="FI:OVT">01098230</cbc:EndpointID>
+        <cbc:EndpointID schemeID="FI:OVT"></cbc:EndpointID>
         <cac:PartyName>
-          <cbc:Name>Kemira Oyj</cbc:Name>
+          <cbc:Name></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
           <cbc:StreetName>Porkkalankatu 3</cbc:StreetName>
@@ -301,25 +301,25 @@ Pj4NCnN0YXJ0eHJlZg0KMTIxNTENCiUlRU9GDQo=
           </cac:Country>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
-          <cbc:CompanyID>NO996021858</cbc:CompanyID>
+          <cbc:CompanyID></cbc:CompanyID>
           <cac:TaxScheme>
             <cbc:ID>VAT</cbc:ID>
           </cac:TaxScheme>
         </cac:PartyTaxScheme>
         <cac:PartyLegalEntity>
           <cbc:RegistrationName>Kemira Oyj</cbc:RegistrationName>
-          <cbc:CompanyID schemeID="FI:OVT">01098230</cbc:CompanyID>
+          <cbc:CompanyID schemeID="FI:OVT"></cbc:CompanyID>
         </cac:PartyLegalEntity>
       </cac:Party>
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
       <cac:Party>
-        <cbc:EndpointID schemeID="NO:ORGNR">939214895</cbc:EndpointID>
+        <cbc:EndpointID schemeID="NO:ORGNR"></cbc:EndpointID>
         <cac:PartyIdentification>
-          <cbc:ID schemeID="ZZZ">0000101739</cbc:ID>
+          <cbc:ID schemeID="ZZZ"></cbc:ID>
         </cac:PartyIdentification>
         <cac:PartyName>
-          <cbc:Name>Drammen kommune</cbc:Name>
+          <cbc:Name></cbc:Name>
         </cac:PartyName>
         <cac:PostalAddress>
           <cbc:StreetName>Engene 1</cbc:StreetName>
@@ -330,7 +330,7 @@ Pj4NCnN0YXJ0eHJlZg0KMTIxNTENCiUlRU9GDQo=
           </cac:Country>
         </cac:PostalAddress>
         <cac:PartyTaxScheme>
-          <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82">939214895MVA</cbc:CompanyID>
+          <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82"></cbc:CompanyID>
           <cac:TaxScheme>
             <cbc:ID>VAT</cbc:ID>
           </cac:TaxScheme>

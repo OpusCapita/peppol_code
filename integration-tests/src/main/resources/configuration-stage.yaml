@@ -277,8 +277,7 @@ tests:
                 container message:
                   source endpoint: integration-test-a2a
                   endpoint: integration-test-endpoint
-                  endpoint type: outbound
-                  archetype: invalid
+                  load file: false
             - mq producer:
                 mq connection: mq1
                 destination queue: preprocessing
