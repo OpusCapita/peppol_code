@@ -5,7 +5,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
-import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadataContianer;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadataContainer;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.storage.Storage;
@@ -81,7 +81,7 @@ public class PreprocessingController {
         PeppolMessageMetadata result = null;
         if (rawMetadata != null) {
             try {
-                result = gson.fromJson(rawMetadata, PeppolMessageMetadataContianer.class).getPeppolMessageMetaData();
+                result = gson.fromJson(rawMetadata, PeppolMessageMetadataContainer.class).getPeppolMessageMetaData();
             } catch (Exception e) {
                 logger.warn("Failed to parse raw metadata: " + rawMetadata);
                 e.printStackTrace();

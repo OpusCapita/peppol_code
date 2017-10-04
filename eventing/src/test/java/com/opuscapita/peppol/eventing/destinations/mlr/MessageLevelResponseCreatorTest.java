@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -23,7 +24,6 @@ public class MessageLevelResponseCreatorTest {
         ContainerMessage cm = prepareContainerMessage();
 
         String result = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         System.out.println(result);
 
@@ -54,6 +54,8 @@ public class MessageLevelResponseCreatorTest {
                         "</cac:DocumentReference>" +
                 "</cac:DocumentResponse>"
         ));
+        assertFalse(result.contains("#"));
+        assertFalse(result.contains("$"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -70,6 +72,8 @@ public class MessageLevelResponseCreatorTest {
         assertTrue(result.contains("<cbc:ResponseCode>RE</cbc:ResponseCode>"));
         assertTrue(result.contains("<cbc:StatusReasonCode>SV</cbc:StatusReasonCode>"));
         assertTrue(result.contains("DOCUMENT_ERROR"));
+        assertFalse(result.contains("#"));
+        assertFalse(result.contains("$"));
     }
 
     private ContainerMessage prepareContainerMessage() {
