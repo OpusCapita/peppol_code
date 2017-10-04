@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.opuscapita.peppol.commons.container.document.Archetype.INVALID;
+import static com.opuscapita.peppol.commons.container.document.Archetype.*;
 
 public class ContainerMessageCreator {
     private final static Logger logger = LoggerFactory.getLogger(ContainerMessageCreator.class);
@@ -99,6 +99,16 @@ public class ContainerMessageCreator {
         switch (type){
             case "invalid" :
                 return INVALID;
+            case "peppol bis":
+                return PEPPOL_BIS;
+            case "ehf":
+                return EHF;
+            case "svefaktura1":
+                return SVEFAKTURA1;
+            case "peppol si":
+                return PEPPOL_SI;
+            case "at":
+                return AT;
             default : throw new IllegalArgumentException("unrecognized archetype: " + type);
         }
     }

@@ -276,13 +276,32 @@ tests:
                   endpoint: integration-test-endpoint
                   endpoint type: outbound
                   archetype: invalid
+            - file producer:
+                source directory: /etc/resources/preprocessing/preprocessing_valid.xml
+                destination directory: /peppol/data/storage/preprocessing-integration/preprocessing_valid.xml
+            - mq producer:
+                mq connection: mq1
+                destination queue: preprocessing
+                source directory: /peppol/data/storage/preprocessing-integration/preprocessing_valid.xml
+                container message:
+                  source endpoint: integration-test-a2a
+                  endpoint: integration-test-endpoint
+                  endpoint type: outbound
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-error
                 timeout: 1500
                 consumers: 16
+            - mq subscriber:
+                source queue: preprocessing-out
+                timeout: 1500
+                consumers: 17
         consumers:
             - queue msg count check:
                 id: 16
                 expected value: 1
                 name: preprocessing error queue check
+            - queue msg count check:
+                id: 17
+                expected value: 1
+                name: preprocessing out queue check
