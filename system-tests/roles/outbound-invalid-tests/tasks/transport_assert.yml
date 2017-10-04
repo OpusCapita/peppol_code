@@ -1,18 +1,27 @@
 ---
 #transport_assert.yml should search for transmissionid in A2A and XIB logs, fail if not found in one of them. 
 
-- name: Show A2A log
+#- name: Show A2A log
+#  shell: docker logs transport-from-a2a
+#  register: a2aLog
+#- name: Show XIB log
+#  shell: docker logs transport-from-xib
+#  register: xibLog
+
+- name: get transport-from-a2a log & check if uuid "{{ uuid }}" "{{ file }}" is found
   shell: docker logs transport-from-a2a
   register: a2aLog
-- name: Show XIB log
-  shell: docker logs transport-from-xib
-  register: xibLog
+  until: uuid in a2aLog.stdout
+  retries: 130
+  delay: 1
+
 
 - name: uuid "{{ uuid }}" is found in transports logs
   ignore_errors: yes
   assert:
     that:
-      - ("uuid in a2aLog.stdout") or ("uuid in xibLog.stdout")
+#      - ("uuid in a2aLog.stdout") or ("uuid in xibLog.stdout")
+      - ("uuid in a2aLog.stdout") 
     msg: "Failed"
   register: result
 
