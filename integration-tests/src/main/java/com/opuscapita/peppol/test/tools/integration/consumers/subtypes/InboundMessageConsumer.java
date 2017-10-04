@@ -5,7 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class InboundMessageConsumer extends FileConsumer {
     private final static Logger logger = LoggerFactory.getLogger(InboundMessageConsumer.class);
@@ -16,16 +17,22 @@ public class InboundMessageConsumer extends FileConsumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        if(consumable == null) {
+        if (consumable == null) {
             return new TestResult(name, false, "InboundMessageConsumer: Invalid consumable, null or empty!");
         }
-        File directory = (File) consumable;
-        logger.info("InboundMessageConsumer: consumable: " + directory.getAbsolutePath() + " length: " + directory.list().length);
-        if(!directory.isDirectory()) {
-            return new TestResult(name, false, "not a directory " + directory.getAbsolutePath());
+        File tempDir = (File) consumable;
+        if (!tempDir.isDirectory()) {
+            return new TestResult(name, false, "not a directory " + tempDir.getAbsolutePath());
         }
-        int matchedDirsCount = (int) Arrays.stream(directory.list()).filter(x -> !x.startsWith("9")).count();
-        boolean result =  matchedDirsCount == Integer.valueOf(expectedValue);
-        return new TestResult(name, result, "Expected value: " + expectedValue + " real: " + matchedDirsCount);
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        File fullDir = new File(tempDir, date);
+        if (!fullDir.isDirectory()) {
+            return new TestResult(name, false, "not a directory " + fullDir.getAbsolutePath());
+        }
+
+        logger.info("InboundMessageConsumer: consumable: " + tempDir.getAbsolutePath() + " length: " + fullDir.list().length);
+
+        boolean result = Integer.valueOf(expectedValue) == fullDir.list().length;
+        return new TestResult(name, result, "Expected value: " + expectedValue + " real: " + fullDir.list().length);
     }
 }
