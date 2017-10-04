@@ -1,9 +1,9 @@
 ---
-- name: Show log, search for uuid "{{ uuid }}"
+- name: Show log, search for uuid "{{ uuid }}" "{{ file }}"
   shell: docker logs internal-routing
   register: log
 
-- name: uuid "{{ uuid }}" is found in internal-routing log 
+- name: uuid "{{ uuid }}" "{{ file }}" is found in internal-routing log 
   ignore_errors: yes
   assert:
     that:

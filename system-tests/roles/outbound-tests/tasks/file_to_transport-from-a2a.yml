@@ -42,8 +42,8 @@
     line: '{{counter}}|{{file}}|{{uuid}}'
 #report END -------
 
-- pause:
-    seconds: 130
+#- pause:
+#    seconds: 130
 
 - include: log_checker.yml
 ...
