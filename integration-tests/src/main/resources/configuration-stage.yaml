@@ -267,6 +267,9 @@ tests:
             - file producer:
                 source directory: /etc/resources/preprocessing/preprocessing_invalid.xml
                 destination directory: /peppol/data/storage/preprocessing-integration/preprocessing_invalid.xml
+            - file producer:
+                source directory: /etc/resources/preprocessing/preprocessing_valid.xml
+                destination directory: /peppol/data/storage/preprocessing-integration/preprocessing_valid.xml
             - mq producer:
                 mq connection: mq1
                 destination queue: preprocessing
@@ -276,9 +279,6 @@ tests:
                   endpoint: integration-test-endpoint
                   endpoint type: outbound
                   archetype: invalid
-            - file producer:
-                source directory: /etc/resources/preprocessing/preprocessing_valid.xml
-                destination directory: /peppol/data/storage/preprocessing-integration/preprocessing_valid.xml
             - mq producer:
                 mq connection: mq1
                 destination queue: preprocessing
