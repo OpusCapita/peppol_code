@@ -266,14 +266,14 @@ tests:
         producers:
             - file producer:
                 source directory: /etc/resources/preprocessing/preprocessing_invalid.xml
-                destination directory: /peppol/data/storage/preprocessing-integration/preprocessing_invalid.xml
+                destination directory: /peppol/data/storage/preprocessing_invalid.xml
             - file producer:
                 source directory: /etc/resources/preprocessing/preprocessing_valid.xml
-                destination directory: /peppol/data/storage/preprocessing-integration/preprocessing_valid.xml
+                destination directory: /peppol/data/storage/preprocessing_valid.xml
             - mq producer:
                 mq connection: mq1
                 destination queue: preprocessing
-                source directory: /peppol/data/storage/preprocessing-integration/preprocessing_invalid.xml
+                source directory: /peppol/data/storage/preprocessing_invalid.xml
                 container message:
                   source endpoint: integration-test-a2a
                   endpoint: integration-test-endpoint
@@ -281,7 +281,7 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: preprocessing
-                source directory: /peppol/data/storage/preprocessing-integration/preprocessing_valid.xml
+                source directory: /peppol/data/storage/preprocessing_valid.xml
                 container message:
                   source endpoint: integration-test-a2a
                   endpoint: integration-test-endpoint
