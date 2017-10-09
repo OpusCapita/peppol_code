@@ -14,13 +14,13 @@ public class ConsumerFactory {
 
     public Consumer createConsumer(Map.Entry<String, ?> consumerConfig, Map<String, Object> genericConfiguration) {
         String name = consumerConfig.getKey().toLowerCase();
-        Map<String ,Object> properties = (Map<String, Object>) consumerConfig.getValue();
+        Map<String, Object> properties = (Map<String, Object>) consumerConfig.getValue();
         String id = String.valueOf(properties.get("id"));
-        Integer timeout = (Integer)properties.get("timeout");
+        Integer timeout = (Integer) properties.get("timeout");
         String testName = (String) properties.get("name");
-        switch (name){
+        switch (name) {
             case "queue msg count check":
-                return new MqConsumer(id, testName, (List<String>)properties.get("subscribers"),properties.get("expected value"));
+                return new MqConsumer(id, testName, (List<String>) properties.get("subscribers"), properties.get("expected value"));
             case "db check":
             case "db test":
                 return new DbConsumer(id, testName, properties.get("expected value"));
@@ -50,7 +50,10 @@ public class ConsumerFactory {
                 return new RestConsumer(id, testName, properties.get("expected value"));
             case "inbound message check":
             case "inbound message test":
-                return new InboundMessageConsumer(id, testName,String.valueOf(properties.get("expected value")), timeout);
+                return new InboundFileConsumer(id, testName, String.valueOf(properties.get("expected value")), timeout);
+            case "preprocessing check":
+            case "preprocessing test":
+                return new PreprocessingFileConsumer(id, testName, String.valueOf(properties.get("expected value")), timeout);
             default:
                 throw new IllegalArgumentException("Invalid consumer configuration, unable to create consumer: " + testName);
         }

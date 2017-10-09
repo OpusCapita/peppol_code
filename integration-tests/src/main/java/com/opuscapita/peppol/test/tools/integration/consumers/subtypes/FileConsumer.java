@@ -17,6 +17,7 @@ public class FileConsumer extends Consumer {
     protected int delay = 5000;
     protected File file;
     protected TestResult result;
+    protected File currentDirectory;
 
     public FileConsumer(String id, String name, String expectedValue, Integer delay) {
         super(id);
@@ -34,6 +35,7 @@ public class FileConsumer extends Consumer {
     @Override
     public TestResult consume(Object consumable) {
         init(consumable);
+        file = new File(currentDirectory, expectedValue);
 
         if(file == null) {
             return result;
@@ -55,13 +57,12 @@ public class FileConsumer extends Consumer {
             return;
         }
 
-        File directory = (File) consumable;
-        if(!directory.isDirectory()) {
-            result = new TestResult(name, false, "FileConsumer: Directory not found " + directory);
+        currentDirectory = (File) consumable;
+        if(!currentDirectory.isDirectory()) {
+            result = new TestResult(name, false, "FileConsumer: Directory not found " + currentDirectory);
             return;
         }
-        result = new TestResult(name, false, "FileConsumer: expected file: " + expectedValue + " not found in: " + directory);
-        file = new File(directory,expectedValue);
+        result = new TestResult(name, false, "FileConsumer: expected file: " + expectedValue + " not found in: " + currentDirectory);
     }
 
     protected boolean clean(){

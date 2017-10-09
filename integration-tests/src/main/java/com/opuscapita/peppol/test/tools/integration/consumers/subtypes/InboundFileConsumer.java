@@ -8,17 +8,17 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class InboundMessageConsumer extends FileConsumer {
-    private final static Logger logger = LoggerFactory.getLogger(InboundMessageConsumer.class);
+public class InboundFileConsumer extends FileConsumer {
+    private final static Logger logger = LoggerFactory.getLogger(InboundFileConsumer.class);
 
-    public InboundMessageConsumer(String id, String name, String expectedValue, Integer delay) {
+    public InboundFileConsumer(String id, String name, String expectedValue, Integer delay) {
         super(id, name, expectedValue, delay);
     }
 
     @Override
     public TestResult consume(Object consumable) {
         if (consumable == null) {
-            return new TestResult(name, false, "InboundMessageConsumer: Invalid consumable, null or empty!");
+            return new TestResult(name, false, "InboundFileConsumer: Invalid consumable, null or empty!");
         }
         File tempDir = (File) consumable;
         if (!tempDir.isDirectory()) {
@@ -30,7 +30,7 @@ public class InboundMessageConsumer extends FileConsumer {
             return new TestResult(name, false, "not a directory " + fullDir.getAbsolutePath());
         }
 
-        logger.info("InboundMessageConsumer: consumable: " + tempDir.getAbsolutePath() + " length: " + fullDir.list().length);
+        logger.info("InboundFileConsumer: consumable: " + tempDir.getAbsolutePath() + " length: " + fullDir.list().length);
 
         boolean result = Integer.valueOf(expectedValue) == fullDir.list().length;
         return new TestResult(name, result, "Expected value: " + expectedValue + " real: " + fullDir.list().length);

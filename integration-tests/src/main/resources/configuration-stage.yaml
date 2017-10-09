@@ -295,6 +295,9 @@ tests:
                 source queue: preprocessing-out
                 timeout: 1500
                 consumers: 17
+            - directory subscriber:
+                consumers: 18 19
+                source directory: /peppol/data/storage/0037_01098230/9908_939214895/
         consumers:
             - queue msg count check:
                 id: 16
@@ -304,3 +307,11 @@ tests:
                 id: 17
                 expected value: 1
                 name: preprocessing out queue check
+            - preprocessing check:
+                id: 18
+                expected value: '$date/preprocessing_valid.xml'
+                name: preprocessing valid file check
+            - preprocessing check:
+                id: 19
+                expected value: '$date/preprocessing_invalid.xml'
+                name: preprocessing invalid file check
