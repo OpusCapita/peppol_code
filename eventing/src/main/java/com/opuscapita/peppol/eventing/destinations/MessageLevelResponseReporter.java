@@ -147,9 +147,10 @@ public class MessageLevelResponseReporter {
 
     @SuppressWarnings("ConstantConditions")
     private String fetchOriginalSourceFromDb(ContainerMessage cm) {
-        Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
+        Customer customer = customerRepository.findByIdentifier(cm.getDocumentInfo().getSenderId());
         if (customer == null) {
-            logger.warn("Unable to create standard MLR. Could not fetch customer id for file: " + cm.getFileName());
+            logger.warn("Unable to create standard MLR. Could not fetch customer for file: " + cm.getFileName()
+                    + " and customer id: " + cm.getDocumentInfo().getSenderId());
             return null;
         }
         Message message = messageRepository.findBySenderAndInvoiceNumber(customer, cm.getDocumentInfo().getDocumentId());
