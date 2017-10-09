@@ -40,6 +40,7 @@ public class UmsAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         username = authentication.getName();
         String password = authentication.getCredentials().toString();
+        logger.info("Authentication attempt for the user: " + username);
         try {
             Authentication auth = parseUmsAuthentication(username, password);
             return auth;
