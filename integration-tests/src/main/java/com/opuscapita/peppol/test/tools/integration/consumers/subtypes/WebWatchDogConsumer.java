@@ -21,7 +21,7 @@ public class WebWatchDogConsumer extends FileConsumer{
 
     @Override
     public TestResult consume(Object consumable) {
-        init(consumable);
+        initCurrentDirectory(consumable);
         if(file == null) {
             return result;
         }

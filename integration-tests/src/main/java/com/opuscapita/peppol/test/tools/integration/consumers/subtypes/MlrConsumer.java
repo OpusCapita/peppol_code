@@ -6,6 +6,8 @@ import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
 public class MlrConsumer extends FileConsumer {
 
     private final static Logger logger = LoggerFactory.getLogger(MlrConsumer.class);
@@ -18,7 +20,10 @@ public class MlrConsumer extends FileConsumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        init(consumable);
+        initCurrentDirectory(consumable);
+
+        file = new File(currentDirectory, expectedValue);
+
         if (file == null) {
             return result;
         }

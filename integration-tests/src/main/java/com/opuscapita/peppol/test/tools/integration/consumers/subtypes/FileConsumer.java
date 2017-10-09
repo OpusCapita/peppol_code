@@ -34,7 +34,7 @@ public class FileConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        init(consumable);
+        initCurrentDirectory(consumable);
         file = new File(currentDirectory, expectedValue);
 
         if(file == null) {
@@ -51,7 +51,7 @@ public class FileConsumer extends Consumer {
         return result;
     }
 
-    protected void init(Object consumable) {
+    protected void initCurrentDirectory(Object consumable) {
         if(consumable == null) {
             result = new TestResult(name, false, "FileConsumer: Invalid consumable, null or empty!");
             return;

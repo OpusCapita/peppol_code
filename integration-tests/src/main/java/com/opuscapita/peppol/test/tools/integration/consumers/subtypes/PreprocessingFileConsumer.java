@@ -16,10 +16,11 @@ public class PreprocessingFileConsumer extends FileConsumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        init(consumable);
+        initCurrentDirectory(consumable);
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        expectedValue.replace("$date", date);
-        file = new File(currentDirectory, expectedValue);
+        logger.info("expected value: " + expectedValue );
+        String fileToSearch = expectedValue.replace("$date", date);
+        file = new File(currentDirectory, fileToSearch);
         if (!file.exists()) {
             return new TestResult(name, false, "Expected file not found:  " + file.getAbsolutePath());
         }

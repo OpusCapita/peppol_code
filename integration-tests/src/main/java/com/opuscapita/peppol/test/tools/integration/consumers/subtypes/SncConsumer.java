@@ -17,32 +17,28 @@ public class SncConsumer extends FileConsumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        if(consumable == null) {
-            return new TestResult(name, false, "SncConsumer: Invalid consumable, null or empty!");
+        initCurrentDirectory(consumable);
+        if(!currentDirectory.isDirectory()) {
+            return new TestResult(name, false, "SncConsumer: Directory not found " + currentDirectory);
         }
 
-        File directory = (File) consumable;
-        if(!directory.isDirectory()) {
-            return new TestResult(name, false, "SncConsumer: Directory not found " + directory);
-        }
-
-        if(searchforFile(directory)) {
+        if(searchforFile()) {
             return new TestResult(name, true, "Found expected file " + expectedValue);
         }
 
-        logger.warn("SncConsumer: no files to consume in " + directory + " retry in: " + delay);
+        logger.warn("SncConsumer: no files to consume in " + currentDirectory + " retry in: " + delay);
         waitFixedDelay();
 
-        if(searchforFile(directory)) {  //retry
+        if(searchforFile()) {  //retry
             return new TestResult(name, true, "Found expected file " + expectedValue);
         }
 
-        logger.warn("SncConsumer: still no files to consume in " + directory + " test failed ");
+        logger.warn("SncConsumer: still no files to consume in " + currentDirectory + " test failed ");
         return new TestResult(name, false, "not found expected file with name " + expectedValue);
     }
 
-    private boolean searchforFile(File directory){
-        for(File f : directory.listFiles()) {
+    private boolean searchforFile(){
+        for(File f : currentDirectory.listFiles()) {
             if(f.getName().startsWith(expectedValue)){
                 f.delete();
                 return true;
