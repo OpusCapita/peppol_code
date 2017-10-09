@@ -26,7 +26,7 @@ public class HealthCheck extends Check {
 
     @Override
     public CheckResult run() {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 15; i++) {
                 try {
                     return performCheck();      //doing check
                 } catch (ConnectException e) {
