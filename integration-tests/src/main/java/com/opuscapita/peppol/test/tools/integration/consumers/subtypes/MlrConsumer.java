@@ -23,7 +23,6 @@ public class MlrConsumer extends FileConsumer {
         initCurrentDirectory(consumable);
 
         file = new File(currentDirectory, expectedValue);
-
         if (file == null) {
             return result;
         }
