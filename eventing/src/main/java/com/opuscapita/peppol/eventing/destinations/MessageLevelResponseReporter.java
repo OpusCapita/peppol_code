@@ -130,7 +130,7 @@ public class MessageLevelResponseReporter {
             created = true;
         }
         if (!created) {
-            logger.warn("Failed to define where to send MLR for " + cm.getFileName() + ", original source = " + originalSource);
+            logger.error("Failed to define where to send MLR for " + cm.getFileName() + ", original source = " + originalSource);
         }
 
         if (backupEnabled) {
@@ -140,14 +140,14 @@ public class MessageLevelResponseReporter {
                     logger.info("Backup MLR stored as " + backupMlr);
                 }
             } catch (Exception e) {
-                logger.warn("Failed to create MLR backup file: " + e.getMessage());
+                logger.error("Failed to create MLR backup file: " + e.getMessage());
             }
         }
     }
 
     @SuppressWarnings("ConstantConditions")
     private String fetchOriginalSourceFromDb(ContainerMessage cm) {
-        Customer customer = customerRepository.findByIdentifier(cm.getDocumentInfo().getSenderId());
+        Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
         if (customer == null) {
             logger.warn("Unable to create standard MLR. Could not fetch customer for file: " + cm.getFileName()
                     + " and customer id: " + cm.getDocumentInfo().getSenderId());
