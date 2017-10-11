@@ -47,16 +47,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
        http
                 .logout()
-               // .addLogoutHandler(customLogoutHandler())
-                //.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutUrl("/logout")
                     .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
                             .logoutSuccessUrl("/")
                                .permitAll();
         http.httpBasic();
-        //http.addFilterAfter(digestAuthenticationFilter(), BasicAuthenticationFilter.class);
-        //http.addFilter(digestAuthenticationFilter());
         http.csrf().disable();
         http.sessionManagement()
                 .maximumSessions(1)
