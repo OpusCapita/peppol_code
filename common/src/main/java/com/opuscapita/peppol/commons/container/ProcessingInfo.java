@@ -86,8 +86,8 @@ public class ProcessingInfo implements Serializable {
 
     @SuppressWarnings("UnusedReturnValue")
     public ProcessingInfo setCurrentStatus(@NotNull Endpoint endpoint, @NotNull String status) {
-        this.currentStatus = status;
         this.currentEndpoint = endpoint;
+        this.currentStatus = status;
         return this;
     }
 
