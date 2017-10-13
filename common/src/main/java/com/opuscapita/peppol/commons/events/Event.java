@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.commons.events;
 
-public class Event {
+import org.jetbrains.annotations.NotNull;
+
+public class Event implements Comparable<Event> {
     private final long id;
     private final String source;
     private final String status;
@@ -44,5 +46,10 @@ public class Event {
                 ", terminal=" + terminal +
                 ", details='" + details + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NotNull Event o) {
+        return Long.compare(id, o.id);
     }
 }
