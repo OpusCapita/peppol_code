@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.container;
 import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.Route;
+import com.opuscapita.peppol.commons.events.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +41,9 @@ public class ProcessingInfo implements Serializable {
     private String sendingProtocol;
     @Since(1.1)
     private String originalSource;
+    private String messageId;
+    private long attemptId;
+    private Message eventingMessage;
 
     /**
      * @param source the initial endpoint
@@ -146,5 +150,29 @@ public class ProcessingInfo implements Serializable {
 
     public void setOriginalSource(String originalSource) {
         this.originalSource = originalSource;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    public void setAttemptId(long attemptId) {
+        this.attemptId = attemptId;
+    }
+
+    public long getAttemptId() {
+        return attemptId;
+    }
+
+    public void setEventingMessage(Message eventingMessage) {
+        this.eventingMessage = eventingMessage;
+    }
+
+    public Message getEventingMessage() {
+        return eventingMessage;
     }
 }

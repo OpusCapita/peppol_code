@@ -54,6 +54,7 @@ public class TestConfig {
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
         yaml.setResources(new ClassPathResource("application.yml"));
         OxalisErrorsList oxalisErrorsList = new OxalisErrorsList();
+        System.getProperties().setProperty("peppol.email-notificator.directory", System.getProperty("java.io.tmpdir"));
         return oxalisErrorsList;
     }
 

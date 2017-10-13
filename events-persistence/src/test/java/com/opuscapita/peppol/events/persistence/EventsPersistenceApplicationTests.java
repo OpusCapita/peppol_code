@@ -31,6 +31,11 @@ import static org.junit.Assert.fail;
 @ComponentScan(excludeFilters = @ComponentScan.Filter(value = EventQueueListener.class, type = FilterType.ASSIGNABLE_TYPE))
 @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
 public class EventsPersistenceApplicationTests {
+
+    public EventsPersistenceApplicationTests() {
+        System.setProperty("spring.jpa.hibernate.ddl-auto", "update");
+    }
+
     String[] negativeFixtures = {
             "",
             "{}",
