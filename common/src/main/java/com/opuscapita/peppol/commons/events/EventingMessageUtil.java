@@ -63,6 +63,9 @@ public class EventingMessageUtil {
     }
 
     protected static Event createEvent(@NotNull ContainerMessage containerMessage, @NotNull String details) {
+        logger.info("Current endpoint is null: " + (containerMessage.getProcessingInfo().getCurrentEndpoint() == null));
+        if(containerMessage.getProcessingInfo().getCurrentEndpoint() != null)
+            logger.info(containerMessage.getProcessingInfo().getCurrentEndpoint().toString());
         return new Event(
                 System.currentTimeMillis(),
                 containerMessage.getProcessingInfo().getCurrentEndpoint().getName(),
