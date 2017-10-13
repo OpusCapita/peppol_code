@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,17 +46,26 @@ public abstract class AbstractQueueListener {
 
     @SuppressWarnings("unused")
     public synchronized void receiveMessage(@NotNull String message) {
-        ContainerMessage cm;
+        ContainerMessage cm = null;
+        boolean success = true;
         try {
             logger.debug("Received string message, assuming JSON");
             cm = serializer.fromJson(message);
         } catch (Exception e) {
+            success = false;
             logger.error("Failed to deserialize received message: " + e.getMessage());
             handleError("n/a", e, null);
-            return;
         }
+        if(success && cm != null) {
+            receiveMessage(cm);
+        }
+        reportEvent(cm);
+    }
 
-        receiveMessage(cm);
+    private void reportEvent(ContainerMessage cm) {
+        if(cm != null) {
+            EventingMessageUtil.reportEvent(cm, cm.getProcessingInfo().getCurrentStatus());
+        }
     }
 
     @SuppressWarnings("unused")

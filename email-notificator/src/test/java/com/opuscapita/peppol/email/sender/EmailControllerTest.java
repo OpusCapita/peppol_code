@@ -42,7 +42,7 @@ import static org.junit.Assert.assertTrue;
 public class EmailControllerTest {
     //constants
     private static final String CUSTOMER_ID = "customer_id";
-    private static final String OUTPUT_DIRECTORY = "/tmp" + File.separator;
+    private static final String OUTPUT_DIRECTORY = new File(System.getProperty("java.io.tmpdir")).getAbsolutePath() + File.separator;
     private static final String INVALID_ERROR_MESSAGE = "INVALID error message";
     private static final String TRANSPORT_ERROR_MESSAGE = "Problem with SMP lookup for participant TEST and document type TEST";
 
@@ -175,7 +175,7 @@ public class EmailControllerTest {
 
     //outbound
     private ContainerMessage createTestContainerMessage() {
-        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("metadata", OUTPUT_DIRECTORY + "/test.xml", new Endpoint("test", ProcessType.TEST));
         DocumentInfo di = new DocumentInfo();
         di.setDocumentId("doc_id");
         di.setIssueDate("2017-07-18");
