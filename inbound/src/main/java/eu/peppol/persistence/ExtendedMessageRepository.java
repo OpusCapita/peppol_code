@@ -65,6 +65,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
 
             ContainerMessage cm = prepareMessage(dataFile, metadataString, properties.getProperty(COMPONENT_NAME));
             cm.getProcessingInfo().setTransactionId(metadata.getTransmissionId().toString());
+            cm.setStatus(cm.getProcessingInfo().getSource(), "received");
             EventingMessageUtil.reportEvent(cm, "received file");
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {

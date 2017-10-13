@@ -2,6 +2,7 @@ package com.opuscapita.peppol.commons.events;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.EndpointUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +66,7 @@ public class EventingMessageUtil {
     protected static Event createEvent(@NotNull ContainerMessage containerMessage, @NotNull String details) {
         return new Event(
                 System.currentTimeMillis(),
-                containerMessage.getProcessingInfo().getSource().getName(),
+                containerMessage.getProcessingInfo().getCurrentEndpoint().getName(),
                 containerMessage.getProcessingInfo().getCurrentStatus(),
                 calculateIfTerminalStatus(containerMessage),
                 details
@@ -80,10 +81,10 @@ public class EventingMessageUtil {
         }
 
         //Negative cases of terminal status determination
-        if(containerMessage.hasErrors()) {
+        if (containerMessage.hasErrors()) {
             result = true;
         }
-        if(containerMessage.getDocumentInfo() != null && containerMessage.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+        if (containerMessage.getDocumentInfo().getArchetype() == Archetype.INVALID) {
             result = true;
         }
         return result;

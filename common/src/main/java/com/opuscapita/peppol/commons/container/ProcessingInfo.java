@@ -46,7 +46,7 @@ public class ProcessingInfo implements Serializable {
     private Message eventingMessage;
 
     /**
-     * @param source the initial endpoint
+     * @param source         the initial endpoint
      * @param sourceMetadata any voluntary data provided by the original endpoint
      */
     public ProcessingInfo(@NotNull Endpoint source, @NotNull String sourceMetadata) {
@@ -121,23 +121,23 @@ public class ProcessingInfo implements Serializable {
     }
 
     public Endpoint getCurrentEndpoint() {
-        return currentEndpoint;
-    }
-
-    public void setCommonName(String commonName) {
-        this.commonName = commonName;
+        return currentEndpoint == null ? source : currentEndpoint;
     }
 
     public String getCommonName() {
         return commonName;
     }
 
-    public void setSendingProtocol(String sendingProtocol) {
-        this.sendingProtocol = sendingProtocol;
+    public void setCommonName(String commonName) {
+        this.commonName = commonName;
     }
 
     public String getSendingProtocol() {
         return sendingProtocol;
+    }
+
+    public void setSendingProtocol(String sendingProtocol) {
+        this.sendingProtocol = sendingProtocol;
     }
 
     @NotNull
@@ -160,19 +160,19 @@ public class ProcessingInfo implements Serializable {
         this.messageId = messageId;
     }
 
-    public void setAttemptId(long attemptId) {
-        this.attemptId = attemptId;
-    }
-
     public long getAttemptId() {
         return attemptId;
     }
 
-    public void setEventingMessage(Message eventingMessage) {
-        this.eventingMessage = eventingMessage;
+    public void setAttemptId(long attemptId) {
+        this.attemptId = attemptId;
     }
 
     public Message getEventingMessage() {
         return eventingMessage;
+    }
+
+    public void setEventingMessage(Message eventingMessage) {
+        this.eventingMessage = eventingMessage;
     }
 }
