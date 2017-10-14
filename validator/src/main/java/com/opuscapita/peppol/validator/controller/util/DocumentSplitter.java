@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.validator.validations.validator.sbdh;
+package com.opuscapita.peppol.validator.controller.util;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import org.jetbrains.annotations.NotNull;
@@ -14,12 +14,12 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.*;
 
 /**
- * Reads document from disk and splits it into two parts - SBDH and document body.
+ * Reads document from storage and splits it into two parts - SBDH and document body.
  *
  * @author Sergejs.Roze
  */
 @Component
-public class SbdhSplitter {
+public class DocumentSplitter {
     public class Result {
         private final byte[] sbdh;
         private final byte[] documentBody;
@@ -36,6 +36,12 @@ public class SbdhSplitter {
         public byte[] getDocumentBody() {
             return documentBody;
         }
+    }
+
+    private final XMLInputFactory xmlInputFactory;
+
+    public DocumentSplitter(@NotNull XMLInputFactory xmlInputFactory) {
+        this.xmlInputFactory = xmlInputFactory;
     }
 
     /**
@@ -56,14 +62,14 @@ public class SbdhSplitter {
         }
     }
 
-    Result split(@NotNull InputStream inputStream, @NotNull String rootName) throws XMLStreamException, IOException {
+    public Result split(@NotNull InputStream inputStream, @NotNull String rootName) throws XMLStreamException, IOException {
         FastByteArrayOutputStream sbdh = new FastByteArrayOutputStream(2048); // seems like regular SBDH is inside this limit
         FastByteArrayOutputStream body = new FastByteArrayOutputStream(8192); // seems like regular file is inside this limit
 
         boolean collectingSbdh = false;
         boolean collectingBody = false;
 
-        XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(inputStream);
+        XMLEventReader reader = xmlInputFactory.createXMLEventReader(inputStream);
         Writer sbdhWriter = new OutputStreamWriter(sbdh);
         Writer bodyWriter = new OutputStreamWriter(body);
 

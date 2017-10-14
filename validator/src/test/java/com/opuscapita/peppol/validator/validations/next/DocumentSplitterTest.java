@@ -1,7 +1,9 @@
-package com.opuscapita.peppol.validator.validations.validator.sbdh;
+package com.opuscapita.peppol.validator.validations.next;
 
+import com.opuscapita.peppol.validator.controller.util.DocumentSplitter;
 import org.junit.Test;
 
+import javax.xml.stream.XMLInputFactory;
 import java.io.InputStream;
 
 import static org.junit.Assert.assertFalse;
@@ -10,15 +12,17 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Sergejs.Roze
  */
-public class SbdhSplitterTest {
+public class DocumentSplitterTest {
 
     @Test
     public void split() throws Exception {
         String sbdh;
         String body;
 
-        try (InputStream inputStream = SbdhSplitterTest.class.getResourceAsStream("/test_data/difi_files/EHF_profile-bii05_invoice_invalid.xml")) {
-            SbdhSplitter.Result result = new SbdhSplitter().split(inputStream, "Invoice");
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+
+        try (InputStream inputStream = DocumentSplitterTest.class.getResourceAsStream("/test_data/difi_files/EHF_profile-bii05_invoice_invalid.xml")) {
+            DocumentSplitter.Result result = new DocumentSplitter(xmlInputFactory).split(inputStream, "Invoice");
             sbdh = new String(result.getSbdh());
             body = new String(result.getDocumentBody());
         }
