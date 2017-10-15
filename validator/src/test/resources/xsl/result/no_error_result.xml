@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svrl:schematron-output xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        title="Sjekk mot norske nasjonale regler"
+                        schemaVersion="iso"><!--   
+		   
+		   
+		 -->
+    <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                                        prefix="cbc"/>
+    <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                                        prefix="cac"/>
+    <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                                        prefix="ubl"/>
+    <svrl:ns-prefix-in-attribute-values uri="utils" prefix="u"/>
+    <svrl:active-pattern document=""/>
+    <svrl:fired-rule context="/ubl:Invoice"/>
+    <svrl:failed-assert test="$isZ02 or (cac:ContractDocumentReference/cbc:ID != '')"
+                        id="NOGOV-T10-R005"
+                        flag="warning"
+                        location="/*:Invoice[namespace-uri()='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'][1]">
+        <svrl:text>[NOGOV-T10-R005]-ContractDocumentReference SHOULD be provided according to EHF.</svrl:text>
+    </svrl:failed-assert>
+    <svrl:fired-rule context="//cbc:ProfileID"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Date')]"/>
+    <svrl:fired-rule context="cbc:InvoiceTypeCode"/>
+    <svrl:fired-rule context="//cac:OrderReference"/>
+    <svrl:fired-rule context="/ubl:Invoice/cac:AccountingSupplierParty/cac:Party"/>
+    <svrl:fired-rule context="//cac:Party/cbc:EndpointID"/>
+    <svrl:fired-rule context="//cac:PartyTaxScheme/cbc:CompanyID"/>
+    <svrl:fired-rule context="//cac:PartyLegalEntity/cbc:CompanyID"/>
+    <svrl:fired-rule context="/ubl:Invoice/cac:AccountingCustomerParty/cac:Party"/>
+    <svrl:fired-rule context="//cac:Party/cbc:EndpointID"/>
+    <svrl:fired-rule context="//cac:PartyTaxScheme/cbc:CompanyID"/>
+    <svrl:fired-rule context="//cac:PartyLegalEntity/cbc:CompanyID"/>
+    <svrl:fired-rule context="//cac:PaymentMeans"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Date')]"/>
+    <svrl:fired-rule context="//cac:PaymentMeans/cac:PayeeFinancialAccount/cbc:ID[attribute::schemeID = 'IBAN']"/>
+    <svrl:fired-rule context="/ubl:Invoice/cac:PaymentTerms"/>
+    <svrl:fired-rule context="/ubl:Invoice/cac:TaxTotal"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="cac:LegalMonetaryTotal"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="//cac:InvoiceLine"/>
+    <svrl:failed-assert test="(cbc:AccountingCost)"
+                        id="NOGOV-T10-R003"
+                        flag="warning"
+                        location="/*:Invoice[namespace-uri()='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'][1]/*:InvoiceLine[namespace-uri()='urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2'][1]">
+        <svrl:text>[NOGOV-T10-R003]-The buyer's accounting code applied to the Invoice Line SHOULD be provided according to EHF.</svrl:text>
+    </svrl:failed-assert>
+    <svrl:failed-assert test="$isZ02 or (cac:OrderLineReference/cbc:LineID != '')"
+                        id="NOGOV-T10-R004"
+                        flag="warning"
+                        location="/*:Invoice[namespace-uri()='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'][1]/*:InvoiceLine[namespace-uri()='urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2'][1]">
+        <svrl:text>[NOGOV-T10-R004]-An association to Order Line Reference SHOULD be provided according to EHF.</svrl:text>
+    </svrl:failed-assert>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+    <svrl:fired-rule context="//cac:Item"/>
+    <svrl:fired-rule context="//*[contains(name(), 'Amount') and not(contains(name(), 'Transaction'))]"/>
+</svrl:schematron-output>

@@ -24,6 +24,7 @@ public class XslValidator {
         Result result = new StreamResult(outputStream);
 
         transformer.transform(source, result);
+
         return outputStream;
     }
 

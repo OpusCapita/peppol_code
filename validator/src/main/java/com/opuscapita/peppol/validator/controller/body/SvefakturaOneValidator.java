@@ -77,6 +77,6 @@ public class SvefakturaOneValidator {
         logger.info("Validating Svefaktura1 " + cm.getFileName() + " against XSL");
         Templates template = xslRepository.getByName(xslPath);
         FastByteArrayOutputStream out = xslValidator.validate(body, template);
-        return resultParser.parse(cm, out);
+        return resultParser.parse(cm, out.getInputStream());
     }
 }
