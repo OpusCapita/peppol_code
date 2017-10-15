@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.xml.transform.Source;
@@ -24,7 +25,7 @@ public class XslRepositoryImpl implements XslRepository {
     private final TransformerFactory transformerFactory;
 
     @Autowired
-    public XslRepositoryImpl(@NotNull TransformerFactory transformerFactory) {
+    public XslRepositoryImpl(@NotNull @Lazy TransformerFactory transformerFactory) {
         this.transformerFactory = transformerFactory;
     }
 

@@ -2,6 +2,7 @@ package com.opuscapita.peppol.validator.controller.util;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FastByteArrayOutputStream;
 
@@ -40,7 +41,7 @@ public class DocumentSplitter {
 
     private final XMLInputFactory xmlInputFactory;
 
-    public DocumentSplitter(@NotNull XMLInputFactory xmlInputFactory) {
+    public DocumentSplitter(@NotNull @Lazy XMLInputFactory xmlInputFactory) {
         this.xmlInputFactory = xmlInputFactory;
     }
 

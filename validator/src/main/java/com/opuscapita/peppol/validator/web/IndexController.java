@@ -8,8 +8,8 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.commons.validation.ValidationResult;
+import com.opuscapita.peppol.validator.controller.ValidationController;
 import com.opuscapita.peppol.validator.util.MultiPartHelper;
-import com.opuscapita.peppol.validator.validations.ValidationController;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -71,6 +71,7 @@ public class IndexController {
         return result;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @PostMapping("/")
     public ModelAndView validate(@RequestParam(name = "datafile") MultipartFile dataFile, HttpServletRequest request) {
         Span span = tracer.createSpan("web validation");

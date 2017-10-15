@@ -2,6 +2,7 @@ package com.opuscapita.peppol.validator.controller.xsl;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.xml.sax.Attributes;
@@ -20,7 +21,7 @@ import java.io.IOException;
 public class ResultParser {
     private final SAXParserFactory saxParserFactory;
 
-    public ResultParser(@NotNull SAXParserFactory saxParserFactory) {
+    public ResultParser(@NotNull @Lazy SAXParserFactory saxParserFactory) {
         this.saxParserFactory = saxParserFactory;
     }
 

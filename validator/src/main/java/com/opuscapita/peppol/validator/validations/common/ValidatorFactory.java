@@ -7,13 +7,11 @@ import com.opuscapita.peppol.validator.validations.difi.DifiValidatorConfig;
 import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1Validator;
 import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1ValidatorConfig;
 import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1XsdValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by bambr on 16.6.10.
  */
-@Component
+//@Component
 public class ValidatorFactory {
     private DifiValidator difiValidator;
     private Svefaktura1Validator svefaktura1Validator;
@@ -23,7 +21,7 @@ public class ValidatorFactory {
 
     public ValidatorFactory() {}
 
-    @Autowired
+    //@Autowired
     public ValidatorFactory(DifiValidatorConfig difiValidatorConfig,
                             Svefaktura1ValidatorConfig svefaktura1ValidatorConfig,
                             Svefaktura1XsdValidator svefaktura1XsdValidator) {

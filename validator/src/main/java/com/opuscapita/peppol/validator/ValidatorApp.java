@@ -30,7 +30,7 @@ import javax.xml.transform.TransformerFactory;
  * @author Sergejs.Roze
  */
 @EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
 @EnableCaching
 public class ValidatorApp {
     private final static Logger logger = LoggerFactory.getLogger(ValidatorApp.class);
