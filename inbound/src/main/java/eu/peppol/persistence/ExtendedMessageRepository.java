@@ -3,6 +3,7 @@ package eu.peppol.persistence;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.storage.StorageImpl;
 import com.opuscapita.peppol.inbound.InboundErrorHandler;
 import com.opuscapita.peppol.inbound.InboundMessageSender;
@@ -64,6 +65,8 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
 
             ContainerMessage cm = prepareMessage(dataFile, metadataString, properties.getProperty(COMPONENT_NAME));
             cm.getProcessingInfo().setTransactionId(metadata.getTransmissionId().toString());
+            cm.setStatus(cm.getProcessingInfo().getSource(), "received");
+            EventingMessageUtil.reportEvent(cm, "received file");
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {
             logger.error("Failed to report file " + dataFile + " to MQ: ", e);

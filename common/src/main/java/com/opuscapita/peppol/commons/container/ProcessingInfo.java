@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.container;
 import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.Route;
+import com.opuscapita.peppol.commons.events.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,9 +41,12 @@ public class ProcessingInfo implements Serializable {
     private String sendingProtocol;
     @Since(1.1)
     private String originalSource;
+    private String messageId;
+    private long attemptId;
+    private Message eventingMessage;
 
     /**
-     * @param source the initial endpoint
+     * @param source         the initial endpoint
      * @param sourceMetadata any voluntary data provided by the original endpoint
      */
     public ProcessingInfo(@NotNull Endpoint source, @NotNull String sourceMetadata) {
@@ -82,8 +86,8 @@ public class ProcessingInfo implements Serializable {
 
     @SuppressWarnings("UnusedReturnValue")
     public ProcessingInfo setCurrentStatus(@NotNull Endpoint endpoint, @NotNull String status) {
-        this.currentStatus = status;
         this.currentEndpoint = endpoint;
+        this.currentStatus = status;
         return this;
     }
 
@@ -117,23 +121,23 @@ public class ProcessingInfo implements Serializable {
     }
 
     public Endpoint getCurrentEndpoint() {
-        return currentEndpoint;
-    }
-
-    public void setCommonName(String commonName) {
-        this.commonName = commonName;
+        return currentEndpoint == null ? source : currentEndpoint;
     }
 
     public String getCommonName() {
         return commonName;
     }
 
-    public void setSendingProtocol(String sendingProtocol) {
-        this.sendingProtocol = sendingProtocol;
+    public void setCommonName(String commonName) {
+        this.commonName = commonName;
     }
 
     public String getSendingProtocol() {
         return sendingProtocol;
+    }
+
+    public void setSendingProtocol(String sendingProtocol) {
+        this.sendingProtocol = sendingProtocol;
     }
 
     @NotNull
@@ -146,5 +150,29 @@ public class ProcessingInfo implements Serializable {
 
     public void setOriginalSource(String originalSource) {
         this.originalSource = originalSource;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    public long getAttemptId() {
+        return attemptId;
+    }
+
+    public void setAttemptId(long attemptId) {
+        this.attemptId = attemptId;
+    }
+
+    public Message getEventingMessage() {
+        return eventingMessage;
+    }
+
+    public void setEventingMessage(Message eventingMessage) {
+        this.eventingMessage = eventingMessage;
     }
 }
