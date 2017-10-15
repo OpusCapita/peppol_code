@@ -23,7 +23,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
@@ -57,15 +56,15 @@ public class PeppolValidatorApplication {
         this.environment = environment;
     }
 
-    public static void main(String[] args) {
-        try {
-            SpringApplication.run(PeppolValidatorApplication.class, args);
-        } catch (Exception e) {
-            //Failed to launch the application
-            //Try snc stuff? :)
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            SpringApplication.run(PeppolValidatorApplication.class, args);
+//        } catch (Exception e) {
+//            //Failed to launch the application
+//            //Try snc stuff? :)
+//            e.printStackTrace();
+//        }
+//    }
 
     @Bean
     public Svefaktura1ValidatorConfig svefaktura1ValidatorConfig() {
