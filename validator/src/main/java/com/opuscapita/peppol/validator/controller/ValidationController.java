@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.validator.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.validator.controller.body.BodyValidator;
 import com.opuscapita.peppol.validator.controller.util.DocumentSplitter;
 import com.opuscapita.peppol.validator.controller.xsd.HeaderValidator;
@@ -32,6 +33,13 @@ public class ValidationController {
 
     @NotNull
     public ContainerMessage validate(@NotNull ContainerMessage cm) throws IOException, XMLStreamException, TransformerException, SAXException, ParserConfigurationException {
+        if (cm.getDocumentInfo() == null) {
+            throw new IllegalArgumentException("Document info is missing from message " + cm.getFileName());
+        }
+        if (cm.hasErrors() || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+            return cm;
+        }
+
         DocumentSplitter.Result parts = splitter.split(cm);
 
         cm = headerValidator.validate(parts.getSbdh(), cm);
