@@ -59,7 +59,11 @@ public abstract class AbstractQueueListener {
         if(success && cm != null) {
             receiveMessage(cm);
         }
-        reportEvent(cm);
+        try {
+            reportEvent(cm);
+        } catch (Exception e) {
+            handleError(cm.getCustomerId(), e, cm);
+        }
     }
 
     private void reportEvent(ContainerMessage cm) {
