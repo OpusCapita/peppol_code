@@ -1,8 +1,10 @@
 package com.opuscapita.peppol.commons.events;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.SortedSet;
 
-public class Attempt {
+public class Attempt implements Comparable<Attempt> {
     private final long id;
     private final SortedSet<Event> events;
     private final String filename;
@@ -32,5 +34,10 @@ public class Attempt {
                 ", events=" + events +
                 ", filename='" + filename + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NotNull Attempt other) {
+        return Long.compare(id, other.getId());
     }
 }
