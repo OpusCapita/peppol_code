@@ -46,7 +46,7 @@ public class RuleSetValidator {
         }
 
         for (String rule : rules) {
-            Templates template = xslRepository.getByName(rule);
+            Templates template = xslRepository.getByFileName(rule);
             cm = resultParser.parse(cm, xslValidator.validate(body, template).getInputStream());
         }
 

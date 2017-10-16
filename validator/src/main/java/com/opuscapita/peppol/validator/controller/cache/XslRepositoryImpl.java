@@ -31,7 +31,7 @@ public class XslRepositoryImpl implements XslRepository {
 
     @Override
     @Cacheable("xsl")
-    public Templates getByName(@NotNull String name) throws TransformerConfigurationException {
+    public Templates getByFileName(@NotNull String name) throws TransformerConfigurationException {
         return loadXsl(name);
     }
 

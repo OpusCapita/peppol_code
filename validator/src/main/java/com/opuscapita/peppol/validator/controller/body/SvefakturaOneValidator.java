@@ -75,7 +75,7 @@ public class SvefakturaOneValidator {
 
     private ContainerMessage validateXsl(byte[] body, ContainerMessage cm) throws TransformerException, IOException, SAXException, ParserConfigurationException {
         logger.info("Validating Svefaktura1 " + cm.getFileName() + " against XSL");
-        Templates template = xslRepository.getByName(xslPath);
+        Templates template = xslRepository.getByFileName(xslPath);
         FastByteArrayOutputStream out = xslValidator.validate(body, template);
         return resultParser.parse(cm, out.getInputStream());
     }

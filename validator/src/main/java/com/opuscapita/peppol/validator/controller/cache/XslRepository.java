@@ -10,6 +10,6 @@ import javax.xml.transform.TransformerConfigurationException;
  */
 public interface XslRepository {
 
-    Templates getByName(@NotNull String name) throws TransformerConfigurationException;
+    Templates getByFileName(@NotNull String name) throws TransformerConfigurationException;
 
 }
