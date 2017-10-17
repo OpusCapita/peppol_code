@@ -10,6 +10,8 @@ import com.opuscapita.peppol.validator.validations.common.ValidatorFactory;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -19,7 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 /**
  * Created by bambr on 16.5.8.
  */
-//@Component
+@Component
 public class ValidationController {
     public static final String URN_WWW_CENBII_EU_TRANSACTION_BIICORETRDM010_VER1_0_URN_WWW_PEPPOL_EU_BIS_PEPPOL4A_VER1_0 = "urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0";
 
@@ -28,7 +30,7 @@ public class ValidationController {
     private final SbdhValidator sbdhValidator;
     private final ValidatorFactory validatorFactory;
 
-    //@Autowired
+    @Autowired
     public ValidationController(@NotNull SbdhValidator sbdhValidator, @NotNull ValidatorFactory validatorFactory) {
         this.sbdhValidator = sbdhValidator;
         this.validatorFactory = validatorFactory;
