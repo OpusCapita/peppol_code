@@ -6,14 +6,13 @@ import com.opuscapita.peppol.validator.controller.cache.XsdRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.xml.validation.Schema;
 
 /**
  * @author Sergejs.Roze
  */
-@Component
+//@Component
 public class HeaderValidator {
     private final XsdValidator xsdValidator;
     private final XsdRepository xsdRepository;

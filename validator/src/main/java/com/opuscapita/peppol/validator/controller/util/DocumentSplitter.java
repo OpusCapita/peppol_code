@@ -3,7 +3,6 @@ package com.opuscapita.peppol.validator.controller.util;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 import org.springframework.util.FastByteArrayOutputStream;
 
 import javax.xml.stream.XMLEventReader;
@@ -19,7 +18,7 @@ import java.io.*;
  *
  * @author Sergejs.Roze
  */
-@Component
+//@Component
 public class DocumentSplitter {
     public class Result {
         private final byte[] sbdh;

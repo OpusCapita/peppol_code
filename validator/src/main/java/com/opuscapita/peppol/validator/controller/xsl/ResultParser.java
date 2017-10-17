@@ -6,7 +6,6 @@ import com.opuscapita.peppol.commons.validation.ValidationError;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -20,7 +19,7 @@ import java.io.InputStream;
 /**
  * @author Sergejs.Roze
  */
-@Component
+//@Component
 public class ResultParser {
     private final SAXParserFactory saxParserFactory;
 

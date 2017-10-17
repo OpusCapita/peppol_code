@@ -2,8 +2,6 @@ package com.opuscapita.peppol.validator.controller.body;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -11,8 +9,8 @@ import java.util.Map;
 /**
  * @author Sergejs.Roze
  */
-@Component
-@ConfigurationProperties(prefix = "peppol.validator.document")
+//@Component
+//@ConfigurationProperties(prefix = "peppol.validator.document")
 public class RuleSetConfig {
     private Map<String, List<String>> types;
 

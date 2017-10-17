@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.xml.sax.SAXException;
 
@@ -25,8 +23,8 @@ import java.io.IOException;
 /**
  * @author Sergejs.Roze
  */
-@Component
-@Lazy
+//@Component
+//@Lazy
 public class SvefakturaOneValidator {
     private final static Logger logger = LoggerFactory.getLogger(SvefakturaOneValidator.class);
 

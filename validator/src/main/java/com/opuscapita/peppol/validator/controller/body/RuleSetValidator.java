@@ -6,7 +6,6 @@ import com.opuscapita.peppol.validator.controller.xsl.ResultParser;
 import com.opuscapita.peppol.validator.controller.xsl.XslValidator;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,7 +19,7 @@ import java.util.List;
  *
  * @author Sergejs.Roze
  */
-@Component
+//@Component
 public class RuleSetValidator {
     private final RuleSetConfig config;
     private final XslRepository xslRepository;
