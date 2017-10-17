@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ContainerMessageSerializer {
-    private final Gson gson = new GsonBuilder().disableHtmlEscaping().setVersion(1.1).create();
+    private final Gson gson = new GsonBuilder().disableHtmlEscaping().setVersion(1.2).create();
 
     public ContainerMessage fromJson(@NotNull String json) {
         return gson.fromJson(json, ContainerMessage.class);
