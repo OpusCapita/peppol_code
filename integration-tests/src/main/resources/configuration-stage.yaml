@@ -77,24 +77,12 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
-                source directory: /etc/resources/events-persistence-test/eventing_invalid-snc-test.xml
-                container message:
-                  source endpoint: integration-test-xib
-                  endpoint type: outbound
-                  endpoint: integration-test-endpoint
-                  null status: true
-            - mq producer:
-                mq connection: mq1
-                destination queue: eventing
                 source directory: /etc/resources/events-persistence-test/logger_eventing_xib_test.xml
                 container message:
                   source endpoint: integration-test-xib
                   endpoint type: outbound
                   endpoint: integration-test-endpoint
         subscribers:
-            - snc subscriber:
-                source directory: /peppol/data/snc-stub
-                consumers: 5
             - directory subscriber:
                 consumers: 6
                 source directory: /peppol/data/eventing/a2a/mlr
@@ -125,11 +113,6 @@ tests:
                 id: 9
                 expected value: '<cbc:Description>OTHER_ERROR: This sending expected to fail I/O in test mode</cbc:Description>'
                 expected file: eventing_invalid-er-mlr.xml
-                timeout: 16000
-            - snc test:
-                name: SNC ticket creation test
-                id: 5
-                expected value: 9908:937270067
                 timeout: 16000
    support-ui:
         producers:
