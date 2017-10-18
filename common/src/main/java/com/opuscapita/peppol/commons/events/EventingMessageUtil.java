@@ -52,7 +52,7 @@ public class EventingMessageUtil {
                 }}
         );
         containerMessage.getProcessingInfo().setEventingMessage(message);
-        return null;
+        return message;
     }
 
     protected static Attempt createAttempt(ContainerMessage containerMessage, String details) {
