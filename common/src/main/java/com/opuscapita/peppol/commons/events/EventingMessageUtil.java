@@ -2,7 +2,6 @@ package com.opuscapita.peppol.commons.events;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
-import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.EndpointUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +35,10 @@ public class EventingMessageUtil {
     }
 
     public static void reportEvent(ContainerMessage containerMessage, String details) {
-        Message message = containerMessage.getProcessingInfo().getEventingMessage() == null ? createMessage(containerMessage, details) : containerMessage.getProcessingInfo().getEventingMessage();
+        boolean shouldCreateEventingMessage = containerMessage.getProcessingInfo().getEventingMessage() == null;
+        logger.info("Should create eventing message: " + shouldCreateEventingMessage);
+        Message message = shouldCreateEventingMessage ? createMessage(containerMessage, details) : containerMessage.getProcessingInfo().getEventingMessage();
+        logger.info("Eventing message: " + message);
         message.getAttempts().last().getEvents().add(createEvent(containerMessage, details));
     }
 
