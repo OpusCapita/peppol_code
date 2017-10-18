@@ -6,8 +6,6 @@ import com.opuscapita.peppol.validator.controller.body.BodyValidator;
 import com.opuscapita.peppol.validator.controller.util.DocumentSplitter;
 import com.opuscapita.peppol.validator.controller.xsd.HeaderValidator;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,13 +16,13 @@ import java.io.IOException;
 /**
  * @author Sergejs.Roze
  */
-@Component
+//@Component
 public class ValidationController {
     private final DocumentSplitter splitter;
     private final HeaderValidator headerValidator;
     private final BodyValidator bodyValidator;
 
-    @Autowired
+    //@Autowired
     public ValidationController(@NotNull DocumentSplitter splitter, @NotNull HeaderValidator headerValidator, @NotNull BodyValidator bodyValidator) {
         this.splitter = splitter;
         this.headerValidator = headerValidator;

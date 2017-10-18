@@ -4,7 +4,6 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,7 +15,7 @@ import java.io.IOException;
  *
  * @author Sergejs.Roze
  */
-@Component
+//@Component
 public class BodyValidator {
     private final SvefakturaOneValidator svefakturaOneValidator;
     private final RuleSetValidator ruleSetValidator;

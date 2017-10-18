@@ -39,10 +39,13 @@ public class ProcessingInfo implements Serializable {
     private String commonName;
     @Since(1.0)
     private String sendingProtocol;
-    @Since(1.1)
+    @Since(1.2)
     private String originalSource;
+    @Since(1.2)
     private String messageId;
+    @Since(1.2)
     private long attemptId;
+    @Since(1.2)
     private Message eventingMessage;
 
     /**
