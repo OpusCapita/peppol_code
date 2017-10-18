@@ -63,3 +63,10 @@ outbound-invalid-tests-ct:
 	docker run -it -v $$PWD:/system-tests -v ~/.ssh:/var/jenkins_home/.ssh -w /system-tests -e ANSIBLE_HOST_KEY_CHECKING=False d-l-tools.ocnet.local:443/jenkins:2.46.2-peppol ansible-playbook -i test.hosts --user $$USER outbound-invalid-tests.yml -e 'report_path=$$PWD/reports'
 
 #------------------------------------------------------------
+#run validator-tests
+validator-tests-l:
+	ansible-playbook -i local.hosts validator-tests.yml
+validator-tests-s:
+	ansible-playbook -i stage.hosts validator-tests.yml
+validator-tests-c:
+	docker run -it -v $$PWD:/system-tests -v ~/.ssh:/var/jenkins_home/.ssh -w /system-tests -e ANSIBLE_HOST_KEY_CHECKING=False d-l-tools.ocnet.local:443/jenkins:2.46.3-peppol ansible-playbook -i stage.hosts --user $$USER validator-tests.yml -e 'report_path=$$PWD/reports' -K
