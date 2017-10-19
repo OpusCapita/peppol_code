@@ -82,7 +82,6 @@ tests:
                   source endpoint: integration-test-xib
                   endpoint type: outbound
                   endpoint: integration-test-endpoint
-                  processing info: null
             - mq producer:
                 mq connection: mq1
                 destination queue: eventing
