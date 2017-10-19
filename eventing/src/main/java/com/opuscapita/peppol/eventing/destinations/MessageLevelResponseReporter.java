@@ -64,6 +64,10 @@ public class MessageLevelResponseReporter {
             return;
         }
 
+        if(cm.getFileName().contains("eventing_invalid-snc-test.xml")){
+            throw new IllegalStateException("Integration test only");
+        }
+
         // ignoring inbound
         if (cm.isInbound()) {
             return;
