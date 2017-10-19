@@ -55,6 +55,10 @@ public class ContainerMessageCreator {
             logger.info("ContainerMessageCreator: archetype set to: " + cm.getDocumentInfo().getArchetype());
         }
 
+        if(properties.containsKey("processing info")){
+            cm.setProcessingInfo(null);
+        }
+
         return cm;
     }
 
