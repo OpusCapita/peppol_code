@@ -81,5 +81,8 @@ public class ReportingManager {
         if (errorHandler != null) {
             processingExceptions.entrySet().forEach(entry -> errorHandler.reportWithContainerMessage(cm, entry.getValue(), entry.getKey()));
         }
+        else {
+            logger.warn("ErrorHandler is null, this should be avoided in production!");
+        }
     }
 }
