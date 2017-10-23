@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-@Component
+/*@Component*/
 public class MessageAttemptEventReporter {
     MessagesRepository messagesRepository;
 
