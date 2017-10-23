@@ -19,3 +19,5 @@ include "zuul-proxy"
 include "peppol-tools"
 include "common-test"
 include "support-portal"
+include "wwd-reporter"
+
