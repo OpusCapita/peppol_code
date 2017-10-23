@@ -8,10 +8,12 @@ import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.revised_model.util.DTOTransformer;
 import com.opuscapita.peppol.eventing.revised.repositories.MessagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+@Component
 public class MessageAttemptEventReporter {
     MessagesRepository messagesRepository;
 

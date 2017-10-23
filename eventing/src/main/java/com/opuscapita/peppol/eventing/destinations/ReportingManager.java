@@ -2,6 +2,7 @@ package com.opuscapita.peppol.eventing.destinations;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.eventing.revised.MessageAttemptEventReporter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -24,14 +25,17 @@ public class ReportingManager {
     private WebWatchDogReporter webWatchDogReporter;
     private MessageLevelResponseReporter messageLevelResponseReporter;
     private EventPersistenceReporter eventPersistenceReporter;
+    private MessageAttemptEventReporter messageAttemptEventReporter;
 
     @Autowired
     public ReportingManager(@NotNull WebWatchDogReporter webWatchDogReporter,
                             @NotNull MessageLevelResponseReporter messageLevelResponseReporter,
-                            @NotNull EventPersistenceReporter eventPersistenceReporter) {
+                            @NotNull EventPersistenceReporter eventPersistenceReporter,
+                            @NotNull MessageAttemptEventReporter messageAttemptEventReporter) {
         this.webWatchDogReporter = webWatchDogReporter;
         this.messageLevelResponseReporter = messageLevelResponseReporter;
         this.eventPersistenceReporter = eventPersistenceReporter;
+        this.messageAttemptEventReporter = messageAttemptEventReporter;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -64,6 +68,16 @@ public class ReportingManager {
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
             processingExceptions.put("Exception during reporting to MLR", ex2);
         }
+
+        try {
+            messageAttemptEventReporter.process(cm);
+        } catch (Exception ex3) {
+            ex3.printStackTrace();
+            logger.error("MessageAttemptEventReporter failed with exception: " + ex3.getMessage());
+            processingExceptions.put("Exception during reporting with new eventing", ex3);
+        }
+
+
         if (errorHandler != null) {
             processingExceptions.entrySet().forEach(entry -> errorHandler.reportWithContainerMessage(cm, entry.getValue(), entry.getKey()));
         }
