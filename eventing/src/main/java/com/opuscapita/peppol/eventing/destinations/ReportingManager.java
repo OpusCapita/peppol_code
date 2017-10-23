@@ -25,17 +25,17 @@ public class ReportingManager {
     private WebWatchDogReporter webWatchDogReporter;
     private MessageLevelResponseReporter messageLevelResponseReporter;
     private EventPersistenceReporter eventPersistenceReporter;
-    /*private MessageAttemptEventReporter messageAttemptEventReporter;*/
+    private MessageAttemptEventReporter messageAttemptEventReporter;
 
     @Autowired
     public ReportingManager(@NotNull WebWatchDogReporter webWatchDogReporter,
                             @NotNull MessageLevelResponseReporter messageLevelResponseReporter,
-                            @NotNull EventPersistenceReporter eventPersistenceReporter/*,
-                            @NotNull MessageAttemptEventReporter messageAttemptEventReporter*/) {
+                            @NotNull EventPersistenceReporter eventPersistenceReporter,
+                            @NotNull MessageAttemptEventReporter messageAttemptEventReporter) {
         this.webWatchDogReporter = webWatchDogReporter;
         this.messageLevelResponseReporter = messageLevelResponseReporter;
         this.eventPersistenceReporter = eventPersistenceReporter;
-        /*this.messageAttemptEventReporter = messageAttemptEventReporter;*/
+        this.messageAttemptEventReporter = messageAttemptEventReporter;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -69,13 +69,13 @@ public class ReportingManager {
             processingExceptions.put("Exception during reporting to MLR", ex2);
         }
 
-        /*try {
+        try {
             messageAttemptEventReporter.process(cm);
         } catch (Exception ex3) {
             ex3.printStackTrace();
             logger.error("MessageAttemptEventReporter failed with exception: " + ex3.getMessage());
             processingExceptions.put("Exception during reporting with new eventing", ex3);
-        }*/
+        }
 
 
         if (errorHandler != null) {

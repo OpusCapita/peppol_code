@@ -30,8 +30,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing", "com.opuscapita.peppol.eventing.destinations.webwatchdog", "com.opuscapita.peppol.eventing.destinations.mlr.model"})
-@EnableJpaRepositories(basePackages = "com.opuscapita.peppol.eventing.destinations.mlr.model")
-@EntityScan(basePackages = {"com.opuscapita.peppol.eventing.destinations.mlr.model", "com.opuscapita.peppol.commons.model"})
+@EnableJpaRepositories(basePackages = {"com.opuscapita.peppol.eventing.destinations.mlr.model","com.opuscapita.peppol.eventing.revised.repositories"})
+@EntityScan(basePackages = {"com.opuscapita.peppol.eventing.destinations.mlr.model", "com.opuscapita.peppol.commons.model","com.opuscapita.peppol.commons.revised_model"})
 @EnableDiscoveryClient
 public class EventingApp {
 
