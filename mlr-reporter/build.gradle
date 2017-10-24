@@ -16,7 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 jar {
-    baseName = 'wwd-reporter'
+    baseName = 'mlr-reporter'
     version = ''
 }
 sourceCompatibility = 1.8
