@@ -40,11 +40,11 @@ public class MessageLevelResponseReporter {
     private final Storage storage;
     private final CustomerRepository customerRepository;
     private final MessageRepository messageRepository;
-    @Value("${peppol.eventing.mlr.a2a}")
+    @Value("${peppol.mlr-reporter.a2a}")
     private String destinationA2A;
-    @Value("${peppol.eventing.mlr.xib}")
+    @Value("${peppol.mlr-reporter.xib}")
     private String destinationXiB;
-    @Value("${peppol.eventing.mlr.backup.enabled:false}")
+    @Value("${peppol.mlr-reporter.backup.enabled:false}")
     private boolean backupEnabled;
 
     @Autowired
