@@ -16,6 +16,6 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 USER peppol
 WORKDIR "${MLR_REPORTER_HOME}"
 
-ADD ["build/libs/eventing.jar", "mlr-reporter.jar"]
+ADD ["build/libs/mlr-reporter.jar", "mlr-reporter.jar"]
 
 CMD ["-jar", "mlr-reporter.jar"]
