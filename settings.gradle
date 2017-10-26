@@ -20,4 +20,4 @@ include "peppol-tools"
 include "common-test"
 include "support-portal"
 include "mlr-reporter"
-
+include "validator-tester"
