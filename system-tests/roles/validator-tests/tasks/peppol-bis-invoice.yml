@@ -1,0 +1,33 @@
+---
+- set_fact: file=/test-materials/peppol-bis/invoice/OP-T10-R056-R057-T10-R0061-deprecatedUOM.xml
+
+- set_fact: expected="Warnings:OP-T10-R056 and OP-T10-R057"
+
+- name: send to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+
+- set_fact: result_w0_identifier="{{ result_warnings.0.validationError.identifier }}"
+
+- set_fact: result_w1_identifier="{{ result_warnings.1.validationError.identifier }}"
+
+- name: check if validation is correct
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_errors == []"
+      - "result_passed == true"
+      - "result_w0_identifier == 'OP-T10-R056'"
+      - "result_w1_identifier == 'OP-T10-R057'"
+    msg: "Test for {{ file }} failed"
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+...

@@ -1,37 +1,18 @@
 ---
-#- include: file_list.yml
+#+++++++++++++++++++++++++++++++
+#      EHF tests
+#+++++++++++++++++++++++++++++++
+- include: ehf-invoice.yml
+#-------------------------------
 
-#curl -F "file=@/test-materials/validation_test_suite/valid/logger_157_0000000011529648.xml" localhost:8083/validator/validate
-#"{\"errors\":[],\"warnings\":[],\"passed\":true,\"errorsString\":\"\"}",
-- name: send to validator REST
-  shell: curl -F "file=@/test-materials/validation_test_suite/valid/logger_157_0000000011529648.xml" localhost:8083/validator/validate
-  register: result
-- debug: var=result
+#+++++++++++++++++++++++++++++++
+#      peppol-bis tests
+#+++++++++++++++++++++++++++++++
+- include: peppol-bis-invoice.yml
+#-------------------------------
 
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- debug: var=result_errors
-
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- debug: var=result_warnings
-
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
-- debug: var=result_passed
-
-- set_fact: result_errorsString="{{ (result.stdout | from_json).errorsString }}"
-- debug: var=result_errorsString
-
-- name: check if validation is correct
-  ignore_errors: yes
-  assert:
-    that:
-      - "result_errors == []"
-      - "result_warnings == []"
-      - "result_passed == true"
-      - "result_errorsString == []"
-    msg: "Test for /test-materials/validation_test_suite/valid/logger_157_0000000011529648.xml failed"
-  register: assert_result
-- debug: var=assert_result
-
-
-
+#+++++++++++++++++++++++++++++++
+#      Final report check
+#+++++++++++++++++++++++++++++++
+- include: report_checker.yml
 ...
