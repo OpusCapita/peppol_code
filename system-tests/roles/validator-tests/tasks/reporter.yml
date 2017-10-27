@@ -11,7 +11,8 @@
     create: yes
     dest: "{{report_path}}/validator-report-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
-    line: '{{ counter }}|File: {{ file }}| Expected:{{ expected }}| Result:{{ assert_result }}'
+    line: '{{ counter }}|File: {{ file }}| Expected:{{ expected }} {{ expected1 }} {{ expected2 }}| Result:{{ assert_result }}'
 #report END -------
 
+- include: variable_cleaner.yml
 ...

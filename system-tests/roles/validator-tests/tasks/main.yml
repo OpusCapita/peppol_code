@@ -1,8 +1,11 @@
 ---
+- include: variable_cleaner.yml
 #+++++++++++++++++++++++++++++++
 #      EHF tests
 #+++++++++++++++++++++++++++++++
 - include: ehf-invoice.yml
+- include: ehf-creditnote.yml
+- include: ehf-catalogue.yml
 #-------------------------------
 
 #+++++++++++++++++++++++++++++++
