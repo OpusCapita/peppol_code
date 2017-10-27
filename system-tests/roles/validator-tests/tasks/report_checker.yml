@@ -1,0 +1,18 @@
+---
+#checking for failures in report- test has to fail if any asseert has failed #
+- debug:
+    var: report_path
+- name: register report
+  delegate_to: localhost
+  shell: cat "{{report_path}}/validator-report-{{ansible_date_time.iso8601_basic}}.txt"
+  register: report
+
+- debug:
+    var: report
+
+- name: check if any assert has failed up until now
+  fail: msg="At least one test failed, check {{report_path}}validator-report-{{ansible_date_time.iso8601_basic}}.txt for details!"
+  when:
+    - report.stdout | search("Test.*failed")
+...
+

@@ -1,0 +1,18 @@
+---
+#report START ------:
+- set_fact: counter="{{counter| int +1 }}"
+  register: counter
+
+- debug: var=counter
+
+- name: update test results
+  delegate_to: localhost
+  lineinfile:
+    create: yes
+    dest: "{{report_path}}/validator-report-{{ansible_date_time.iso8601_basic}}.txt"
+    state: present
+    line: '{{ counter }}|File: {{ file }}| Expected:{{ expected }} {{ expected1 }} {{ expected2 }}| Result:{{ assert_result }}'
+#report END -------
+
+- include: variable_cleaner.yml
+...

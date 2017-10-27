@@ -1,0 +1,61 @@
+---
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/catalogue/validid_ehf_catalogue.xml
+- set_fact: expected="'OP-T19-R014'"
+- set_fact: expected1="'OP-T19-R015'"
+- set_fact: valid="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
+- set_fact: result_identifier1="{{ result_warnings.1.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_errors == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+    msg: "Test for {{ file }} failed"
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/catalogue/NOGOV-T19-R024.xml
+- set_fact: expected="'NOGOV-T19-R024'"
+- set_fact: expected1="'OP-T19-R014'"
+- set_fact: expected2="'OP-T19-R015'"
+- set_fact: valid="false"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+- set_fact: result_identifier1="{{ result_warnings.0.validationError.identifier }}"
+- set_fact: result_identifier2="{{ result_warnings.1.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier2 == {{ expected2 }} "
+    msg: "Test for {{ file }} failed"
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+...
