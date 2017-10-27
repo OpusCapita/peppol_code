@@ -2,6 +2,7 @@
 - set_fact: file=/test-materials/EHF/EHF_2.0.12/invoice/NONAT-T10-R031.xml
 - set_fact: expected="'NONAT-T10-R031'"
 - set_fact: valid="false"
+- set_fact: active="true"
 
 - name: send {{ file }} to validator REST
   shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
@@ -20,6 +21,7 @@
       - "result_passed == {{ valid }}"
       - "result_identifier == {{ expected }}"
     msg: "Test for {{ file }} failed"
+  when: active==true
   register: assert_result
 
 - include: reporter.yml
@@ -28,6 +30,7 @@
 - set_fact: file=/test-materials/EHF/EHF_2.0.12/invoice/NONAT-T10-R032.xml
 - set_fact: expected="'NONAT-T10-R032'"
 - set_fact: valid="false"
+- set_fact: active="true"
 
 - name: send {{ file }} to validator REST
   shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
@@ -46,6 +49,7 @@
       - "result_passed == {{ valid }}"
       - "result_identifier == {{ expected }}"
     msg: "Test for {{ file }} failed"
+  when: active==true
   register: assert_result
 
 - include: reporter.yml
