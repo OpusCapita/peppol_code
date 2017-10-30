@@ -73,6 +73,10 @@ public class PmsChecker implements Checker {
             assertionType.setIdentifier("UNKNOWN");
         }
 
+        if(failedAssert.getId() != null) {
+            assertionType.setIdentifier(failedAssert.getId());
+        }
+
         assertionType.setText(text);
         assertionType.setLocation(failedAssert.getLocation());
         assertionType.setTest(failedAssert.getTest());
