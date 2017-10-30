@@ -12,6 +12,7 @@ def modules = [
     [name: 'inbound'],
     [name: 'internal-routing'],
     [name: 'mq-to-file'],
+    [name: 'mlr-reporter'],
     [name: 'outbound'],
     [name: 'preprocessing'],
     [name: 'support-ui'],
