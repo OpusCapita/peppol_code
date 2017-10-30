@@ -2,12 +2,14 @@ package com.opuscapita.peppol.eventing.destinations;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.eventing.revised.MessageAttemptEventReporter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -26,16 +28,21 @@ public class ReportingManager {
     private MessageLevelResponseReporter messageLevelResponseReporter;
     private EventPersistenceReporter eventPersistenceReporter;
     private MessageAttemptEventReporter messageAttemptEventReporter;
+    private MessageQueue rabbitTemplate;
+    @Value("${peppol.eventing.queue.out.mlr.name}")
+    private String mlrQueue;
 
     @Autowired
     public ReportingManager(@NotNull WebWatchDogReporter webWatchDogReporter,
                             @NotNull MessageLevelResponseReporter messageLevelResponseReporter,
                             @NotNull EventPersistenceReporter eventPersistenceReporter,
-                            @NotNull MessageAttemptEventReporter messageAttemptEventReporter) {
+                            @NotNull MessageAttemptEventReporter messageAttemptEventReporter,
+                            @NotNull MessageQueue rabbitTemplate) {
         this.webWatchDogReporter = webWatchDogReporter;
         this.messageLevelResponseReporter = messageLevelResponseReporter;
         this.eventPersistenceReporter = eventPersistenceReporter;
         this.messageAttemptEventReporter = messageAttemptEventReporter;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -62,7 +69,8 @@ public class ReportingManager {
         }
 
         try {
-            messageLevelResponseReporter.process(cm);
+            rabbitTemplate.convertAndSend(mlrQueue, cm);
+            //messageLevelResponseReporter.process(cm);
         } catch (Exception ex2) {
             ex2.printStackTrace();
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());

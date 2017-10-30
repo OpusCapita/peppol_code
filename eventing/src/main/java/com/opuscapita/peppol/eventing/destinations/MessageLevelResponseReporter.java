@@ -49,6 +49,7 @@ public class MessageLevelResponseReporter {
     private boolean backupEnabled;
 
     @Autowired
+    @Deprecated
     public MessageLevelResponseReporter(@NotNull MessageLevelResponseCreator creator, @NotNull Storage storage, CustomerRepository customerRepository, MessageRepository messageRepository) {
         this.creator = creator;
         this.storage = storage;
@@ -57,6 +58,7 @@ public class MessageLevelResponseReporter {
     }
 
     // only messages about errors and successfull delivery must get through
+    @Deprecated
     void process(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException, IOException {
         // nothing to do if there is no info about the file
         if (cm.getDocumentInfo() == null || cm.getProcessingInfo() == null) {

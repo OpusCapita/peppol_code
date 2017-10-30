@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.eventing.destinations;
+package com.opuscapita.peppol.mlr.util;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
@@ -9,9 +9,8 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.Customer;
 import com.opuscapita.peppol.commons.model.Message;
 import com.opuscapita.peppol.commons.storage.Storage;
-import com.opuscapita.peppol.eventing.destinations.mlr.MessageLevelResponseCreator;
-import com.opuscapita.peppol.eventing.destinations.mlr.model.CustomerRepository;
-import com.opuscapita.peppol.eventing.destinations.mlr.model.MessageRepository;
+import com.opuscapita.peppol.mlr.util.model.CustomerRepository;
+import com.opuscapita.peppol.mlr.util.model.MessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 
