@@ -73,6 +73,8 @@ public class PmsChecker implements Checker {
             assertionType.setIdentifier("UNKNOWN");
         }
 
+
+        //Workaround backported from Vefa validator github repo
         if(failedAssert.getId() != null) {
             assertionType.setIdentifier(failedAssert.getId());
         }
