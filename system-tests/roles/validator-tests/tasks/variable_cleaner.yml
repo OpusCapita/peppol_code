@@ -1,0 +1,9 @@
+---
+- set_fact: file=
+- set_fact: expected=
+- set_fact: expected1=
+- set_fact: expected2=
+- set_fact: expected3=
+- set_fact: valid=
+
+...

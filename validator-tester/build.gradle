@@ -10,16 +10,19 @@ buildscript {
     }
 }
 
+group 'com.opuscapita.peppol'
+version '2.0.18-SNAPSHOT'
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
+sourceCompatibility = 1.8
+
 jar {
-    baseName = 'wwd-reporter'
+    baseName = 'validator-tester'
     version = ''
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -28,11 +31,9 @@ repositories {
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-web'
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-starter-amqp'
-    compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
-    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.2'
+    compile group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
+    compile ('log4j:apache-log4j-extras:1.2.17')
     compile 'com.google.code.gson:gson:2.7'
     compile project(':common')
     testCompile group: 'junit', name: 'junit', version: '4.12'

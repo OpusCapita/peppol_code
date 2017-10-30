@@ -1,0 +1,39 @@
+- set_fact: file=
+- set_fact: expected="' '"
+- set_fact: valid="false"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+- debug: var=result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- debug: var=result_errors
+
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- debug: var=result_warnings
+
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- debug: var=result_passed
+
+- set_fact: result_errorsString="{{ (result.stdout | from_json).errorsString }}"
+- debug: var=result_errorsString
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+- debug: var=result_identifier
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_errors == []"
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
