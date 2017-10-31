@@ -24,7 +24,6 @@ import java.util.Map;
 public class ReportingManager {
     private final static Logger logger = LoggerFactory.getLogger(ReportingManager.class);
 
-    private MessageLevelResponseReporter messageLevelResponseReporter;
     private EventPersistenceReporter eventPersistenceReporter;
     private MessageAttemptEventReporter messageAttemptEventReporter;
     private MessageQueue rabbitTemplate;
@@ -32,11 +31,9 @@ public class ReportingManager {
     private String mlrQueue;
 
     @Autowired
-    public ReportingManager(@NotNull MessageLevelResponseReporter messageLevelResponseReporter,
-                            @NotNull EventPersistenceReporter eventPersistenceReporter,
+    public ReportingManager(@NotNull EventPersistenceReporter eventPersistenceReporter,
                             @NotNull MessageAttemptEventReporter messageAttemptEventReporter,
                             @NotNull MessageQueue rabbitTemplate) {
-        this.messageLevelResponseReporter = messageLevelResponseReporter;
         this.eventPersistenceReporter = eventPersistenceReporter;
         this.messageAttemptEventReporter = messageAttemptEventReporter;
         this.rabbitTemplate = rabbitTemplate;
@@ -60,7 +57,6 @@ public class ReportingManager {
 
         try {
             rabbitTemplate.convertAndSend(mlrQueue, cm);
-            //messageLevelResponseReporter.process(cm);
         } catch (Exception ex2) {
             ex2.printStackTrace();
             logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
