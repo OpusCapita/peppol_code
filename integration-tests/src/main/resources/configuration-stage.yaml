@@ -88,10 +88,10 @@ tests:
                 consumers: 5
             - directory subscriber:
                 consumers: 6
-                source directory: /peppol/data/eventing/a2a/mlr
+                source directory: /peppol/data/mlr-reporter/a2a/mlr
             - directory subscriber:
                 consumers: 7 9
-                source directory: /peppol/data/eventing/xib/mlr
+                source directory: /peppol/data/mlr-reporter/xib/mlr
         consumers:
             - file test:
                 name: MLR a2a accepted creation test
