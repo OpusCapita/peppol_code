@@ -30,7 +30,6 @@ public class TestCommon {
             DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(resourcePath), (path) -> {
                 boolean result = false;
                 try {
-                    System.out.println(path.toFile().getAbsolutePath() + " -> " + path.getFileName().toString().toLowerCase().endsWith("xml"));
                     result = path.getFileName().toString().toLowerCase().endsWith("xml");
                 } catch (Exception e) {
                 }
@@ -42,10 +41,7 @@ public class TestCommon {
             return name.toLowerCase().endsWith("xml");
         }
         );*/
-            StreamSupport.stream(directoryStream.spliterator(), false).map(path -> {
-                System.out.println(path.toFile().getAbsolutePath());
-                return path.toFile();
-            }).filter(fileToCheck -> fileToCheck.isFile() && fileToCheck.exists()).forEach(consumer);
+            StreamSupport.stream(directoryStream.spliterator(), false).map(path -> path.toFile()).filter(fileToCheck -> fileToCheck.isFile() && fileToCheck.exists()).forEach(consumer);
         } catch (IOException e) {
             e.printStackTrace();
         }
