@@ -39,9 +39,6 @@ public class ConsumerFactory {
                 String mlrExpectedValue = (String) properties.get("expected value");
                 String expectedFile = (String) properties.get("expected file");
                 return new MlrConsumer(id, testName, mlrExpectedValue, expectedFile, timeout);
-            case "wwd test":
-                String wwdExpectedValue = (String) properties.get("expected value");
-                return new WebWatchDogConsumer(id, testName, wwdExpectedValue, timeout);
             case "web ui check":
             case "web ui test":
                 return new WebUiConsumer(id, testName, properties.get("expected value"));

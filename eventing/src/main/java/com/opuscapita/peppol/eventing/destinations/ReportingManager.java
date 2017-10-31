@@ -24,7 +24,6 @@ import java.util.Map;
 public class ReportingManager {
     private final static Logger logger = LoggerFactory.getLogger(ReportingManager.class);
 
-    private WebWatchDogReporter webWatchDogReporter;
     private MessageLevelResponseReporter messageLevelResponseReporter;
     private EventPersistenceReporter eventPersistenceReporter;
     private MessageAttemptEventReporter messageAttemptEventReporter;
@@ -33,12 +32,10 @@ public class ReportingManager {
     private String mlrQueue;
 
     @Autowired
-    public ReportingManager(@NotNull WebWatchDogReporter webWatchDogReporter,
-                            @NotNull MessageLevelResponseReporter messageLevelResponseReporter,
+    public ReportingManager(@NotNull MessageLevelResponseReporter messageLevelResponseReporter,
                             @NotNull EventPersistenceReporter eventPersistenceReporter,
                             @NotNull MessageAttemptEventReporter messageAttemptEventReporter,
                             @NotNull MessageQueue rabbitTemplate) {
-        this.webWatchDogReporter = webWatchDogReporter;
         this.messageLevelResponseReporter = messageLevelResponseReporter;
         this.eventPersistenceReporter = eventPersistenceReporter;
         this.messageAttemptEventReporter = messageAttemptEventReporter;
@@ -59,13 +56,6 @@ public class ReportingManager {
         } catch (Exception ex) {
             logger.error("EventPersistenceReporter failed with exception: " + ex.getMessage());
             processingExceptions.put("Exception during reporting to Events persistence", ex);
-        }
-
-        try {
-            webWatchDogReporter.process(cm);
-        } catch (Exception ex1) {
-            logger.error("WebWatchdogReporter failed wit exception: " + ex1.getMessage());
-            processingExceptions.put("Exception during reporting to Web Watch Dog", ex1);
         }
 
         try {
