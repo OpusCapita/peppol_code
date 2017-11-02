@@ -1,6 +1,8 @@
 #!/bin/bash
 #set -x
 
+export CONFIGURATION_SERVER_HEALTH="http://configuration-server:8888/admin/health"
+
 # change from default umask of 0022 to allow group writes
 umask 0007
 
@@ -22,6 +24,12 @@ trap 'int_handler' SIGINT
 
 # first parameter '-jar' indicates regular startup
 if [[ "$1" == "-jar" ]]; then
+  # check services before startup
+  while ! curl -fs ${CONFIGURATION_SERVER_HEALTH} > /dev/null; do
+      echo "$(date) - still waiting on ${CONFIGURATION_SERVER_HEALTH}";
+      sleep 1;
+  done
+
   # read JAVA_OPTS into arrays to avoid need for eval (and associated vulnerabilities)
   java_opts_array=()
   while IFS= read -r -d '' item; do
