@@ -7,6 +7,7 @@
 - include: ehf-invoice.yml
 - include: ehf-creditnote.yml
 - include: ehf-catalogue.yml
+- include: ehf-common.yml
 #-------------------------------
 
 #+++++++++++++++++++++++++++++++
