@@ -119,7 +119,7 @@ try {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.txt'
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
                 }
             }
         }
