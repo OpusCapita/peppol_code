@@ -1,4 +1,6 @@
 ---
+server:
+  port: 8083
 # support up to 100MB file uploads using web interface
 spring:
   http.multipart:

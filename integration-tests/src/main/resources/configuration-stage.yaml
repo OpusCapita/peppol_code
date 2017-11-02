@@ -82,27 +82,16 @@ tests:
                   source endpoint: integration-test-xib
                   endpoint type: outbound
                   endpoint: integration-test-endpoint
-            - mq producer:
-                mq connection: mq1
-                destination queue: eventing
-                source directory: /etc/resources/events-persistence-test/logger_eventing_xib_test.xml
-                container message:
-                  source endpoint: integration-test-xib
-                  endpoint type: outbound
-                  endpoint: integration-test-endpoint
         subscribers:
             - snc subscriber:
                 source directory: /peppol/data/snc-stub
                 consumers: 5
             - directory subscriber:
                 consumers: 6
-                source directory: /peppol/data/eventing/a2a/mlr
+                source directory: /peppol/data/mlr-reporter/a2a/mlr
             - directory subscriber:
                 consumers: 7 9
-                source directory: /peppol/data/eventing/xib/mlr
-            - directory subscriber:
-                consumers: 8
-                source directory: /peppol/data/eventing/xib/wwd
+                source directory: /peppol/data/mlr-reporter/xib/mlr
         consumers:
             - file test:
                 name: MLR a2a accepted creation test
@@ -113,11 +102,6 @@ tests:
                 name: MLR xib rejected creation test
                 id: 7
                 expected value: eventing_rejected-re-mlr.xml
-                timeout: 16000
-            - wwd test:
-                name: Web Watch Dog successful report test
-                id: 8
-                expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_eventing_xib_test
                 timeout: 16000
             - mlr test:
                 name: IO exception in mlr test

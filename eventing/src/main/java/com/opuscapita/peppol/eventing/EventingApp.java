@@ -7,7 +7,6 @@ import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.eventing.destinations.ReportingManager;
-import com.opuscapita.peppol.eventing.destinations.webwatchdog.WebWatchDogConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -29,9 +28,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author Sergejs.Roze
  */
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing", "com.opuscapita.peppol.eventing.destinations.webwatchdog", "com.opuscapita.peppol.eventing.destinations.mlr.model"})
-@EnableJpaRepositories(basePackages = {"com.opuscapita.peppol.eventing.destinations.mlr.model","com.opuscapita.peppol.eventing.revised.repositories"})
-@EntityScan(basePackages = {"com.opuscapita.peppol.eventing.destinations.mlr.model", "com.opuscapita.peppol.commons.model","com.opuscapita.peppol.commons.revised_model"})
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.eventing", "com.opuscapita.peppol.eventing.destinations.mlr.model"})
+@EnableJpaRepositories(basePackages = {"com.opuscapita.peppol.eventing.destinations.mlr.model", "com.opuscapita.peppol.eventing.revised.repositories"})
+@EntityScan(basePackages = {"com.opuscapita.peppol.eventing.destinations.mlr.model", "com.opuscapita.peppol.commons.model", "com.opuscapita.peppol.commons.revised_model"})
 @EnableDiscoveryClient
 public class EventingApp {
 
@@ -45,11 +44,6 @@ public class EventingApp {
 
     public static void main(String[] args) {
         SpringApplication.run(EventingApp.class, args);
-    }
-
-    @Bean
-    WebWatchDogConfig webWatchDogConfig(@Value("${wwd.folder}") String webWatchDogFolder, @Value("${wwd.prefix}") String webWatchDogPrefix) {
-        return new WebWatchDogConfig(webWatchDogFolder, webWatchDogPrefix);
     }
 
     @SuppressWarnings("Duplicates")

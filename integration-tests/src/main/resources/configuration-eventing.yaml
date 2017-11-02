@@ -63,8 +63,3 @@ tests:
                    id: 6
                    expected value: ehf-ap-mlr.xml
                    timeout: 16000
-               - wwd test:
-                   name: Web Watch Dog successful report test
-                   id: 8
-                   expected value: SEMAIDPOST_PEPPOL_XIB_status_logger_xib_test
-                   timeout: 16000

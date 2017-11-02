@@ -23,7 +23,6 @@ import static org.junit.Assert.fail;
 /**
  * Created by bambr on 16.7.10.
  */
-@Ignore("FIXME")
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)

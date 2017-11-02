@@ -1,10 +1,12 @@
 package com.opuscapita.peppol.commons.revised_model;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "peppol_message_events")
-public class Event {
+public class Event implements Comparable<Event> {
     @Id
     private long id; //Unix timestamp to be stored here
 
@@ -93,5 +95,10 @@ public class Event {
                 ", details='" + details + '\'' +
                 ", attempt=" + attempt +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NotNull Event other) {
+        return Long.compare(id, other.getId());
     }
 }
