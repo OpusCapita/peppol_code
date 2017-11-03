@@ -18,7 +18,8 @@ public class IntegrationTestConfig {
 
     public List<TestResult> runTests() {
         List <TestResult> testResults = new ArrayList<>();
-        tests.stream().map(IntegrationTest::run).forEach(testResults::addAll);
+        tests.forEach(IntegrationTest::runProducers);
+        tests.stream().map(IntegrationTest::runTest).forEach(testResults::addAll);
         return testResults;
     }
 }

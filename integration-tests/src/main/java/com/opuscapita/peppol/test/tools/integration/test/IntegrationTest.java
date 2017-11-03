@@ -25,11 +25,15 @@ public class IntegrationTest {
         this.consumers = consumers;
     }
 
-    public List<TestResult> run() {
+    public List<TestResult> runTest() {
         logger.info("**** Test starting: " + name +" ****");
-        producers.forEach(Producer::run);
         List<TestResult> testResults = new ArrayList<>();
         subscribers.stream().map(Subscriber::run).forEach(testResults::addAll);
         return testResults;
+    }
+
+    public void runProducers() {
+        logger.info("**** Producer starting for: " + name +" ****");
+        producers.forEach(Producer::run);
     }
 }
