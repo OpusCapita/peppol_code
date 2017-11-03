@@ -10,6 +10,7 @@ import java.util.Date;
 
 public class PreprocessingFileConsumer extends FileConsumer {
     private final static Logger logger = LoggerFactory.getLogger(PreprocessingFileConsumer.class);
+
     public PreprocessingFileConsumer(String id, String testName, String expectedValue, Integer delay) {
         super(id, testName, expectedValue, delay);
     }

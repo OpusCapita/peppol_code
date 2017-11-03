@@ -36,11 +36,11 @@ import java.util.concurrent.TimeoutException;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.test.tools.integration"})
 public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLineRunner {
-    private final static Logger logger = LoggerFactory.getLogger(IntegrationTestApp.class);
     static String configFile;
     static String testResultFileName;
     static String templateDir;
     public static String tempDir;
+    private final static Logger logger = LoggerFactory.getLogger(IntegrationTestApp.class);
     private static List<MqListener> mqListeners = new ArrayList<>();
 
     @Autowired

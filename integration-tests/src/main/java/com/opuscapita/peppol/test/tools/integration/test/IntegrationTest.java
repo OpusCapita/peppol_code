@@ -15,7 +15,7 @@ public class IntegrationTest implements Runnable{
     private String name;
     private List<Producer> producers;
     private List<Subscriber> subscribers;
-    private List<TestResult> testResults;
+    private List<TestResult> testResults = new ArrayList<>();
 
     public IntegrationTest(String moduleName, List<Producer> producers, List<Subscriber> subscribers) {
         this.name = moduleName;
@@ -31,9 +31,7 @@ public class IntegrationTest implements Runnable{
     @Override
     public void run() {
         logger.info("**** Test starting: " + name +" ****");
-        List<TestResult> testResults = new ArrayList<>();
         subscribers.stream().map(Subscriber::run).forEach(testResults::addAll);
-        this.testResults = testResults;
     }
 
     public List<TestResult> getTestResults() {
