@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,8 +31,9 @@ public class IntegrationTestExecutor {
         tests.forEach(IntegrationTest::runProducers);
 
         executor = Executors.newFixedThreadPool(tests.size());
+        Date start = new Date();
         logger.info("Starting all tests as Runnable via ThreadPool");
-        tests.forEach(test -> executor.execute(test));
+        tests.forEach(executor::execute);
 
         executor.shutdown();
 
@@ -41,7 +43,7 @@ public class IntegrationTestExecutor {
             e.printStackTrace();
         }
 
-        logger.info("Executor finished! ");
+        logger.info("Executor finished! in " + (new Date().getTime() - start.getTime()));
 
         tests.stream().map(IntegrationTest::getTestResults).forEach(testResults::addAll);
         return testResults;

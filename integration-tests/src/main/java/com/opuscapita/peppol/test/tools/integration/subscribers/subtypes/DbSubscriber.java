@@ -29,31 +29,32 @@ public class DbSubscriber extends Subscriber {
 
     @Override
     public List<TestResult> run() {
+        logger.info("DbSubscriber: started!");
+
         try {
-            logger.info("DbSubscriber: started!");
-            String executionResult = getQuerryResult();
-            if (executionResult.equals("0")) {
-                logger.info("DbSubscriber: got no result, retrying in " + timeout);
-                Thread.sleep(timeout);
-                executionResult = getQuerryResult(); //second attempt
-                if(executionResult.equals("0"))
-                    logger.info("DbSubscriber: still no results");
-                else
-                    logger.info("DbSubscriber: got the result after retry, nice");
+            for (int i =0; i < 30; i ++ ) {
+                int result = getQuerryResult();
+                if (result < 1) {
+                    logger.info("DbSubscriber: got no result, retrying in " + timeout);
+                    Thread.sleep(timeout);
+                } else {
+                    for (Consumer consumer : consumers) {
+                        TestResult testResult = consumer.consume(result);
+                        testResults.add(testResult);
+                        return testResults;
+                    }
+                }
             }
-            for (Consumer consumer : consumers) {
-                TestResult testResult = consumer.consume(executionResult);
-                testResults.add(testResult);
-            }
-        } catch (
-                InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         return testResults;
     }
 
-    private String getQuerryResult() {
-        ResultSet resultSet = null;
+    private int getQuerryResult() {
+        ResultSet resultSet;
+
         try {
             Properties props = new Properties();
             props.put("useJDBCCompliantTimezoneShift", "true");
@@ -64,10 +65,10 @@ public class DbSubscriber extends Subscriber {
             PreparedStatement statement = conn.prepareStatement(query);
             resultSet = statement.executeQuery();
             resultSet.next();
-            return resultSet.getString(1);
+            return resultSet.getInt(1);
         } catch (SQLException e1) {
             e1.printStackTrace();
-            return  e1.toString();
+            return  -1;
         }
     }
 }

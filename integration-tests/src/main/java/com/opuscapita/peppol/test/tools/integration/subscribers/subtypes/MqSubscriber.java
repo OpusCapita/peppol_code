@@ -25,7 +25,7 @@ public class MqSubscriber extends Subscriber implements MqListener {
 
     @Override
     public List<TestResult> run() {
-        logger.info("MqSubscriber: started! queue subscribed: " + queue);
+        logger.info(queue + " Listener started");
         //waiting for a second for messages to appear ?
         if(messages.isEmpty()){
             try {
