@@ -2,13 +2,14 @@ package com.opuscapita.peppol.commons.revised_model;
 
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.SortedSet;
 
 @Entity
 @Table(name = "peppol_messages")
-public class Message {
+public class Message implements  Comparable<Message> {
     @Id
     private String id;  //Use EventingMessageUtil.generateMessageId to fill this field
 
@@ -61,5 +62,10 @@ public class Message {
                 ", created=" + created +
                 ", attempts=" + attempts +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NotNull Message other) {
+        return Integer.compare(getId().hashCode(), other.getId().hashCode());
     }
 }
