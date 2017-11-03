@@ -24,7 +24,7 @@ tests:
         subscribers:
             - db subscriber:
                 db connection: db1
-                timeout: 5000
+                timeout: 10000
                 query: select count(*) from messages where invoice_number="20828"
                 consumers: 4
         consumers:
