@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.test.tools.integration.util;
 
-import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
+import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestExecutor;
 import com.opuscapita.peppol.test.tools.integration.test.IntegrationTest;
 import com.opuscapita.peppol.test.tools.integration.test.IntegrationTestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,11 @@ public class IntegrationTestConfigReader {
     private String configFile;
     private Map<String, Object> genericConfiguration = new HashMap<>();
 
-    public IntegrationTestConfig initConfig(String configFile) {
+    public IntegrationTestExecutor initExecutor(String configFile) {
 
         Yaml yaml = new Yaml();
         logger.info("IntegrationTestConfigReader: config loaded: " + configFile);
-        IntegrationTestConfig testConfig = new IntegrationTestConfig();
+        IntegrationTestExecutor testConfig = new IntegrationTestExecutor();
         try{
             Map<String, ArrayList> yamlParser  = (Map<String, ArrayList>) yaml
                     .load(new FileInputStream(new File(configFile)));

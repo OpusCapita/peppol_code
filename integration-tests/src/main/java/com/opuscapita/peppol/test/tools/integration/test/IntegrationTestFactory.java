@@ -44,7 +44,7 @@ public class IntegrationTestFactory {
         List<Subscriber> subscribers = createSubscribers(genericConfiguration, subscribersConfiguration, consumers);
 
 
-        return new IntegrationTest(moduleName, producers, subscribers, new ArrayList<>(consumers.values()));
+        return new IntegrationTest(moduleName, producers, subscribers);
     }
 
     private List<Subscriber> createSubscribers(Map<String, Object> genericConfiguration, List<Map<String, ?>> subscribersConfiguration, Map<String, Consumer> consumers) {

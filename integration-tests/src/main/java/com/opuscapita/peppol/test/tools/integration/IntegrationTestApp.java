@@ -2,7 +2,7 @@ package com.opuscapita.peppol.test.tools.integration;
 
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
-import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestConfig;
+import com.opuscapita.peppol.test.tools.integration.configs.IntegrationTestExecutor;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import com.opuscapita.peppol.test.tools.integration.util.*;
 import com.rabbitmq.client.Channel;
@@ -96,8 +96,8 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
     }
 
     private List<TestResult> runTests(String configFile) {
-        IntegrationTestConfig config = configReader.initConfig(configFile);
-        return config.runTests();
+        IntegrationTestExecutor executor = configReader.initExecutor(configFile);
+        return executor.runTests();
     }
 
     public static void registerMqListener(MqListener listener){
