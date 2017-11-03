@@ -1,7 +1,7 @@
 ---
-- set_fact: file=/test-materials/peppol-bis/invoice/OP-T10-R056-R057-T10-R0061-deprecatedUOM.xml
-- set_fact: expected="'OP-T10-R056'"
-- set_fact: expected1="'OP-T10-R057'"
+- set_fact: file=/test-materials/peppol-bis/creditnote/OP-T14-R012-R013-T14-0028-deprecatedUOM.xml
+- set_fact: expected="'OP-T14-R012'"
+- set_fact: expected1="'OP-T14-R013'"
 - set_fact: valid="true"
 - set_fact: active="true"
 
@@ -30,10 +30,16 @@
 - include: reporter.yml
 #-------------------------------
 
-- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R033-T10-R0060-commodity.xml
-- set_fact: expected="'BII2-T10-R033'"
+- set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R033-T14-0022-line-errors-2.xml
+- set_fact: expected="'BII2-T14-R018'"
+- set_fact: expected1="'BII2-T14-R019'"
+- set_fact: expected2="'BII2-T14-R032'"
+- set_fact: expected3="'BII2-T14-R033'"
+- set_fact: expected4="'CL-T14-R003'"
+- set_fact: expected5="'PEPPOL_CORE_R001'"
+- set_fact: expected6="'PEPPOL_CORE_R002'"
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 
 - name: send {{ file }} to validator REST
   shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
@@ -43,14 +49,25 @@
 - set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
 - set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+- set_fact: result_identifier3="{{ result_errors.3.validationError.identifier }}"
+- set_fact: result_identifier4="{{ result_errors.4.validationError.identifier }}"
+- set_fact: result_identifier5="{{ result_warnings.0.validationError.identifier }}"
+- set_fact: result_identifier6="{{ result_warnings.1.validationError.identifier }}"
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
   assert:
     that:
-      - "result_warnings == []"
       - "result_passed == {{ valid }}"
       - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier2 == {{ expected2 }} "
+      - "result_identifier3 == {{ expected3 }} "
+      - "result_identifier4 == {{ expected4 }} "
+      - "result_identifier5 == {{ expected5 }} "
+      - "result_identifier6 == {{ expected6 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -58,8 +75,8 @@
 - include: reporter.yml
 #-------------------------------
 
-- set_fact: file=/test-materials/peppol-bis/invoice/EUGEN-T10-R055-T10-R0059-missing-item-name.xml
-- set_fact: expected="'EUGEN-T10-R055'"
+- set_fact: file=/test-materials/peppol-bis/creditnote/EUGEN-T14-R055-T14-0026-item-name.xml
+- set_fact: expected="'EUGEN-T14-R055'"
 - set_fact: expected1="'PEPPOL_CORE_R001'"
 - set_fact: valid="false"
 - set_fact: active="false"

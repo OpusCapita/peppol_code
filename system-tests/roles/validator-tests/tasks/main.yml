@@ -1,4 +1,5 @@
 ---
+#initialize all variables->
 - include: variable_cleaner.yml
 #+++++++++++++++++++++++++++++++
 #      EHF tests
@@ -6,12 +7,14 @@
 - include: ehf-invoice.yml
 - include: ehf-creditnote.yml
 - include: ehf-catalogue.yml
+- include: ehf-common.yml
 #-------------------------------
 
 #+++++++++++++++++++++++++++++++
 #      peppol-bis tests
 #+++++++++++++++++++++++++++++++
 - include: peppol-bis-invoice.yml
+- include: peppol-bis-creditnote.yml
 #-------------------------------
 
 #+++++++++++++++++++++++++++++++

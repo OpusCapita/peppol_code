@@ -1,5 +1,5 @@
 ---
-#report START ------:
+#This creates report about validation tests
 - set_fact: counter="{{counter| int +1 }}"
   register: counter
 
@@ -11,8 +11,9 @@
     create: yes
     dest: "{{report_path}}/validator-report-{{ansible_date_time.iso8601_basic}}.txt"
     state: present
-    line: '{{ counter }}|File: {{ file }}| Expected:{{ expected }} {{ expected1 }} {{ expected2 }}| Result:{{ assert_result }}'
-#report END -------
+    line: '{{ counter }},File: {{ file }}, Expected:{{ expected }} {{ expected1 }} 
+    {{ expected2 }}{{ expected3 }} {{ expected4 }} {{ expected5 }} {{ expected6 }} , Result:{{ assert_result }}'
 
+#kind of global variable reseter->
 - include: variable_cleaner.yml
 ...

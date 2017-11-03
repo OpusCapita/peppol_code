@@ -1,0 +1,359 @@
+---
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R001.xml
+- set_fact: expected="'EHF-COMMON-R001'"
+- set_fact: expected1="'EUGEN-T10-R047'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+- set_fact: result_identifier1="{{ result_warnings.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R002.xml
+- set_fact: expected="'EHF-COMMON-R002'"
+- set_fact: expected1="'EUGEN-T10-R047'"
+- set_fact: valid="false"
+- set_fact: active="false"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+- set_fact: result_identifier1="{{ result_warnings.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R003.xml
+- set_fact: expected="'EHF-COMMON-R003'"
+- set_fact: valid="true"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_errors == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R004.xml
+- set_fact: expected="'EHF-COMMON-R004'"
+- set_fact: valid="false"
+- set_fact: active="false"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: active==true
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R010.xml
+- set_fact: expected="'EHF-COMMON-R010'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R011.xml
+- set_fact: expected="'EHF-COMMON-R011'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R012.xml
+- set_fact: expected="'EHF-COMMON-R012'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R013.xml
+- set_fact: expected="'EHF-COMMON-R013'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R014.xml
+- set_fact: expected="'EHF-COMMON-R014'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R020.xml
+- set_fact: expected="'EHF-COMMON-R020'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R030.xml
+- set_fact: expected="'EHF-COMMON-R030'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R040.xml
+- set_fact: expected="'EHF-COMMON-R040'"
+- set_fact: valid="true"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_errors == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R100.xml
+- set_fact: expected="'EHF-COMMON-R100'"
+- set_fact: valid="true"
+- set_fact: active="true"
+
+- name: send {{ file }} to validator REST
+  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  register: result
+
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_errors == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+...
