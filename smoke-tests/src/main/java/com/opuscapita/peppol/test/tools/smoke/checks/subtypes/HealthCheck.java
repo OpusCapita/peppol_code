@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class HealthCheck extends Check {
 
-    private final static int DELAY = 8000;
+    private final static int DELAY = 10000;
 
     public HealthCheck(String moduleName, Map<String, Object> params) {
         super(moduleName,params);
