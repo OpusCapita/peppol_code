@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class HealthCheck extends Check {
 
-    private final static int DELAY = 10000;
+    private final static int DELAY = 30000;
     private final static Logger logger = LoggerFactory.getLogger(HealthCheck.class);
 
     public HealthCheck(String moduleName, Map<String, Object> params) {
