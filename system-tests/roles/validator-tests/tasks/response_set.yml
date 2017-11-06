@@ -1,0 +1,9 @@
+---
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_validationError="{{ result_errors.0.validationError }}"
+  when: result_errors!=[]
+- set_fact: result_validationError="{{ result_warnings.0.validationError }}"
+  when: result_warnings!=[]
+...

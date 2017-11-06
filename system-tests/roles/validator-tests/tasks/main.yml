@@ -4,17 +4,17 @@
 #+++++++++++++++++++++++++++++++
 #      EHF tests
 #+++++++++++++++++++++++++++++++
-- include: ehf-invoice.yml
-- include: ehf-creditnote.yml
-- include: ehf-catalogue.yml
-- include: ehf-common.yml
+#- include: ehf-invoice.yml
+#- include: ehf-creditnote.yml
+#- include: ehf-catalogue.yml
+#- include: ehf-common.yml
 #-------------------------------
 
 #+++++++++++++++++++++++++++++++
 #      peppol-bis tests
 #+++++++++++++++++++++++++++++++
 - include: peppol-bis-invoice.yml
-- include: peppol-bis-creditnote.yml
+#- include: peppol-bis-creditnote.yml
 #-------------------------------
 
 #+++++++++++++++++++++++++++++++

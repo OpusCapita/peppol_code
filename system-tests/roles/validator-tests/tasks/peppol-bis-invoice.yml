@@ -86,5 +86,125 @@
   register: assert_result
 
 - include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R005.xml
+- set_fact: expected="'BII2-T10-R005'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- debug: var=result
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R006.xml
+# expected="'BII2-T10-R006'" but since it fails at Preprocessing, validator response will be null
+- set_fact: expected="''"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
+- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
+- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_validationError="{{ result_errors.0.validationError }}"
+  when: result_errors!=[]
+- set_fact: result_validationError="{{ result_warnings.0.validationError }}"
+  when: result_warnings!=[]
+
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!=''
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R008.xml
+# expected="'BII2-T10-R006'" but since it fails at Preprocessing, validator response will be null
+- set_fact: expected="''"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!=''
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R010.xml
+- set_fact: expected="'BII2-T10-R010'"
+- set_fact: expected1="'BII2-T10-R051'"
+- set_fact: expected2="'BII2-T10-R052'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+  when: result_validationError!=''
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier2 == {{ expected2 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
 
 ...
