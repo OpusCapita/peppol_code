@@ -12,7 +12,6 @@ import java.io.File;
  */
 public class FileConsumer extends Consumer {
     private final static Logger logger = LoggerFactory.getLogger(FileConsumer.class);
-    protected final String name;
     protected final String expectedValue;
     protected int delay = 5000;
     protected File file;
@@ -25,11 +24,6 @@ public class FileConsumer extends Consumer {
         this.expectedValue = expectedValue;
         if(delay != null)
             this.delay = delay;
-    }
-
-    @Override
-    public boolean isDone() {
-        return false;
     }
 
     @Override

@@ -35,16 +35,18 @@ public abstract class Subscriber {
     }
 
     public List<TestResult> run() {
-        logger.info(this.getClass().getName() + ": started!");
+        logger.info(this.getClass().getSimpleName() + ": started!");
+        logger.info(this.getClass().getSimpleName() + ": consumers: " + consumers);
         try {
             for (int i = 0; i < RETRIES; i++) {
                 fetchConsumable();
                 if (consumable == null) {
-                    logger.info(this.getClass().getName() + ": got no result, retrying in " + timeout);
+                    logger.info(this.getClass().getSimpleName() + ": got no result, retrying in " + timeout);
                     Thread.sleep(timeout);
                 } else {
-                    logger.info(this.getClass().getName() + ": got the result" + consumable);
+                    logger.info(this.getClass().getSimpleName() + ": got the result: " + consumable.toString().substring(0,50));
                     for (Consumer consumer : consumers) {
+                        logger.info("Passing data to consumer: " + consumer);
                         TestResult testResult = consumer.consume(consumable);
                         testResults.add(testResult);
                         return testResults;

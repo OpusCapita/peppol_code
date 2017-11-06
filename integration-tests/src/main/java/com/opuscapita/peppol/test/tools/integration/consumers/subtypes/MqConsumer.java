@@ -13,18 +13,11 @@ public class MqConsumer extends Consumer {
     private final static Logger logger = LoggerFactory.getLogger(MqConsumer.class);
     private List<String> subscribers;
     private int expectedValue;
-    private final String name;
-
     public MqConsumer(String id,  String name, List<String> subscribers, Object expectedValue) {
         super(id);
         this.name = name;
         this.subscribers = subscribers;
         this.expectedValue = (int) expectedValue;
-    }
-
-    @Override
-    public boolean isDone() {
-        return false;
     }
 
     @Override
