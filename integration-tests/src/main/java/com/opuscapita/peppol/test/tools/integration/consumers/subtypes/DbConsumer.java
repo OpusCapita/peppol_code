@@ -23,7 +23,7 @@ public class DbConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        boolean passed = expectedValue.equals(consumable);
+        boolean passed = expectedValue.equals(String.valueOf(consumable));
         String details = (passed) ? "successfully fetched data from DB!" :
                 "Got value " + consumable + " but expected: " + expectedValue;
         return new TestResult(name,passed,details);
