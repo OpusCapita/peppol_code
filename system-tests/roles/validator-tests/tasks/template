@@ -4,13 +4,10 @@
 - set_fact: active="true"
 
 - include: send_to_REST.yml
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- debug: var=result_errors
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- debug: var=result_warnings
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
-- debug: var=result_passed
+- include: response_set.yml
+
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!=''
 - debug: var=result_identifier
 
 - name: check if validation is correct for {{ file }}

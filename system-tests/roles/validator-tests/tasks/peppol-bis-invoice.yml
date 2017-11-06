@@ -5,13 +5,9 @@
 - set_fact: valid="true"
 - set_fact: active="true"
 
-- name: send {{ file }} to validator REST
-  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
-  register: result
+- include: send_to_REST.yml
+- include: response_set.yml
 
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
 - set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
 - set_fact: result_identifier1="{{ result_warnings.1.validationError.identifier }}"
 
@@ -35,13 +31,9 @@
 - set_fact: valid="false"
 - set_fact: active="true"
 
-- name: send {{ file }} to validator REST
-  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
-  register: result
+- include: send_to_REST.yml
+- include: response_set.yml
 
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
 
 - name: check if validation is correct for {{ file }}
@@ -64,13 +56,9 @@
 - set_fact: valid="false"
 - set_fact: active="false"
 
-- name: send {{ file }} to validator REST
-  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
-  register: result
+- include: send_to_REST.yml
+- include: response_set.yml
 
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
 - set_fact: result_identifier1="{{ result_warnings.0.validationError.identifier }}"
 
@@ -94,10 +82,8 @@
 - set_fact: active="true"
 
 - include: send_to_REST.yml
-- debug: var=result
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- include: response_set.yml
+
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
 
 - name: check if validation is correct for {{ file }}
@@ -122,14 +108,7 @@
 - set_fact: active="true"
 
 - include: send_to_REST.yml
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
-- set_fact: result_validationError="{{ result_errors.0.validationError }}"
-  when: result_errors!=[]
-- set_fact: result_validationError="{{ result_warnings.0.validationError }}"
-  when: result_warnings!=[]
-
+- include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
   when: result_validationError!=''
@@ -201,6 +180,80 @@
       - "result_identifier == {{ expected }} "
       - "result_identifier1 == {{ expected1 }} "
       - "result_identifier2 == {{ expected2 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R011.xml
+- set_fact: expected="'BII2-T10-R011'"
+- set_fact: expected1="'BII2-T10-R058'"
+- set_fact: expected2="'BII2-T10-R052'"
+- set_fact: expected3="'BII2-T10-R053'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier3="{{ result_errors.3.validationError.identifier }}"
+  when: result_validationError!=''
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier2 == {{ expected2 }} "
+      - "result_identifier3 == {{ expected3 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R012.xml
+- set_fact: expected="'BII2-T10-R012'"
+- set_fact: expected1="'BII2-T10-R035'"
+- set_fact: expected2="'BII2-T10-R053'"
+- set_fact: expected3="'BII2-T10-R056'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier3="{{ result_errors.3.validationError.identifier }}"
+  when: result_validationError!=''
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier2 == {{ expected2 }} "
+      - "result_identifier3 == {{ expected3 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
