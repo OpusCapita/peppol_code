@@ -46,7 +46,9 @@ public class SubscriberFactory {
                 subscriber = new FileSubscriber(properties.get("timeout"), properties.get("source file"));
                 break;
             default:
-                logger.error("Invalid subscriber configuration, unable to create subscriber: " + name);
+                String errorText = "Invalid subscriber configuration, unable to create subscriber: " + name;
+                logger.error(errorText);
+                throw new IllegalStateException(errorText);
         }
         for (String consumerId : consumerIds) {
             if(existingConsumers.containsKey(consumerId))

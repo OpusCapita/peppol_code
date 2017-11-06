@@ -61,8 +61,7 @@ public class MlrReporterApplication {
                 }
                 try {
                     mlrReporter.process(cm);
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     logger.error("failed to process MLR with exception: " + ex.getMessage());
                     errorHandler.reportWithContainerMessage(cm, ex, "Exception during MLR processing");
                 }

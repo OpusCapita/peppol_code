@@ -44,7 +44,9 @@ public abstract class Subscriber {
                     logger.info(this.getClass().getSimpleName() + ": got no result, retrying in " + timeout);
                     Thread.sleep(timeout);
                 } else {
-                    logger.info(this.getClass().getSimpleName() + ": got the result: " + consumable.toString().substring(0,50));
+                    logger.info(this.getClass().getSimpleName() + ": got the result: "
+                            + (consumable.toString().length() > 100 ? consumable.toString().substring(0, 100) : consumable)
+                    );
                     for (Consumer consumer : consumers) {
                         logger.info("Passing data to consumer: " + consumer);
                         TestResult testResult = consumer.consume(consumable);
