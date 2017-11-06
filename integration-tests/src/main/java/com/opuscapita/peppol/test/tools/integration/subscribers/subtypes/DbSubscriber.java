@@ -5,6 +5,7 @@ import com.opuscapita.peppol.test.tools.integration.subscribers.Subscriber;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,12 +33,14 @@ public class DbSubscriber extends Subscriber {
         logger.info("DbSubscriber: started!");
 
         try {
-            for (int i =0; i < 30; i ++ ) {
+            for (int i = 0; i < 30; i++) {
                 int result = getQuerryResult();
+
                 if (result < 1) {
                     logger.info("DbSubscriber: got no result, retrying in " + timeout);
                     Thread.sleep(timeout);
                 } else {
+                    logger.info("DbSubscriber: got the result" + result);
                     for (Consumer consumer : consumers) {
                         TestResult testResult = consumer.consume(result);
                         testResults.add(testResult);
@@ -59,16 +62,14 @@ public class DbSubscriber extends Subscriber {
             Properties props = new Properties();
             props.put("useJDBCCompliantTimezoneShift", "true");
             props.put("serverTimezone", "UTC");
-            java.sql.Connection conn = null;
-
-            conn = DriverManager.getConnection(dbConnection, props);
+            java.sql.Connection conn = DriverManager.getConnection(dbConnection, props);
             PreparedStatement statement = conn.prepareStatement(query);
             resultSet = statement.executeQuery();
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e1) {
             e1.printStackTrace();
-            return  -1;
+            return -1;
         }
     }
 }
