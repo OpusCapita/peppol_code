@@ -474,12 +474,12 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(2|03|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(28|03|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: ".*extended:urn:www.difi.no:ehf.ordr*"
+              mask: ".*extended:urn:www.difi.no:ehf:ordre*.*"
 
           - name: EHF.Order
             root: Order
@@ -530,12 +530,12 @@ peppol:
               paths:
               - "$ROOT/ProfileID"
               mandatory: true
-              mask: urn:www\.cenbii\.eu:profile:bii(2|03|xx):ver[1-2]\.0
+              mask: urn:www\.cenbii\.eu:profile:bii(28|xx):ver[1-2]\.0
             - id: customization_id
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: ".*extended:urn:www.difi.no:ehf.ordr*"
+              mask: ".*extended:urn:www.difi.no:ehf:ordre*.*"
 
           - name: EHF.OrderResponse
             root: "$SBD/OrderResponse"
