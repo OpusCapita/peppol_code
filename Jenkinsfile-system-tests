@@ -71,19 +71,19 @@ try {
                 try {
                     dir('src/system-tests') {
                         parallel(
-                            outbound-tests: { ansiblePlaybook(
+                            "outbound-tests": { ansiblePlaybook(
                                 'outbound-tests.yml', 'stage.hosts', 'ansible-sudo',
                                 'report_path=$PWD/reports/'
                             )},
-                            outbound-invalid-tests: { ansiblePlaybook(
+                            "outbound-invalid-tests": { ansiblePlaybook(
                                 'outbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
                                 'report_path=$PWD/reports/'
                             )},
-                            inbound-tests: { ansiblePlaybook(
+                            "inbound-tests": { ansiblePlaybook(
                                 'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
                                 'report_path=$PWD/reports/'
                             )},
-                            inbound-invalid-tests: { ansiblePlaybook(
+                            "inbound-invalid-tests": { ansiblePlaybook(
                                 'inbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
                                 'report_path=$PWD/reports/'
                             )}
