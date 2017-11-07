@@ -32,9 +32,9 @@
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.txt"
+    dest: "{{report_path}}/outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
-    line: '{{counter}}|{{file}}|{{uuid}}'
+    line: '{{counter}},{{file}},{{uuid}}'
 #report END -------
 
 #- pause:

@@ -16,10 +16,10 @@
   delegate_to: localhost
   lineinfile:
     create: no
-    dest: "{{report_path}}outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.txt"
+    dest: "{{report_path}}outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
-    regexp: "^{{counter}}|{{file}}|{{uuid}}"
-    line: "{{counter}}|{{file}}|{{uuid}}|{{transport_result}}|{{preprocessing_result}}|{{email_notificator_result}}"
+    regexp: "^{{counter}},{{file}},{{uuid}}"
+    line: "{{counter}},{{file}},{{uuid}},{{transport_result}},{{preprocessing_result}},{{email_notificator_result}}"
 #    line: "{{counter}}|{{file}}|{{fileName}}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
 #report update END -----------------------
 
@@ -28,7 +28,7 @@
     var: report_path
 - name: register report
   delegate_to: localhost
-  shell: cat "{{report_path}}outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.txt"
+  shell: cat "{{report_path}}outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
   register: report
 
 - debug:

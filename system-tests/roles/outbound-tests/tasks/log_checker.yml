@@ -20,10 +20,10 @@
   delegate_to: localhost
   lineinfile:
     create: no
-    dest: "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.txt"
+    dest: "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
-    regexp: "^{{counter}}|{{file}}|{{ uuid }}"
-    line: "{{counter}}|{{file}}|{{ uuid }}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
+    regexp: "^{{counter}},{{file}},{{ uuid }}"
+    line: "{{counter}},{{file}},{{ uuid }},{{transport_result}},{{preprocessing_result}},{{internal_routing_result}},{{validator_result}},{{outbound_result}}"
 #report update END -----------------------
 
 #checking for failures in report- test has to fail if any asseert has failed #
@@ -31,7 +31,7 @@
     var: report_path
 - name: register report
   delegate_to: localhost
-  shell: cat "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.txt"
+  shell: cat "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.csv"
   register: report
 
 - debug:
