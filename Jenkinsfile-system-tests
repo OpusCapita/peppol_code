@@ -70,23 +70,25 @@ try {
             stage('System Tests') {
                 try {
                     dir('src/system-tests') {
-                        ansiblePlaybook(
-                            'outbound-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            'report_path=$PWD/reports/'
-                        )
-                        ansiblePlaybook(
-                            'outbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            'report_path=$PWD/reports/'
-                        )
-                        ansiblePlaybook(
-                            'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            'report_path=$PWD/reports/'
-                        )
-                        ansiblePlaybook(
-                            'inbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            'report_path=$PWD/reports/'
-                        )
-                    }
+                        parallel(
+                            outbound-tests: { ansiblePlaybook(
+                                'outbound-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                'report_path=$PWD/reports/'
+                            )},
+                            outbound-invalid-tests: { ansiblePlaybook(
+                                'outbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                'report_path=$PWD/reports/'
+                            )},
+                            inbound-tests: { ansiblePlaybook(
+                                'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                'report_path=$PWD/reports/'
+                            )},
+                            inbound-invalid-tests: { ansiblePlaybook(
+                                'inbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                'report_path=$PWD/reports/'
+                            )}
+                        )                    
+                    }   
                 }
                 catch(e) {
                     failBuild(
