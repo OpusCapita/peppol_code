@@ -7,12 +7,11 @@ import com.opuscapita.peppol.test.tools.integration.test.TestResult;
  */
 public abstract class Consumer {
     private String id;
+    protected String name;
 
     public Consumer(String id) {
         this.id = id;
     }
-
-    public abstract boolean isDone();
 
     public String getId() {
         return id;
@@ -23,4 +22,20 @@ public abstract class Consumer {
     }
 
     public abstract TestResult consume(Object consumable);
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Consumer{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

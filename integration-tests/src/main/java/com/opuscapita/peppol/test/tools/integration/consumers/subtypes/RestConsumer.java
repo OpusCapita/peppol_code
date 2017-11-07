@@ -18,18 +18,12 @@ import java.util.List;
  */
 public class RestConsumer extends Consumer {
 
-    private final String name;
     private final int expectedResult;
 
     public RestConsumer(String id, String name, Object expectedResult) {
         super(id);
         this.name = name;
         this.expectedResult = (int) expectedResult;
-    }
-
-    @Override
-    public boolean isDone() {
-        return false;
     }
 
     @Override

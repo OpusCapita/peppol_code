@@ -20,7 +20,6 @@ import java.io.*;
  */
 public class FileDownloadConsumer extends Consumer {
     private final static Logger logger = LoggerFactory.getLogger(WebUiProducer.class);
-    private final String name;
     private boolean expectedValue;
     private String link;
     private String action;
@@ -31,11 +30,6 @@ public class FileDownloadConsumer extends Consumer {
         this.action = (String)action;
         this.link = (String)link;
         this.expectedValue = (boolean)expectedValue;
-    }
-
-    @Override
-    public boolean isDone() {
-        return false;
     }
 
     @Override

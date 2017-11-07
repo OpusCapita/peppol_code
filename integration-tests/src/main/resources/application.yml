@@ -1,0 +1,52 @@
+integration:
+    test:
+        listeners:
+        - validation-integration-test
+        - integration-test-endpoint
+        - preprocessing-integration-test
+        - transport-to-xib
+        - preprocessing-out
+        - preprocessing-error
+        queues:
+        - validation-integration-test
+        - integration-test-endpoint
+        - preprocessing-out
+        - preprocessing-error
+        rabbitmq:
+            host: rabbitmq
+            password: guest
+            port: 5672
+            username: guest
+peppol:
+    common:
+        consistency_check_enabled: false
+    component:
+        name: integration-tests
+    eventing:
+        queue:
+            in:
+                name: eventing
+    storage:
+        long: /tmp
+        short: /tmp
+snc:
+    bsc: BSC
+    businessGroup: HEAVEN
+    enabled: false
+    from: HELL
+    rest:
+        password: boot
+        url: http://localhost
+        username: woot
+spring:
+    autoconfigure:
+        exclude:
+        - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+        - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+        - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+        - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+    rabbitmq:
+        host: rabbitmq
+        password: guest
+        port: 5672
+        username: guest

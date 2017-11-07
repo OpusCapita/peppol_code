@@ -12,17 +12,11 @@ import java.util.Properties;
  */
 public class WebUiConsumer extends Consumer {
     private final int expectedResult;
-    private final String name;
 
     public WebUiConsumer(String id, String name, Object expectedResult) {
         super(id);
         this.name = name;
         this.expectedResult = (int) expectedResult;
-    }
-
-    @Override
-    public boolean isDone() {
-        return false;
     }
 
     @Override
