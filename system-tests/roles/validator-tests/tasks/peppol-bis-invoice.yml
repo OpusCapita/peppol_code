@@ -9,7 +9,9 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
+  when: result_validationError!='' and result_warnings != []
 - set_fact: result_identifier1="{{ result_warnings.1.validationError.identifier }}"
+  when: result_validationError!='' and result_warnings != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -35,6 +37,7 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -54,13 +57,15 @@
 - set_fact: expected="'EUGEN-T10-R055'"
 - set_fact: expected1="'PEPPOL_CORE_R001'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier1="{{ result_warnings.0.validationError.identifier }}"
+  when: result_validationError!='' and result_warnings != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -85,6 +90,7 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -111,7 +117,7 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -138,7 +144,7 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -165,11 +171,11 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -199,13 +205,13 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier3="{{ result_errors.3.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -236,13 +242,13 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier3="{{ result_errors.3.validationError.identifier }}"
-  when: result_validationError!=''
+  when: result_validationError!='' and result_errors != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -257,6 +263,659 @@
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R015.xml
+- set_fact: expected="'BII2-T10-R015'"
+- set_fact: expected1="'BII2-T10-R053'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R018-R019.xml
+- set_fact: expected="'BII2-T10-R018'"
+- set_fact: expected1="'BII2-T10-R019'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R021.xml
+- set_fact: expected="'BII2-T10-R021'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R025.xml
+- set_fact: expected="'BII2-T10-R025'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R026-R028-R030.xml
+- set_fact: expected="'BII2-T10-R026'"
+- set_fact: expected1="'EUGEN-T10-R028'"
+- set_fact: expected2="'EUGEN-T10-R030'"
+- set_fact: expected3="'PEPPOL_CORE_R001'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier3="{{ result_warnings.0.validationError.identifier }}"
+  when: result_validationError!='' and result_warnings != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier2 == {{ expected2 }} "
+      - "result_identifier3 == {{ expected3 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R027.xml
+- set_fact: expected="'BII2-T10-R027'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R029.xml
+- set_fact: expected="'BII2-T10-R029'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R030.xml
+- set_fact: expected="'BII2-T10-R030'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R032.xml
+- set_fact: expected="'BII2-T10-R032'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R033-T10-R0060-commodity.xml
+- set_fact: expected="'BII2-T10-R033'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R034.xml
+- set_fact: expected="'BII2-T10-R051'"
+- set_fact: expected1="'BII2-T10-R052'"
+- set_fact: expected2="'BII2-T10-R034'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier2 == {{ expected2 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R037.xml
+- set_fact: expected="'BII2-T10-R037'"
+- set_fact: expected1="'BII2-T10-R056'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R039.xml
+- set_fact: expected="'BII2-T10-R039'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R040-R042.xml
+- set_fact: expected="'BII2-T10-R040'"
+- set_fact: expected1="'BII2-T10-R042'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R043.xml
+- set_fact: expected="'BII2-T10-R043'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R044.xml
+- set_fact: expected="'BII2-T10-R044'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R045.xml
+- set_fact: expected="'BII2-T10-R045'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R046.xml
+- set_fact: expected="'BII2-T10-R046'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R047-R048-R049-R050.xml
+- set_fact: expected="'BII2-T10-R047'"
+- set_fact: expected1="'BII2-T10-R048'"
+- set_fact: expected2="'BII2-T10-R049'"
+- set_fact: expected3="'BII2-T10-R050'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier3="{{ result_errors.3.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier2 == {{ expected2 }} "
+      - "result_identifier3 == {{ expected3 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R052-R055.xml
+- set_fact: expected="'BII2-T10-R052'"
+- set_fact: expected1="'BII2-T10-R055'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R054.xml
+- set_fact: expected="'BII2-T10-R054'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!='' and result_errors != []
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/T10-0040-valid-profile04.xml
+- set_fact: valid="true"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_errors == []"
+      - "result_passed == {{ valid }}"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/T10-0041-valid-profile05.xml
+- set_fact: valid="true"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_errors == []"
+      - "result_passed == {{ valid }}"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/invoice/valid.xml
+- set_fact: valid="true"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_errors == []"
+      - "result_passed == {{ valid }}"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
 
 - include: reporter.yml
 
