@@ -5,14 +5,22 @@
 
 - debug: var=counter
 
-- name: update test results
+- name: create report headers
   delegate_to: localhost
   lineinfile:
     create: yes
     dest: "{{report_path}}/validator-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
-    line: '{{ counter }},File: {{ file }}, Expected:{{ expected }} {{ expected1 }} 
-    {{ expected2 }}{{ expected3 }} {{ expected4 }} {{ expected5 }} {{ expected6 }} , Result:{{ assert_result }}'
+    line: 'Test counter,Test file,Expected test results,Test result'
+
+- name: update test results
+  delegate_to: localhost
+  lineinfile:
+    create: no
+    dest: "{{report_path}}/validator-report-{{ansible_date_time.iso8601_basic}}.csv"
+    state: present
+    line: '{{ counter }},{{ file }},{{ expected }} {{ expected1 }} 
+    {{ expected2 }} {{ expected3 }} {{ expected4 }} {{ expected5 }} {{ expected6 }} ,{{ assert_result }}'
 
 #kind of global variable reseter->
 - include: variable_cleaner.yml
