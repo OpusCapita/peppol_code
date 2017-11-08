@@ -603,7 +603,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: ".*extended:urn:www.difi.no:ehf.ordrebekreftelse*"
+              mask: ".*extended:urn:www.difi.no:ehf.ordrebekreftelse*.*"
 
           - name: EHF.OrderResponse
             root: OrderResponse
@@ -659,7 +659,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: ".*extended:urn:www.difi.no:ehf.ordrebekreftelse*"
+              mask: ".*extended:urn:www.difi.no:ehf.ordrebekreftelse*.*"
 
           - name: EHF.DespatchAdvice
             root: "$SBD/DespatchAdvice"

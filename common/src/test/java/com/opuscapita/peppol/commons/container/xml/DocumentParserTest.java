@@ -339,6 +339,20 @@ public class DocumentParserTest {
             assertNotNull(result);
             assertTrue(result.getErrors().isEmpty());
             assertEquals(Archetype.EHF, result.getArchetype());
+            assertEquals("Order", result.getDocumentType());
+        }
+    }
+
+    @Test
+    public void testParseEhfOrderResponse() throws Exception {
+        DocumentParser parser = createDocumentParser();
+        //consistent check
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/ordrsp/EHF-order-response.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "EHF-order-response.xml", new Endpoint("test", ProcessType.TEST), true);
+            assertNotNull(result);
+            assertTrue(result.getErrors().isEmpty());
+            assertEquals(Archetype.EHF, result.getArchetype());
+            assertEquals("OrderResponse", result.getDocumentType());
         }
     }
 }
