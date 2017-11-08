@@ -5,11 +5,13 @@ import java.util.SortedSet;
 public class Message {
     private final String id;
     private final long created;
+    private final boolean isInbound;
     private final SortedSet<Attempt> attempts;
 
-    public Message(String id, long created, SortedSet<Attempt> attempts) {
+    public Message(String id, long created, boolean isInbound, SortedSet<Attempt> attempts) {
         this.id = id;
         this.created = created;
+        this.isInbound = isInbound;
         this.attempts = attempts;
     }
 
@@ -21,6 +23,10 @@ public class Message {
         return created;
     }
 
+    public boolean isInbound() {
+        return isInbound;
+    }
+
     public SortedSet<Attempt> getAttempts() {
         return attempts;
     }
@@ -30,6 +36,7 @@ public class Message {
         return "Message{" +
                 "id='" + id + '\'' +
                 ", created=" + created +
+                ", isInbound=" + isInbound +
                 ", attempts=" + attempts +
                 '}';
     }

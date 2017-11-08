@@ -18,9 +18,9 @@ public class EventingMessageUtil {
         String result = UUID.randomUUID().toString();
         try {
             if (containerMessage.isInbound()) {
-                result = containerMessage.getProcessingInfo() == null ? FilenameUtils.getBaseName(containerMessage.getOriginalFileName()) : containerMessage.getProcessingInfo().getTransactionId();
+                result = containerMessage.getProcessingInfo() == null ? extractBaseName(containerMessage.getOriginalFileName()) : containerMessage.getProcessingInfo().getTransactionId();
             } else {
-                result = FilenameUtils.getBaseName(containerMessage.getOriginalFileName());
+                result = extractBaseName(containerMessage.getOriginalFileName());
                 if (containerMessage.getCustomerId() == null || containerMessage.getDocumentInfo().getDocumentId().isEmpty()) {
                     result = result + "_" + containerMessage.getCustomerId() + " " + containerMessage.getDocumentInfo().getDocumentId();
                 } else {
@@ -31,7 +31,12 @@ public class EventingMessageUtil {
             logger.error("Due to failure generated random message id for: " + containerMessage.getOriginalFileName());
             e.printStackTrace();
         }
-        return result;
+        String prefix = containerMessage.isInbound() ? "IN_" : "OUT_";
+        return prefix + result;
+    }
+
+    protected static String extractBaseName(String fullPath) {
+        return FilenameUtils.getName(fullPath);
     }
 
     public static void reportEvent(ContainerMessage containerMessage, String details) {
@@ -47,7 +52,7 @@ public class EventingMessageUtil {
         Message message = new Message(
                 generateMessageId(containerMessage),
                 created,
-                new TreeSet<Attempt>() {{
+                containerMessage.isInbound(), new TreeSet<Attempt>() {{
                     add(createAttempt(containerMessage, details));
                 }}
         );
@@ -78,7 +83,7 @@ public class EventingMessageUtil {
     protected static boolean calculateIfTerminalStatus(ContainerMessage containerMessage) {
         boolean result = false;
         //Positive case of terminal status determination
-        if(EndpointUtil.isTerminal(containerMessage.getProcessingInfo().getCurrentEndpoint())) {
+        if (EndpointUtil.isTerminal(containerMessage.getProcessingInfo().getCurrentEndpoint())) {
             result = true;
         }
 

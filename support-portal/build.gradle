@@ -14,6 +14,12 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
+
+jar {
+	baseName = 'support-portal'
+	version = ''
+}
+
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
@@ -35,6 +41,8 @@ dependencies {
 	compile('org.springframework.session:spring-session')
 	compile('com.vaadin:vaadin-spring-boot-starter')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile project(':common')
+	compile project(':common-model')
 	runtime('org.hsqldb:hsqldb')
 	runtime('mysql:mysql-connector-java')
 	runtime('org.postgresql:postgresql')

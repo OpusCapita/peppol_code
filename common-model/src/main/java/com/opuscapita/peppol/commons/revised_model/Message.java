@@ -16,6 +16,16 @@ public class Message implements  Comparable<Message> {
     @Column(name = "created")
     private long created;
 
+    @Column(name = "inbound")
+    private boolean inbound;
+
+    @Column(name = "sender")
+    private String sender;
+
+    @Column(name = "recipient")
+    private String recipient;
+
+
     @Column
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type = SortType.NATURAL)
@@ -25,10 +35,36 @@ public class Message implements  Comparable<Message> {
     public Message() {
     }
 
-    public Message(String id, long created, SortedSet<Attempt> attempts) {
+    public Message(String id, long created, boolean inbound, SortedSet<Attempt> attempts) {
         this.id = id;
         this.created = created;
+        this.inbound = inbound;
         this.attempts = attempts;
+    }
+
+    public Message(String id, long created, boolean inbound, String sender, String recipient, SortedSet<Attempt> attempts) {
+        this.id = id;
+        this.created = created;
+        this.inbound = inbound;
+        this.sender = sender;
+        this.recipient = recipient;
+        this.attempts = attempts;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
     }
 
     public String getId() {
@@ -55,11 +91,22 @@ public class Message implements  Comparable<Message> {
         this.attempts = attempts;
     }
 
+    public boolean isInbound() {
+        return inbound;
+    }
+
+    public void setInbound(boolean inbound) {
+        this.inbound = inbound;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
                 "id='" + id + '\'' +
                 ", created=" + created +
+                ", inbound=" + inbound +
+                ", sender='" + sender + '\'' +
+                ", recipient='" + recipient + '\'' +
                 ", attempts=" + attempts +
                 '}';
     }
