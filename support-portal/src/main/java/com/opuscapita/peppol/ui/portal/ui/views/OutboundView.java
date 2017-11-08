@@ -1,8 +1,9 @@
 package com.opuscapita.peppol.ui.portal.ui.views;
 
-import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragment;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentType;
+import com.opuscapita.peppol.ui.portal.ui.views.fragments.messages.MessagesGridFragment;
+import com.opuscapita.peppol.ui.portal.ui.views.fragments.messages.MessagesLazyLoadService;
 import com.opuscapita.peppol.ui.portal.ui.views.util.TabSheetSessionUtils;
 import com.opuscapita.peppol.ui.portal.ui.views.util.ViewUtil;
 import com.vaadin.navigator.View;
@@ -20,6 +21,9 @@ public class OutboundView extends VerticalLayout implements View {
     @Autowired
     HttpSession httpSession;
 
+    @Autowired
+    MessagesLazyLoadService messagesLazyLoadService;
+
     @PostConstruct
     void init() {
         setSizeFull();
@@ -30,11 +34,11 @@ public class OutboundView extends VerticalLayout implements View {
         TabSheet tabSheet = new TabSheet();
         tabSheet.setSizeFull();
         tabSheet.setCaption("Outbound");
-        tabSheet.addTab(new GridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.ALL), GridFragmentMode.ALL.toString());
-        tabSheet.addTab(new GridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.DELIVERED), GridFragmentMode.DELIVERED.toString());
-        tabSheet.addTab(new GridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.REPROCESSING), GridFragmentMode.REPROCESSING.toString());
-        tabSheet.addTab(new GridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.FAILED), GridFragmentMode.FAILED.toString());
-        tabSheet.addTab(new GridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.REJECTED), GridFragmentMode.REJECTED.toString());
+        tabSheet.addTab(new MessagesGridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.ALL, messagesLazyLoadService), GridFragmentMode.ALL.toString());
+        tabSheet.addTab(new MessagesGridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.DELIVERED, messagesLazyLoadService), GridFragmentMode.DELIVERED.toString());
+        tabSheet.addTab(new MessagesGridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.REPROCESSING, messagesLazyLoadService), GridFragmentMode.REPROCESSING.toString());
+        tabSheet.addTab(new MessagesGridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.FAILED, messagesLazyLoadService), GridFragmentMode.FAILED.toString());
+        tabSheet.addTab(new MessagesGridFragment(GridFragmentType.OUTBOUND, GridFragmentMode.REJECTED, messagesLazyLoadService), GridFragmentMode.REJECTED.toString());
         TabSheetSessionUtils.handleTabsInSession(tabSheet, httpSession);
         addComponent(tabSheet);
     }

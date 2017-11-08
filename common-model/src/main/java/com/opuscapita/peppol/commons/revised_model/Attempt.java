@@ -73,7 +73,7 @@ public class Attempt implements Comparable<Attempt> {
                 "id=" + id +
                 ", events=" + events +
                 ", filename='" + filename + '\'' +
-                ", message=" + message +
+                ", message=" + message.getId() +
                 '}';
     }
 

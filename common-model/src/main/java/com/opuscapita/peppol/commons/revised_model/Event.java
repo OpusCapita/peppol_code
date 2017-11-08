@@ -93,7 +93,7 @@ public class Event implements Comparable<Event> {
                 ", status='" + status + '\'' +
                 ", terminal=" + terminal +
                 ", details='" + details + '\'' +
-                ", attempt=" + attempt +
+                ", attempt=" + attempt.getId() +
                 '}';
     }
 

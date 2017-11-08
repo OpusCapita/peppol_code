@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.ui.portal.ui.views.util;
 
 import com.opuscapita.peppol.ui.portal.session.SessionParams;
-import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragment;
+import com.opuscapita.peppol.ui.portal.ui.views.fragments.messages.MessagesGridFragment;
 import com.vaadin.ui.TabSheet;
 
 import javax.servlet.http.HttpSession;
@@ -17,7 +17,7 @@ public class TabSheetSessionUtils {
             System.out.println("Last tab: " + lastTab);
             if (lastTab != null) {
                 tabSheet.iterator().forEachRemaining(tab -> {
-                    if (((GridFragment) tab).getTag().equals(lastTab.toString())) {
+                    if (((MessagesGridFragment) tab).getTag().equals(lastTab.toString())) {
                         tabSheet.setSelectedTab(tab);
                     }
                 });
@@ -26,7 +26,7 @@ public class TabSheetSessionUtils {
         tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
             @Override
             public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
-                session.setAttribute(lastView + "_" + SessionParams.LAST_TAB, ((GridFragment) event.getTabSheet().getSelectedTab()).getTag());
+                session.setAttribute(lastView + "_" + SessionParams.LAST_TAB, ((MessagesGridFragment) event.getTabSheet().getSelectedTab()).getTag());
                 System.out.println("Changing tab to: " + getLastTabSessionObject(session, lastView));
             }
         });
