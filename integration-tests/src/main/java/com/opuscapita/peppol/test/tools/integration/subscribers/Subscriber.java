@@ -50,6 +50,7 @@ public abstract class Subscriber {
                         TestResult testResult = consumer.consume(consumable);
                         testResults.add(testResult);
                     }
+                    return testResults;
                 }
             }
         } catch (InterruptedException e) {

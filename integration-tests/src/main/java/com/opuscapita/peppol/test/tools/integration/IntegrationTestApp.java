@@ -77,7 +77,6 @@ public class IntegrationTestApp implements RabbitListenerConfigurer, CommandLine
         if (new File(configFile).isDirectory())
             configFile = configFile + "\\configuration.yaml";
 
-        System.exit(0);
         List<TestResult> testResults = runTests(configFile);
         new LoggingResultBuilder().processResult(testResults); //outputs the result to console
         new HtmlResultBuilder(testResultFileName,templateDir).processResult(testResults); //test result for jenkins
