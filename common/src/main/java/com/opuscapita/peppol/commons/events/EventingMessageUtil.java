@@ -42,12 +42,12 @@ public class EventingMessageUtil {
     public static void reportEvent(ContainerMessage containerMessage, String details) {
         boolean shouldCreateEventingMessage = containerMessage.getProcessingInfo().getEventingMessage() == null;
         logger.info("Should create eventing message: " + shouldCreateEventingMessage);
-        Message message = shouldCreateEventingMessage ? createMessage(containerMessage, details) : containerMessage.getProcessingInfo().getEventingMessage();
+        Message message = shouldCreateEventingMessage ? createAndSetMessage(containerMessage, details) : containerMessage.getProcessingInfo().getEventingMessage();
         logger.info("Eventing message: " + message);
         message.getAttempts().last().getEvents().add(createEvent(containerMessage, details));
     }
 
-    protected static Message createMessage(ContainerMessage containerMessage, String details) {
+    protected static Message createAndSetMessage(ContainerMessage containerMessage, String details) {
         long created = System.currentTimeMillis();
         Message message = new Message(
                 generateMessageId(containerMessage),
