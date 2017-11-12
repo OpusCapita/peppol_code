@@ -19,5 +19,6 @@
     - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice-SBDH-senderID-different-EndPointId.xml"
     - "{{test_data_path}}/validation_test_suite/valid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml"
     - "{{test_data_path}}/validation_test_suite/valid/EHF-order-sample.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF-order-response.xml"
 ...
 

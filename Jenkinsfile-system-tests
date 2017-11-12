@@ -78,7 +78,9 @@ try {
                             "outbound-invalid-tests": { ansiblePlaybook(
                                 'outbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
                                 'report_path=$PWD/reports/'
-                            )},
+                            )}
+                        )
+                        parallel(
                             "inbound-tests": { ansiblePlaybook(
                                 'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
                                 'report_path=$PWD/reports/'

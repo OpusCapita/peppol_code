@@ -2,6 +2,9 @@
 - name: Show email-notificator log, search for uuid "{{ uuid }}" "{{ file }}"
   shell: docker logs email-notificator
   register: log
+  until: uuid in log.stdout
+  retries: 60
+  delay: 1
 
 - name: Assert if uuid "{{ uuid }}" "{{ file }}" is found in email-notificator log 
   ignore_errors: yes
