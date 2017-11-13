@@ -5,6 +5,7 @@ import eu.peppol.outbound.transmission.TransmissionResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Common interface for all senders.
@@ -13,5 +14,7 @@ import java.io.IOException;
  */
 @FunctionalInterface
 public interface PeppolSender {
-    TransmissionResponse send(@NotNull ContainerMessage containerMessage) throws IOException;
+
+    CompletableFuture<TransmissionResponse> send(@NotNull ContainerMessage containerMessage) throws IOException;
+
 }
