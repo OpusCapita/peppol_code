@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.ui.portal.ui.views;
 
-import com.opuscapita.peppol.commons.revised_model.Customer;
-import com.opuscapita.peppol.ui.portal.model.CustomerRepository;
+import com.opuscapita.peppol.commons.revised_model.Participant;
+import com.opuscapita.peppol.ui.portal.model.ParticipantRepository;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentType;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.PlainGridFragment;
@@ -24,7 +24,7 @@ public class SendersView extends VerticalLayout implements View {
     HttpSession httpSession;
 
     @Autowired
-    CustomerRepository customerRepository;
+    ParticipantRepository participantRepository;
 
     @PostConstruct
     void init() {
@@ -33,12 +33,12 @@ public class SendersView extends VerticalLayout implements View {
         setMargin(false);
         ViewUtil.updateSessionViewObject(httpSession, ViewName.SENDERS);
 
-        PlainGridFragment sendersGridFragment = new PlainGridFragment(GridFragmentType.SENDERS, GridFragmentMode.ALL, Customer.class, getSenders());
+        PlainGridFragment sendersGridFragment = new PlainGridFragment(GridFragmentType.SENDERS, GridFragmentMode.ALL, Participant.class, getSenders());
         sendersGridFragment.setCaption("Senders");
         addComponent(sendersGridFragment);
     }
 
     private Collection getSenders() {
-        return StreamSupport.stream(customerRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        return StreamSupport.stream(participantRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 }

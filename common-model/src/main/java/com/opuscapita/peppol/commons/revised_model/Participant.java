@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Entity
 @DynamicUpdate
 @Table(name = "senders")
-public class Customer {
+public class Participant {
 
     @Id
     @Column(name = "id")
