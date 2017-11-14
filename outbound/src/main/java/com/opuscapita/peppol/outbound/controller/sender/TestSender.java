@@ -18,11 +18,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * More advanced test sender that the {@link FakeSender}.
@@ -31,6 +34,7 @@ import java.net.URL;
  * @author Sergejs.Roze
  */
 @Component
+@Scope("prototype")
 @Lazy
 public class TestSender extends UblSender {
     private static final Logger logger = LoggerFactory.getLogger(TestSender.class);
@@ -61,7 +65,8 @@ public class TestSender extends UblSender {
     @SuppressWarnings("unused")
     @Override
     @NotNull
-    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
+    @Async("outbound-pool")
+    public CompletableFuture<TransmissionResponse> send(@NotNull ContainerMessage cm) throws IOException {
         if (StringUtils.isBlank(testRecipient)) {
             logger.warn("Test sender selected but property 'peppol.outbound.test.recipient' is empty, using FakeSender instead");
             return fakeSender.send(cm);
@@ -131,13 +136,13 @@ public class TestSender extends UblSender {
                     }
                 };
                 logger.info("created fake TransmissionResponse for integration test with transmission id: " + fakeResult.getTransmissionId());
-                return fakeResult;
+                return CompletableFuture.completedFuture(fakeResult);
             }
 
             TransmissionResponse result = transmitter.transmit(transmissionRequest);
             logger.info("Delivered message " + cm.getFileName() + " to URL " + result.getURL() + " with transmission ID: " +
                     result.getTransmissionId());
-            return result;
+            return CompletableFuture.completedFuture(result);
         }
     }
 

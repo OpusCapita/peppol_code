@@ -6,10 +6,7 @@ import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
-import com.opuscapita.peppol.outbound.controller.sender.FakeSender;
-import com.opuscapita.peppol.outbound.controller.sender.Svefaktura1Sender;
-import com.opuscapita.peppol.outbound.controller.sender.TestSender;
-import com.opuscapita.peppol.outbound.controller.sender.UblSender;
+import com.opuscapita.peppol.outbound.controller.sender.*;
 import eu.peppol.outbound.transmission.TransmissionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Sergejs.Roze
@@ -68,7 +69,7 @@ public class OutboundController {
         try {
             if (!sendingEnabled) {
                 if (fakeSender != null) {
-                    transmissionResponse = fakeSender.send(cm);
+                    transmissionResponse = sendAsync(fakeSender, cm);
                 } else {
                     logger.warn("Selected to send via fake sender but it isn't initialized");
                     return;
@@ -77,7 +78,7 @@ public class OutboundController {
                 if (StringUtils.isNotBlank(testRecipient)) {
                     // real send via test sender
                     if (testSender != null) {
-                        transmissionResponse = testSender.send(cm);
+                        transmissionResponse = sendAsync(testSender, cm);
                     } else {
                         logger.warn("Selected to send via test sender but it isn't initialized");
                         return;
@@ -88,10 +89,10 @@ public class OutboundController {
                         case INVALID:
                             throw new IllegalArgumentException("Unable to send invalid documents");
                         case SVEFAKTURA1:
-                            transmissionResponse = svefaktura1Sender.send(cm);
+                            transmissionResponse = sendAsync(svefaktura1Sender, cm);
                             break;
                         default:
-                            transmissionResponse = ublSender.send(cm);
+                            transmissionResponse = sendAsync(ublSender, cm);
                     }
                 }
             }
@@ -103,6 +104,12 @@ public class OutboundController {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + e.getMessage());
             whatAboutRetry(cm, messageQueue, e, endpoint);
         }
+    }
+
+    private TransmissionResponse sendAsync(@NotNull PeppolSender sender, @NotNull ContainerMessage cm)
+            throws IOException, ExecutionException, InterruptedException {
+        CompletableFuture<TransmissionResponse> result = sender.send(cm);
+        return result.get(); // can define timeout here if needed
     }
 
     // will try to re-send the message to the delayed queue only for I/O exceptions
