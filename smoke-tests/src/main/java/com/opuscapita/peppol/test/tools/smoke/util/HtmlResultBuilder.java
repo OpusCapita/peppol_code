@@ -74,12 +74,14 @@ public class HtmlResultBuilder implements ResultBuilder{
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Writer out = new OutputStreamWriter(outputStream);
+        Date now = new Date();
 
         Map<String, Object> data = new HashMap<>();
         data.put("result", badChecks.size() > 0 ? "FAILURE" : "SUCCESS");
         data.put("all_tests", allChecks.size());
         data.put("successful_tests", goodChecks.size());
         data.put("failed_tests", badChecks.size());
+        data.put("time", DateFormat.getInstance().format(now));
         data.put("percentage", Double.valueOf(((double) goodChecks.size()/ (double) allChecks.size()) * 100.0));
         data.put("comment", "smoke test checks");
         data.put("item", new Object());
