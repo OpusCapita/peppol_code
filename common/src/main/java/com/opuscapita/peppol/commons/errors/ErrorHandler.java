@@ -30,10 +30,23 @@ public class ErrorHandler {
         this.serviceNowRest = serviceNowRest;
     }
 
+    /**
+     *
+     * @param cm container message
+     * @param e Exception
+     * @param shortDescription short description
+     */
     public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription) {
         reportWithContainerMessage(cm, e, shortDescription, null);
     }
 
+    /**
+     *
+     * @param cm container message
+     * @param e Exception
+     * @param shortDescription short description
+     * @param additionalDetails additional details
+     */
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription,
                                            @Nullable String additionalDetails) {

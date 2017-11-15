@@ -72,7 +72,12 @@ public class PreprocessingApp {
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 logger.info("Message received, file id: " + cm.getFileName());
                 cm = controller.process(cm);
-                if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+                if(cm.getDocumentInfo() != null && cm.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED) {
+                    errorHandler.reportWithContainerMessage(cm, null, "Document type not recognized by the parser!");
+                    cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file, document type unrecognized");
+                    logger.info("Invalid message, SNC ticket will be created");
+                }
+                else if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
                     cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file");
                     messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Invalid message sent to " + errorQueue + " queue");

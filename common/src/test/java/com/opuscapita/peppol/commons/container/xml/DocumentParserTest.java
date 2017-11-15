@@ -360,7 +360,7 @@ public class DocumentParserTest {
             DocumentInfo result = parser.parse(inputStream, "unrecognized_document_type.xml", new Endpoint("test", ProcessType.TEST), true);
             assertNotNull(result);
             assertTrue(result.getErrors().get(0).getMessage().contains("No matching document templates found"));
-            assertEquals(Archetype.INVALID, result.getArchetype());
+            assertEquals(Archetype.UNRECOGNIZED, result.getArchetype());
             assertEquals("", result.getDocumentType());
         }
     }
