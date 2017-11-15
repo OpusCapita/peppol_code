@@ -1,20 +1,16 @@
 ---
-- name: get validator log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found
+- name: get validator log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found in validator
   ignore_errors: yes
-  shell: docker logs validator
+  shell: docker logs validator | grep "{{ transmissionId }}"
   register: log
   until: transmissionId in log.stdout
-  retries: 60
+  retries: 300
   delay: 1
 
-- name: transmissionID "{{ transmissionId }}" "{{ file }}" is found in validator log 
-  ignore_errors: yes
-  assert:
-    that:
-      - "transmissionId in log.stdout"
-    msg: "Failed"
-  register: result
-
-- set_fact: validator_result="validator={{result.msg}}"
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: validator_result="Failed"
+  when: log.rc != 0
+- set_fact: validator_result="All assertions passed"
+  when: log.rc == 0
 - debug: var=validator_result
 ...
