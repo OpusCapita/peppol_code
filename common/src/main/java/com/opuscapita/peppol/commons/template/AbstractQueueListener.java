@@ -42,6 +42,11 @@ public abstract class AbstractQueueListener {
         } catch (Exception e) {
             handleError(cm.getCustomerId() == null ? "n/a" : cm.getCustomerId(), e, cm);
         }
+        try {
+            reportEvent(cm);
+        } catch (Exception e) {
+            handleError(cm.getCustomerId(), e, cm);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -58,12 +63,14 @@ public abstract class AbstractQueueListener {
         }
         if(success && cm != null) {
             receiveMessage(cm);
+        } else if (cm != null) {
+            try {
+                reportEvent(cm);
+            } catch (Exception e) {
+                handleError(cm.getCustomerId(), e, cm);
+            }
         }
-        try {
-            reportEvent(cm);
-        } catch (Exception e) {
-            handleError(cm.getCustomerId(), e, cm);
-        }
+
     }
 
     private void reportEvent(ContainerMessage cm) {
