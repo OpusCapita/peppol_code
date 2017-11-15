@@ -84,8 +84,14 @@ public class DocumentLoaderTest {
         checkTypes(list, Archetype.SVEFAKTURA1);
 
         list = Arrays.asList(
+                "/invalid/random.xml",
+                "/invalid/unrecognized_document_type.xml"
+        );
+        checkTypes(list, Archetype.UNRECOGNIZED);
+
+        list = Arrays.asList(
                 "/invalid/not_xml.txt",
-                "/invalid/random.xml"
+                "/invalid/ehf_no_issue_date.xml"
         );
         checkTypes(list, Archetype.INVALID);
 
