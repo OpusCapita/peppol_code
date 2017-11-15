@@ -13,7 +13,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -61,7 +60,7 @@ public class HealthCheck extends Check {
         String statusValue = jsonObj.get("status").toString();
         statusValue = statusValue.replaceAll("\"", "");
         boolean statusCheck = statusValue.toUpperCase().equals("UP");
-
+        logger.info("Connected to " + moduleName  + " status is: " + statusValue);
         return new CheckResult(moduleName, statusCheck, "Health check performed for: " +
                 rawConfig.get("reference") + " received status is: " +
                 statusValue, rawConfig);
