@@ -91,7 +91,8 @@ public class EventingMessageUtil {
         if (containerMessage.hasErrors()) {
             result = true;
         }
-        if (containerMessage.getDocumentInfo() != null && containerMessage.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+        if (containerMessage.getDocumentInfo() != null
+                && (containerMessage.getDocumentInfo().getArchetype() == Archetype.INVALID || containerMessage.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED)) {
             result = true;
         }
         return result;

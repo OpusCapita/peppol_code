@@ -43,7 +43,7 @@ public class ValidationController {
         }
 
         Archetype archetype = containerMessage.getDocumentInfo().getArchetype();
-        if (archetype == Archetype.INVALID) {
+        if (archetype == Archetype.INVALID || archetype == Archetype.UNRECOGNIZED) {
             return containerMessage;
         }
         String customizationId = containerMessage.getDocumentInfo().getCustomizationId();
@@ -95,7 +95,8 @@ public class ValidationController {
 
     @SuppressWarnings("ConstantConditions")
     private Document getRootDocument(@NotNull ContainerMessage containerMessage, @NotNull Document dom) throws Exception {
-        if (containerMessage.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+        Archetype at = containerMessage.getDocumentInfo().getArchetype();
+        if (at == Archetype.INVALID || at == Archetype.UNRECOGNIZED) {
             throw new IllegalArgumentException("Unable to validate invalid documents: " + containerMessage.getFileName());
         }
 
