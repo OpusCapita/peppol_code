@@ -30,16 +30,20 @@ public class MessagesGridFragment extends AbstractGridFragment {
         grid = new Grid<>();
         grid.addColumn(Message::getId).setCaption("Id")
                 .setSortable(true)
+                .setSortProperty("id")
                 .setComparator((SerializableComparator<Message>) (o1, o2) -> o1.getId().compareTo(o2.getId()))
                 .setHidable(true);
         grid.addColumn(Message::getSender).setCaption("Sender")
                 .setSortable(true)
+                .setSortProperty("sender")
                 .setHidable(true);
         grid.addColumn(Message::getRecipient).setCaption("Recipient")
                 .setSortable(true)
+                .setSortProperty("recipient")
                 .setHidable(true);
         grid.addColumn((ValueProvider<Message, String>) message -> Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString())
                 .setCaption("Date/time")
+                .setSortProperty("created")
                 .setSortable(true);
         grid.addComponentColumn((ValueProvider<Message, HorizontalLayout>) message -> {
             HorizontalLayout result = new HorizontalLayout();
