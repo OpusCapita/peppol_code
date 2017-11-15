@@ -250,6 +250,9 @@ tests:
             - file producer:
                 source directory: /etc/resources/preprocessing/preprocessing_valid.xml
                 destination directory: /peppol/data/storage/preprocessing_valid.xml
+            - file producer:
+                source directory: /etc/resources/preprocessing/preprocessing_unrecognized.xml
+                destination directory: /peppol/data/storage/preprocessing_unrecognized.xml
             - mq producer:
                 mq connection: mq1
                 destination queue: preprocessing
