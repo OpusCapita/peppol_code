@@ -63,12 +63,6 @@ public abstract class AbstractQueueListener {
         }
         if(success && cm != null) {
             receiveMessage(cm);
-        } else if (cm != null) {
-            try {
-                reportEvent(cm);
-            } catch (Exception e) {
-                handleError(cm.getCustomerId(), e, cm);
-            }
         }
 
     }
