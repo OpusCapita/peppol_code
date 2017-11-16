@@ -8,10 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -74,12 +72,14 @@ public class HtmlResultBuilder implements ResultBuilder{
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Writer out = new OutputStreamWriter(outputStream);
+        Date now = new Date();
 
         Map<String, Object> data = new HashMap<>();
         data.put("result", failedTests.size() > 0 ? "FAILURE" : "SUCCESS");
         data.put("all_tests", allTests.size());
         data.put("successful_tests", passedTests.size());
         data.put("failed_tests", failedTests.size());
+        data.put("time", DateFormat.getInstance().format(now));
         data.put("percentage", Double.valueOf(((double) passedTests.size()/ (double) allTests.size()) * 100.0));
         data.put("comment", "integration test checks");
         data.put("item", new Object());

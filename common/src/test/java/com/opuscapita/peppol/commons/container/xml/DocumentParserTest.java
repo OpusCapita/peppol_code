@@ -322,7 +322,6 @@ public class DocumentParserTest {
     @Test
     public void testCorruptDocumentIdentifier() throws Exception {
         DocumentParser parser = createDocumentParser();
-        //consistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/EHF_peppol-bis-5a_invoice-SBDH-DocumentTypeIdentifier-corrupted.xml")) {
             DocumentInfo result = parser.parse(inputStream, "EHF_peppol-bis-5a_invoice-SBDH-DocumentTypeIdentifier-corrupted.xml", new Endpoint("test", ProcessType.UNKNOWN), false);
             assertNotNull(result);
@@ -333,7 +332,6 @@ public class DocumentParserTest {
     @Test
     public void testParseEhfOrder() throws Exception {
         DocumentParser parser = createDocumentParser();
-        //consistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/order/EHF-order-sample.xml")) {
             DocumentInfo result = parser.parse(inputStream, "EHF-order-sample.xml", new Endpoint("test", ProcessType.TEST), true);
             assertNotNull(result);
@@ -346,13 +344,24 @@ public class DocumentParserTest {
     @Test
     public void testParseEhfOrderResponse() throws Exception {
         DocumentParser parser = createDocumentParser();
-        //consistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/ordrsp/EHF-order-response.xml")) {
             DocumentInfo result = parser.parse(inputStream, "EHF-order-response.xml", new Endpoint("test", ProcessType.TEST), true);
             assertNotNull(result);
             assertTrue(result.getErrors().isEmpty());
             assertEquals(Archetype.EHF, result.getArchetype());
             assertEquals("OrderResponse", result.getDocumentType());
+        }
+    }
+
+    @Test
+    public void testParseUnrecognizedDocumentType() throws Exception {
+        DocumentParser parser = createDocumentParser();
+        try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/unrecognized_document_type.xml")) {
+            DocumentInfo result = parser.parse(inputStream, "unrecognized_document_type.xml", new Endpoint("test", ProcessType.TEST), true);
+            assertNotNull(result);
+            assertTrue(result.getErrors().get(0).getMessage().contains("No matching document templates found"));
+            assertEquals(Archetype.UNRECOGNIZED, result.getArchetype());
+            assertEquals("", result.getDocumentType());
         }
     }
 }

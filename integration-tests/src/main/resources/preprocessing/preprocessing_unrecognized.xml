@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+  <StandardBusinessDocumentHeader>
+    <HeaderVersion>1.0</HeaderVersion>
+    <Sender>
+      <Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+    </Sender>
+    <Receiver>
+      <Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+    </Receiver>
+    <DocumentIdentification>
+      <Standard>urn:oasis:names:specification:ubl:schema:xsd:Order-2</Standard>
+      <TypeVersion>2.1</TypeVersion>
+      <InstanceIdentifier>9eea765f-9bf0-490f-aebe-9ee67747e3bb</InstanceIdentifier>
+      <Type>Order</Type>
+      <CreationDateAndTime>2017-10-25T13:55:59.5762265+02:00</CreationDateAndTime>
+    </DocumentIdentification>
+    <BusinessScope>
+      <Scope>
+        <Type>DOCUMENTID</Type>
+        <InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0:extended:urn:www.difi.no:ehf:ordre:ver1.0::2.1</InstanceIdentifier>
+      </Scope>
+      <Scope>
+        <Type>PROCESSID</Type>
+        <InstanceIdentifier>urn:www.cenbii.eu:profile:bii28:ver2.0</InstanceIdentifier>
+      </Scope>
+    </BusinessScope>
+  </StandardBusinessDocumentHeader>
+<Unrecognized xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0:extended:urn:www.difi.no:ehf:unrec:ver1.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:www.cenbii.eu:profile:bii28:ver2.0</cbc:ProfileID>
+  <cbc:ID>120637</cbc:ID>
+  <cbc:IssueDate>2017-10-25</cbc:IssueDate>
+  <cbc:IssueTime>13:55:40.0000000+02:00</cbc:IssueTime>
+  <cbc:Note>Testordre - ignorer</cbc:Note>
+  <cbc:DocumentCurrencyCode listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
+  <cac:ValidityPeriod>
+    <cbc:EndDate>2017-10-30</cbc:EndDate>
+  </cac:ValidityPeriod>
+  <cac:Contract>
+    <cbc:ID>NOT_MAINTAINED</cbc:ID>
+  </cac:Contract>
+  <cac:BuyerCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="NO:ORGNR">987987987</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="GLN">7080003535696</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>Aksess Innkjøp</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>OpusCapita test street</cbc:StreetName>
+        <cbc:CityName>Fauske</cbc:CityName>
+        <cbc:PostalZone>8200</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>884660912MVA</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Aksess Innkjøp</cbc:RegistrationName>
+        <cbc:CompanyID>884660912</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ID>2224</cbc:ID>
+        <cbc:Name>OpusCapita test</cbc:Name>
+        <cbc:ElectronicMail>opuscapitatest@opuscapita.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:BuyerCustomerParty>
+  <cac:SellerSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="NO:ORGNR">987987987</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="ZZZ">53</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>OpusCapita test</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>OpusCapita test street</cbc:StreetName>
+        <cbc:CityName>Stokmarknes</cbc:CityName>
+        <cbc:PostalZone>8455</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+    </cac:Party>
+  </cac:SellerSupplierParty>
+  <cac:OriginatorCustomerParty>
+    <cac:Party>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="GLN">7080003535696</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>Aksess Innkjøp</cbc:Name>
+      </cac:PartyName>
+      <cac:Contact>
+        <cbc:ID>2224</cbc:ID>
+        <cbc:Name>OpusCapita test</cbc:Name>
+        <cbc:ElectronicMail>opuscapitatest@opuscapita.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:OriginatorCustomerParty>
+  <cac:Delivery>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:ID schemeID="GLN">7080003535111</cbc:ID>
+        <cbc:StreetName>OpusCapita test street</cbc:StreetName>
+        <cbc:CityName>Fauske</cbc:CityName>
+        <cbc:PostalZone>8200</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+    <cac:RequestedDeliveryPeriod>
+      <cbc:StartDate>2017-10-31</cbc:StartDate>
+      <cbc:EndDate>2017-10-31</cbc:EndDate>
+    </cac:RequestedDeliveryPeriod>
+    <cac:DeliveryParty>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="GLN">7080003535111</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>Aksess Innkjøp</cbc:Name>
+      </cac:PartyName>
+      <cac:Contact>
+        <cbc:ID>2224</cbc:ID>
+        <cbc:Name>OpusCapita test</cbc:Name>
+        <cbc:ElectronicMail>opuscapitatest@opuscapita.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:DeliveryParty>
+  </cac:Delivery>
+  <cac:OrderLine>
+    <cac:LineItem>
+      <cbc:ID>1</cbc:ID>
+      <cbc:Quantity unitCode="PK" unitCodeListID="UNECERec20">1.000</cbc:Quantity>
+      <cbc:LineExtensionAmount currencyID="NOK">55.57000</cbc:LineExtensionAmount>
+      <cac:OriginatorParty>
+        <cac:PartyIdentification>
+          <cbc:ID schemeID="ZZZ">2224</cbc:ID>
+        </cac:PartyIdentification>
+        <cac:PartyName>
+          <cbc:Name>OpusCapita test</cbc:Name>
+        </cac:PartyName>
+      </cac:OriginatorParty>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="NOK">55.57</cbc:PriceAmount>
+        <cbc:BaseQuantity unitCode="PK" unitCodeListID="UNECERec20">1</cbc:BaseQuantity>
+      </cac:Price>
+      <cac:Item>
+        <cbc:Description>OpusCapita test item description</cbc:Description>
+        <cbc:Name>OpusCapita test</cbc:Name>
+        <cac:SellersItemIdentification>
+          <cbc:ID>282073</cbc:ID>
+        </cac:SellersItemIdentification>
+        <cac:CommodityClassification>
+          <cbc:ItemClassificationCode listID="UNSPSC">41121503</cbc:ItemClassificationCode>
+        </cac:CommodityClassification>
+      </cac:Item>
+    </cac:LineItem>
+  </cac:OrderLine>
+  <cac:OrderLine>
+    <cac:LineItem>
+      <cbc:ID>2</cbc:ID>
+      <cbc:Quantity unitCode="PK" unitCodeListID="UNECERec20">1.000</cbc:Quantity>
+      <cbc:LineExtensionAmount currencyID="NOK">15.74000</cbc:LineExtensionAmount>
+      <cac:OriginatorParty>
+        <cac:PartyIdentification>
+          <cbc:ID schemeID="ZZZ">2224</cbc:ID>
+        </cac:PartyIdentification>
+        <cac:PartyName>
+          <cbc:Name>OpusCapita test</cbc:Name>
+        </cac:PartyName>
+      </cac:OriginatorParty>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="NOK">15.74</cbc:PriceAmount>
+        <cbc:BaseQuantity unitCode="PK" unitCodeListID="UNECERec20">1</cbc:BaseQuantity>
+      </cac:Price>
+      <cac:Item>
+        <cbc:Description>OpusCapita test item description</cbc:Description>
+        <cbc:Name>OpusCapita test</cbc:Name>
+        <cac:SellersItemIdentification>
+          <cbc:ID>250720</cbc:ID>
+        </cac:SellersItemIdentification>
+        <cac:CommodityClassification>
+          <cbc:ItemClassificationCode listID="UNSPSC">46181606</cbc:ItemClassificationCode>
+        </cac:CommodityClassification>
+      </cac:Item>
+    </cac:LineItem>
+  </cac:OrderLine>
+</Unrecognized>
+</StandardBusinessDocument>

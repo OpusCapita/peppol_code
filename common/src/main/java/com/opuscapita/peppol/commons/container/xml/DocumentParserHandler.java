@@ -364,7 +364,7 @@ public class DocumentParserHandler extends DefaultHandler {
         errors.add(new DocumentError(endpoint, "No matching document templates found for " + fileName));
 
         DocumentInfo result = new DocumentInfo();
-        result.setArchetype(Archetype.INVALID);
+        result.setArchetype(Archetype.UNRECOGNIZED);
 
         if (best != null) {
             for (Field field : best.fields) {

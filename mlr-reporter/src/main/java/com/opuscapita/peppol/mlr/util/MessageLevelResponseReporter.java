@@ -76,7 +76,7 @@ public class MessageLevelResponseReporter {
         DocumentInfo di = cm.getDocumentInfo();
 
         // report invalid files
-        if (di.getArchetype() == Archetype.INVALID) {
+        if (di.getArchetype() == Archetype.INVALID || di.getArchetype() == Archetype.UNRECOGNIZED) {
             logger.info("Creating MLR (re) for: invalid message: " + cm.getFileName());
             storeResponse(creator.reportError(cm), cm, "re");
             return;

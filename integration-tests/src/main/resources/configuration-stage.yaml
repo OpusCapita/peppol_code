@@ -83,7 +83,7 @@ tests:
                   endpoint type: outbound
                   endpoint: integration-test-endpoint
         subscribers:
-            - snc subscriber:
+            - directory subscriber:
                 source directory: /peppol/data/snc-stub
                 consumers: 5
             - directory subscriber:
@@ -156,9 +156,6 @@ tests:
                 source queue: validation-integration-test
                 timeout: 1500
                 consumers: 1
-            - snc subscriber:
-                consumers: 2
-                timeout: 500
             - file subscriber:
                 source file:  /etc/resources/validation-result/restResult
                 consumers: 3
@@ -253,10 +250,21 @@ tests:
             - file producer:
                 source directory: /etc/resources/preprocessing/preprocessing_valid.xml
                 destination directory: /peppol/data/storage/preprocessing_valid.xml
+            - file producer:
+                source directory: /etc/resources/preprocessing/preprocessing_unrecognized.xml
+                destination directory: /peppol/data/storage/preprocessing_unrecognized.xml
             - mq producer:
                 mq connection: mq1
                 destination queue: preprocessing
                 source directory: /peppol/data/storage/preprocessing_invalid.xml
+                container message:
+                  source endpoint: integration-test-a2a
+                  endpoint: integration-test-endpoint
+                  load file: 'false'
+            - mq producer:
+                mq connection: mq1
+                destination queue: preprocessing
+                source directory: /peppol/data/storage/preprocessing_unrecognized.xml
                 container message:
                   source endpoint: integration-test-a2a
                   endpoint: integration-test-endpoint
@@ -281,6 +289,9 @@ tests:
             - directory subscriber:
                 consumers: 18 19
                 source directory: /peppol/data/storage/0037_01098230/9908_939214895/
+            - directory subscriber:
+                source directory: /peppol/data/snc-stub
+                consumers: 20
         consumers:
             - queue msg count check:
                 id: 16
@@ -298,3 +309,8 @@ tests:
                 id: 19
                 expected value: '$date/preprocessing_invalid.xml'
                 name: preprocessing invalid file check
+            - snc test:
+                name: preprocessing SNC ticket creation test
+                id: 20
+                expected value: 9908:937270067
+                timeout: 16000

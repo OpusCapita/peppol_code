@@ -34,7 +34,8 @@ public class ValidationController {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document info is missing from message " + cm.getFileName());
         }
-        if (cm.hasErrors() || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+        Archetype at = cm.getDocumentInfo().getArchetype();
+        if (cm.hasErrors() || at == Archetype.INVALID || at == Archetype.UNRECOGNIZED) {
             return cm;
         }
 

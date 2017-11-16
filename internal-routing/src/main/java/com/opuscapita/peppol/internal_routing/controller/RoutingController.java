@@ -47,7 +47,7 @@ public class RoutingController {
         String source = cm.getProcessingInfo().getSource().getName();
         DocumentInfo documentInfo = cm.getDocumentInfo();
 
-        if (documentInfo.getArchetype() == Archetype.INVALID) {
+        if (documentInfo.getArchetype() == Archetype.INVALID || documentInfo.getArchetype() == Archetype.UNRECOGNIZED) {
             Route errorRoute = new Route();
             errorRoute.setDescription("ERROR");
             errorRoute.setEndpoints(Collections.singletonList(errorQueue));

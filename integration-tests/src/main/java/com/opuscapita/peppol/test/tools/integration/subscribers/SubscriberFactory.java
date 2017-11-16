@@ -31,9 +31,6 @@ public class SubscriberFactory {
                 subscriber = new MqSubscriber(properties.get("timeout"), properties.get("source queue"));
                 IntegrationTestApp.registerMqListener((MqListener) subscriber);
                 break;
-            case "snc subscriber":
-                subscriber = new SncSubscriber(properties.get("timeout"), properties.get("source directory"));
-                break;
             case "directory subscriber":
                 subscriber = new DirectorySubscriber(properties.get("timeout"), properties.get("source directory"));
                 break;
