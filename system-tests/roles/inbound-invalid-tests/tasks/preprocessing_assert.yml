@@ -1,19 +1,16 @@
 ---
 - name: get preprocessing log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found
-  shell: docker logs preprocessing
+  ignore_errors: yes
+  shell: docker logs preprocessing | grep "{{ transmissionId }}"
   register: log
   until: transmissionId in log.stdout
-  retries: 60
+  retries: 120
   delay: 1
 
-- name: Assert if transmissionID "{{ transmissionId }}" "{{ file }}" is found in preprocessing log 
-  ignore_errors: yes
-  assert:
-    that:
-      - "transmissionId in log.stdout"
-    msg: "Failed"
-  register: result
-
-- set_fact: preprocessing_result="preprocessing={{result.msg}}"
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: preprocessing_result="Failed"
+  when: log.rc != 0
+- set_fact: preprocessing_result="All assertions passed"
+  when: log.rc == 0
 - debug: var=preprocessing_result
 ...
