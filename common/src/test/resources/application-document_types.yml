@@ -479,7 +479,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: ".*extended:urn:www.difi.no:ehf:ordre*.*"
+              mask: ".*extended:urn:www.difi.no:ehf:ordre.*"
 
           - name: EHF.Order
             root: Order
