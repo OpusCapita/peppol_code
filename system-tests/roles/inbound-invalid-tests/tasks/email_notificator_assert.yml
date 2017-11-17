@@ -6,11 +6,23 @@
   until: transmissionId in log.stdout
   retries: 60
   delay: 1
+  when: preprocessing_result != "No matching document templates found"
 
 #rc is response code for shell commands 0=success and anything else=failed
 - set_fact: email_notificator_result="Failed"
-  when: log.rc != 0
+  when: log.rc is defined and log.rc != 0
 - set_fact: email_notificator_result="All assertions passed"
-  when: log.rc == 0
+  when: log.rc is defined and log.rc == 0
+- debug: var=email_notificator_result
+
+- name: get preprocessing result, in unknown document case handle like this->
+  set_fact: email_notificator_result="Error reported to SNC through preprocessing"
+  when: preprocessing_result | search("No matching document templates found")
+
+- debug: var=email_notificator_result
+
+- name: check if no transmissionId "{{ transmissionId }}" was found for "{{ file }}" in inbound
+  set_fact: email_notificator_result="No transmissionId was set for this file in inbound"
+  when: transmissionId ==""
 - debug: var=email_notificator_result
 ...
