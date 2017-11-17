@@ -22,14 +22,14 @@ public class SncConsumer extends FileConsumer {
             return new TestResult(name, false, "SncConsumer: Directory not found " + currentDirectory);
         }
 
-        if(searchforFile()) {
+        if(fileFound()) {
             return new TestResult(name, true, "Found expected file " + expectedValue);
         }
 
         logger.warn("SncConsumer: no files to consume in " + currentDirectory + " retry in: " + delay);
         waitFixedDelay();
 
-        if(searchforFile()) {  //retry
+        if(fileFound()) {  //retry
             return new TestResult(name, true, "Found expected file " + expectedValue);
         }
 
@@ -37,9 +37,10 @@ public class SncConsumer extends FileConsumer {
         return new TestResult(name, false, "not found expected file with name " + expectedValue);
     }
 
-    private boolean searchforFile(){
+    private boolean fileFound(){
         for(File f : currentDirectory.listFiles()) {
             if(f.getName().startsWith(expectedValue)){
+                logger.info("Found file: " + f.getName() +  " deleting!");
                 f.delete();
                 return true;
             }

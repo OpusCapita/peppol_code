@@ -55,12 +55,14 @@ public class ReportingManager {
             processingExceptions.put("Exception during reporting to Events persistence", ex);
         }
 
-        try {
-            rabbitTemplate.convertAndSend(mlrQueue, cm);
-        } catch (Exception ex2) {
-            ex2.printStackTrace();
-            logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
-            processingExceptions.put("Exception during reporting to MLR", ex2);
+        if(!cm.isInbound()) {
+            try {
+                rabbitTemplate.convertAndSend(mlrQueue, cm);
+            } catch (Exception ex2) {
+                ex2.printStackTrace();
+                logger.error("MessageLevelResponseReporter failed with exception: " + ex2.getMessage());
+                processingExceptions.put("Exception during reporting to MLR", ex2);
+            }
         }
 
         try {
