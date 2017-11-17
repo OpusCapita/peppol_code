@@ -18,10 +18,18 @@
 
 - debug: var=counter
 
-- name: update test results
+- name: create report headers
   delegate_to: localhost
   lineinfile:
     create: yes
+    dest: "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.csv"
+    state: present
+    line: "Test num.,Test file,transmissionId,preprocessing result,internal-routing result,validator result,transport result"
+
+- name: update test results
+  delegate_to: localhost
+  lineinfile:
+    create: no
     dest: "{{report_path}}/inbound-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
     line: "{{counter}},{{file}},{{transmissionId}}"

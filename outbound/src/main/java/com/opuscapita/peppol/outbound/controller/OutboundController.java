@@ -15,16 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author Sergejs.Roze
  */
 @Component
+@Scope("prototype")
 public class OutboundController {
     private final static Logger logger = LoggerFactory.getLogger(OutboundController.class);
 
@@ -69,7 +67,7 @@ public class OutboundController {
         try {
             if (!sendingEnabled) {
                 if (fakeSender != null) {
-                    transmissionResponse = sendAsync(fakeSender, cm);
+                    transmissionResponse = send(fakeSender, cm);
                 } else {
                     logger.warn("Selected to send via fake sender but it isn't initialized");
                     return;
@@ -78,7 +76,7 @@ public class OutboundController {
                 if (StringUtils.isNotBlank(testRecipient)) {
                     // real send via test sender
                     if (testSender != null) {
-                        transmissionResponse = sendAsync(testSender, cm);
+                        transmissionResponse = send(testSender, cm);
                     } else {
                         logger.warn("Selected to send via test sender but it isn't initialized");
                         return;
@@ -89,10 +87,10 @@ public class OutboundController {
                         case INVALID:
                             throw new IllegalArgumentException("Unable to send invalid documents");
                         case SVEFAKTURA1:
-                            transmissionResponse = sendAsync(svefaktura1Sender, cm);
+                            transmissionResponse = send(svefaktura1Sender, cm);
                             break;
                         default:
-                            transmissionResponse = sendAsync(ublSender, cm);
+                            transmissionResponse = send(ublSender, cm);
                     }
                 }
             }
@@ -106,10 +104,9 @@ public class OutboundController {
         }
     }
 
-    private TransmissionResponse sendAsync(@NotNull PeppolSender sender, @NotNull ContainerMessage cm)
-            throws IOException, ExecutionException, InterruptedException {
-        CompletableFuture<TransmissionResponse> result = sender.send(cm);
-        return result.get(); // can define timeout here if needed
+    // separated to be able to implement additional logic on demand
+    private TransmissionResponse send(@NotNull PeppolSender sender, @NotNull ContainerMessage cm) throws Exception {
+        return sender.send(cm);
     }
 
     // will try to re-send the message to the delayed queue only for I/O exceptions

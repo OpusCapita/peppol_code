@@ -1,20 +1,16 @@
 ---
 - name: get internal-routing log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found in internal-routing
   ignore_errors: yes
-  shell: docker logs internal-routing
+  shell: docker logs internal-routing | grep "{{ transmissionId }}"
   register: log
-  until: "transmissionId in log.stdout"
-  retries: 60
+  until: transmissionId in log.stdout
+  retries: 120
   delay: 1
 
-- name: transmissionID "{{ transmissionId }}" "{{ file }}" is found in internal-routing log 
-  ignore_errors: yes
-  assert:
-    that:
-      - "transmissionId in log.stdout"
-    msg: "Failed"
-  register: result
-
-- set_fact: internal_routing_result="internal-routing={{result.msg}}"
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: internal_routing_result="Failed"
+  when: log.rc != 0
+- set_fact: internal_routing_result="All assertions passed"
+  when: log.rc == 0
 - debug: var=internal_routing_result
 ...
