@@ -312,5 +312,5 @@ tests:
             - snc test:
                 name: preprocessing SNC ticket creation test
                 id: 20
-                expected value: 9908:937270067
+                expected value: n_a_
                 timeout: 16000

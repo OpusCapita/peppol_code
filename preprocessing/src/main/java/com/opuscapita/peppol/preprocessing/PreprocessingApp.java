@@ -75,7 +75,6 @@ public class PreprocessingApp {
                 if(cm.getDocumentInfo() != null && cm.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED) {
                     errorHandler.reportWithContainerMessage(cm, null, "Document type not recognized by the parser!");
                     cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file, document type unrecognized");
-                    logger.info("Invalid message, SNC ticket will be created");
                 }
                 else if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
                     cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file");
