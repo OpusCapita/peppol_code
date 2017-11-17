@@ -19,13 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.URL;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * More advanced test sender that the {@link FakeSender}.
@@ -65,8 +63,7 @@ public class TestSender extends UblSender {
     @SuppressWarnings("unused")
     @Override
     @NotNull
-    @Async("outbound-pool")
-    public CompletableFuture<TransmissionResponse> send(@NotNull ContainerMessage cm) throws IOException {
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
         if (StringUtils.isBlank(testRecipient)) {
             logger.warn("Test sender selected but property 'peppol.outbound.test.recipient' is empty, using FakeSender instead");
             return fakeSender.send(cm);
@@ -136,13 +133,13 @@ public class TestSender extends UblSender {
                     }
                 };
                 logger.info("created fake TransmissionResponse for integration test with transmission id: " + fakeResult.getTransmissionId());
-                return CompletableFuture.completedFuture(fakeResult);
+                return fakeResult;
             }
 
             TransmissionResponse result = transmitter.transmit(transmissionRequest);
             logger.info("Delivered message " + cm.getFileName() + " to URL " + result.getURL() + " with transmission ID: " +
                     result.getTransmissionId());
-            return CompletableFuture.completedFuture(result);
+            return result;
         }
     }
 

@@ -12,14 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Sergejs.Roze
@@ -49,8 +47,7 @@ public class UblSender implements PeppolSender {
 
     @SuppressWarnings("unused")
     @NotNull
-    @Async("outbound-pool")
-    public CompletableFuture<TransmissionResponse> send(@NotNull ContainerMessage cm) throws IOException {
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
         DocumentInfo document = cm.getDocumentInfo();
         if (document == null) {
             throw new IllegalArgumentException("There is no document in message");
@@ -73,8 +70,7 @@ public class UblSender implements PeppolSender {
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 
-            TransmissionResponse result = transmitter.transmit(transmissionRequest);
-            return CompletableFuture.completedFuture(result);
+            return transmitter.transmit(transmissionRequest);
         }
     }
 
