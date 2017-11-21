@@ -1,19 +1,22 @@
 ---
-- name: get preprocessing log & check if uuid "{{ uuid }}" "{{ file }}" is found
-  shell: docker logs preprocessing
+- name: get preprocessing log & check if uuid "{{ uuid }}" for "{{ file }}" is found
+  ignore_errors: yes
+  shell: docker logs preprocessing | grep "{{ uuid }}"
   register: log
   until: uuid in log.stdout
-  retries: 60
+  retries: 120
   delay: 1
 
-- name: Assert if uuid "{{ uuid }}" "{{ file }}" is found in preprocessing log 
-  ignore_errors: yes
-  assert:
-    that:
-      - "uuid in log.stdout"
-    msg: "Failed"
-  register: result
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: preprocessing_result="Failed"
+  when: log.rc != 0
+- set_fact: preprocessing_result="All assertions passed"
+  when: log.rc == 0
+- debug: var=preprocessing_result
 
-- set_fact: preprocessing_result="Preprocessing={{result.msg}}"
+- name: get preprocessing result, in unknown document case handle like this->
+  set_fact: preprocessing_result="Failed- No matching document templates found"
+  when: log.stdout | search("No matching document templates found")
+
 - debug: var=preprocessing_result
 ...
