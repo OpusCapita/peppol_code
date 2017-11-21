@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.internal_routing.controller.RoutingController;
@@ -56,6 +57,7 @@ public class InternalRoutingApp {
                 logger.info("Route set to " + cm.getProcessingInfo().getRoute());
 
                 String queueOut = cm.popRoute();
+                EventingMessageUtil.reportEvent(cm, "Route set, sent to: " + queueOut);
                 cm.setStatus(endpoint, "route set");
                 messageQueue.convertAndSend(queueOut, cm);
                 logger.info("Route for " + cm.getFileName() + " defined, message sent to " + queueOut + " queue");

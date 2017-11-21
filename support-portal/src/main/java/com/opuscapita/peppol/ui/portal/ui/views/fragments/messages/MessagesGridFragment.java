@@ -4,11 +4,12 @@ import com.opuscapita.peppol.commons.revised_model.Message;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.AbstractGridFragment;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentType;
+import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.*;
 
 import java.time.Instant;
@@ -49,82 +50,9 @@ public class MessagesGridFragment extends AbstractGridFragment {
             HorizontalLayout result = new HorizontalLayout();
             result.setSizeFull();
             result.setSpacing(true);
-            HorizontalLayout infoBar = new HorizontalLayout();
-            infoBar.setSizeFull();
-            Label totalLabel = new Label("Total attempts: " + message.getAttempts().size());
-            totalLabel.setVisible(true);
-            infoBar.addComponent(totalLabel);
             HorizontalLayout actionBar = new HorizontalLayout();
             Button detailsBtn = new Button("Details");
-            detailsBtn.addClickListener((Button.ClickListener) event -> {
-                String messageDirection = message.isInbound() ? "Inbound" : "Outbound";
-                final Window detailedView = new Window();
-                detailedView.setCaptionAsHtml(true);
-                detailedView.setCaption("<b>Details on " + messageDirection + " message:</b> " + message.getId());
-                detailedView.setVisible(true);
-                detailedView.setModal(true);
-                detailedView.setResizable(false);
-                detailedView.setHeight(400, Unit.PIXELS);
-                detailedView.setWidth(800, Unit.PIXELS);
-                VerticalLayout detailedContent = new VerticalLayout();
-                detailedContent.setSizeUndefined();
-                detailedContent.setSpacing(false);
-                detailedContent.setMargin(true);
-                HorizontalLayout participantsInfo = new HorizontalLayout();
-                participantsInfo.setWidth(100, Unit.PERCENTAGE);
-                participantsInfo.setHeightUndefined();
-                Label senderLabel = new Label("<b>Sender:</b> " + message.getSender(), ContentMode.HTML);
-                participantsInfo.addComponent(senderLabel);
-                Label recipientLabel = new Label("<b>Recipient:</b> " + message.getRecipient(), ContentMode.HTML);
-                participantsInfo.addComponent(recipientLabel);
-                detailedContent.addComponent(participantsInfo);
-                HorizontalLayout processingInfo = new HorizontalLayout();
-                processingInfo.setWidth(100, Unit.PERCENTAGE);
-                processingInfo.setHeightUndefined();
-                Label processingStartLabel = new Label("<b>Processing started at:</b> " + Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime(), ContentMode.HTML);
-                processingInfo.addComponent(processingStartLabel);
-                Label attemptsLabel = new Label("<b>Attempts:</b> " + message.getAttempts().size(), ContentMode.HTML);
-                processingInfo.addComponent(attemptsLabel);
-                detailedContent.addComponent(processingInfo);
-                message.getAttempts().forEach(attempt -> {
-                    VerticalLayout attemptDetails = new VerticalLayout();
-                    attemptDetails.setSpacing(false);
-                    attemptDetails.setMargin(false);
-                    attemptDetails.setWidth(100, Unit.PERCENTAGE);
-                    attemptDetails.setHeightUndefined();
-                    Label attemptTimestampLabel = new Label("<b>Attempt:</b> " + Instant.ofEpochMilli(attempt.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime(), ContentMode.HTML);
-                    attemptDetails.addComponent(attemptTimestampLabel);
-                    Label attemptFileNameLabel = new Label("<b>Filename:</b> " + attempt.getFilename(), ContentMode.HTML);
-                    attemptDetails.addComponent(attemptFileNameLabel);
-                    Grid<com.opuscapita.peppol.commons.revised_model.Event> eventsGrid = new Grid<>("Events: " + attempt.getEvents().size());
-                    eventsGrid.setWidth(640, Unit.PIXELS);
-                    eventsGrid.setHeightMode(HeightMode.ROW);
-                    eventsGrid.setHeightByRows(5);
-                    eventsGrid.addColumn((ValueProvider<com.opuscapita.peppol.commons.revised_model.Event, String>) eventItem -> Instant.ofEpochMilli(eventItem.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString())
-                            .setCaption("When");
-                    eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getSource)
-                            .setCaption("Source");
-                    eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getDetails)
-                            .setCaption("Details");
-                    eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getStatus)
-                            .setCaption("Status");
-                    eventsGrid.addColumn((ValueProvider<com.opuscapita.peppol.commons.revised_model.Event, String>) eventItem -> eventItem.isTerminal() ? "yes" : "no")
-                            .setCaption("Final");
-                    eventsGrid.setItems(attempt.getEvents());
-                    attemptDetails.addComponent(eventsGrid);
-                    detailedContent.addComponent(attemptDetails);
-                });
-                detailedView.setContent(detailedContent);
-                detailedView.addCloseListener(new Window.CloseListener() {
-                    @Override
-                    public void windowClose(Window.CloseEvent e) {
-                        detailedView.setModal(false);
-                        detailedView.setVisible(false);
-                        getUI().removeWindow(detailedView);
-                    }
-                });
-                getUI().addWindow(detailedView);
-            });
+            detailsBtn.addClickListener((Button.ClickListener) event -> showDetails(message));
             actionBar.addComponent(detailsBtn);
             Button downloadBtn = new Button("Download");
             downloadBtn.addClickListener((Button.ClickListener) event -> {
@@ -137,10 +65,9 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 }
             });
             actionBar.addComponent(downloadBtn);
-            result.addComponent(infoBar);
             result.addComponent(actionBar);
             return result;
-        }).setCaption("Attempts");
+        }).setCaption("");
         grid.setSizeFull();
 
         AtomicBoolean isInbound = new AtomicBoolean(false);
@@ -172,6 +99,91 @@ public class MessagesGridFragment extends AbstractGridFragment {
         /*BackEndDataProvider backEndDataProvider;
         grid.setItems(repository.findMessagesByInbound(isInbound));*/
 
+    }
+
+    protected void showDetails(Message message) {
+        String messageDirection = message.isInbound() ? "Inbound" : "Outbound";
+        final Window detailedView = new Window();
+        detailedView.setCaptionAsHtml(true);
+        detailedView.setCaption("<b>Details on " + messageDirection + " message:</b> " + message.getId());
+        detailedView.setVisible(true);
+        detailedView.setModal(true);
+        detailedView.setResizable(false);
+        detailedView.setHeight(400, Unit.PIXELS);
+        detailedView.setWidth(800, Unit.PIXELS);
+        VerticalLayout detailedContent = new VerticalLayout();
+        detailedContent.setSizeFull();
+        detailedContent.setSpacing(true);
+        detailedContent.setMargin(true);
+        HorizontalLayout participantsInfo = new HorizontalLayout();
+        participantsInfo.setWidth(100, Unit.PERCENTAGE);
+        participantsInfo.setHeightUndefined();
+        Label senderLabel = new Label("<b>Sender:</b> " + message.getSender(), ContentMode.HTML);
+        participantsInfo.addComponent(senderLabel);
+        Label recipientLabel = new Label("<b>Recipient:</b> " + message.getRecipient(), ContentMode.HTML);
+        participantsInfo.addComponent(recipientLabel);
+        detailedContent.addComponent(participantsInfo);
+        detailedContent.setExpandRatio(participantsInfo, 1);
+        HorizontalLayout processingInfo = new HorizontalLayout();
+        processingInfo.setWidth(100, Unit.PERCENTAGE);
+        processingInfo.setHeightUndefined();
+        Label processingStartLabel = new Label("<b>Processing started at:</b> " + Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime(), ContentMode.HTML);
+        processingInfo.addComponent(processingStartLabel);
+        Label attemptsLabel = new Label("<b>Attempts:</b> " + message.getAttempts().size(), ContentMode.HTML);
+        processingInfo.addComponent(attemptsLabel);
+        detailedContent.addComponent(processingInfo);
+        detailedContent.setExpandRatio(processingInfo, 1);
+        Tree<String> attemptDetails = new Tree<>();
+        attemptDetails.setSizeFull();
+        TreeData<String> attemptDetailsData = new TreeData<>();
+        message.getAttempts().forEach(attempt -> {
+            String attemptInfo = Instant.ofEpochMilli(attempt.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString() + " " + attempt.getFilename();
+            attemptDetailsData.addItem(null, attemptInfo);
+            attempt.getEvents().forEach(event -> {
+                String eventInfo = Instant.ofEpochMilli(event.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString();
+                eventInfo += " " + event.getSource() + " " + event.getDetails() + " " + (event.isTerminal() ? "FINAL" : "");
+                attemptDetailsData.addItem(attemptInfo, eventInfo);
+            });
+            /*VerticalLayout attemptDetails = new VerticalLayout();
+            attemptDetails.setSpacing(false);
+            attemptDetails.setMargin(false);
+            attemptDetails.setWidth(100, Unit.PERCENTAGE);
+            attemptDetails.setHeightUndefined();
+            Label attemptTimestampLabel = new Label("<b>Attempt:</b> " + Instant.ofEpochMilli(attempt.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime(), ContentMode.HTML);
+            attemptDetails.addComponent(attemptTimestampLabel);
+            Label attemptFileNameLabel = new Label("<b>Filename:</b> " + attempt.getFilename(), ContentMode.HTML);
+            attemptDetails.addComponent(attemptFileNameLabel);
+            Grid<com.opuscapita.peppol.commons.revised_model.Event> eventsGrid = new Grid<>("Events: " + attempt.getEvents().size());
+            eventsGrid.setWidth(640, Unit.PIXELS);
+            eventsGrid.setHeightMode(HeightMode.ROW);
+            eventsGrid.setHeightByRows(5);
+            eventsGrid.addColumn((ValueProvider<com.opuscapita.peppol.commons.revised_model.Event, String>) eventItem -> Instant.ofEpochMilli(eventItem.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString())
+                    .setCaption("When");
+            eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getSource)
+                    .setCaption("Source");
+            eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getDetails)
+                    .setCaption("Details");
+            eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getStatus)
+                    .setCaption("Status");
+            eventsGrid.addColumn((ValueProvider<com.opuscapita.peppol.commons.revised_model.Event, String>) eventItem -> eventItem.isTerminal() ? "yes" : "no")
+                    .setCaption("Final");
+            eventsGrid.setItems(attempt.getEvents());
+            attemptDetails.addComponent(eventsGrid);
+            detailedContent.addComponent(attemptDetails);*/
+        });
+        attemptDetails.setDataProvider(new TreeDataProvider<>(attemptDetailsData));
+        detailedContent.addComponent(attemptDetails);
+        detailedContent.setExpandRatio(attemptDetails, 5);
+        detailedView.setContent(detailedContent);
+        detailedView.addCloseListener(new Window.CloseListener() {
+            @Override
+            public void windowClose(Window.CloseEvent e) {
+                detailedView.setModal(false);
+                detailedView.setVisible(false);
+                getUI().removeWindow(detailedView);
+            }
+        });
+        getUI().addWindow(detailedView);
     }
 
     public String getTag() {

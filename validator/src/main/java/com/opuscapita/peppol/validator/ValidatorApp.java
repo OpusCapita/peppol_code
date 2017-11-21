@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.validator.controller.ValidationController;
@@ -67,11 +68,13 @@ public class ValidatorApp {
 
                 if (cm.hasErrors()) {
                     cm.getProcessingInfo().setCurrentStatus(endpoint, "validation failed");
+                    EventingMessageUtil.reportEvent(cm, "Validation failed");
                     messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
                 } else {
                     String queueOut = cm.popRoute();
                     cm.setStatus(endpoint, "validation passed");
+                    EventingMessageUtil.reportEvent(cm, "Validation passed, sent to: " + queueOut);
                     messageQueue.convertAndSend(queueOut, cm);
                     logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
                 }

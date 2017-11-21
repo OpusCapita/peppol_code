@@ -35,5 +35,6 @@ public class MessageAttemptEventReporter {
         message.setSender(containerMessage.getDocumentInfo().getSenderId());
         message.setInbound(containerMessage.isInbound());
         messagesRepository.save(message);
+        logger.info("Saved message: " + message);
     }
 }
