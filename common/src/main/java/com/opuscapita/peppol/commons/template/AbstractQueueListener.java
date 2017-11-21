@@ -69,6 +69,7 @@ public abstract class AbstractQueueListener {
 
     private void reportEvent(ContainerMessage cm) {
         if(cm != null) {
+            logger.info("Reporting event: " + cm.getProcessingInfo().getEventingMessage());
             EventingMessageUtil.reportEvent(cm, cm.getProcessingInfo().getCurrentStatus());
         }
     }
