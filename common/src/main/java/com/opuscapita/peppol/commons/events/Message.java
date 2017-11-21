@@ -1,5 +1,7 @@
 package com.opuscapita.peppol.commons.events;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.SortedSet;
 
 public class Message {
@@ -8,7 +10,7 @@ public class Message {
     private final boolean isInbound;
     private final SortedSet<Attempt> attempts;
 
-    public Message(String id, long created, boolean isInbound, SortedSet<Attempt> attempts) {
+    public Message(@NotNull String id, long created, boolean isInbound, SortedSet<Attempt> attempts) {
         this.id = id;
         this.created = created;
         this.isInbound = isInbound;
