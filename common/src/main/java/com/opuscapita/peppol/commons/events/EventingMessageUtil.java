@@ -21,7 +21,9 @@ public class EventingMessageUtil {
                 result = containerMessage.getProcessingInfo() == null ? extractBaseName(containerMessage.getOriginalFileName()) : containerMessage.getProcessingInfo().getTransactionId();
             } else {
                 result = extractBaseName(containerMessage.getOriginalFileName());
-                if (containerMessage.getCustomerId() == null || containerMessage.getDocumentInfo().getDocumentId().isEmpty()) {
+                if (containerMessage.getDocumentInfo() == null) {
+                    result = result + "_" + containerMessage.getProcessingInfo().getSource().getName();
+                } else if (containerMessage.getCustomerId() == null || containerMessage.getDocumentInfo().getDocumentId().isEmpty()) {
                     result = result + "_" + containerMessage.getCustomerId() + " " + containerMessage.getDocumentInfo().getDocumentId();
                 } else {
                     result = result + "_invalid_" + UUID.randomUUID().toString();
