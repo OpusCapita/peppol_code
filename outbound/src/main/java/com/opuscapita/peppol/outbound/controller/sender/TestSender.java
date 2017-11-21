@@ -87,7 +87,7 @@ public class TestSender extends UblSender {
                     .payLoad(getUpdatedFileContent(cm, testRecipient));
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
-            logger.debug("About to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: "
+            logger.info("Thread " + Thread.currentThread().getName() + " about to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: "
                     + transmissionRequest.getEndpointAddress().getCommonName().toString());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();

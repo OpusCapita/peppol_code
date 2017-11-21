@@ -66,7 +66,7 @@ public class UblSender implements PeppolSender {
                     .payLoad(inputStream);
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
-            logger.debug("About to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + " and endpoint: " + transmissionRequest.getEndpointAddress().getCommonName().toString());
+            logger.info("Thread " + Thread.currentThread().getName() + " is about to send " + cm.getFileName() + ", endpoint: " + transmissionRequest.getEndpointAddress().getCommonName().toString());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 

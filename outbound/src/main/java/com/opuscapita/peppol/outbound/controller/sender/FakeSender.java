@@ -30,6 +30,8 @@ public class FakeSender implements PeppolSender {
 
     @SuppressWarnings("unused")
     public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
+        logger.info("Thread " + Thread.currentThread().getName() + " about to emulate sending " + cm.getFileName() + " using " + this.getClass().getSimpleName());
+
         if (cm.getFileName().contains("-fail-me-io-")) {
             logger.info("Rejecting message with I/O error as requested by the file name");
             throw new IOException("This sending expected to fail I/O in test mode");
