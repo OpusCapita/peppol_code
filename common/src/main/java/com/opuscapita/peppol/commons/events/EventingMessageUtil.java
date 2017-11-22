@@ -70,7 +70,7 @@ public class EventingMessageUtil {
     protected static Attempt createAttempt(ContainerMessage containerMessage, String details) {
 
         return new Attempt(
-                System.currentTimeMillis() + "_" + containerMessage.getFileName() + "_" + UUID.randomUUID().toString(),
+                System.currentTimeMillis() + "_" + FilenameUtils.getName(containerMessage.getFileName()),
                 new TreeSet<Event>() {{
                     add(createEvent(containerMessage, details));
                 }},
