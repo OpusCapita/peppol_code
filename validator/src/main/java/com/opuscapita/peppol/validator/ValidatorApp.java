@@ -64,6 +64,7 @@ public class ValidatorApp {
 
                 logger.info("Validating message " + cm.getFileName());
                 cm.getProcessingInfo().setCurrentStatus(endpoint, "performing validation");
+                EventingMessageUtil.reportEvent(cm, "Performing validation");
                 cm = controller.validate(cm);
 
                 if (cm.hasErrors()) {
