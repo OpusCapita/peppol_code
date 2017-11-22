@@ -43,6 +43,12 @@ public class MessagesLazyLoadService {
         return items.subList(offset % limit, items.size());
     }
 
+    public List<Message> findByInboundAndTerminal(boolean inbound, boolean terminal, int offset, int limit, Map<String, Boolean> sortOrders) {
+        PageRequest pageRequest = composePageRequest(offset, limit, sortOrders);
+        List<Message> items = messagesRepository.findMessagesByInboundAndAttemptsEventsTerminal(inbound, terminal, pageRequest).getContent();
+        return items.subList(offset % limit, items.size());
+    }
+
 
     public Integer count() {
         return Math.toIntExact(messagesRepository.count());
@@ -50,6 +56,10 @@ public class MessagesLazyLoadService {
 
     public Integer countByInbound(boolean inbound) {
         return Math.toIntExact(messagesRepository.countMessagesByInbound(inbound));
+    }
+
+    public Integer countByInboundAndTerminal(boolean inbound, boolean terminal) {
+        return Math.toIntExact(messagesRepository.countMessagesByInboundAndAttemptsEventsTerminal(inbound, terminal));
     }
 
 

@@ -8,19 +8,28 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface MessagesRepository extends PagingAndSortingRepository<Message, String> {
-    public List<Message> findMessagesByInboundFalse();
+    List<Message> findMessagesByInboundFalse();
 
-    public Page<Message> findMessagesByInboundFalse(Pageable pageable);
+    Page<Message> findMessagesByInboundFalse(Pageable pageable);
 
-    public List<Message> findMessagesByInboundTrue();
+    List<Message> findMessagesByInboundTrue();
 
-    public Page<Message> findMessagesByInboundTrue(Pageable pageable);
+    Page<Message> findMessagesByInboundTrue(Pageable pageable);
 
-    public List<Message> findMessagesByInbound(boolean inbound);
+    List<Message> findMessagesByInbound(boolean inbound);
 
-    public Page<Message> findMessagesByInbound(boolean inbound, Pageable pageable);
+    Page<Message> findMessagesByInbound(boolean inbound, Pageable pageable);
 
-    public Long countMessagesByInbound(boolean inbound);
+    Long countMessagesByInbound(boolean inbound);
 
-    public Long countMessagesByInboundAndCreatedBetween(boolean inbound, long start, long end);
+    Long countMessagesByInboundAndCreatedBetween(boolean inbound, long start, long end);
+
+    List<Message> findMessagesByInboundAndAttemptsEventsTerminal(boolean inbound, boolean terminal);
+
+    Page<Message> findMessagesByInboundAndAttemptsEventsTerminal(boolean inbound, boolean terminal, Pageable pageable);
+
+    Long countMessagesByInboundAndAttemptsEventsTerminal(boolean inbound, boolean terminal);
+
+    Long countMessagesByInboundAndAttemptsEventsTerminal(boolean inbound, boolean terminal, long start, long end);
+
 }

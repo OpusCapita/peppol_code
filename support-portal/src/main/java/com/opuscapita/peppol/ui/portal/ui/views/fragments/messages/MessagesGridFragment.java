@@ -75,6 +75,8 @@ public class MessagesGridFragment extends AbstractGridFragment {
         grid.setSizeFull();
 
         AtomicBoolean isInbound = new AtomicBoolean(false);
+        AtomicBoolean isTerminal = new AtomicBoolean(false);
+        AtomicBoolean all = new AtomicBoolean(false);
         AtomicInteger count = new AtomicInteger(0);
         switch (direction) {
             case INBOUND:
@@ -86,7 +88,15 @@ public class MessagesGridFragment extends AbstractGridFragment {
             default:
                 throw new IllegalStateException("This component is supposed to handle only INBOUND and OUTBOUND as directions");
         }
-        count.set(messagesLazyLoadService.countByInbound(isInbound.get()));
+        switch (mode) {
+            case DELIVERED:
+                isTerminal.set(true);
+                break;
+            case ALL:
+                all.set(true);
+                break;
+        }
+        count.set(all.get() ? messagesLazyLoadService.countByInbound(isInbound.get()) : messagesLazyLoadService.countByInboundAndTerminal(isInbound.get(), isTerminal.get()));
         grid.setDataProvider(
                 (sortOrders, offset, limit) -> {
                     Map<String, Boolean> sortOrder = sortOrders.stream()
@@ -94,7 +104,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
                                     sort -> sort.getSorted(),
                                     sort -> sort.getDirection() == SortDirection.ASCENDING));
 
-                    return messagesLazyLoadService.findByInbound(isInbound.get(), offset, limit, sortOrder).stream();
+                    return all.get() ? messagesLazyLoadService.findByInbound(isInbound.get(), offset, limit, sortOrder).stream() : messagesLazyLoadService.findByInboundAndTerminal(isInbound.get(), isTerminal.get(), offset, limit, sortOrder).stream();
                 },
                 () -> count.get()
         );
