@@ -12,7 +12,7 @@ import java.util.SortedSet;
 public class Attempt implements Comparable<Attempt> {
 
     @Id
-    private long id; //Unix timestamp to be stored here
+    private String id; //Unix timestamp to be stored here
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "attempt", cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type = SortType.NATURAL)
@@ -28,18 +28,18 @@ public class Attempt implements Comparable<Attempt> {
     public Attempt() {
     }
 
-    public Attempt(long id, SortedSet<Event> events, String filename, Message message) {
+    public Attempt(String id, SortedSet<Event> events, String filename, Message message) {
         this.id = id;
         this.events = events;
         this.filename = filename;
         this.message = message;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -80,7 +80,7 @@ public class Attempt implements Comparable<Attempt> {
     @Override
     public int compareTo(@NotNull Attempt other) {
         int part1 = getMessage().compareTo(other.getMessage());
-        int part2 = Long.compare(getId(), other.getId());
+        int part2 = Integer.compare(getId().hashCode(), other.getId().hashCode());
         if(part1 != 0) {
             return part1;
         }

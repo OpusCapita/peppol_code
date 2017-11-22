@@ -64,7 +64,7 @@ public class EventingMessageUtil {
 
     protected static Attempt createAttempt(ContainerMessage containerMessage, String details) {
         return new Attempt(
-                System.currentTimeMillis(),
+                System.currentTimeMillis() + "_" + containerMessage.getProcessingInfo().getEventingMessage().getId(),
                 new TreeSet<Event>() {{
                     add(createEvent(containerMessage, details));
                 }},

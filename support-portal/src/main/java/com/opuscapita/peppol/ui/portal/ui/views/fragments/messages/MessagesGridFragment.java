@@ -11,6 +11,8 @@ import com.vaadin.server.SerializableComparator;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -20,6 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class MessagesGridFragment extends AbstractGridFragment {
+    private static final Logger logger = LoggerFactory.getLogger(MessagesGridFragment.class);
+
     private final Grid<Message> grid;
     private final GridFragmentType direction;
     private final GridFragmentMode mode;
@@ -137,7 +141,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
         attemptDetails.setSizeFull();
         TreeData<String> attemptDetailsData = new TreeData<>();
         message.getAttempts().forEach(attempt -> {
-            String attemptInfo = Instant.ofEpochMilli(attempt.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString() + " " + attempt.getFilename();
+            String attemptInfo = Instant.ofEpochMilli(extractAttemptCreationTimestamp(attempt.getId())).atZone(ZoneId.systemDefault()).toLocalDateTime().toString() + " " + attempt.getFilename();
             attemptDetailsData.addItem(null, attemptInfo);
             attempt.getEvents().forEach(event -> {
                 String eventInfo = Instant.ofEpochMilli(event.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString();
@@ -184,6 +188,17 @@ public class MessagesGridFragment extends AbstractGridFragment {
             }
         });
         getUI().addWindow(detailedView);
+    }
+
+    private long extractAttemptCreationTimestamp(String id) {
+        long result = System.currentTimeMillis();
+        try {
+            result = Long.valueOf(id.split("_", 2)[0]);
+        } catch (Exception e) {
+            logger.warn("Failed extracting timestamp from attempt id: " + id);
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public String getTag() {
