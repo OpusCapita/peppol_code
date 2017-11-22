@@ -57,8 +57,8 @@ public class InternalRoutingApp {
                 logger.info("Route set to " + cm.getProcessingInfo().getRoute());
 
                 String queueOut = cm.popRoute();
-                EventingMessageUtil.reportEvent(cm, "Route set, sent to: " + queueOut);
                 cm.setStatus(endpoint, "route set");
+                EventingMessageUtil.reportEvent(cm, "Route set, sent to: " + queueOut);
                 messageQueue.convertAndSend(queueOut, cm);
                 logger.info("Route for " + cm.getFileName() + " defined, message sent to " + queueOut + " queue");
             }
