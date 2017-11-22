@@ -193,12 +193,17 @@ public class MessagesGridFragment extends AbstractGridFragment {
     private long extractAttemptCreationTimestamp(String id) {
         long result = System.currentTimeMillis();
         try {
-            result = Long.valueOf(id.split("_", 2)[0]);
+            return Long.valueOf(id.split("_", 2)[0]);
         } catch (Exception e) {
+            try {
+                return Long.valueOf(id);
+            } catch (Exception e1) {
+                e = e1;
+            }
             logger.warn("Failed extracting timestamp from attempt id: " + id);
             e.printStackTrace();
         }
-        return 0;
+        return result;
     }
 
     public String getTag() {
