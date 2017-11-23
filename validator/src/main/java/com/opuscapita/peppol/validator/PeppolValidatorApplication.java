@@ -11,6 +11,7 @@ import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.validator.validations.ValidationController;
@@ -30,6 +31,8 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+
+import java.util.stream.Collectors;
 
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
@@ -129,10 +132,12 @@ public class PeppolValidatorApplication {
 
                 Endpoint endpoint = new Endpoint(componentName, cm.isInbound() ? ProcessType.IN_VALIDATION : ProcessType.OUT_VALIDATION);
                 cm.getProcessingInfo().setCurrentStatus(endpoint, "performing validation");
+                EventingMessageUtil.reportEvent(cm, "Validation started");
                 cm = controller.validate(cm);
 
                 if (cm.getDocumentInfo().getArchetype() == Archetype.INVALID || !cm.getDocumentInfo().getErrors().isEmpty()) {
                     cm.getProcessingInfo().setCurrentStatus(endpoint, "validation failed");
+                    EventingMessageUtil.reportEvent(cm, "Validation failed: " + cm.getDocumentInfo().getErrors().stream().map(error -> error.toString()).collect(Collectors.joining("\n\r")));
                     messageQueue.convertAndSend(errorQueue, cm);
 
                     logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
@@ -141,6 +146,7 @@ public class PeppolValidatorApplication {
 
                 String queueOut = cm.popRoute();
                 cm.setStatus(endpoint, "validation passed");
+                EventingMessageUtil.reportEvent(cm, "Validation passed");
                 messageQueue.convertAndSend(queueOut, cm);
                 logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
             }

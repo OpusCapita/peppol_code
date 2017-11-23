@@ -2,6 +2,7 @@ package com.opuscapita.peppol.commons.events;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.EndpointUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +43,10 @@ public class EventingMessageUtil {
     }
 
     public static void reportEvent(ContainerMessage containerMessage, String details) {
+        if (containerMessage.getProcessingInfo() == null) {
+            logger.error("No processing info for: " + containerMessage);
+        }
+
         boolean shouldCreateEventingMessage = containerMessage.getProcessingInfo().getEventingMessage() == null;
         logger.info("Should create eventing message: " + shouldCreateEventingMessage);
         Message message = shouldCreateEventingMessage ? createAndSetMessage(containerMessage, details) : containerMessage.getProcessingInfo().getEventingMessage();
@@ -55,16 +60,17 @@ public class EventingMessageUtil {
                 generateMessageId(containerMessage),
                 created,
                 containerMessage.isInbound(), new TreeSet<Attempt>() {{
-                    add(createAttempt(containerMessage, details));
-                }}
+            add(createAttempt(containerMessage, details));
+        }}
         );
         containerMessage.getProcessingInfo().setEventingMessage(message);
         return message;
     }
 
     protected static Attempt createAttempt(ContainerMessage containerMessage, String details) {
+
         return new Attempt(
-                System.currentTimeMillis() + "_" + containerMessage.getProcessingInfo().getEventingMessage().getId(),
+                System.currentTimeMillis() + "_" + FilenameUtils.getName(containerMessage.getFileName()),
                 new TreeSet<Event>() {{
                     add(createEvent(containerMessage, details));
                 }},
@@ -73,9 +79,10 @@ public class EventingMessageUtil {
     }
 
     protected static Event createEvent(@NotNull ContainerMessage containerMessage, @NotNull String details) {
+        Endpoint endpoint = containerMessage.getProcessingInfo().getCurrentEndpoint() == null ? containerMessage.getProcessingInfo().getSource() : containerMessage.getProcessingInfo().getCurrentEndpoint();
         return new Event(
                 System.currentTimeMillis(),
-                containerMessage.getProcessingInfo().getCurrentEndpoint().getName(),
+                endpoint.getName(),
                 containerMessage.getProcessingInfo().getCurrentStatus(),
                 calculateIfTerminalStatus(containerMessage),
                 details
@@ -85,9 +92,14 @@ public class EventingMessageUtil {
     protected static boolean calculateIfTerminalStatus(ContainerMessage containerMessage) {
         boolean result = false;
         //Positive case of terminal status determination
-        if (EndpointUtil.isTerminal(containerMessage.getProcessingInfo().getCurrentEndpoint())) {
-            result = true;
+        try {
+            if (EndpointUtil.isTerminal(containerMessage.getProcessingInfo().getCurrentEndpoint())) {
+                result = true;
+            }
+        } catch (NullPointerException e) {
+            logger.warn("No current endpoint set for: " + containerMessage);
         }
+
 
         //Negative cases of terminal status determination
         if (containerMessage.hasErrors()) {
