@@ -19,7 +19,7 @@ public class Event implements Comparable<Event> {
     @Column
     private boolean terminal;
 
-    @Column
+    @Column(length = 65535, columnDefinition = "text")
     private String details;
 
     @ManyToOne(cascade = CascadeType.ALL)
