@@ -33,7 +33,7 @@ public class MessageAttemptEventReporter {
         message.setRecipient(containerMessage.getDocumentInfo().getRecipientId());
         message.setSender(containerMessage.getDocumentInfo().getSenderId());
         message.setInbound(containerMessage.isInbound());
-        messagesRepository.save(message);
-        logger.info("Saved message: " + message);
+        /*messagesRepository.save(message);
+        logger.info("Saved message: " + message);*/
     }
 }
