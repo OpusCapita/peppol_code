@@ -2,14 +2,10 @@
 # doing asserts for each module #
 
 - include: transport_assert.yml
-- pause:
-    seconds: 1
 - include: preprocessing_assert.yml
-- pause:
-    seconds: 1
 - include: email_notificator_assert.yml
-#- include: internal-routing_assert.yml
-#- include: validator_assert.yml
+- include: internal_routing_assert.yml
+- include: validator_assert.yml
 
 #report update START ---------------------
 - name: update test results
@@ -19,7 +15,7 @@
     dest: "{{report_path}}/outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
     regexp: "^{{counter}},{{file}},{{uuid}}"
-    line: "{{counter}},{{file}},{{uuid}},{{transport_result}},{{preprocessing_result}},{{email_notificator_result}}"
+    line: "{{counter}},{{file}},{{uuid}},{{transport_result}},{{preprocessing_result}},{{email_notificator_result}},{{ internal_routing_result }},{{ validator_result }}"
 #    line: "{{counter}}|{{file}}|{{fileName}}|{{transport_result}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{outbound_result}}"
 #report update END -----------------------
 

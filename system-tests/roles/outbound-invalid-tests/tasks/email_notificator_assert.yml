@@ -1,19 +1,24 @@
 ---
-- name: Show email-notificator log, search for uuid "{{ uuid }}" "{{ file }}"
-  shell: docker logs email-notificator
+- name: get email-notificator log & check if uuid "{{ uuid }}" "{{ file }}" is found
+  ignore_errors: yes
+  shell: docker logs email-notificator | grep "{{ uuid }}"
   register: log
   until: uuid in log.stdout
   retries: 60
   delay: 1
+  when: preprocessing_result not in ["Passed- No matching document templates found"]
 
-- name: Assert if uuid "{{ uuid }}" "{{ file }}" is found in email-notificator log 
-  ignore_errors: yes
-  assert:
-    that:
-      - "uuid in log.stdout"
-    msg: "Failed"
-  register: result
-
-- set_fact: email_notificator_result="email-notificator={{result.msg}}"
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: email_notificator_result="Failed- email was not sent"
+  when: log.rc is defined and log.rc != 0
+- set_fact: email_notificator_result="Passed- email has been sent"
+  when: log.rc is defined and log.rc == 0
 - debug: var=email_notificator_result
+
+- name: get preprocessing result, in unknown document case handle like this->
+  set_fact: email_notificator_result="Passed- error reported to SNC through preprocessing"
+  when: preprocessing_result | search("No matching document templates found")
+
+- debug: var=email_notificator_result
+
 ...
