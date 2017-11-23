@@ -35,7 +35,7 @@ public class HealthCheck extends Check {
             } catch (ConnectException e) {
                 e.printStackTrace();
                 try {
-                    logger.warn("Could not connect to: "  + rawConfig.get("reference") + "retry in: " + DELAY);
+                    logger.warn("Could not connect to: "  + rawConfig.get("reference") + " retry in: " + DELAY);
                     Thread.sleep(DELAY);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();

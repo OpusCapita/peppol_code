@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.outbound.controller.OutboundController;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +60,7 @@ public class OutboundApp {
                 if (StringUtils.isNotBlank(cm.getProcessingInfo().getTransactionId())) {
                     logger.debug("Message " + cm.getFileName() + "delivered with transaction id = " + cm.getProcessingInfo().getTransactionId());
                     cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "delivered");
+                    EventingMessageUtil.reportEvent(cm, "Delivered to Peppol network");
                 }
             }
         };

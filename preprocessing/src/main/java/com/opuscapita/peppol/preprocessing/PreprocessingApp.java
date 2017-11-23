@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.preprocessing.controller.PreprocessingController;
@@ -80,9 +81,11 @@ public class PreprocessingApp {
                     cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file, document type unrecognized");
                 } else if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
                     cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file");
+                    EventingMessageUtil.reportEvent(cm, "Invalid file");
                     messageQueue.convertAndSend(errorQueue, cm);
                     logger.info("Invalid message sent to " + errorQueue + " queue");
                 } else {
+                    EventingMessageUtil.reportEvent(cm, "Preprocessing complete, sent to: " + queueOut);
                     messageQueue.convertAndSend(queueOut, cm);
                     logger.info("Successfully processed and delivered to " + queueOut + " queue");
                 }

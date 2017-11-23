@@ -5,17 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.SortedSet;
 
 public class Attempt implements Comparable<Attempt> {
-    private final long id;
+    private final String id;
     private final SortedSet<Event> events;
     private final String filename;
 
-    public Attempt(long id, SortedSet<Event> events, String filename) {
+    public Attempt(String id, SortedSet<Event> events, String filename) {
         this.id = id;
         this.events = events;
         this.filename = filename;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -38,6 +38,6 @@ public class Attempt implements Comparable<Attempt> {
 
     @Override
     public int compareTo(@NotNull Attempt other) {
-        return Long.compare(id, other.getId());
+        return Integer.compare(id.hashCode(), other.getId().hashCode());
     }
 }

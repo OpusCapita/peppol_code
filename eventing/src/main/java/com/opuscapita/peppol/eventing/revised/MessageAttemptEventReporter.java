@@ -23,7 +23,6 @@ public class MessageAttemptEventReporter {
         com.opuscapita.peppol.commons.events.Message internalMessage = containerMessage.getProcessingInfo().getEventingMessage();
 
         boolean isNull = internalMessage == null;
-        logger.info("internalMessage is null: " + isNull);
         if (isNull) {
             logger.info("File with null eventing message: " + containerMessage.getFileName());
             logger.info("Source: " + containerMessage.getProcessingInfo().getSource());
@@ -34,6 +33,7 @@ public class MessageAttemptEventReporter {
         message.setRecipient(containerMessage.getDocumentInfo().getRecipientId());
         message.setSender(containerMessage.getDocumentInfo().getSenderId());
         message.setInbound(containerMessage.isInbound());
-        messagesRepository.save(message);
+        /*messagesRepository.save(message);
+        logger.info("Saved message: " + message);*/
     }
 }
