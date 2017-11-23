@@ -53,9 +53,6 @@ public class EmailControllerTest {
     private String inInvalidEmailSubject;
     @Value("${peppol.email-notificator.out.lookup-error.subject}")
     private String outLookupErrorEmailSubject;
-    //spring
-    @Autowired
-    private TestConfig testConfig;
 
     @Autowired
     private EmailController controller;
@@ -81,7 +78,7 @@ public class EmailControllerTest {
         String content = Files.toString(subjectFile, Charsets.UTF_8);
         assertTrue(content.contains(outLookupErrorEmailSubject));
         content = Files.toString(toFile, Charsets.UTF_8);
-        assertEquals(content, testConfig.OUTBOUND_EMAIL); //should be the one used for outbound
+        assertEquals(content, TestConfig.OUTBOUND_EMAIL); //should be the one used for outbound
 
         content = Files.toString(bodyFile, Charsets.UTF_8);
         assertTrue(content.contains(TRANSPORT_ERROR_MESSAGE));
@@ -90,6 +87,7 @@ public class EmailControllerTest {
         cleanFiles(subjectFile, toFile, bodyFile);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void processDocumentInValidationError() throws Exception {
         System.out.println("Inbound invalid error test");
@@ -112,7 +110,7 @@ public class EmailControllerTest {
         String content = Files.toString(subjectFile, Charsets.UTF_8);
         assertTrue(content.contains(inInvalidEmailSubject));
         content = Files.toString(toFile, Charsets.UTF_8);
-        assertEquals(content, testConfig.INBOUND_EMAIL); //should be the one used for inbound
+        assertEquals(content, TestConfig.INBOUND_EMAIL); //should be the one used for inbound
 
         content = Files.toString(bodyFile, Charsets.UTF_8);
         assertTrue(content.contains(INVALID_ERROR_MESSAGE));
@@ -121,6 +119,7 @@ public class EmailControllerTest {
         cleanFiles(subjectFile, toFile, bodyFile);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void processDocumentMultipleErrors() throws Exception {
         System.out.println("Multiple Errors test");
@@ -146,7 +145,7 @@ public class EmailControllerTest {
         String content = Files.toString(subjectFile, Charsets.UTF_8);
         assertTrue(content.contains(outLookupErrorEmailSubject));
         content = Files.toString(toFile, Charsets.UTF_8);
-        assertEquals(content, testConfig.OUTBOUND_EMAIL); //should be the one used for outbound
+        assertEquals(content, TestConfig.OUTBOUND_EMAIL); //should be the one used for outbound
 
         content = Files.toString(bodyFile, Charsets.UTF_8);
         assertTrue(content.contains(INVALID_ERROR_MESSAGE + "#1"));
@@ -168,6 +167,7 @@ public class EmailControllerTest {
             controller.processMessage(cm);
             fail("Exception not thrown when processing message");
         } catch (IllegalArgumentException good) {
+            // ignore
         } catch (Exception ex) {
             fail("Different exception expected!");
         }
@@ -175,7 +175,7 @@ public class EmailControllerTest {
 
     //outbound
     private ContainerMessage createTestContainerMessage() {
-        ContainerMessage cm = new ContainerMessage("metadata", OUTPUT_DIRECTORY + "/test.xml", new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("metadata", OUTPUT_DIRECTORY + "/test.xml", Endpoint.TEST);
         DocumentInfo di = new DocumentInfo();
         di.setDocumentId("doc_id");
         di.setIssueDate("2017-07-18");
@@ -189,7 +189,8 @@ public class EmailControllerTest {
         return cm;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void cleanFiles(File... files) {
-        Arrays.stream(files).forEach(f -> f.delete());
+        Arrays.stream(files).forEach(File::delete);
     }
 }

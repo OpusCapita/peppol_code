@@ -3,7 +3,6 @@ package com.opuscapita.peppol.outbound.controller.sender;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
 import com.opuscapita.peppol.outbound.OutboundApp;
@@ -112,10 +111,10 @@ public class Svefaktura1SenderTest {
     }
 
     private ContainerMessage loadFile(String fileName) throws Exception {
-        ContainerMessage cm = new ContainerMessage("meatdata", fileName, new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("meatdata", fileName, Endpoint.TEST);
 
         try (InputStream inputStream = Svefaktura1SenderTest.class.getResourceAsStream("/sv1_valid.xml")) {
-            cm.setDocumentInfo(documentLoader.load(inputStream, fileName, new Endpoint("test", ProcessType.TEST)));
+            cm.setDocumentInfo(documentLoader.load(inputStream, fileName, Endpoint.TEST));
         }
 
         return cm;

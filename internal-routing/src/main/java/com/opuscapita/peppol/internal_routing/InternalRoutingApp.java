@@ -11,7 +11,6 @@ import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.internal_routing.controller.RoutingController;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -35,11 +34,10 @@ public class InternalRoutingApp {
     }
 
     @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler,
+    AbstractQueueListener queueListener(@NotNull ErrorHandler errorHandler,
                                         @NotNull RoutingController controller, @NotNull MessageQueue messageQueue,
                                         @NotNull StatusReporter reporter, @NotNull ContainerMessageSerializer serializer) {
         return new AbstractQueueListener(errorHandler, reporter, serializer) {
-            @SuppressWarnings("ConstantConditions")
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
                 cm = controller.loadRoute(cm);
@@ -59,6 +57,7 @@ public class InternalRoutingApp {
                 String queueOut = cm.popRoute();
                 cm.setStatus(endpoint, "route set");
                 EventingMessageUtil.reportEvent(cm, "Route set, sent to: " + queueOut);
+                //noinspection ConstantConditions
                 messageQueue.convertAndSend(queueOut, cm);
                 logger.info("Route for " + cm.getFileName() + " defined, message sent to " + queueOut + " queue");
             }

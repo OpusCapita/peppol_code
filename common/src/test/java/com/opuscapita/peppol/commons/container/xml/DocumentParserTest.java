@@ -2,6 +2,7 @@ package com.opuscapita.peppol.commons.container.xml;
 
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import io.vavr.collection.List;
@@ -36,7 +37,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/BIIXY_document_type_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "BIIXY_document_type_test.xml", Endpoint.TEST, shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -50,7 +51,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/ehf.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "ehf.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "ehf.xml", Endpoint.TEST, shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -80,7 +81,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/ehf_no_issue_date.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "ehf_no_issue_date.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "ehf_no_issue_date.xml", Endpoint.TEST, shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.INVALID, result.getArchetype());
@@ -111,7 +112,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/BIIXY_document_type_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "BIIXY_document_type_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "BIIXY_document_type_test.xml", Endpoint.TEST, shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -140,7 +141,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/Catalogue_document_type_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_test.xml", Endpoint.TEST, shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -162,11 +163,11 @@ public class DocumentParserTest {
     }
 
     @Test
-    public void testParseEhfCatalogueSellerSuplier() throws Exception {
+    public void testParseEhfCatalogueSellerSupplier() throws Exception {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/Catalogue_document_type_seller_supplier_test.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_seller_supplier_test.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "Catalogue_document_type_seller_supplier_test.xml", Endpoint.TEST, shouldFailOnInconsistency);
 
             assertNotNull(result);
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -192,7 +193,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-no-sbdh.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-no-sbdh.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-no-sbdh.xml", Endpoint.TEST, shouldFailOnInconsistency);
             assertNotNull(result);
             assertEquals(Archetype.INVALID, result.getArchetype());
         }
@@ -203,7 +204,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml", Endpoint.TEST, shouldFailOnInconsistency);
             assertNotNull(result);
             assertEquals(Archetype.INVALID.equals(result.getArchetype()), shouldFailOnInconsistency);
         }
@@ -214,7 +215,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
 
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml", new Endpoint("test", ProcessType.TEST), shouldFailOnInconsistency);
+            DocumentInfo result = parser.parse(inputStream, "SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml", Endpoint.TEST, shouldFailOnInconsistency);
             assertNotNull(result);
             assertEquals(Archetype.SVEFAKTURA1, result.getArchetype());
         }
@@ -244,10 +245,10 @@ public class DocumentParserTest {
             long matchedErrors = result
                     .getErrors()
                     .stream()
-                    .map(error -> error.getMessage())
+                    .map(DocumentError::getMessage)
                     .filter(errorMessage -> expectedErrorMessages
                             .toStream()
-                            .map(expectedErrorMessage -> errorMessage.contains(expectedErrorMessage))
+                            .map(errorMessage::contains)
                             .count(matchingMessage -> matchingMessage) > 0
                     )
                     .count();
@@ -262,7 +263,7 @@ public class DocumentParserTest {
 
         //consistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/netclient_as_sender.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", new Endpoint("test", ProcessType.TEST), true);
+            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", Endpoint.TEST, true);
             assertNotNull(result);
             assertTrue(result.getErrors().get(0).getMessage().contains(
                     "There are different conflicting values in the document for the field 'sender_id: [9908:995483254, 991723145, 991723145]"
@@ -271,7 +272,7 @@ public class DocumentParserTest {
         }
         //inconsistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/netclient_as_sender.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", new Endpoint("test", ProcessType.TEST), false);
+            DocumentInfo result = parser.parse(inputStream, "netclient_as_sender.xml", Endpoint.TEST, false);
             assertNotNull(result);
             assertTrue(result.getErrors().isEmpty());
             assertNotEquals(Archetype.INVALID, result.getArchetype());
@@ -284,7 +285,7 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
         //consistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/9908_989170325MVA-9908_890164072-20170825.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", new Endpoint("test", ProcessType.TEST), true);
+            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", Endpoint.TEST, true);
             assertNotNull(result);
             assertTrue(result.getErrors().get(0).getMessage().contains(
                     "There are different conflicting values in the document for the field 'sender_id: [9908:989170325MVA, 989170325, 989170325]"
@@ -293,7 +294,7 @@ public class DocumentParserTest {
         }
         //inconsistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/special_sender_id/9908_989170325MVA-9908_890164072-20170825.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", new Endpoint("test", ProcessType.TEST), false);
+            DocumentInfo result = parser.parse(inputStream, "9908_989170325MVA-9908_890164072-20170825.xml", Endpoint.TEST, false);
             assertNotNull(result);
             assertTrue(result.getErrors().isEmpty());
             assertNotEquals(Archetype.INVALID, result.getArchetype());
@@ -305,14 +306,14 @@ public class DocumentParserTest {
         DocumentParser parser = createDocumentParser();
         //consistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/simpler_invoicing_files/Valid5_no_sbdh.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "Valid5_no_sbdh.xml", new Endpoint("test", ProcessType.TEST), true);
+            DocumentInfo result = parser.parse(inputStream, "Valid5_no_sbdh.xml", Endpoint.TEST, true);
             assertNotNull(result);
             assertTrue(result.getErrors().isEmpty());
             assertEquals(Archetype.PEPPOL_SI, result.getArchetype());
         }
         //inconsistent check
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/simpler_invoicing_files/Valid5_no_sbdh.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "Valid5_no_sbdh.xml", new Endpoint("test", ProcessType.TEST), false);
+            DocumentInfo result = parser.parse(inputStream, "Valid5_no_sbdh.xml", Endpoint.TEST, false);
             assertNotNull(result);
             assertTrue(result.getErrors().isEmpty());
             assertEquals(Archetype.PEPPOL_SI, result.getArchetype());
@@ -333,7 +334,7 @@ public class DocumentParserTest {
     public void testParseEhfOrder() throws Exception {
         DocumentParser parser = createDocumentParser();
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/order/EHF-order-sample.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "EHF-order-sample.xml", new Endpoint("test", ProcessType.TEST), true);
+            DocumentInfo result = parser.parse(inputStream, "EHF-order-sample.xml", Endpoint.TEST, true);
             assertNotNull(result);
             assertTrue(result.getErrors().isEmpty());
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -345,7 +346,7 @@ public class DocumentParserTest {
     public void testParseEhfOrderResponse() throws Exception {
         DocumentParser parser = createDocumentParser();
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/valid/ordrsp/EHF-order-response.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "EHF-order-response.xml", new Endpoint("test", ProcessType.TEST), true);
+            DocumentInfo result = parser.parse(inputStream, "EHF-order-response.xml", Endpoint.TEST, true);
             assertNotNull(result);
             assertTrue(result.getErrors().isEmpty());
             assertEquals(Archetype.EHF, result.getArchetype());
@@ -357,7 +358,7 @@ public class DocumentParserTest {
     public void testParseUnrecognizedDocumentType() throws Exception {
         DocumentParser parser = createDocumentParser();
         try (InputStream inputStream = DocumentParserTest.class.getResourceAsStream("/invalid/unrecognized_document_type.xml")) {
-            DocumentInfo result = parser.parse(inputStream, "unrecognized_document_type.xml", new Endpoint("test", ProcessType.TEST), true);
+            DocumentInfo result = parser.parse(inputStream, "unrecognized_document_type.xml", Endpoint.TEST, true);
             assertNotNull(result);
             assertTrue(result.getErrors().get(0).getMessage().contains("No matching document templates found"));
             assertEquals(Archetype.UNRECOGNIZED, result.getArchetype());

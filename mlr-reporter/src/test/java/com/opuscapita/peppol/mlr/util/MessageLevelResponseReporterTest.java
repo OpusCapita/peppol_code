@@ -23,8 +23,8 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("ConstantConditions")
 public class MessageLevelResponseReporterTest {
     private Storage storage = mock(Storage.class);
-    CustomerRepository customerRepository = mock(CustomerRepository.class);
-    MessageRepository messageRepository = mock(MessageRepository.class);
+    private CustomerRepository customerRepository = mock(CustomerRepository.class);
+    private MessageRepository messageRepository = mock(MessageRepository.class);
 
     @Before
     public void setUp() {

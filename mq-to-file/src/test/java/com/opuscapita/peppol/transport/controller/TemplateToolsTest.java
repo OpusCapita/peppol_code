@@ -4,7 +4,6 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class TemplateToolsTest {
     @Test
     public void templateToPath() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", Endpoint.TEST);
 
         DocumentInfo di = new DocumentInfo();
         di.setSenderId("SENDER_ID");

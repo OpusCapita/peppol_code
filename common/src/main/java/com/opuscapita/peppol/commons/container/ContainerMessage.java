@@ -10,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
-
 /**
  * Holds the whole data exchange bean inside the application.<br/>
  * Consists of two parts - document information and process information.
@@ -20,8 +18,7 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ContainerMessage implements Serializable {
-    private static final long serialVersionUID = -7283779459299141635L;
+public class ContainerMessage {
 
     @Since(1.0)
     private double version = 1.1;
@@ -33,8 +30,6 @@ public class ContainerMessage implements Serializable {
     private String originalFileName = "";
     @Since(1.0)
     private DocumentInfo documentInfo;
-
-    public ContainerMessage() {}
 
     /**
      * Instantiates new container of the message.
@@ -59,7 +54,7 @@ public class ContainerMessage implements Serializable {
         return this;
     }
 
-    @Nullable
+    @NotNull
     public ProcessingInfo getProcessingInfo() {
         return processingInfo;
     }
@@ -92,11 +87,9 @@ public class ContainerMessage implements Serializable {
     /**
      * Returns customer ID depending on the direction of the message, either sender or recipient ID.
      */
+    @SuppressWarnings("ConstantConditions")
     @Nullable
     public String getCustomerId() {
-        if (getDocumentInfo() == null) {
-            return null;
-        }
         return isInbound() ? getDocumentInfo().getRecipientId() : getDocumentInfo().getSenderId();
     }
 

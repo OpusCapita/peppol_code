@@ -3,16 +3,14 @@ package com.opuscapita.peppol.commons.container.process.route;
 import com.google.gson.annotations.Since;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
-
 /**
  * Single endpoint of the module/process/whatever in a whole route.
  * Each endpoint has own name (service name) and type.
  *
  * @author Sergejs.Roze
  */
-public class Endpoint implements Serializable {
-    private static final long serialVersionUID = -3805355254135733535L;
+public class Endpoint {
+    public static final Endpoint TEST = new Endpoint("test", ProcessType.TEST);
 
     @Since(1.0)
     private final String name;

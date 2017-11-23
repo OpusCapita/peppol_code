@@ -3,11 +3,8 @@ package com.opuscapita.peppol.mlr.util;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import org.junit.Test;
-
-import java.io.ByteArrayOutputStream;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -66,7 +63,6 @@ public class MessageLevelResponseCreatorTest {
         cm.getDocumentInfo().setIssueDate("oops");
 
         String result = new MessageLevelResponseCreator(oxalisErrorRecognizer).reportSuccess(cm);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         System.out.println(result);
         assertTrue(result.contains("<cbc:ResponseCode>RE</cbc:ResponseCode>"));
@@ -77,7 +73,7 @@ public class MessageLevelResponseCreatorTest {
     }
 
     private ContainerMessage prepareContainerMessage() {
-        ContainerMessage cm = new ContainerMessage("meatdata", "test.xml", new Endpoint("xxx", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("meatdata", "test.xml", Endpoint.TEST);
 
         DocumentInfo di = new DocumentInfo();
         di.setDocumentId("doc_id");
@@ -89,7 +85,7 @@ public class MessageLevelResponseCreatorTest {
         di.setSenderName("sender_name");
         cm.setDocumentInfo(di);
 
-        cm.setStatus(new Endpoint("test", ProcessType.TEST), "testing");
+        cm.setStatus(Endpoint.TEST, "testing");
 
         return cm;
     }
