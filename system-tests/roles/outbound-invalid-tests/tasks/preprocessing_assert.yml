@@ -1,19 +1,39 @@
 ---
-- name: get preprocessing log & check if uuid "{{ uuid }}" "{{ file }}" is found
-  shell: docker logs preprocessing
+#- set_fact: uuid=c1a2601b-148e-5c23-80d7-b6ffeaa259ff
+#- debug: var=uuid
+#- set_fact: file=file
+#- debug: var=file
+
+- name: get preprocessing log & check if uuid "{{ uuid }}" for "{{ file }}" is found
+  ignore_errors: yes
+  shell: docker logs preprocessing | grep "{{ uuid }}"
   register: log
-  until: uuid in log.stdout
+  until: log.stdout | search("Input file.*"+uuid)
   retries: 60
   delay: 1
 
-- name: Assert if uuid "{{ uuid }}" "{{ file }}" is found in preprocessing log 
-  ignore_errors: yes
-  assert:
-    that:
-      - "uuid in log.stdout"
-    msg: "Failed"
-  register: result
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: preprocessing_result="Failed"
+  when: log.rc != 0
+- set_fact: preprocessing_result="All assertions passed"
+  when: log.rc == 0
+- debug: var=preprocessing_result
 
-- set_fact: preprocessing_result="Preprocessing={{result.msg}}"
+- name: get preprocessing result, in unknown document case handle like this->
+  set_fact: preprocessing_result="Passed- No matching document templates found"
+  when: log.stdout | search("No matching document templates found")
+
+- name: debug- unknown document case 
+  debug: var=preprocessing_result
+
+- name: get preprocessing result, if fail to parse file then handle like this->
+  set_fact: preprocessing_result="Passed- failed to parse file"
+  when: log.stdout | search("Failed to parse file")
+
+- debug: var=preprocessing_result
+
+- name: get preprocessing result, if no SBDH then handle like this->
+  set_fact: preprocessing_result="Passed- No SBDH present in file"
+  when: log.stdout | search("No SBDH present in file") and preprocessing_result != "Passed- No matching document templates found"
 - debug: var=preprocessing_result
 ...

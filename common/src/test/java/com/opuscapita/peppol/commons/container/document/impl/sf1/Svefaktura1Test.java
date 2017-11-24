@@ -4,7 +4,6 @@ import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class Svefaktura1Test {
         DocumentInfo document;
 
         try (InputStream inputStream = Svefaktura1Test.class.getResourceAsStream("/valid/svefaktura1.xml")) {
-            document = loader.load(inputStream, "test", new Endpoint("test", ProcessType.TEST));
+            document = loader.load(inputStream, "test", Endpoint.TEST);
             assertEquals(Archetype.SVEFAKTURA1, document.getArchetype());
         }
 
@@ -51,7 +50,7 @@ public class Svefaktura1Test {
         DocumentInfo document;
 
         try (InputStream inputStream = Svefaktura1Test.class.getResourceAsStream("/valid/sv1_with_attachment.xml")) {
-            document = loader.load(inputStream, "test2", new Endpoint("test", ProcessType.TEST));
+            document = loader.load(inputStream, "test2", Endpoint.TEST);
             assertEquals(Archetype.SVEFAKTURA1, document.getArchetype());
         }
 

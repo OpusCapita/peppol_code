@@ -1,0 +1,37 @@
+---
+- name: get internal-routing log & check if uuid "{{ uuid }}" for "{{ file }}" is found in internal-routing
+  ignore_errors: yes
+  shell: docker logs internal-routing | grep "{{ uuid }}"
+  register: log
+  until: uuid in log.stdout
+  retries: 60
+  delay: 1
+  when: preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to parse file", "Passed- No SBDH present in file" ]
+- debug: var=log
+
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: internal_routing_result="Failed"
+  when: log.rc is defined and log.rc != 0
+- set_fact: internal_routing_result="All assertions passed"
+  when: log.rc is defined and log.rc == 0
+- name: debug1- shell response
+  debug: var=internal_routing_result
+
+- name: get preprocessing result, in unknown document case handle like this->
+  set_fact: internal_routing_result="Passed- error reported to SNC through preprocessing"
+  when: preprocessing_result=="Passed- No matching document templates found"
+- name: debug2- unknown document case
+  debug: var=internal_routing_result
+
+- name: get preprocessing result, if fail to parse file then handle like this->
+  set_fact: internal_routing_result="Passed- preprocessing failed to parse file"
+  when: preprocessing_result=="Passed- failed to parse file"
+- name: debug3- fail to parse file
+  debug: var=internal_routing_result
+
+- name: get preprocessing result, if no SBDH then handle like this->
+  set_fact: internal_routing_result="Passed- preprocessing failed due to No SBDH present in file"
+  when: preprocessing_result=="Passed- No SBDH present in file"
+- name: debug4- no SBDH then
+  debug: var=internal_routing_result
+...

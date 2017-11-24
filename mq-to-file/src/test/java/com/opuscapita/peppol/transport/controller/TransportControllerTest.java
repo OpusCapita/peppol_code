@@ -4,7 +4,6 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -27,7 +26,7 @@ public class TransportControllerTest {
         if(System.getProperty("os.name").toLowerCase().contains("windows")) {
             return;
         }
-        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", Endpoint.TEST);
 
         DocumentInfo doc = mock(DocumentInfo.class);
         when(doc.getArchetype()).thenReturn(Archetype.PEPPOL_BIS);

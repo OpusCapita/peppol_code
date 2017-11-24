@@ -1,25 +1,22 @@
 ---
-- name: get validator log & check if uuid "{{ uuid }}" "{{ file }}" is found
-  shell: docker logs validator
+- name: get validator log & check if uuid "{{ uuid }}" for "{{ file }}" is found in validator
+  ignore_errors: yes
+  shell: docker logs validator | grep "{{ uuid }}"
   register: log
   until: uuid in log.stdout
-  retries: 60
+  retries: 300
   delay: 1
 
-- name: Check if uuid "{{ uuid }}" "{{ file }}" is found in validator log 
-  ignore_errors: yes
-  assert:
-    that:
-      - "uuid in log.stdout"
-    msg: "Failed"
-  register: result
-
-- set_fact: validator_result="validator={{result.msg}}"
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: validator_result="Failed to get uuid from log"
+  when: log.rc != 0
+- set_fact: validator_result="All assertions passed"
+  when: log.rc == 0
 - debug: var=validator_result
 
 #check for failures as well and adjust report accordingly->
 - name: Check if validation failed for uuid "{{ uuid }}" "{{ file }}"
-  set_fact: validator_result="validator=Failed"
+  set_fact: validator_result="Validation Failed"
   when:
     - log.stdout | search(".*Validation failed for.*{{ uuid }}")
 

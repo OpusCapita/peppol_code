@@ -56,9 +56,6 @@ public class OutboundController {
 
     @SuppressWarnings("ConstantConditions")
     public void send(@NotNull ContainerMessage cm) throws Exception {
-        if (cm.getDocumentInfo() == null) {
-            throw new IllegalArgumentException("There is no document in message: " + cm);
-        }
         Endpoint endpoint = new Endpoint(componentName, ProcessType.OUT_OUTBOUND);
 
         logger.info("Sending message " + cm.getFileName());
@@ -110,7 +107,6 @@ public class OutboundController {
     }
 
     // will try to re-send the message to the delayed queue only for I/O exceptions
-    @SuppressWarnings("ConstantConditions")
     private void whatAboutRetry(@NotNull ContainerMessage cm, @NotNull MessageQueue messageQueue,
                                 @NotNull Exception e, @NotNull Endpoint endpoint) throws Exception {
         cm.setStatus(endpoint, "message delivery failure");
@@ -132,7 +128,7 @@ public class OutboundController {
             throw e;
         }
 
-        if (cm.getProcessingInfo() != null && cm.getProcessingInfo().getRoute() != null) {
+        if (cm.getProcessingInfo().getRoute() != null) {
             String next = cm.popRoute();
             if (StringUtils.isNotBlank(next)) {
                 cm.setStatus(new Endpoint(next, ProcessType.OUT_PEPPOL_RETRY), "RETRY: " + next);

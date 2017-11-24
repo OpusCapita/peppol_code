@@ -3,7 +3,6 @@ package com.opuscapita.peppol.outbound;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.outbound.controller.OutboundController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,8 +24,6 @@ import static org.junit.Assert.fail;
 public class OutboundAppTest {
     @Autowired
     private OutboundController outboundController;
-
-    private Endpoint endpoint = new Endpoint("test", ProcessType.TEST);
 
     @SuppressWarnings("ConstantConditions")
     @Test
@@ -59,7 +56,7 @@ public class OutboundAppTest {
     }
 
     private ContainerMessage createContainerMessage() {
-        ContainerMessage cm = new ContainerMessage("meatdata", "file.xml", endpoint);
+        ContainerMessage cm = new ContainerMessage("meatdata", "file.xml", Endpoint.TEST);
         DocumentInfo di = new DocumentInfo();
         cm.setDocumentInfo(di);
         return cm;

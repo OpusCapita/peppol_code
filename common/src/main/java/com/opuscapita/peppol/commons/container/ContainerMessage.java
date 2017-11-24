@@ -21,7 +21,6 @@ import java.io.Serializable;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class ContainerMessage implements Serializable {
-    private static final long serialVersionUID = -7283779459299141635L;
 
     @Since(1.0)
     private double version = 1.1;
@@ -92,6 +91,7 @@ public class ContainerMessage implements Serializable {
     /**
      * Returns customer ID depending on the direction of the message, either sender or recipient ID.
      */
+    @SuppressWarnings("ConstantConditions")
     @Nullable
     public String getCustomerId() {
         if (getDocumentInfo() == null) {

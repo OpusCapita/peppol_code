@@ -2,7 +2,6 @@ package com.opuscapita.peppol.commons.container.document;
 
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +99,7 @@ public class DocumentLoaderTest {
     private void checkTypes(List<String> list, Archetype archetype) throws Exception {
         for (String fileName : list) {
             try (InputStream inputStream = DocumentLoaderTest.class.getResourceAsStream(fileName)) {
-                DocumentInfo document = loader.load(inputStream, fileName, new Endpoint("test", ProcessType.TEST));
+                DocumentInfo document = loader.load(inputStream, fileName, Endpoint.TEST);
                 System.out.println(document.getErrors().stream().map(DocumentError::getMessage).collect(Collectors.joining("\t\n")));
                 assertEquals("Failed for file: " + fileName, archetype, document.getArchetype());
             }

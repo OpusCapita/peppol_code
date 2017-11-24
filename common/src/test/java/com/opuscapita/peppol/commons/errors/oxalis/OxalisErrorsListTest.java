@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.commons.errors.oxalis;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,9 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Sergejs.Roze
  */
-//@Ignore("doesn't work on Estonian computers")
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @EnableConfigurationProperties(value = { OxalisErrorsList.class })
-//@TestPropertySource(locations = "classpath:application.yml")
 public class OxalisErrorsListTest {
     @Autowired
     private OxalisErrorsList oxalisErrorsList;

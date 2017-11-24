@@ -1,4 +1,6 @@
 ---
+#change search so that "tail" is used for getting script output, then grep in that result
+
 - name: Copy file to inbound
   shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
   register: inbound_output

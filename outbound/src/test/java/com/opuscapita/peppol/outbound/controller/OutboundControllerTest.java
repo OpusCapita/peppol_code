@@ -40,7 +40,7 @@ public class OutboundControllerTest {
         controller.setComponentName("component_name");
         when(oxalisErrorRecognizer.recognize(any(Exception.class))).thenReturn(SendingErrors.CONNECTION_ERROR);
 
-        ContainerMessage cm = new ContainerMessage("meatdata", "filename", new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("meatdata", "filename", Endpoint.TEST);
         DocumentInfo di = new DocumentInfo();
         cm.setDocumentInfo(di);
 
@@ -68,7 +68,7 @@ public class OutboundControllerTest {
         controller.setComponentName("component_name");
         when(oxalisErrorRecognizer.recognize(any(Exception.class))).thenReturn(SendingErrors.UNKNOWN_RECIPIENT);
 
-        ContainerMessage cm = new ContainerMessage("meatdata", "filename", new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("meatdata", "filename", Endpoint.TEST);
         DocumentInfo di = new DocumentInfo();
         cm.setDocumentInfo(di);
 

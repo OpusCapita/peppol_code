@@ -2,7 +2,6 @@ package com.opuscapita.peppol.commons.container;
 
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
-import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.process.route.Route;
 import org.junit.Test;
 
@@ -18,7 +17,7 @@ public class ContainerMessageSerializerTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testBothDirections() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "fileName", new Endpoint("test", ProcessType.TEST));
+        ContainerMessage cm = new ContainerMessage("metadata", "fileName", Endpoint.TEST);
 
         DocumentInfo di = new DocumentInfo();
         di.setArchetype(Archetype.INVALID);

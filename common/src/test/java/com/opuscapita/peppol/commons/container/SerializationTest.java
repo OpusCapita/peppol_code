@@ -23,11 +23,9 @@ public class SerializationTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testSerialization() throws Exception {
-        Endpoint endpoint = new Endpoint("test", ProcessType.TEST);
-
         ContainerMessage cm = new ContainerMessage("metadata", "filename1", new Endpoint("test", ProcessType.OUT_FILE_TO_MQ));
         cm.getProcessingInfo().setTransactionId("666");
-        cm.setStatus(endpoint, "result");
+        cm.setStatus(Endpoint.TEST, "result");
 
         Route route = new Route();
         route.setEndpoints(Arrays.asList("a", "b", "c"));

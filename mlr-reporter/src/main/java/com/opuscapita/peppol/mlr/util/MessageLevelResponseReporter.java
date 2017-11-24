@@ -58,7 +58,7 @@ public class MessageLevelResponseReporter {
     // only messages about errors and successfull delivery must get through
     public void process(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException, IOException {
         // nothing to do if there is no info about the file
-        if (cm.getDocumentInfo() == null || cm.getProcessingInfo() == null) {
+        if (cm.getDocumentInfo() == null) {
             logger.info("No document in received message, ignoring message");
             return;
         }
@@ -114,7 +114,6 @@ public class MessageLevelResponseReporter {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void storeResponse(@NotNull String art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         boolean created = false;
         String originalSource = cm.getProcessingInfo().getOriginalSource();
@@ -164,9 +163,9 @@ public class MessageLevelResponseReporter {
         return message.getOriginalSource();
     }
 
-    @SuppressWarnings("ConstantConditions")
     private boolean isReprocess(ContainerMessage cm) {
-        return cm.getProcessingInfo().getSource().getType() == ProcessType.IN_REPROCESS || cm.getProcessingInfo().getSource().getType() == ProcessType.OUT_REPROCESS;
+        return cm.getProcessingInfo().getSource().getType() == ProcessType.IN_REPROCESS ||
+                cm.getProcessingInfo().getSource().getType() == ProcessType.OUT_REPROCESS;
     }
 
     private void storeResponse(@NotNull String art, @NotNull String fileName) throws IOException {
@@ -176,7 +175,6 @@ public class MessageLevelResponseReporter {
         logger.info("MLR successfully stored as " + fileName);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private String storeBackup(@NotNull String art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         String fileName = FilenameUtils.getBaseName(cm.getFileName()) + "-" + result + "-mlr.xml";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(art.getBytes(StandardCharsets.UTF_8));

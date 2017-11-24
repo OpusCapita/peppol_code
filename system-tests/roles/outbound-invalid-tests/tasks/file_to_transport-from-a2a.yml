@@ -28,6 +28,14 @@
 
 - debug: var=counter
 
+- name: create report headers
+  delegate_to: localhost
+  lineinfile:
+    create: yes
+    dest: "{{report_path}}/outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
+    state: present
+    line: "Test num.,Test file,transmissionId,transport-from-a2a,preprocessing result,email-notificator result,internal-routing result,validator result"
+
 - name: update test results
   delegate_to: localhost
   lineinfile:

@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author Sergejs.Roze
  */
 public class Endpoint implements Serializable {
-    private static final long serialVersionUID = -3805355254135733535L;
+    public static final Endpoint TEST = new Endpoint("test", ProcessType.TEST);
 
     @Since(1.0)
     private final String name;
