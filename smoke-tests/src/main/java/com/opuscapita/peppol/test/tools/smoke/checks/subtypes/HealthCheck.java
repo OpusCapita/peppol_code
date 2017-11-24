@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStreamReader;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class HealthCheck extends Check {
             } catch (ConnectException e) {
                 e.printStackTrace();
                 try {
-                    logger.warn("Could not connect to: "  + rawConfig.get("reference") + " retry in: " + DELAY);
+                    logger.warn("Could not connect to: " + rawConfig.get("reference") + " retry in: " + DELAY);
                     Thread.sleep(DELAY);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
@@ -53,14 +53,17 @@ public class HealthCheck extends Check {
 
     public CheckResult performCheck() throws Exception {
         URL url = new URL((String) rawConfig.get("reference"));
-        URLConnection urlConn = url.openConnection();
+        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+        urlConn.setConnectTimeout(DELAY);
+        urlConn.connect();
+
         InputStreamReader is = new InputStreamReader(urlConn.getInputStream(), Charset.defaultCharset());
 
         JsonObject jsonObj = new Gson().fromJson(is, JsonObject.class);
         String statusValue = jsonObj.get("status").toString();
         statusValue = statusValue.replaceAll("\"", "");
         boolean statusCheck = statusValue.toUpperCase().equals("UP");
-        logger.info("Connected to " + moduleName  + " status is: " + statusValue);
+        logger.info("Connected to " + moduleName + " status is: " + statusValue);
         return new CheckResult(moduleName, statusCheck, "Health check performed for: " +
                 rawConfig.get("reference") + " received status is: " +
                 statusValue, rawConfig);
