@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+
 /**
  * Holds the whole data exchange bean inside the application.<br/>
  * Consists of two parts - document information and process information.
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Sergejs.Roze
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ContainerMessage {
+public class ContainerMessage implements Serializable {
 
     @Since(1.0)
     private double version = 1.1;
@@ -92,6 +94,9 @@ public class ContainerMessage {
     @SuppressWarnings("ConstantConditions")
     @Nullable
     public String getCustomerId() {
+        if (getDocumentInfo() == null) {
+            return null;
+        }
         return isInbound() ? getDocumentInfo().getRecipientId() : getDocumentInfo().getSenderId();
     }
 
