@@ -6,7 +6,6 @@ import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.test.util.ContainerMessageTestLoader;
 import com.opuscapita.peppol.validator.TestConfig;
 import com.opuscapita.peppol.validator.validations.common.TestCommon;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ import static org.junit.Assert.fail;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)
 public class ValidationControllerTest extends TestCommon {
-    private String[] documentProfilesToBeTested = {"svefaktura1", /*"austria", */"difi"/*, "simpler_invoicing"*/};
+    private String[] documentProfilesToBeTested = {"svefaktura1", /*"austria", */"difi", "simpler_invoicing"};
 
     @Autowired
     private ValidationController validationController;
