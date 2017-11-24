@@ -31,6 +31,8 @@ public class ContainerMessage {
     @Since(1.0)
     private DocumentInfo documentInfo;
 
+    public ContainerMessage() {}
+
     /**
      * Instantiates new container of the message.
      *
@@ -54,7 +56,7 @@ public class ContainerMessage {
         return this;
     }
 
-    @NotNull
+    @Nullable
     public ProcessingInfo getProcessingInfo() {
         return processingInfo;
     }
