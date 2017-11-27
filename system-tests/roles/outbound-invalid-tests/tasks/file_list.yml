@@ -15,7 +15,6 @@
     - "{{test_data_path}}/validation_test_suite/invalid/image_example.jpg.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/peppol-bis-04-32307653-invalid-ProfileID.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/random.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/SI-UBL-Netherlands-profile-bii04_invoice.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_creditnote-no-SBDH.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-biixy-ver2.0-invoice.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/unrecognized_document_type.xml"
