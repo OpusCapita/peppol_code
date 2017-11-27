@@ -41,6 +41,10 @@ inbound-invalid-tests-t:
 	ansible-playbook -i test.hosts inbound-invalid-tests.yml
 outbound-invalid-tests-t:
 	ansible-playbook -i test.hosts -K outbound-invalid-tests.yml
+send-to-outbound-stage-prod-l:
+	ansible-playbook -i local.hosts -K send-to-outbound-stage-prod.yml
+send-to-outbound-stage-prod-s:
+	ansible-playbook -i stage.hosts -K send-to-outbound-stage-prod.yml
 
 #------------------------------------------------------------
 #run system tests: inbound-tests on just container that simulates real conditions as running this on d-l-tools

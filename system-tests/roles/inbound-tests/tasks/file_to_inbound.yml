@@ -1,14 +1,16 @@
 ---
 #change search so that "tail" is used for getting script output, then grep in that result
 
-- name: Copy file to inbound
+- name: Copy file "{{file}}" to inbound
   shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
   register: inbound_output
 - set_fact: file="{{file}}"
 - debug: var=file
+
 - pause:
     seconds: 5
-- name: find transmissionId
+
+- name: find transmissionId for "{{file}}"
   shell: echo "{{inbound_output.stdout_lines[-5:]}}" |grep -oh 'transmissionId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
   register: transmissionId
 - set_fact: transmissionId="{{ transmissionId.stdout}}"
