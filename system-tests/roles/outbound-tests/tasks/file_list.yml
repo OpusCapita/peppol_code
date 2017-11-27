@@ -21,5 +21,5 @@
     - "{{test_data_path}}/validation_test_suite/valid/EHF-order-sample.xml"
     - "{{test_data_path}}/validation_test_suite/valid/EHF-order-response.xml"
     - "{{test_data_path}}/validation_test_suite/valid/SI-UBL-Netherlands-profile-bii04_invoice.xml"
-
+    - "{{test_data_path}}/validation_test_suite/valid/AT-UBL-Austria-profile-bii04-invoice.xml"
 ...

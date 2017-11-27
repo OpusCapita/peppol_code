@@ -8,7 +8,6 @@
   with_items:
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/Svefaktura2_profile-bii05_invoice.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/AT-UBL-Austria-profile-bii04-invoice.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_2.0.9.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_no_SBDH_invalid.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_OC_zero_values_structural-error.xml" 
