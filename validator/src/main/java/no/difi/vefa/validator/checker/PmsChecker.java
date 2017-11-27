@@ -53,9 +53,11 @@ public class PmsChecker implements Checker {
             section.setTitle(output.getTitle());
             section.setRuntime((tsEnd - tsStart) + "ms");
 
-            for (Object o : output.getActivePatternAndFiredRuleAndFailedAssert())
-                if (o instanceof FailedAssert)
+            for (Object o : output.getActivePatternAndFiredRuleAndFailedAssert()) {
+                if (o instanceof FailedAssert) {
                     add(section, (FailedAssert) o);
+                }
+            }
         } catch (Exception e) {
             throw new ValidatorException(
                     String.format("Unable to perform check: %s", e.getMessage()), e);
@@ -75,7 +77,7 @@ public class PmsChecker implements Checker {
 
 
         //Workaround backported from Vefa validator github repo
-        if(failedAssert.getId() != null) {
+        if (failedAssert.getId() != null) {
             assertionType.setIdentifier(failedAssert.getId());
         }
 
@@ -83,7 +85,8 @@ public class PmsChecker implements Checker {
         assertionType.setLocation(failedAssert.getLocation());
         assertionType.setTest(failedAssert.getTest());
 
-        switch (failedAssert.getFlag()) {
+
+        switch (failedAssert.getFlag() == null ? "fatal" : failedAssert.getFlag()) {
             case "fatal":
                 assertionType.setFlag(FlagType.ERROR);
                 break;
@@ -94,6 +97,7 @@ public class PmsChecker implements Checker {
                 logger.warn("Unknown: " + failedAssert.getFlag());
                 break;
         }
+
 
         section.add(assertionType);
     }
