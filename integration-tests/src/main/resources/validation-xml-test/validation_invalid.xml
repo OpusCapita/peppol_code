@@ -656,9 +656,9 @@ NEZBRUFBRkIxMDk3RTVFOTUxPjw3RTAwRjlGOTdEMDUwRjRGQUVBQUZCMTA5N0U1RTk1MT5d
 Pj4Kc3RhcnR4cmVmCjMyMzQxCiUlRU9GCg==
 </cbc:EmbeddedDocumentBinaryObject></cac:Attachment></cac:AdditionalDocumentReference><cac:AccountingSupplierParty>
   <cac:Party>
-   <cbc:EndpointID schemeID="NO:ORGNR">913536770</cbc:EndpointID>
+   <cbc:EndpointID schemeID="NO:ORGNR">0</cbc:EndpointID>
    <cac:PartyIdentification>
-    <cbc:ID schemeID="ZZZ">913536770</cbc:ID>
+    <cbc:ID schemeID="ZZZ">0</cbc:ID>
    </cac:PartyIdentification>
    <cac:PartyName>
     <cbc:Name>Veidekke Industri AS</cbc:Name>
@@ -672,7 +672,7 @@ Pj4Kc3RhcnR4cmVmCjMyMzQxCiUlRU9GCg==
     </cac:Country>
    </cac:PostalAddress>
    <cac:PartyTaxScheme>
-    <cbc:CompanyID schemeID="NO:VAT">913536770MVA</cbc:CompanyID>
+    <cbc:CompanyID schemeID="NO:VAT"></cbc:CompanyID>
     <cac:TaxScheme>
      <cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
     </cac:TaxScheme>
@@ -691,9 +691,9 @@ Pj4Kc3RhcnR4cmVmCjMyMzQxCiUlRU9GCg==
  </cac:AccountingSupplierParty>
  <cac:AccountingCustomerParty>
   <cac:Party>
-   <cbc:EndpointID schemeID="NO:ORGNR">966783524</cbc:EndpointID>
+   <cbc:EndpointID schemeID="NO:ORGNR"></cbc:EndpointID>
    <cac:PartyIdentification>
-    <cbc:ID schemeID="NO:ORGNR">966783524</cbc:ID>
+    <cbc:ID schemeID="NO:ORGNR"></cbc:ID>
    </cac:PartyIdentification>
    <cac:PartyName>
     <cbc:Name>T. ENGENE AS</cbc:Name>
