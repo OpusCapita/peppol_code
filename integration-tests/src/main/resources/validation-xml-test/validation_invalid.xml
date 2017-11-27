@@ -737,18 +737,18 @@ Pj4Kc3RhcnR4cmVmCjMyMzQxCiUlRU9GCg==
   </cac:TaxSubtotal>
  </cac:TaxTotal>
  <cac:LegalMonetaryTotal>
-  <cbc:LineExtensionAmount currencyID="NOK">12304.60</cbc:LineExtensionAmount>
-  <cbc:TaxExclusiveAmount currencyID="NOK">12304.60</cbc:TaxExclusiveAmount>
-  <cbc:TaxInclusiveAmount currencyID="NOK">15380.75</cbc:TaxInclusiveAmount>
-  <cbc:AllowanceTotalAmount currencyID="NOK">0.00</cbc:AllowanceTotalAmount>
-  <cbc:ChargeTotalAmount currencyID="NOK">0.00</cbc:ChargeTotalAmount>
-  <cbc:PayableAmount currencyID="NOK">15380.75</cbc:PayableAmount>
+  <cbc:LineExtensionAmount currencyID="NOK">0</cbc:LineExtensionAmount>
+  <cbc:TaxExclusiveAmount currencyID="NOK">0</cbc:TaxExclusiveAmount>
+  <cbc:TaxInclusiveAmount currencyID="NOK">0</cbc:TaxInclusiveAmount>
+  <cbc:AllowanceTotalAmount currencyID="USD">0.00</cbc:AllowanceTotalAmount>
+  <cbc:ChargeTotalAmount currencyID="USD">0.00</cbc:ChargeTotalAmount>
+  <cbc:PayableAmount currencyID="EUR">0</cbc:PayableAmount>
  </cac:LegalMonetaryTotal>
  <cac:InvoiceLine>
   <cbc:ID>32.0000000000</cbc:ID>
   <cbc:Note>Trafikkdirigenter</cbc:Note>
   <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1</cbc:InvoicedQuantity>
-  <cbc:LineExtensionAmount currencyID="NOK">12304.60</cbc:LineExtensionAmount>
+  <cbc:LineExtensionAmount currencyID="NOK">-12304.60</cbc:LineExtensionAmount>
   <cac:Item>
    <cbc:Description>Forarbeid RS</cbc:Description>
    <cbc:Name>Forarbeid RS</cbc:Name>
@@ -761,7 +761,7 @@ Pj4Kc3RhcnR4cmVmCjMyMzQxCiUlRU9GCg==
    </cac:ClassifiedTaxCategory>
   </cac:Item>
   <cac:Price>
-   <cbc:PriceAmount currencyID="NOK">12304.60</cbc:PriceAmount>
+   <cbc:PriceAmount currencyID="NOK">12304,60</cbc:PriceAmount>
   </cac:Price>
  </cac:InvoiceLine>
 </Invoice></StandardBusinessDocument>
