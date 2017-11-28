@@ -23,7 +23,7 @@ public class Message {
     @GeneratedValue
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
     @JoinColumn(name = "sender_id")
     private Customer sender;
 
