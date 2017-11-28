@@ -20,7 +20,7 @@ public class MessageAttemptEventReporter {
     }
 
     public void process(ContainerMessage containerMessage) {
-        com.opuscapita.peppol.commons.events.Message internalMessage = containerMessage.getProcessingInfo().getEventingMessage();
+        /*com.opuscapita.peppol.commons.events.Message internalMessage = containerMessage.getProcessingInfo().getEventingMessage();
 
         boolean isNull = internalMessage == null;
         if (isNull) {
@@ -32,7 +32,7 @@ public class MessageAttemptEventReporter {
         //TODO: check if inversion of sender/recipient is needed based on direction in/out
         message.setRecipient(containerMessage.getDocumentInfo().getRecipientId());
         message.setSender(containerMessage.getDocumentInfo().getSenderId());
-        message.setInbound(containerMessage.isInbound());
+        message.setInbound(containerMessage.isInbound());*/
         /*messagesRepository.save(message);
         logger.info("Saved message: " + message);*/
     }
