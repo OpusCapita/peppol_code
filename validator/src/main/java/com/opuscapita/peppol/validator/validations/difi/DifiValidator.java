@@ -77,20 +77,19 @@ public class DifiValidator implements BasicValidator {
 
     protected void parseValidationResultSection(ContainerMessage cm, SectionType section, Consumer<ValidationError> extractedDataConsumer, FlagType... flagTypes) {
         List<FlagType> flagTypesToParseFor = Arrays.asList(flagTypes);
-        if (flagTypesToParseFor.contains(section.getFlag())/*section.getFlag() == FlagType.ERROR || section.getFlag() == FlagType.FATAL*/) {
-            for (AssertionType assertion : section.getAssertion()) {
-                if (flagTypesToParseFor.contains(assertion.getFlag())/*assertion.getFlag() == FlagType.ERROR || assertion.getFlag() == FlagType.FATAL*/) {
-                    ValidationError error = new ValidationError();
-                    error.withTitle(section.getTitle());
-                    error.withIdentifier(assertion.getIdentifier());
-                    error.withLocation(assertion.getLocation());
-                    error.withFlag(assertion.getFlag().value());
-                    error.withText(assertion.getText());
-                    error.withTest(assertion.getTest());
-                    extractedDataConsumer.accept(error);
+        for (AssertionType assertion : section.getAssertion()) {
+            if (flagTypesToParseFor.contains(assertion.getFlag())) {
+                ValidationError error = new ValidationError();
+                error.withTitle(section.getTitle());
+                error.withIdentifier(assertion.getIdentifier());
+                error.withLocation(assertion.getLocation());
+                error.withFlag(assertion.getFlag().value());
+                error.withText(assertion.getText());
+                error.withTest(assertion.getTest());
+                extractedDataConsumer.accept(error);
                     /*cm.addError(error.toDocumentError(cm.getProcessingInfo().getCurrentEndpoint()));*/
-                }
             }
         }
+
     }
 }
