@@ -92,6 +92,7 @@ tests:
                 container message:
                   source endpoint: integration-test-xib
                   endpoint type: outbound reprocess
+                  source type: outbound reprocess
                   endpoint: integration-test-endpoint
         subscribers:
             - directory subscriber:

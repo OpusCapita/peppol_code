@@ -28,10 +28,10 @@ public class ContainerMessageCreator {
     }
 
     public ContainerMessage createContainerMessage(File file) throws Exception {
-        Endpoint source = new Endpoint(getSourceEndPoint(), ProcessType.TEST);
+        Endpoint source = new Endpoint(getSourceEndPoint(), getSourceEndPointType());
         ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(), source);
         //loading document info
-        if(loadFile()) {
+        if (loadFile()) {
             cm.setDocumentInfo(documentLoader.load(file, getLoaderEndpoint()));
         }
         //final endpoint current status
@@ -42,7 +42,7 @@ public class ContainerMessageCreator {
             cm.getProcessingInfo().setProcessingException(properties.get("processing exception"));
         }
 
-        if(!file.getName().contains("invalid")) {
+        if (!file.getName().contains("invalid")) {
             List<String> endpoints = Collections.singletonList(getRouteEndpoint()); //new queue for integration tests
             cm.getProcessingInfo().setTransactionId("transactionId");
             Route route = new Route();
@@ -50,7 +50,7 @@ public class ContainerMessageCreator {
             cm.getProcessingInfo().setRoute(route);
         }
 
-        if(properties.containsKey("archetype")){
+        if (properties.containsKey("archetype")) {
             cm.getDocumentInfo().setArchetype(getArchetype());
             logger.info("ContainerMessageCreator: archetype set to: " + cm.getDocumentInfo().getArchetype());
         }
@@ -105,8 +105,8 @@ public class ContainerMessageCreator {
 
     private Archetype getArchetype() {
         String type = properties.get("archetype").toLowerCase();
-        switch (type){
-            case "invalid" :
+        switch (type) {
+            case "invalid":
                 return INVALID;
             case "peppol bis":
                 return PEPPOL_BIS;
@@ -118,8 +118,18 @@ public class ContainerMessageCreator {
                 return PEPPOL_SI;
             case "at":
                 return AT;
-            default : throw new IllegalArgumentException("unrecognized archetype: " + type);
+            default:
+                throw new IllegalArgumentException("unrecognized archetype: " + type);
         }
     }
 
+    public ProcessType getSourceEndPointType() {
+        String type = properties.getOrDefault("archetype", "").toLowerCase();
+        switch (type) {
+            case "outbound reprocess":
+                return ProcessType.OUT_REPROCESS;
+            default:
+                return ProcessType.TEST;
+        }
+    }
 }
