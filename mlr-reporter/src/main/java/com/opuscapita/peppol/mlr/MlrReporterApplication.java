@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.mlr"})
+@EnableJpaRepositories(basePackages = "com.opuscapita.peppol.mlr.util.model")
+@EntityScan(basePackages = {"com.opuscapita.peppol.mlr.util.model", "com.opuscapita.peppol.commons.model"})
 public class MlrReporterApplication {
 
     @Value("${peppol.mlr-reporter.queue.in.name}")
