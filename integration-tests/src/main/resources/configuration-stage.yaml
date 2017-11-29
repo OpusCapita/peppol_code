@@ -139,7 +139,7 @@ tests:
             - mq producer:
                 mq connection: mq1
                 destination queue: mlr-reporter
-                source directory: /etc/resources/mlr-reporter-test/mlr-reporter_valid_reprocess.xml
+                source directory: /etc/resources/mlr-reporter/mlr-reporter_valid_reprocess.xml
                 container message:
                   source endpoint: integration-test-xib
                   endpoint type: outbound reprocess
