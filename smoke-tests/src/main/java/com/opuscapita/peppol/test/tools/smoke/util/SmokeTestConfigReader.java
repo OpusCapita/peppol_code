@@ -27,7 +27,6 @@ public class SmokeTestConfigReader {
         Yaml yaml = new Yaml();
         SmokeTestConfig testConfig = new SmokeTestConfig();
         try {
-            System.out.println(yaml.dump(yaml.load(new FileInputStream(new File(configFile)))));
             Map<String, ArrayList> yamlParser  = (Map<String, ArrayList>) yaml
                     .load(new FileInputStream(new File(configFile)));
 
