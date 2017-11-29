@@ -131,6 +131,29 @@ tests:
                 action: download
                 link: http://support-ui:8080/rest/outbound/download/
                 expected value: true
+   mlr-reporter:
+        producers:
+            - file producer:
+                source directory: /etc/resources/mlr-reporter-test/mlr-reporter_valid_reprocess.xml
+                destination directory: /peppol/data/storage/mlr-reporter_valid_reprocess.xml
+            - mq producer:
+                mq connection: mq1
+                destination queue: mlr-reporter
+                source directory: /etc/resources/mlr-reporter-test/mlr-reporter_valid_reprocess.xml
+                container message:
+                  source endpoint: integration-test-xib
+                  endpoint type: outbound reprocess
+                  endpoint: integration-test-endpoint
+        subscribers:
+            - directory subscriber:
+                consumers: 21
+                source directory: /peppol/data/mlr-reporter/xib/mlr
+        consumers:
+            - file test:
+                name: MLR reprocessing test
+                id: 21
+                expected value: mlr-reporter_valid_reprocess.xml
+                timeout: 16000
    validation:
         producers:
             - file producer:

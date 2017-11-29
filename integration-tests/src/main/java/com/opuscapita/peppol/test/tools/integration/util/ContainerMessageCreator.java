@@ -76,6 +76,8 @@ public class ContainerMessageCreator {
         switch (type) {
             case "outbound":
                 return ProcessType.OUT_OUTBOUND;
+            case "outbound reprocess":
+                return ProcessType.OUT_REPROCESS;
             case "test":
                 return ProcessType.TEST;
             case "inbound":
