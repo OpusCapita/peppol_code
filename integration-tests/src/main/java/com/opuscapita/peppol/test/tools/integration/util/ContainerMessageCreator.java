@@ -124,7 +124,7 @@ public class ContainerMessageCreator {
     }
 
     public ProcessType getSourceEndPointType() {
-        String type = properties.getOrDefault("archetype", "").toLowerCase();
+        String type = properties.getOrDefault("source type", "").toLowerCase();
         switch (type) {
             case "outbound reprocess":
                 return ProcessType.OUT_REPROCESS;
