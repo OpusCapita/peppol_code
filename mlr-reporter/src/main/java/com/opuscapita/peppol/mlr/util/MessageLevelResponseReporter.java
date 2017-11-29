@@ -69,6 +69,7 @@ public class MessageLevelResponseReporter {
 
         // ignoring inbound
         if (cm.isInbound()) {
+            logger.info("Inbound, ignoring message");
             return;
         }
 
