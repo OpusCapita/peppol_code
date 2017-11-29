@@ -151,6 +151,7 @@ public class MessageLevelResponseReporter {
 
     @SuppressWarnings("ConstantConditions")
     private String fetchOriginalSourceFromDb(ContainerMessage cm) {
+        logger.info("customer repo: " + customerRepository.toString());
         Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
         if (customer == null) {
             logger.warn("Unable to create standard MLR. Could not fetch customer for file: " + cm.getFileName()
