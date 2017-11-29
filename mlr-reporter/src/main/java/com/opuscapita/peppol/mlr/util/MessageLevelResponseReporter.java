@@ -83,7 +83,7 @@ public class MessageLevelResponseReporter {
         }
 
         // processing exception
-        if (pi.getProcessingException() != null) {
+        if (pi != null && pi.getProcessingException() != null) {
             logger.info("Creating MLR (er) for: message in error because of processing exception: " + cm.getFileName());
             storeResponse(creator.reportError(cm), cm, "er");
             return;
@@ -97,14 +97,14 @@ public class MessageLevelResponseReporter {
         }
 
         // report retries in outbound
-        if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_RETRY) {
+        if (pi != null && pi.getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_RETRY) {
             logger.info("Creating MLR (ab) for: message queued for retry: " + cm.getFileName());
             storeResponse(creator.reportRetry(cm), cm, "ab");
             return;
         }
 
         // report successfull end of the flow
-        if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
+        if (pi != null && pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
             if (StringUtils.isNotBlank(pi.getTransactionId())) {
                 logger.info("Creating MLR (ap) for: successfully sent message: " + cm.getFileName());
                 storeResponse(creator.reportSuccess(cm), cm, "ap");
