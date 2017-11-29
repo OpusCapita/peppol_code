@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Created by bambr on 16.28.9.
  */
 public interface MessageRepository extends JpaRepository<Message, Integer> {
-    Message findBySenderAndInvoiceNumber(Customer customer, String invoiceId);
+    Message findBySenderAndInvoiceNumber(Customer customer, String invoiceNumber);
 }

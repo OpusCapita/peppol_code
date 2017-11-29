@@ -48,7 +48,7 @@ public class MessageLevelResponseReporter {
     private boolean backupEnabled;
 
     @Autowired
-    public MessageLevelResponseReporter(@NotNull MessageLevelResponseCreator creator, @NotNull Storage storage, CustomerRepository customerRepository, MessageRepository messageRepository) {
+    public MessageLevelResponseReporter(@NotNull MessageLevelResponseCreator creator, @NotNull Storage storage, CustomerRepository customerRepository, @NotNull MessageRepository messageRepository) {
         this.creator = creator;
         this.storage = storage;
         this.customerRepository = customerRepository;
