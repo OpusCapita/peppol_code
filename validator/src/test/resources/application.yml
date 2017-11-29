@@ -517,3 +517,8 @@ snc:
   bsc: test
   from: test
   businessGroup: test
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: false

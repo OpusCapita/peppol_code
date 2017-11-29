@@ -18,8 +18,8 @@ import java.nio.file.Paths;
 /**
  * Created by bambr on 16.17.10.
  */
-@Configuration
-@ComponentScan(basePackages = {"com.opuscapita.peppol"})
+/*@Configuration
+@ComponentScan(basePackages = {"com.opuscapita.peppol"})*/
 public class RestTestConfig {
     public RestTestConfig() throws URISyntaxException {
         System.setProperty("peppol.component.name", "validator");
@@ -33,6 +33,7 @@ public class RestTestConfig {
         System.setProperty("peppol.validation.artifacts.at.path", getAbsolutePathToResource("difi_artifacts/"));
         System.setProperty("peppol.validation.consume-queue", "validator");
         System.setProperty("peppol.email-notificator.queue.in.name", "email");
+        System.setProperty("spring.cloud.config.discovery.enabled", "false");
 
 
     }
