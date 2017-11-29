@@ -134,7 +134,7 @@ tests:
    mlr-reporter:
         producers:
             - file producer:
-                source directory: /etc/resources/mlr-reporter-test/mlr-reporter_valid_reprocess.xml
+                source directory: /etc/resources/mlr-reporter/mlr-reporter_valid_reprocess.xml
                 destination directory: /peppol/data/storage/mlr-reporter_valid_reprocess.xml
             - mq producer:
                 mq connection: mq1
