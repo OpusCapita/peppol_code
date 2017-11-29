@@ -91,7 +91,7 @@ tests:
                 source directory: /etc/resources/mlr-reporter/mlr-reporter_valid_reprocess.xml
                 container message:
                   source endpoint: integration-test-xib
-                  endpoint type: outbound reprocess
+                  endpoint type: outbound
                   source type: outbound reprocess
                   endpoint: integration-test-endpoint
         subscribers:
