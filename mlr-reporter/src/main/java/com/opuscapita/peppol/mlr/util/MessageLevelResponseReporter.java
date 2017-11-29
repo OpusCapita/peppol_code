@@ -156,7 +156,7 @@ public class MessageLevelResponseReporter {
                     + " and customer id: " + cm.getDocumentInfo().getSenderId());
             return null;
         }
-        logger.info("messageRepository.findBySenderAndInvoiceNumber" + customer + " " + "document_id = " + cm.getDocumentInfo().getDocumentId());
+        logger.info("customer id: " + customer.getId() + " " + " document_id = " + cm.getDocumentInfo().getDocumentId());
         Message message = messageRepository.findBySenderAndInvoiceNumber(customer, cm.getDocumentInfo().getDocumentId());
         if (message == null) {
             logger.warn("Unable to create standard MLR. Could not fetch original event message for file: " + cm.getFileName());
