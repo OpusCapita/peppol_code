@@ -70,7 +70,7 @@ try {
             stage('Smoke Tests') {
                 try {
                     dir('infra/ap2/ansible') {
-                        ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo', "peppol_version=latest")
+                        ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo', "peppol_version=latest, 'report_path=$PWD/reports/'")
                     }
                 }
                 catch(e) {
@@ -80,7 +80,7 @@ try {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
+                    archiveArtifacts artifacts: 'src/system-tests/reports/smoke-tests-results.html'
                 }
             }
         }
