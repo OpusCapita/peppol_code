@@ -118,7 +118,7 @@ tests:
             - file test:
                 name: MLR reprocessing test
                 id: 21
-                expected value: mlr-reporter_valid_reprocess-apmlr.xml
+                expected value: mlr-reporter_valid_reprocess-ap-mlr.xml
                 timeout: 16000
             - mlr test:
                 name: IO exception in mlr test
