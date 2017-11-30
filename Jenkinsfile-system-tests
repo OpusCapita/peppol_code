@@ -76,13 +76,18 @@ try {
                 catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'Smoke tests have failed. Check the log for details.'
+                        'System-tests: Smoke tests have failed. Check the log for details.'
                     )
                 }
                 finally {
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
                 }
             }
+        }
+    }
+    node {
+        lock(resource: 'peppol-stage-servers') {
+            milestone 2
             stage('System Tests') {
                 try {
                     dir('src/system-tests') {
@@ -120,7 +125,7 @@ try {
     }
     node {
         lock(resource: 'peppol-stage-servers') {
-            milestone 2
+            milestone 3
             stage('Validator Tests') {
                 try {
                     dir('src/system-tests') {
@@ -133,7 +138,7 @@ try {
                 catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'Validator Tests have failed. Check the log for details.'
+                        'System-tests: Validator Tests have failed. Check the log for details.'
                     )
                 }
                 finally {
@@ -146,7 +151,7 @@ try {
 }
 catch(e) {
     echo e.toString()
-    emailNotify('', "Unexpected error has occured. Check the log for details.\n${e}\n")
+    emailNotify('', "System-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
     throw e
 }
 
