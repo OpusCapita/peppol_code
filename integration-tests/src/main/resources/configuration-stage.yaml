@@ -99,10 +99,10 @@ tests:
                 source directory: /peppol/data/snc-stub
                 consumers: 5
             - directory subscriber:
-                consumers: 6
+                consumers: 6 21
                 source directory: /peppol/data/mlr-reporter/a2a/mlr
             - directory subscriber:
-                consumers: 7 9 21
+                consumers: 7 9
                 source directory: /peppol/data/mlr-reporter/xib/mlr
         consumers:
             - file test:
