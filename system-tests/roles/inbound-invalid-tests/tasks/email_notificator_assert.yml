@@ -6,7 +6,9 @@
   until: transmissionId in log.stdout
   retries: 60
   delay: 1
-  when: preprocessing_result not in ["Passed- No matching document templates found"]
+  when:
+    - preprocessing_result not in ["Passed- No matching document templates found"]
+    - validator_result not in ["Failed- Validation success, but should have failed"]
 
 #rc is response code for shell commands 0=success and anything else=failed
 - set_fact: email_notificator_result="Failed- email was not sent"
@@ -18,7 +20,11 @@
 - name: get preprocessing result, in unknown document case handle like this->
   set_fact: email_notificator_result="Passed- error reported to SNC through preprocessing"
   when: preprocessing_result | search("No matching document templates found")
+- debug: var=email_notificator_result
 
+- name: get validator result, in Validation success case handle like this->
+  set_fact: email_notificator_result="Passed- if validator passed then email should not be sent"
+  when: validator_result | search("Failed- Validation success, but should have failed")
 - debug: var=email_notificator_result
 
 - name: check if no transmissionId "{{ transmissionId }}" was found for "{{ file }}" in inbound
