@@ -6,11 +6,43 @@
   until: transmissionId in log.stdout
   retries: 300
   delay: 1
+  when: preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to parse file", "Passed- No SBDH present in file" ]
 
 #rc is response code for shell commands 0=success and anything else=failed
-- set_fact: validator_result="Failed"
-  when: log.rc != 0
-- set_fact: validator_result="All assertions passed"
-  when: log.rc == 0
+- set_fact: validator_result="Failed to get transmissionId from log"
+  when: log.rc is defined and log.rc != 0
+- set_fact: validator_result="Passed"
+  when: log.rc is defined and log.rc == 0
 - debug: var=validator_result
+- debug: var=log.stdout
+
+- name: get preprocessing result, in unknown document case handle like this->
+  set_fact: validator_result="Passed- error reported to SNC through preprocessing"
+  when: preprocessing_result | search("Passed- No matching document templates found")
+- debug: var=validator_result
+
+- name: get preprocessing result, if fail to parse file then handle like this->
+  set_fact: validator_result="Passed- preprocessing failed to parse file"
+  when: preprocessing_result=="Passed- failed to parse file"
+- debug: var=validator_result
+
+- name: get preprocessing result, if no SBDH then handle like this->
+  set_fact: validator_result="Passed- preprocessing failed due to No SBDH present in file"
+  when: preprocessing_result=="Passed- No SBDH present in file"
+- name: debug4- no SBDH then
+  debug: var=validator_result
+
+#check for successes as well and adjust report accordingly->
+- name: Check if validation did not fail for transmissionId "{{ transmissionId }}" "{{ file }}"
+  set_fact: validator_result="Failed- Validation success, but should have failed"
+  when: log.stdout is defined and log.stdout | search("Validation passed for")
+
+- name: check if no transmissionId "{{ transmissionId }}" was found for "{{ file }}" in inbound
+  set_fact: validator_result="No transmissionId was set for this file in inbound"
+  when: transmissionId ==""
+- debug: var=validator_result
+
+#final validator result->
+- debug: var=validator_result
+
 ...

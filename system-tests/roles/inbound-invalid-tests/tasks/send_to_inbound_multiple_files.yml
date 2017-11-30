@@ -6,8 +6,8 @@
     seconds: 3
 
 - include: preprocessing_assert.yml
-#- include: internal-routing_assert.yml
-#- include: validator_assert.yml
+- include: internal-routing_assert.yml
+- include: validator_assert.yml
 - include: email_notificator_assert.yml
 
 #report update START ---------------------
@@ -18,8 +18,8 @@
     dest: "{{report_path}}/inbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
     regexp: "^{{counter}},{{file}},{{transmissionId}}"
-    line: "{{counter}},{{file}},{{transmissionId}},{{preprocessing_result}},{{email_notificator_result}}"
-#    line: "{{counter}}|{{file}}|{{transmissionId}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{email_notificator_result}}"
+#    line: "{{counter}},{{file}},{{transmissionId}},{{preprocessing_result}},{{email_notificator_result}}"
+    line: "{{counter}},{{file}},{{transmissionId}},{{preprocessing_result}},{{internal_routing_result}},{{validator_result}},{{email_notificator_result}}"
 #report update END -----------------------
 
 - debug:
