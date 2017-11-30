@@ -273,15 +273,15 @@ def emailNotify(String whom, String message) {
     def changes = getChangeString()
 
     mail to: recipients.developers , cc: "${recipients.testers}, ${recipients.devops}",
-        subject: "Job '${JOB_NAME}': build ${BUILD_NUMBER} has failed!",
+        subject: "Job '${JOB_NAME}': run ${BUILD_NUMBER} has failed!",
         body: """
 ${message}
-Please go to ${BUILD_URL} and fix the build!
+Please go to ${BUILD_URL} and check out why this happened!
 
-Build status: ${currentBuild.result}
-Build URL: ${BUILD_URL}
+System-tests status: ${currentBuild.result}
+System-tests URL: ${BUILD_URL}
 Project: ${JOB_NAME}
-Build duration: ${currentBuild.durationString}
+Test duration: ${currentBuild.durationString}
 
 CHANGE SET
 ${changes}
