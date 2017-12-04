@@ -6,6 +6,9 @@
   vars: 
     file: "{{item}}"
   with_items:
+#valid sample for tests:
+#    - "{{test_data_path}}/validation_test_suite/valid/EHF-order-response.xml"
+#----
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/Svefaktura2_profile-bii05_invoice.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_2.0.9.xml"

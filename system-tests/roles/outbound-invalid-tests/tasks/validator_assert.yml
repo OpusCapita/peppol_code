@@ -14,7 +14,7 @@
 - set_fact: validator_result="Passed"
   when: log.rc is defined and log.rc == 0
 - debug: var=validator_result
-- debug: var=log.stdout
+#- debug: var=log.stdout
 
 - name: get preprocessing result, in unknown document case handle like this->
   set_fact: validator_result="Passed- error reported to SNC through preprocessing"

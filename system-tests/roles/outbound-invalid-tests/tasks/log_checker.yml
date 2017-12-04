@@ -26,12 +26,34 @@
   delegate_to: localhost
   shell: cat "{{report_path}}/outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
   register: report
+- name: debug- cat outbound-invalid-report
+  debug: var=report
 
-- debug:
-    var: report
+#assume that tests passed if not set otherwise and register result->
+- name: Set outbound-invalid-tests result
+  set_fact: tests_result="Passed"
+- name: debug1 Passed- Set outbound-invalid-tests result
+  debug: var=tests_result
 
+#check for failure and register result->
+- name: Set outbound-invalid-tests result
+  set_fact: tests_result="Failed"
+  when: "'Failed' in report.stdout"
+- name: debug2 Failed- Set outbound-invalid-tests result
+  debug: var=tests_result
+
+#renaming report so that result is reflected in name->
+- name: rename report
+  delegate_to: localhost
+  shell: mv "{{report_path}}/outbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv" "{{report_path}}/outbound-invalid-report-{{ tests_result }}-{{ ansible_date_time.iso8601_basic }}.csv"
+  register: renamed_report
+  when: tests_result == "Failed"
+- name: debug3- renamed_report
+  debug: var=renamed_report
+
+#checking for failures in report- test has to fail if any asseert has failed #
 - name: check if any assert has failed up until now
-  fail: msg="system test failed"
+  fail: msg="system-test outbound-invalid-tests failed"
   when:
     - "'Failed' in report.stdout"
 
