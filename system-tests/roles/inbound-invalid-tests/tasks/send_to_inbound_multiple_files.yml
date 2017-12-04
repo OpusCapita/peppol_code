@@ -6,8 +6,8 @@
     seconds: 3
 
 - include: preprocessing_assert.yml
-#- include: internal-routing_assert.yml
-#- include: validator_assert.yml
+- include: internal-routing_assert.yml
+- include: validator_assert.yml
 - include: email_notificator_assert.yml
 
 #report update START ---------------------
@@ -18,8 +18,8 @@
     dest: "{{report_path}}/inbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
     regexp: "^{{counter}},{{file}},{{transmissionId}}"
-    line: "{{counter}},{{file}},{{transmissionId}},{{preprocessing_result}},{{email_notificator_result}}"
-#    line: "{{counter}}|{{file}}|{{transmissionId}}|{{preprocessing_result}}|{{internal_routing_result}}|{{validator_result}}|{{email_notificator_result}}"
+#    line: "{{counter}},{{file}},{{transmissionId}},{{preprocessing_result}},{{email_notificator_result}}"
+    line: "{{counter}},{{file}},{{transmissionId}},{{preprocessing_result}},{{internal_routing_result}},{{validator_result}},{{email_notificator_result}}"
 #report update END -----------------------
 
 - debug:
@@ -33,9 +33,32 @@
 - debug:
     var: report
 
+#assume that tests passed if not set othervise and register result->
+- name: Set inbound-invalid-tests result
+  set_fact: tests_result="Passed"
+- name: debug1 Passed- Set inbound-invalid-tests result
+  debug: var=tests_result
+
+#check for failure and register result->
+- name: Set inbound-invalid-tests result
+  set_fact: tests_result="Failed"
+  when: "'Failed' in report.stdout"
+- name: debug2 Failed- Set inbound-invalid-tests result
+  debug: var=tests_result
+
+#renaming report so that result is reflected in name->
+- name: rename report
+  delegate_to: localhost
+  shell: mv "{{report_path}}/inbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv" "{{report_path}}/inbound-invalid-report-{{ tests_result }}-{{ ansible_date_time.iso8601_basic }}.csv"
+  register: renamed_report
+
+- debug:
+    var: renamed_report
+
+#fail playbook when one of asserts result in Failed state->
 - name: check if any assert has failed up until now
   fail: msg="system test failed"
-  when:
-    - "'Failed' in report.stdout"
+  when: "'Failed' in report.stdout"
+
 
 ...

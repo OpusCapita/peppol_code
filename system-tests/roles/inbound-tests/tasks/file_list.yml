@@ -6,6 +6,8 @@
   vars:
     file: "{{item}}"
   with_items:
+#AT stuff does not work for now and this file might be incorrect
+#    - "{{test_data_path}}/validation_test_suite/valid/AT-UBL-Austria-profile-bii04-invoice.xml"
     - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_OC.xml"
     - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice.xml"
     - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_creditnote.xml" 
@@ -20,8 +22,8 @@
     - "{{test_data_path}}/validation_test_suite/valid/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml"
     - "{{test_data_path}}/validation_test_suite/valid/EHF-order-sample.xml"
     - "{{test_data_path}}/validation_test_suite/valid/EHF-order-response.xml"
-    - "{{test_data_path}}/validation_test_suite/valid/SI-UBL-Netherlands-profile-bii04_invoice.xml"
-#AT stuff does not work for now and this file might be incorrect
-#    - "{{test_data_path}}/validation_test_suite/valid/AT-UBL-Austria-profile-bii04-invoice.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/SI-UBL-Netherlands-profile-bii04_invoice-ver1.1.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/SI-UBL-Netherlands-profile-bii04_invoice-ver1.1.x.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/SI-UBL-Netherlands-profile-bii04_invoice-ver1.2.xml"
 ...
 

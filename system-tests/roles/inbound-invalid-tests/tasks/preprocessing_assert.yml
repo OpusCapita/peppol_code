@@ -3,8 +3,8 @@
   ignore_errors: yes
   shell: docker logs preprocessing | grep "{{ transmissionId }}"
   register: log
-  until: transmissionId in log.stdout
-  retries: 120
+  until: log.stdout | search("Input file.*"+transmissionId)
+  retries: 60
   delay: 1
 
 #rc is response code for shell commands 0=success and anything else=failed
@@ -12,15 +12,31 @@
   when: log.rc != 0
 - set_fact: preprocessing_result="All assertions passed"
   when: log.rc == 0
-- debug: var=preprocessing_result
+- name: debug- response code
+  debug: var=preprocessing_result
 
 - name: get preprocessing log & check if document type not found for transmissionId "{{ transmissionId }}" "{{ file }}" 
-  set_fact: preprocessing_result="No matching document templates found"
+  set_fact: preprocessing_result="Passed- No matching document templates found"
   when: log.stdout | search("No matching document templates found")
-- debug: var=preprocessing_result
+- name: debug- unknown document case
+  debug: var=preprocessing_result
+
+- name: get preprocessing result, if fail to parse file then handle like this->
+  set_fact: preprocessing_result="Passed- failed to parse file"
+  when: log.stdout | search("Failed to parse file")
+- name: debug- fail to parse file 
+  debug: var=preprocessing_result
+
+- name: get preprocessing result, if no SBDH then handle like this->
+  set_fact: preprocessing_result="Passed- No SBDH present in file"
+  when: log.stdout | search("No SBDH present in file") and preprocessing_result != "Passed- No matching document templates found"
+- name: debug- no SBDH
+  debug: var=preprocessing_result
 
 - name: check if no transmissionId "{{ transmissionId }}" was found for "{{ file }}" in inbound 
   set_fact: preprocessing_result="No transmissionId was set for this file in inbound"
   when: transmissionId ==""
-- debug: var=preprocessing_result
+- name: debug- no transmissionId
+  debug: var=preprocessing_result
+
 ...
