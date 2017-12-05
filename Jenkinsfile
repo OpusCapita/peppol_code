@@ -16,6 +16,7 @@ def modules = [
     [name: 'outbound'],
     [name: 'preprocessing'],
     [name: 'support-ui'],
+    [name: 'support-portal'],
     [name: 'validator'],
 
     [name: 'configuration-server'],
