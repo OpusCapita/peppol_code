@@ -30,17 +30,12 @@ public class CheckResult {
         return details;
     }
 
-    public Map<String, Object> getRawConfigOfCheck() {
-        return rawConfigOfCheck;
-    }
-
     @Override
     public String toString() {
         return "CheckResult{" +
                 "name='" + name + '\'' +
                 ", passed=" + passed +
                 ", details='" + details + '\'' +
-                ", rawConfigOfCheck=" + rawConfigOfCheck +
                 '}';
     }
 }

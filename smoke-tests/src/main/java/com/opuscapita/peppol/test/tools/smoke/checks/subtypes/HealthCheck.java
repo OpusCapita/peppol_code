@@ -29,7 +29,7 @@ public class HealthCheck extends Check {
 
     @Override
     public CheckResult run() {
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 12; i++) {
             try {
                 return performCheck();      //doing check
             } catch (ConnectException e) {
@@ -54,7 +54,7 @@ public class HealthCheck extends Check {
     public CheckResult performCheck() throws Exception {
         URL url = new URL((String) rawConfig.get("reference"));
         HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-        urlConn.setConnectTimeout(DELAY);
+        urlConn.setConnectTimeout(5000);
         urlConn.connect();
 
         InputStreamReader is = new InputStreamReader(urlConn.getInputStream(), Charset.defaultCharset());
