@@ -118,7 +118,7 @@ try {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*-tests*'
                 }
             }
         }
