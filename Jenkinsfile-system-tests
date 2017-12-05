@@ -80,7 +80,7 @@ try {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/smoke-tests-results.html'
+                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
                 }
             }
         }
@@ -118,7 +118,7 @@ try {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*-tests*'
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
                 }
             }
         }
