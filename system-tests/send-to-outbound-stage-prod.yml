@@ -1,0 +1,8 @@
+---
+- hosts: peppol
+  roles:
+    - send-to-outbound-stage-prod
+  vars:
+    test_data_path: /test-materials
+    counter: 0
+...

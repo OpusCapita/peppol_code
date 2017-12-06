@@ -1,0 +1,27 @@
+---
+
+- name: Clean storage path
+  become: true
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /peppol/data/storage/unknown/
+    - /peppol/data/storage/9908_987987987/
+    - /peppol/data/storage/9908_998877665/
+    - /peppol/data/storage/9908_789789789/
+    - /peppol/data/storage/987987987/
+
+- set_fact: file="{{test_data_path}}/custom_materials/outbound-inbound-sending/OpusCapita-TEST-to-test-AP-987987987.xml"
+- debug: var=file
+
+- name: Copy file to outbound from-a2a dir
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  copy:
+    remote_src: True
+    src: "{{file}}"
+    dest: "{{transport_from_a2a_path}}/{{ file| basename }}-{{ 99999 | random | to_uuid }}.xml"
+  with_sequence: count=13
+
+...

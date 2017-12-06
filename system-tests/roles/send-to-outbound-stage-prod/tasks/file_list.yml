@@ -1,0 +1,12 @@
+---
+#File_list.yml#
+#This is where all the test materials are taken from #
+
+- include: file_to_transport-from-a2a.yml
+  vars: 
+    file: "{{item}}"
+  with_items:
+    - "{{test_data_path}}/custom_materials/outbound-inbound-sending/OpusCapita-TEST-to-test-AP-987987987.xml"
+#    - "{{test_data_path}}/custom_materials/outbound-inbound-sending/OpusCapita-TEST-to-prod-AP-789789789.xml"
+  with_sequence: count=2
+...

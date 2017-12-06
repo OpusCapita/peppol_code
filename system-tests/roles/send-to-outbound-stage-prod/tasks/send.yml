@@ -1,0 +1,13 @@
+#- set_fact: uuid="{{99999 | random | to_uuid}}"
+#- debug: var=uuid
+- set_fact: file="{{test_data_path}}/custom_materials/outbound-inbound-sending/OpusCapita-TEST-to-test-AP-987987987.xml"
+- debug: var=file
+
+- name: Copy file to outbound from-a2a dir
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  copy:
+    remote_src: True
+    src: "{{file}}"
+    dest: "{{transport_from_a2a_path}}/{{ file| basename }}-{{ 99999 | random | to_uuid }}.xml"
+  with_sequence: count=4
