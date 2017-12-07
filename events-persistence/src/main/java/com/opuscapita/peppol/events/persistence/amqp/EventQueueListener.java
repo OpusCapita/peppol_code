@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.events.persistence.controller.PersistenceController;
+import com.opuscapita.peppol.events.persistence.stats.Statistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -33,7 +34,7 @@ public class EventQueueListener {
 
     @SuppressWarnings("WeakerAccess")
     public synchronized void receiveMessage(String data) {
-
+        long start = System.currentTimeMillis();
         String customerId = "n/a";
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(data);
@@ -51,8 +52,10 @@ public class EventQueueListener {
 //                    return null;
 //                }
 //            });
+            Statistics.updateLastSuccessful(start);
         } catch (Exception e) {
             logger.warn("Failed to process message: " + data, e);
+            Statistics.updateLastFailed(start);
             handleError(data, customerId, e);
         }
 
