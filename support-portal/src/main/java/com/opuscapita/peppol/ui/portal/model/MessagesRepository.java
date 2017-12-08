@@ -32,4 +32,8 @@ public interface MessagesRepository extends PagingAndSortingRepository<Message, 
 
     Long countMessagesByInboundAndAttemptsEventsTerminal(boolean inbound, boolean terminal, long start, long end);
 
+    Page<Message> findMessagesByInboundAndAttemptsEventsTerminalAndAttemptsEventsStatusContains(boolean inbound, boolean terminal, String status, Pageable pageable);
+
+    Long countMessagesByInboundAndAttemptsEventsTerminalAndAttemptsEventsStatusContains(boolean inbound, boolean terminal, String status);
+
 }

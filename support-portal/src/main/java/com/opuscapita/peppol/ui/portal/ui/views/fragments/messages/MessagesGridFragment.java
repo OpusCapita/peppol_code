@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -50,6 +51,15 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 .setCaption("Date/time")
                 .setSortProperty("created")
                 .setSortable(true);
+        grid.addColumn((ValueProvider<Message, String>) message -> String.valueOf(message.getAttempts().stream().flatMap(attempt -> attempt.getEvents().stream()).filter(event -> event.isTerminal()).count()))
+                .setCaption("Delivered (times)")
+                .setHidable(true);
+        grid.addColumn((ValueProvider<Message, String>) message -> {
+            List<com.opuscapita.peppol.commons.revised_model.Event> list = message.getAttempts().stream().flatMap(attempt -> attempt.getEvents().stream()).collect(Collectors.toList());
+            return list.size() > 0 ? list.get(list.size() - 1).getStatus() : "N\\A";
+        })
+                .setCaption("Last status")
+                .setHidable(true);
         grid.addComponentColumn((ValueProvider<Message, HorizontalLayout>) message -> {
             HorizontalLayout result = new HorizontalLayout();
             result.setSizeFull();
@@ -69,6 +79,11 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 }
             });
             actionBar.addComponent(downloadBtn);
+            Button reprocessBtn = new Button("Reprocess");
+            reprocessBtn.addClickListener((Button.ClickListener) event -> {
+                //Reprocess functionality invocation goes here
+            });
+            actionBar.addComponent(reprocessBtn);
             result.addComponent(actionBar);
             return result;
         }).setCaption("");
