@@ -27,6 +27,8 @@ import org.springframework.session.config.annotation.web.http.EnableSpringHttpSe
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 public class PortalApplication extends WebSecurityConfigurerAdapter {
+    @Value(value = "${peppol.portal.baseUrl:/portal}")
+    String baseUrl;
 
     public static void main(String[] args) {
         SpringApplication.run(PortalApplication.class, args);
@@ -35,10 +37,10 @@ public class PortalApplication extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().
-                exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).accessDeniedPage("/accessDenied")
+                exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(baseUrl + "/login")).accessDeniedPage(baseUrl + "/accessDenied")
                 .and().authorizeRequests()
-                .antMatchers("/VAADIN/**", "/PUSH/**", "/UIDL/**", "/login", "/login/**", "/error/**", "/accessDenied/**", "/vaadinServlet/**").permitAll()
-                .antMatchers("/authorized", "/**").fullyAuthenticated();
+                .antMatchers(baseUrl + "/VAADIN/**", baseUrl + "/PUSH/**", baseUrl + "/UIDL/**", baseUrl + "/login", baseUrl + "/login/**", baseUrl + "/error/**", baseUrl + "/accessDenied/**", baseUrl + "/vaadinServlet/**").permitAll()
+                .antMatchers(baseUrl + "/authorized", "/**").fullyAuthenticated();
     }
 
     @Bean
