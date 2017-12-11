@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.ui.portal.ui.views.fragments.messages;
 
+import com.opuscapita.peppol.commons.revised_model.Event;
 import com.opuscapita.peppol.commons.revised_model.Message;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.AbstractGridFragment;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
@@ -34,6 +35,51 @@ public class MessagesGridFragment extends AbstractGridFragment {
         this.direction = direction;
         this.mode = mode;
         grid = new Grid<>();
+        setupGridColumns();
+        grid.setSizeFull();
+
+        AtomicBoolean isInbound = new AtomicBoolean(false);
+        AtomicBoolean isTerminal = new AtomicBoolean(false);
+        AtomicBoolean all = new AtomicBoolean(false);
+        AtomicInteger count = new AtomicInteger(0);
+        switch (direction) {
+            case INBOUND:
+                isInbound.set(true);
+                break;
+            case OUTBOUND:
+                isInbound.set(false);
+                break;
+            default:
+                throw new IllegalStateException("This component is supposed to handle only INBOUND and OUTBOUND as directions");
+        }
+        switch (mode) {
+            case DELIVERED:
+                isTerminal.set(true);
+                break;
+            case ALL:
+                all.set(true);
+                break;
+        }
+        count.set(all.get() ? messagesLazyLoadService.countByInbound(isInbound.get()) : messagesLazyLoadService.countByInboundAndTerminal(isInbound.get(), isTerminal.get()));
+        grid.setDataProvider(
+                (sortOrders, offset, limit) -> {
+                    Map<String, Boolean> sortOrder = sortOrders.stream()
+                            .collect(Collectors.toMap(
+                                    sort -> sort.getSorted(),
+                                    sort -> sort.getDirection() == SortDirection.ASCENDING));
+
+                    return all.get() ? messagesLazyLoadService.findByInbound(isInbound.get(), offset, limit, sortOrder).stream() : messagesLazyLoadService.findByInboundAndTerminal(isInbound.get(), isTerminal.get(), offset, limit, sortOrder).stream();
+                },
+                () -> count.get()
+        );
+
+        addComponent(grid);
+        /*BackEndDataProvider backEndDataProvider;
+        grid.setItems(repository.findMessagesByInbound(isInbound));*/
+
+    }
+
+    private void setupGridColumns() {
         grid.addColumn(Message::getId).setCaption("Id")
                 .setSortable(true)
                 .setSortProperty("id")
@@ -80,6 +126,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
             });
             actionBar.addComponent(downloadBtn);
             Button reprocessBtn = new Button("Reprocess");
+            //TODO: same quantity of attempt based logic of ui for file to be reprocessed.
             reprocessBtn.addClickListener((Button.ClickListener) event -> {
                 //Reprocess functionality invocation goes here
             });
@@ -87,47 +134,6 @@ public class MessagesGridFragment extends AbstractGridFragment {
             result.addComponent(actionBar);
             return result;
         }).setCaption("");
-        grid.setSizeFull();
-
-        AtomicBoolean isInbound = new AtomicBoolean(false);
-        AtomicBoolean isTerminal = new AtomicBoolean(false);
-        AtomicBoolean all = new AtomicBoolean(false);
-        AtomicInteger count = new AtomicInteger(0);
-        switch (direction) {
-            case INBOUND:
-                isInbound.set(true);
-                break;
-            case OUTBOUND:
-                isInbound.set(false);
-                break;
-            default:
-                throw new IllegalStateException("This component is supposed to handle only INBOUND and OUTBOUND as directions");
-        }
-        switch (mode) {
-            case DELIVERED:
-                isTerminal.set(true);
-                break;
-            case ALL:
-                all.set(true);
-                break;
-        }
-        count.set(all.get() ? messagesLazyLoadService.countByInbound(isInbound.get()) : messagesLazyLoadService.countByInboundAndTerminal(isInbound.get(), isTerminal.get()));
-        grid.setDataProvider(
-                (sortOrders, offset, limit) -> {
-                    Map<String, Boolean> sortOrder = sortOrders.stream()
-                            .collect(Collectors.toMap(
-                                    sort -> sort.getSorted(),
-                                    sort -> sort.getDirection() == SortDirection.ASCENDING));
-
-                    return all.get() ? messagesLazyLoadService.findByInbound(isInbound.get(), offset, limit, sortOrder).stream() : messagesLazyLoadService.findByInboundAndTerminal(isInbound.get(), isTerminal.get(), offset, limit, sortOrder).stream();
-                },
-                () -> count.get()
-        );
-
-        addComponent(grid);
-        /*BackEndDataProvider backEndDataProvider;
-        grid.setItems(repository.findMessagesByInbound(isInbound));*/
-
     }
 
     protected void showDetails(Message message) {
