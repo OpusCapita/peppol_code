@@ -141,7 +141,7 @@ public class MainUi extends UI {
         HorizontalLayout header = new HorizontalLayout();
         header.setWidth(100, Unit.PERCENTAGE);
         header.setHeightUndefined();
-        header.setMargin(new MarginInfo(false, false, false, true));
+        header.setMargin(new MarginInfo(false, false, false, false));
        /* Label headerLabel = new Label("OpusCapita Peppol Access Point Support Portal");
         header.addComponent(headerLabel);*/
         header.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);

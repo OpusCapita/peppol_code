@@ -14,7 +14,6 @@ public class PlainGridFragment extends AbstractGridFragment {
         this.direction = direction;
         this.mode = mode;
         grid = new Grid<>(itemClass);
-        //grid.setColumnOrder();
         grid.setSizeFull();
         addComponent(grid);
         grid.setItems(items);
@@ -22,5 +21,9 @@ public class PlainGridFragment extends AbstractGridFragment {
 
     public String getTag() {
         return direction + "_" + mode;
+    }
+
+    public Grid getGrid() {
+        return grid;
     }
 }
