@@ -5,6 +5,8 @@ import com.opuscapita.peppol.ui.portal.ui.views.ViewName;
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.ClassResource;
+import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
@@ -45,6 +47,8 @@ public class MainUi extends UI {
 
         VerticalLayout leftMenu = initLeftMenu();
 
+        HorizontalLayout footer = initFooter();
+
         populateLeftMenu(leftMenu);
 
         VerticalLayout contentPanel = initContentPanel();
@@ -56,12 +60,25 @@ public class MainUi extends UI {
 
         screen.addComponent(header);
         screen.addComponent(body);
+        screen.addComponent(footer);
         screen.setExpandRatio(body, 1);
         screen.setDefaultComponentAlignment(Alignment.TOP_CENTER);
 
         setContent(screen);
 
         initNavigator(contentPanel);
+    }
+
+    private HorizontalLayout initFooter() {
+        HorizontalLayout footer = new HorizontalLayout();
+        footer.setWidth(100, Unit.PERCENTAGE);
+        footer.setHeightUndefined();
+        footer.setMargin(new MarginInfo(true, false, false, false));
+
+        Resource res = new ClassResource("/img/bg-footer.png");
+        Image image = new Image(null, res);
+        footer.addComponent(image);
+        return footer;
     }
 
     private VerticalLayout initContentPanel() {
@@ -124,11 +141,21 @@ public class MainUi extends UI {
         HorizontalLayout header = new HorizontalLayout();
         header.setWidth(100, Unit.PERCENTAGE);
         header.setHeightUndefined();
-        header.setMargin(new MarginInfo(false, true, false, true));
-        Label headerLabel = new Label("OpusCapita Peppol Access Point Support Portal");
-        header.addComponent(headerLabel);
+        header.setMargin(new MarginInfo(false, false, false, true));
+       /* Label headerLabel = new Label("OpusCapita Peppol Access Point Support Portal");
+        header.addComponent(headerLabel);*/
         header.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         header.addLayoutClickListener((LayoutEvents.LayoutClickListener) event -> navigator.navigateTo(ViewName.HOME));
+
+        Resource res = new ClassResource("/img/bg-header.png");
+        Image image = new Image(null, res);
+        header.addComponent(image);
+
+        Button logoutBtn = new Button("Logout");
+        logoutBtn.addClickListener((Button.ClickListener) event -> getPage().setLocation("/logout"));
+        header.addComponent(logoutBtn);
+        header.setComponentAlignment(logoutBtn, Alignment.MIDDLE_RIGHT);
+
         return header;
     }
 

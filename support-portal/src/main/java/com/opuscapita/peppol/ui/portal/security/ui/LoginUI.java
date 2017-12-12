@@ -7,6 +7,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Title("LoginPage")
 @Theme("valo")
 public class LoginUI extends UI {
-
+    private static final Logger logger = LoggerFactory.getLogger(LoginUI.class);
     private static final String username = "username";
     private static final String passwordValue = "test123";
     TextField user;
