@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
@@ -286,10 +287,10 @@ public class PersistenceController {
 
     @NotNull
     private Message getOrCreateMessage(@NotNull PeppolEvent peppolEvent) {
-        Message message = fetchMessageByPeppolEvent(peppolEvent);
+        Message message = fetchMessageByPeppolEvent(peppolEvent.getInvoiceId(), peppolEvent.getSenderName(), peppolEvent.getSenderId());
         if (message == null) {
             logger.info("Creating new message for file: " + peppolEvent.getFileName());
-            Customer customer = getOrCreateCustomer(peppolEvent);
+            Customer customer = getOrCreateCustomer(peppolEvent.getSenderId(), peppolEvent.getSenderName());
             message = new Message();
             message.setSender(customer);
             message.setRecipientId(peppolEvent.getRecipientId());
@@ -327,10 +328,11 @@ public class PersistenceController {
     }
 
     @Nullable
-    private Message fetchMessageByPeppolEvent(@NotNull PeppolEvent peppolEvent) {
+    @Cacheable("messages_cache")
+    public Message fetchMessageByPeppolEvent(String invoiceId, String senderName, String senderId) {
         try {
-            Customer customer = getOrCreateCustomer(peppolEvent);
-            return messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId());
+            Customer customer = getOrCreateCustomer(senderId, senderName);
+            return messageRepository.findBySenderAndInvoiceNumber(customer, invoiceId);
         } catch (Exception e) {
             logger.error("Failed to get customer using document: " + e.getMessage());
         }
@@ -338,12 +340,13 @@ public class PersistenceController {
     }
 
     @NotNull
-    private Customer getOrCreateCustomer(@NotNull PeppolEvent peppolEvent) {
-        Customer customer = customerRepository.findByIdentifier(peppolEvent.getSenderId());
+    @Cacheable("customer_cache")
+    public Customer getOrCreateCustomer(String senderId, String senderName) {
+        Customer customer = customerRepository.findByIdentifier(senderId);
         if (customer == null) {
             customer = new Customer();
-            customer.setName(peppolEvent.getSenderName());
-            customer.setIdentifier(peppolEvent.getSenderId());
+            customer.setName(senderName);
+            customer.setIdentifier(senderId);
             customer = customerRepository.save(customer);
         }
         return customer;
@@ -369,7 +372,8 @@ public class PersistenceController {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    private AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
+    @Cacheable("access_points_cache")
+    public AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
         AccessPoint accessPoint = null;
         if (peppolEvent.getCommonName() != null) {
             ApInfo apInfo = ApInfo.parseFromCommonName(peppolEvent.getCommonName());

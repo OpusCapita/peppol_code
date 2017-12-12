@@ -40,6 +40,8 @@ dependencies {
 	compile('org.springframework.retry:spring-retry')
 	compile 'com.google.code.gson:gson:2.7'
 	compile group: 'com.google.guava', name: 'guava', version: '19.0'
+	compile 'org.springframework:spring-context-support'
+	compile 'com.github.ben-manes.caffeine:caffeine:2.6.0'
 	compile project(':common')
 	compile project(':common-model')
 	runtime('com.h2database:h2')
