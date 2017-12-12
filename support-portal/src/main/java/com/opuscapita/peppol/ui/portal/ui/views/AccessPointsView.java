@@ -21,6 +21,7 @@ import java.util.stream.StreamSupport;
 @SpringView(name = ViewName.ACCESS_POINTS)
 public class AccessPointsView extends VerticalLayout implements View {
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     HttpSession httpSession;
 
     @Autowired

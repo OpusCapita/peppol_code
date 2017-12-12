@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 @SpringView(name = ViewName.ADVANCED_SEARCH)
 public class AdvancedSearchView extends VerticalLayout implements View {
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     HttpSession httpSession;
 
     @PostConstruct

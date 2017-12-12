@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 @SpringView(name = ViewName.HOME)
 public class StartView extends VerticalLayout implements View {
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     HttpSession httpSession;
 
     @PostConstruct

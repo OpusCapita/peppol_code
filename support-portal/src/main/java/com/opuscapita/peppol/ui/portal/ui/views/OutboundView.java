@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 @SpringView(name = ViewName.OUTBOUND)
 public class OutboundView extends VerticalLayout implements View {
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     HttpSession httpSession;
 
     @Autowired

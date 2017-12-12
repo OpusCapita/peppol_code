@@ -20,6 +20,7 @@ import java.util.stream.StreamSupport;
 @SpringView(name = ViewName.SENDERS)
 public class SendersView extends VerticalLayout implements View {
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     HttpSession httpSession;
 
     @Autowired

@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 @SpringView(name = ViewName.STATISTICS)
 public class StatisticsView extends VerticalLayout implements View {
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     HttpSession httpSession;
 
     @Autowired
