@@ -11,6 +11,7 @@ import com.opuscapita.peppol.inbound.InboundProperties;
 import com.opuscapita.peppol.inbound.MetadataUtils;
 import eu.peppol.PeppolMessageMetaData;
 import eu.peppol.evidence.TransmissionEvidence;
+import eu.peppol.identifier.ParticipantId;
 import eu.peppol.identifier.TransmissionId;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
     @Override
     public void saveTransportReceipt(TransmissionEvidence transmissionEvidence, PeppolMessageMetaData peppolMessageMetaData) {
         logger.info("Saving the transport receipt. This method has been overridden btw");
-        File messageDirectory = prepareMessageDirectory(new File(properties.getProperty(INBOUND_OUTPUT_DIR)).toString(), peppolMessageMetaData.getRecipientId(), peppolMessageMetaData.getSenderId());
+        File messageDirectory = this.prepareMessageDirectory(properties.getProperty(INBOUND_OUTPUT_DIR), peppolMessageMetaData.getRecipientId(), peppolMessageMetaData.getSenderId());
         File evidenceFullPath = computeEvidenceFileName(peppolMessageMetaData.getTransmissionId(), messageDirectory);
 
         try {
@@ -99,6 +100,19 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
     private File computeEvidenceFileName(TransmissionId transmissionId, File messageDirectory) {
         String evidenceFileName = normalizeFilename(transmissionId.toString() + "-rem.xml");
         return new File(messageDirectory, evidenceFileName);
+    }
+
+     @Override
+     File prepareMessageDirectory(String inboundMessageStore, ParticipantId recipient, ParticipantId sender) {
+        String path = String.format("%s/%s", normalizeFilename(recipient.stringValue()), normalizeFilename(sender.stringValue()));
+        File messageDirectory = new File(inboundMessageStore, path);
+        if (!messageDirectory.exists() && !messageDirectory.mkdirs()) {
+            throw new IllegalStateException("Unable to create directory " + messageDirectory.toString());
+        } else if (messageDirectory.isDirectory() && messageDirectory.canWrite()) {
+            return messageDirectory;
+        } else {
+            throw new IllegalStateException("Directory " + messageDirectory + " does not exist, or there is no access");
+        }
     }
 
 }
