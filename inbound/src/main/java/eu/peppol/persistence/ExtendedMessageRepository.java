@@ -80,7 +80,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
     @Override
     public void saveTransportReceipt(TransmissionEvidence transmissionEvidence, PeppolMessageMetaData peppolMessageMetaData) {
         logger.info("Saving the transport receipt. This method has been overridden btw");
-        File messageDirectory = this.prepareMessageDirectory(new File(properties.getProperty(INBOUND_OUTPUT_DIR)).toString(), peppolMessageMetaData.getRecipientId(), peppolMessageMetaData.getSenderId());
+        File messageDirectory = prepareMessageDirectory(new File(properties.getProperty(INBOUND_OUTPUT_DIR)).toString(), peppolMessageMetaData.getRecipientId(), peppolMessageMetaData.getSenderId());
         File evidenceFullPath = computeEvidenceFileName(peppolMessageMetaData.getTransmissionId(), messageDirectory);
 
         try {
@@ -89,7 +89,7 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             throw new IllegalStateException("Unable to write transmission evidence to " + evidenceFullPath.getAbsolutePath() + ": " + ioEx.getMessage(), ioEx);
         }
 
-        logger.debug("Transmission evidence written to " + evidenceFullPath.getAbsolutePath());
+        logger.info("Transmission evidence written to " + evidenceFullPath.getAbsolutePath());
     }
 
     private ContainerMessage prepareMessage(String fileName, String metadata, String componentName) {
