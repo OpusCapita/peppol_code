@@ -10,15 +10,18 @@ import com.opuscapita.peppol.inbound.InboundMessageSender;
 import com.opuscapita.peppol.inbound.InboundProperties;
 import com.opuscapita.peppol.inbound.MetadataUtils;
 import eu.peppol.PeppolMessageMetaData;
+import eu.peppol.evidence.TransmissionEvidence;
+import eu.peppol.identifier.TransmissionId;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
-import static com.opuscapita.peppol.inbound.InboundProperties.COMPONENT_NAME;
-import static com.opuscapita.peppol.inbound.InboundProperties.INBOUND_COPY_DIR;
-import static com.opuscapita.peppol.inbound.InboundProperties.INBOUND_OUTPUT_DIR;
+import static com.opuscapita.peppol.inbound.InboundProperties.*;
 
 
 /**
@@ -74,8 +77,28 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
         }
     }
 
+    @Override
+    public void saveTransportReceipt(TransmissionEvidence transmissionEvidence, PeppolMessageMetaData peppolMessageMetaData) {
+        logger.info("Saving the transport receipt. This method has been overridden btw");
+        File messageDirectory = this.prepareMessageDirectory(new File(properties.getProperty(INBOUND_OUTPUT_DIR)).toString(), peppolMessageMetaData.getRecipientId(), peppolMessageMetaData.getSenderId());
+        File evidenceFullPath = computeEvidenceFileName(peppolMessageMetaData.getTransmissionId(), messageDirectory);
+
+        try {
+            IOUtils.copy(transmissionEvidence.getInputStream(), new FileOutputStream(evidenceFullPath));
+        } catch (IOException ioEx) {
+            throw new IllegalStateException("Unable to write transmission evidence to " + evidenceFullPath.getAbsolutePath() + ": " + ioEx.getMessage(), ioEx);
+        }
+
+        logger.debug("Transmission evidence written to " + evidenceFullPath.getAbsolutePath());
+    }
+
     private ContainerMessage prepareMessage(String fileName, String metadata, String componentName) {
         return new ContainerMessage(metadata, fileName, new Endpoint(componentName, ProcessType.IN_INBOUND));
+    }
+
+    private File computeEvidenceFileName(TransmissionId transmissionId, File messageDirectory) {
+        String evidenceFileName = normalizeFilename(transmissionId.toString() + "-rem.xml");
+        return new File(messageDirectory, evidenceFileName);
     }
 
 }
