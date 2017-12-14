@@ -44,8 +44,8 @@ public class StorageImpl implements Storage {
         File dir = createDailyDirectory();
         File result = new File(dir, fileName);
 
-        IOUtils.copy(stream, new FileOutputStream(result));
-        if (!result.exists()) {
+        FileUtils.copyInputStreamToFile(stream, result);
+        if (!result.exists() || result.length() == 0) {
             throw new IOException("Failed to copy file " + fileName + " to " + result);
         }
 
@@ -69,7 +69,7 @@ public class StorageImpl implements Storage {
 
         File result = StorageUtils.prepareUnique(dir, source.getName());
         FileUtils.moveFile(source, result);
-        if (!result.exists()) {
+        if (!result.exists() || result.length() == 0) {
             throw new IOException("Failed to move file " + source + " to " + result);
         }
 
@@ -105,7 +105,7 @@ public class StorageImpl implements Storage {
 
         File result = StorageUtils.prepareUnique(dir, file.getName());
         FileUtils.moveFile(file, result);
-        if (!result.exists()) {
+        if (!result.exists() || result.length() == 0) {
             throw new IOException("Failed to move file " + file + " to " + result);
         }
 
@@ -143,6 +143,5 @@ public class StorageImpl implements Storage {
         this.shortTerm = shortTerm;
         return this;
     }
-
 
 }
