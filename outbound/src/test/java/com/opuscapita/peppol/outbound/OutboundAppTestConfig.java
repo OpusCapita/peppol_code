@@ -43,12 +43,12 @@ public class OutboundAppTestConfig {
 
     @Bean
     ErrorHandler errorHandler() {
-        return mock(ErrorHandler.class);
+        return OutboundAppTest.errorHandler;
     }
 
     @Bean
     StatusReporter statusReporter() {
-        return mock(StatusReporter.class);
+        return OutboundAppTest.statusReporter;
     }
 
     @Bean

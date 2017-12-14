@@ -49,6 +49,7 @@ dependencies {
     testCompile project(':common-test')
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '5.1.26'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.mockito:mockito-all:1.10.19'
 }
 
 dependencyManagement {

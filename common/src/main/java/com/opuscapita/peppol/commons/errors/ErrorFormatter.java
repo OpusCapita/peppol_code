@@ -21,8 +21,9 @@ import java.util.stream.Collectors;
 @SuppressWarnings("WeakerAccess")
 public class ErrorFormatter {
 
+    @SuppressWarnings({"RegExpRedundantEscape", "RegExpSingleCharAlternation"})
     @NotNull
-    public static String getErrorDescription(@NotNull ContainerMessage cm, @Nullable Exception e, @Nullable String additionalDetails) {
+    public static String getErrorDescription(@NotNull ContainerMessage cm, @Nullable Throwable e, @Nullable String additionalDetails) {
         String detailedDescription = "Failed to process message";
 
         detailedDescription += "\nFile name: " + cm.getFileName();
@@ -55,7 +56,7 @@ public class ErrorFormatter {
             detailedDescription += "\nLast processing status: " + cm.getProcessingInfo().getCurrentStatus();
         }
 
-        String processingException = null;
+        String processingException;
         if (cm.getProcessingInfo() != null) {
             processingException = cm.getProcessingInfo().getProcessingException();
             if (StringUtils.isNotBlank(processingException)) {
@@ -79,8 +80,8 @@ public class ErrorFormatter {
     }
 
     @NotNull
-    public static String getErrorDescription(@Nullable String customerId, @Nullable Exception e, @Nullable String fileName,
-                                        @Nullable String additionalDetails) {
+    public static String getErrorDescription(@Nullable String customerId, @Nullable Throwable e, @Nullable String fileName,
+                                             @Nullable String additionalDetails) {
         String detailedDescription = "Failed to process message";
 
         if (fileName != null) {
@@ -112,7 +113,7 @@ public class ErrorFormatter {
     }
 
     @Nullable
-    static String exceptionMessageToString(@Nullable Exception e) {
+    static String exceptionMessageToString(@Nullable Throwable e) {
         if (e == null) {
             return null;
         }

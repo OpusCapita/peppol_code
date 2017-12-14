@@ -22,12 +22,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * @author Sergejs.Roze
  */
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.outbound", "eu.peppol.outbound.transmission"})
 @EnableDiscoveryClient
+@EnableAsync
 public class OutboundApp {
     @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(OutboundApp.class);
@@ -84,5 +86,6 @@ public class OutboundApp {
         container.setMessageListener(listenerAdapter);
         return container;
     }
+
 
 }

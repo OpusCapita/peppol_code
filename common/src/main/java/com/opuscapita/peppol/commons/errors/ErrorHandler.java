@@ -36,7 +36,7 @@ public class ErrorHandler {
      * @param e Exception
      * @param shortDescription short description
      */
-    public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription) {
+    public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Throwable e, @NotNull String shortDescription) {
         reportWithContainerMessage(cm, e, shortDescription, null);
     }
 
@@ -48,23 +48,23 @@ public class ErrorHandler {
      * @param additionalDetails additional details
      */
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
-    public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e, @NotNull String shortDescription,
+    public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Throwable e, @NotNull String shortDescription,
                                            @Nullable String additionalDetails) {
         createTicketFromContainerMessage(cm, e, shortDescription, additionalDetails);
     }
 
-    public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Exception e, @NotNull String shortDescription,
+    public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Throwable e, @NotNull String shortDescription,
                                               @Nullable String correlationId, @Nullable String fileName) {
         reportWithoutContainerMessage(customerId, e, shortDescription, correlationId, fileName, null);
 
     }
 
-    public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Exception e, @NotNull String shortDescription,
+    public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Throwable e, @NotNull String shortDescription,
                                               @Nullable String correlationId, @Nullable String fileName, @Nullable String additionalDetails) {
         createTicketWithoutContainerMessage(customerId, e, fileName, shortDescription, correlationId, additionalDetails);
     }
 
-    private void createTicketWithoutContainerMessage(@Nullable String customerId, @Nullable Exception e, @Nullable String fileName,
+    private void createTicketWithoutContainerMessage(@Nullable String customerId, @Nullable Throwable e, @Nullable String fileName,
                                                      @NotNull String shortDescription, @Nullable String correlationId, String additionalDetails) {
         String detailedDescription =
                 ErrorFormatter.getErrorDescription(customerId, e, fileName, additionalDetails);
@@ -92,7 +92,7 @@ public class ErrorHandler {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Exception e,
+    private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Throwable e,
                                                   @NotNull String shortDescription, @Nullable String additionalDetails) {
         String detailedDescription = ErrorFormatter.getErrorDescription(cm, e, additionalDetails);
 
