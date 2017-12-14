@@ -1,20 +1,21 @@
 package com.opuscapita.peppol.ui.portal.ui.views.fragments.messages;
 
-import com.opuscapita.peppol.commons.revised_model.Event;
 import com.opuscapita.peppol.commons.revised_model.Message;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.AbstractGridFragment;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentType;
+import com.opuscapita.peppol.ui.portal.util.FileReprocessor;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.TreeDataProvider;
-import com.vaadin.server.SerializableComparator;
+import com.vaadin.server.*;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
@@ -29,8 +30,10 @@ public class MessagesGridFragment extends AbstractGridFragment {
     private final Grid<Message> grid;
     private final GridFragmentType direction;
     private final GridFragmentMode mode;
+    private FileReprocessor reprocessor;
 
-    public MessagesGridFragment(GridFragmentType direction, GridFragmentMode mode, MessagesLazyLoadService messagesLazyLoadService) {
+    public MessagesGridFragment(GridFragmentType direction, GridFragmentMode mode, MessagesLazyLoadService messagesLazyLoadService, FileReprocessor reprocessor) {
+        this.reprocessor = reprocessor;
         initLayout();
         this.direction = direction;
         this.mode = mode;
@@ -114,23 +117,6 @@ public class MessagesGridFragment extends AbstractGridFragment {
             Button detailsBtn = new Button("Details");
             detailsBtn.addClickListener((Button.ClickListener) event -> showDetails(message));
             actionBar.addComponent(detailsBtn);
-            Button downloadBtn = new Button("Download");
-            downloadBtn.addClickListener((Button.ClickListener) event -> {
-                if (message.getAttempts().size() == 0) {
-                    //Show message about no files? :) Makes no sense, but error message has to be shown
-                } else if (message.getAttempts().size() == 1) {
-                    //Download the file right away;
-                } else {
-                    //Show dialog with links to file per each attempt
-                }
-            });
-            actionBar.addComponent(downloadBtn);
-            Button reprocessBtn = new Button("Reprocess");
-            //TODO: same quantity of attempt based logic of ui for file to be reprocessed.
-            reprocessBtn.addClickListener((Button.ClickListener) event -> {
-                //Reprocess functionality invocation goes here
-            });
-            actionBar.addComponent(reprocessBtn);
             result.addComponent(actionBar);
             return result;
         }).setCaption("");
@@ -205,18 +191,36 @@ public class MessagesGridFragment extends AbstractGridFragment {
             eventsGrid.setItems(attempt.getEvents());
             attemptDetails.addComponent(eventsGrid);
             detailedContent.addComponent(attemptDetails);*/
+            /*Download functionality*/
+            Button downloadBtn = new Button("Download");
+            Button reprocessBtn = new Button("Reprocess");
+
+            File fileToOperate = new File(attempt.getFilename());
+
+            if(fileToOperate.exists()){
+                Resource resource = new FileResource(fileToOperate);
+                new FileDownloader(resource).extend(downloadBtn);
+            } else {
+                downloadBtn.setComponentError(new UserError("File not available !"));
+                reprocessBtn.setComponentError(new UserError("File not available !"));
+            }
+            detailedContent.addComponent(downloadBtn);
+
+            /*Reprocess functionality*/
+            reprocessBtn.addClickListener((Button.ClickListener) event -> {
+                reprocessor.reprocessFile(attempt);
+            });
+            detailedContent.addComponent(reprocessBtn);
+
         });
         attemptDetails.setDataProvider(new TreeDataProvider<>(attemptDetailsData));
         detailedContent.addComponent(attemptDetails);
         detailedContent.setExpandRatio(attemptDetails, 5);
         detailedView.setContent(detailedContent);
-        detailedView.addCloseListener(new Window.CloseListener() {
-            @Override
-            public void windowClose(Window.CloseEvent e) {
-                detailedView.setModal(false);
-                detailedView.setVisible(false);
-                getUI().removeWindow(detailedView);
-            }
+        detailedView.addCloseListener((Window.CloseListener) e -> {
+            detailedView.setModal(false);
+            detailedView.setVisible(false);
+            getUI().removeWindow(detailedView);
         });
         getUI().addWindow(detailedView);
     }
