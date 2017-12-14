@@ -27,7 +27,7 @@ import org.springframework.session.config.annotation.web.http.EnableSpringHttpSe
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 public class PortalApplication extends WebSecurityConfigurerAdapter {
-    @Value(value = "${peppol.portal.baseUrl:/portal}")
+    @Value(value = "${peppol.portal.baseUrl:}")
     String baseUrl;
 
     public static void main(String[] args) {
