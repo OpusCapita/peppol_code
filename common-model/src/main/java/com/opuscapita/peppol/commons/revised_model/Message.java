@@ -5,7 +5,9 @@ import org.hibernate.annotations.SortType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "peppol_messages")
@@ -97,6 +99,11 @@ public class Message implements  Comparable<Message> {
 
     public void setInbound(boolean inbound) {
         this.inbound = inbound;
+    }
+
+    public String getLastStatus(){
+        List<Event> list = attempts.stream().flatMap(attempt -> attempt.getEvents().stream()).collect(Collectors.toList());
+        return list.size() > 0 ? list.get(list.size() - 1).getStatus() : "N\\A";
     }
 
     @Override

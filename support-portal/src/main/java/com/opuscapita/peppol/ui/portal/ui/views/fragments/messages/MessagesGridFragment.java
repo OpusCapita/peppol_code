@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -97,17 +96,25 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 .setSortProperty("recipient")
                 .setHidable(true);
         grid.addColumn((ValueProvider<Message, String>) message -> Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString())
-                .setCaption("Date/time")
+                .setCaption("Arrived time")
                 .setSortProperty("created")
                 .setSortable(true);
         grid.addColumn((ValueProvider<Message, String>) message -> String.valueOf(message.getAttempts().stream().flatMap(attempt -> attempt.getEvents().stream()).filter(event -> event.isTerminal()).count()))
                 .setCaption("Delivered (times)")
                 .setHidable(true);
-        grid.addColumn((ValueProvider<Message, String>) message -> {
-            List<com.opuscapita.peppol.commons.revised_model.Event> list = message.getAttempts().stream().flatMap(attempt -> attempt.getEvents().stream()).collect(Collectors.toList());
-            return list.size() > 0 ? list.get(list.size() - 1).getStatus() : "N\\A";
-        })
+        grid.addColumn((ValueProvider<Message, String>) Message::getLastStatus)
                 .setCaption("Last status")
+                .setStyleGenerator((StyleGenerator<Message>) msg -> {
+                    switch (msg.getLastStatus().toLowerCase()) {
+                        case "delivered":
+                            return "green-pls";
+                        case "failed":
+                        case "rejected":
+                        case "invalid":
+                            return "red-pls";
+                    }
+                    return "blue-pls";
+                })
                 .setHidable(true);
         grid.addComponentColumn((ValueProvider<Message, HorizontalLayout>) message -> {
             HorizontalLayout result = new HorizontalLayout();
@@ -197,7 +204,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
 
             File fileToOperate = new File(attempt.getFilename());
 
-            if(fileToOperate.exists()){
+            if (fileToOperate.exists()) {
                 Resource resource = new FileResource(fileToOperate);
                 new FileDownloader(resource).extend(downloadBtn);
             } else {
