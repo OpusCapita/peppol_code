@@ -24,7 +24,7 @@ import org.springframework.session.config.annotation.web.http.EnableSpringHttpSe
 @EnableJpaRepositories(basePackages = {"com.opuscapita.peppol.ui.portal.model"})
 @EntityScan(basePackages = {"com.opuscapita.peppol.commons.model", "com.opuscapita.peppol.commons.revised_model"})
 @EnableDiscoveryClient
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 public class PortalApplication extends WebSecurityConfigurerAdapter {
     @Value(value = "${peppol.portal.baseUrl:}")
@@ -36,11 +36,12 @@ public class PortalApplication extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        System.out.println("baseUrl: " + baseUrl);
         http.csrf().disable().
-                exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(baseUrl + "/login")).accessDeniedPage(baseUrl + "/accessDenied")
+                exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).accessDeniedPage("/accessDenied")
                 .and().authorizeRequests()
-                .antMatchers(baseUrl + "/VAADIN/**", baseUrl + "/PUSH/**", baseUrl + "/UIDL/**", baseUrl + "/login", baseUrl + "/login/**", baseUrl + "/error/**", baseUrl + "/accessDenied/**", baseUrl + "/vaadinServlet/**").permitAll()
-                .antMatchers(baseUrl + "/authorized", "/**").fullyAuthenticated();
+                .antMatchers("/VAADIN/**", "/PUSH/**", "/UIDL/**", "/login", "/login/**", "/error/**", "/accessDenied/**", "/vaadinServlet/**").permitAll()
+                .antMatchers("/authorized", "/**").fullyAuthenticated();
     }
 
     @Bean

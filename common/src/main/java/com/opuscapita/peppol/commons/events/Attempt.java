@@ -7,7 +7,7 @@ import java.util.SortedSet;
 public class Attempt implements Comparable<Attempt> {
     private final String id;
     private final SortedSet<Event> events;
-    private final String filename;
+    private String filename;
 
     public Attempt(String id, SortedSet<Event> events, String filename) {
         this.id = id;
@@ -39,5 +39,9 @@ public class Attempt implements Comparable<Attempt> {
     @Override
     public int compareTo(@NotNull Attempt other) {
         return Integer.compare(id.hashCode(), other.getId().hashCode());
+    }
+
+    public void updateFileName(String fileName) {
+        this.filename = fileName;
     }
 }

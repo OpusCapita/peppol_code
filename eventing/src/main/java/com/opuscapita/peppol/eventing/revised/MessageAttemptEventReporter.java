@@ -7,6 +7,7 @@ import com.opuscapita.peppol.eventing.revised.repositories.MessagesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,13 +15,19 @@ public class MessageAttemptEventReporter {
     private final static Logger logger = LoggerFactory.getLogger(MessageAttemptEventReporter.class);
     MessagesRepository messagesRepository;
 
+    @Value("${peppol.eventing.attempts.storing.enabled:false}")
+    Boolean storingEnabled;
+
     @Autowired
     public MessageAttemptEventReporter(MessagesRepository messagesRepository) {
         this.messagesRepository = messagesRepository;
     }
 
     public void process(ContainerMessage containerMessage) {
-        /*com.opuscapita.peppol.commons.events.Message internalMessage = containerMessage.getProcessingInfo().getEventingMessage();
+        if(!storingEnabled) {
+            return;
+        }
+        com.opuscapita.peppol.commons.events.Message internalMessage = containerMessage.getProcessingInfo().getEventingMessage();
 
         boolean isNull = internalMessage == null;
         if (isNull) {
@@ -32,8 +39,8 @@ public class MessageAttemptEventReporter {
         //TODO: check if inversion of sender/recipient is needed based on direction in/out
         message.setRecipient(containerMessage.getDocumentInfo().getRecipientId());
         message.setSender(containerMessage.getDocumentInfo().getSenderId());
-        message.setInbound(containerMessage.isInbound());*/
-        /*messagesRepository.save(message);
-        logger.info("Saved message: " + message);*/
+        message.setInbound(containerMessage.isInbound());
+        messagesRepository.save(message);
+        logger.info("Saved message: " + message);
     }
 }

@@ -1,28 +1,93 @@
-spring:
-  application:
-    name: 'zuul-proxy'
-
-server:
-  port: ${PORT:8989}
+---
 zuul:
+  debug.request: true
+  host:
+    socket-timeout-millis: 180000
+    connect-timeout-millis: 3000
+  ignoredServices: '*'
   routes:
-    validator: /validator/**
+    inbound-as2:
+      path: /as2/**
+      url: http://inbound:8080/peppol-ap-inbound/as2
+      stripPrefix: true
+    inbound-status:
+      path: /status/**
+      url: http://inbound:8080/peppol-ap-inbound/status
+      stripPrefix: true
+    kibana:
+      path: /kibana/**
+      url: http://p-l-elk-node2.ocnet.local:5601/
+      stripPrefix: true
+    validator:
+      path: /validator/**
+      stripPrefix: false
+    admin:
+      path: /admin/**
+      url: forward:/admin  # handle locally
+      stripPrefix: true
+    support-ui:
+      path: /**
+      sensitiveHeaders: Authorization
+      url: http://support-ui:8080/
+    support-portal:
+      path: /portal/**
+      sensitiveHeaders: Authorization
+      stripPrefix: false
+      url: http://support-portal:30989/
+  servletPath: /peppol-ap-inbound
+  AccessCheckFilter.pre.disable: false
 
-peppol:
-  zuul:
-    proxy:
-      allowFrom: '*'
+peppol.zuul:
+  proxy:
+    allowFrom: '*'
+    #10.0.0.0/8,172.0.0.0/8,192.89.176.2/30,127.0.0.1/24
+    #denyFrom: '*'
+    prohibitedMasks: admin
+    prohibitedMasksNetworkOvveride: '127.0.0.1, localhost, 172.22.0.0/24, 172.17.0.0/24'
+    servicesAllowFrom:
+      as2: '*'
+      status: '*'
+  headers:
+    headersToPreserve: Host
+
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 180000
+
+spring:
+    application:
+        name: zuul-proxy
+    profiles:
+        include:
+...
+
+
+
+#spring:
+#  application:
+#    name: 'zuul-proxy'
+
+#server:
+#  port: ${PORT:8989}
+#zuul:
+#  routes:
+#    validator: /validator/**
+
+#peppol:
+#  zuul:
+#    proxy:
+#      allowFrom: '*'
 #      denyFrom: 192.168.1.200
 #      servicesAllowFrom:
 #        validator: 192.168.1.110
 #      servicesDenyFrom:
 #        validator: 192.168.1.200
 
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          strategy: THREAD
-          thread:
-            timeoutInMilliseconds: 10000
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          strategy: THREAD
+#          thread:
+#            timeoutInMilliseconds: 10000

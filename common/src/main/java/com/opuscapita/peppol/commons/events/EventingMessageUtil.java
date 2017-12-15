@@ -111,4 +111,13 @@ public class EventingMessageUtil {
         }
         return result;
     }
+
+    public static void updateFileNameInAttempt(ContainerMessage containerMessage) {
+        if(containerMessage.getProcessingInfo() != null) {
+            Message message = containerMessage.getProcessingInfo().getEventingMessage();
+            if(message != null) {
+                message.getAttempts().last().updateFileName(containerMessage.getFileName());
+            }
+        }
+    }
 }

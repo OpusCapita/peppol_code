@@ -86,6 +86,7 @@ public class PreprocessingApp {
                     logger.info("Invalid message sent to " + errorQueue + " queue");
                 } else {
                     EventingMessageUtil.reportEvent(cm, "Preprocessing complete, sent to: " + queueOut);
+                    EventingMessageUtil.updateFileNameInAttempt(cm);
                     messageQueue.convertAndSend(queueOut, cm);
                     logger.info("Successfully processed and delivered to " + queueOut + " queue");
                 }
