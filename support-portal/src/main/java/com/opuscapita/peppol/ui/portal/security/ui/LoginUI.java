@@ -10,6 +10,7 @@ import com.vaadin.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,10 @@ public class LoginUI extends UI {
     PasswordField password;
     @Autowired
     UmsAuthenticationProvider umsAuthenticationProvider;
+
+    @Value(value = "${peppol.portal.baseUrl:/portal}")
+    String baseUrl;
+
     Button loginButton = new Button("Login", this::loginButtonClick);
 
     @Override
@@ -62,7 +67,7 @@ public class LoginUI extends UI {
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getValue(), password.getValue());
         Authentication authenticated = umsAuthenticationProvider.authenticate(auth);
         SecurityContextHolder.getContext().setAuthentication(authenticated);
-        getPage().setLocation("/");
+        getPage().setLocation(baseUrl);
     }
 
 }

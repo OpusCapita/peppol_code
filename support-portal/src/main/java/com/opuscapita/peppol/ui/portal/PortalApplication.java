@@ -27,16 +27,12 @@ import org.springframework.session.config.annotation.web.http.EnableSpringHttpSe
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 public class PortalApplication extends WebSecurityConfigurerAdapter {
-    @Value(value = "${peppol.portal.baseUrl:/portal}")
-    String baseUrl;
-
     public static void main(String[] args) {
         SpringApplication.run(PortalApplication.class, args);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        System.out.println("baseUrl: " + baseUrl);
         http.csrf().disable().
                 exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).accessDeniedPage("/accessDenied")
                 .and().authorizeRequests()
