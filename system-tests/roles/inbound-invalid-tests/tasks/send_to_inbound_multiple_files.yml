@@ -29,9 +29,8 @@
   delegate_to: localhost
   shell: cat "{{report_path}}/inbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
   register: report
-
-- debug:
-    var: report
+- name: debug- cat inbound-invalid-report
+  debug: var=report
 
 #assume that tests passed if not set othervise and register result->
 - name: Set inbound-invalid-tests result
@@ -51,13 +50,13 @@
   delegate_to: localhost
   shell: mv "{{report_path}}/inbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv" "{{report_path}}/inbound-invalid-report-{{ tests_result }}-{{ ansible_date_time.iso8601_basic }}.csv"
   register: renamed_report
-
-- debug:
-    var: renamed_report
+  when: tests_result == "Failed"
+- name: debug3- renamed_report
+  debug: var=renamed_report
 
 #fail playbook when one of asserts result in Failed state->
 - name: check if any assert has failed up until now
-  fail: msg="system test failed"
+  fail: msg="system-test inbound-invalid-tests failed"
   when: "'Failed' in report.stdout"
 
 
