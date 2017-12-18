@@ -22,18 +22,18 @@ public class OutboundExceptionHandler {
         this.errorHandler = errorHandler;
     }
 
-    public void handle(Throwable e, Method method, Object... something) {
-        if (something.length == 1 && something[0] instanceof ContainerMessage) {
-            ContainerMessage cm = (ContainerMessage) something[0];
+    public void handle(Throwable e, Method method, Object... callParameters) {
+        if (callParameters.length == 1 && callParameters[0] instanceof ContainerMessage) {
+            ContainerMessage cm = (ContainerMessage) callParameters[0];
             errorHandler.reportWithContainerMessage(cm, e, "Outbound sending failed");
         } else {
-            logger.error("Expected call to send(ContainerMessage) but got call to " + method.getName() + "(" + somethingToString(something) + ")");
+            logger.error("Expected call to send(ContainerMessage) but got call to " + method.getName() + "(" + callParametersToString(callParameters) + ")");
             errorHandler.reportWithoutContainerMessage(null, e, "Outbound sending failed", null, null,
-                    "Method: " + method.getName() + "(" + somethingToString(something) + ")");
+                    "Method: " + method.getName() + "(" + callParametersToString(callParameters) + ")");
         }
     }
 
-    private String somethingToString(Object... something) {
+    private String callParametersToString(Object... something) {
         StringJoiner sj = new StringJoiner(", ");
         for (Object o : something) {
             sj.add(o.toString());
