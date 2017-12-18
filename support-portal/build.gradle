@@ -42,6 +42,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	compile('org.springframework.boot:spring-boot-starter-jooq')
 	compile('org.springframework.session:spring-session')
+	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.15'
 	compile('com.vaadin:vaadin-spring-boot-starter')
 	compile fileTree(dir: 'libs', include: '*.jar')
 	compile project(':common')
