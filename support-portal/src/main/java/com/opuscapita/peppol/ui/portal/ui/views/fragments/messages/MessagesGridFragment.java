@@ -4,7 +4,7 @@ import com.opuscapita.peppol.commons.revised_model.Message;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.AbstractGridFragment;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentType;
-import com.opuscapita.peppol.ui.portal.util.FileReprocessor;
+import com.opuscapita.peppol.ui.portal.util.FileService;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.TreeDataProvider;
@@ -29,10 +29,10 @@ public class MessagesGridFragment extends AbstractGridFragment {
     private final Grid<Message> grid;
     private final GridFragmentType direction;
     private final GridFragmentMode mode;
-    private FileReprocessor reprocessor;
+    private FileService fileService;
 
-    public MessagesGridFragment(GridFragmentType direction, GridFragmentMode mode, MessagesLazyLoadService messagesLazyLoadService, FileReprocessor reprocessor) {
-        this.reprocessor = reprocessor;
+    public MessagesGridFragment(GridFragmentType direction, GridFragmentMode mode, MessagesLazyLoadService messagesLazyLoadService, FileService fileService) {
+        this.fileService = fileService;
         initLayout();
         this.direction = direction;
         this.mode = mode;
@@ -208,15 +208,16 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 Resource resource = new FileResource(fileToOperate);
                 new FileDownloader(resource).extend(downloadBtn);
             } else {
+  //              downloadBtn.setEnabled(false);
                 downloadBtn.setComponentError(new UserError("File not available !"));
+                reprocessBtn.setEnabled(false);
                 reprocessBtn.setComponentError(new UserError("File not available !"));
             }
+            downloadBtn.addClickListener((Button.ClickListener) event -> fileService.extractFromArchive(attempt.getFilename()));
             detailedContent.addComponent(downloadBtn);
 
             /*Reprocess functionality*/
-            reprocessBtn.addClickListener((Button.ClickListener) event -> {
-                reprocessor.reprocessFile(attempt);
-            });
+            reprocessBtn.addClickListener((Button.ClickListener) event -> fileService.reprocessFile(attempt));
             detailedContent.addComponent(reprocessBtn);
 
         });
