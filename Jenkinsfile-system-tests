@@ -83,10 +83,6 @@ try {
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
                 }
             }
-        }
-    }
-    node {
-        lock(resource: 'peppol-stage-servers') {
             milestone 2
             stage('System Tests') {
                 try {
@@ -121,10 +117,6 @@ try {
                     archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
                 }
             }
-        }
-    }
-    node {
-        lock(resource: 'peppol-stage-servers') {
             milestone 3
             stage('Validator Tests') {
                 try {
