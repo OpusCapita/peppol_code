@@ -13,12 +13,16 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpSession;
 
 @SpringUI
 @Theme("valo")
 public class MainUi extends UI {
+    @Value(value = "${peppol.portal.baseUrl:/portal}")
+    String baseUrl;
+
     Navigator navigator;
 
     @Autowired
@@ -152,7 +156,7 @@ public class MainUi extends UI {
         header.addComponent(image);
 
         Button logoutBtn = new Button("Logout");
-        logoutBtn.addClickListener((Button.ClickListener) event -> getPage().setLocation("/logout"));
+        logoutBtn.addClickListener((Button.ClickListener) event -> getPage().setLocation(baseUrl + "/logout"));
         header.addComponent(logoutBtn);
         header.setComponentAlignment(logoutBtn, Alignment.MIDDLE_RIGHT);
 
