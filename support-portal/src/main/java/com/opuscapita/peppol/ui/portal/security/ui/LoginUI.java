@@ -67,7 +67,7 @@ public class LoginUI extends UI {
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getValue(), password.getValue());
         Authentication authenticated = umsAuthenticationProvider.authenticate(auth);
         SecurityContextHolder.getContext().setAuthentication(authenticated);
-        getPage().setLocation(baseUrl);
+        getPage().setLocation(baseUrl.isEmpty() ? "/" : baseUrl);
     }
 
 }
