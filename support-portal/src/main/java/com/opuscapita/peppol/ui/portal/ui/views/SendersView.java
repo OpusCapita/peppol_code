@@ -8,7 +8,10 @@ import com.opuscapita.peppol.ui.portal.ui.views.fragments.PlainGridFragment;
 import com.opuscapita.peppol.ui.portal.ui.views.util.ViewUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -27,6 +30,7 @@ public class SendersView extends VerticalLayout implements View {
     ParticipantRepository participantRepository;
 
     @PostConstruct
+    @SuppressWarnings("unchecked")
     void init() {
         setSizeFull();
         setDefaultComponentAlignment(Alignment.TOP_LEFT);
@@ -34,8 +38,15 @@ public class SendersView extends VerticalLayout implements View {
         ViewUtil.updateSessionViewObject(httpSession, ViewName.SENDERS);
 
         PlainGridFragment sendersGridFragment = new PlainGridFragment(GridFragmentType.SENDERS, GridFragmentMode.ALL, Participant.class, getSenders());
-        setupGridOrdering(sendersGridFragment.getGrid());
+        Grid grid = sendersGridFragment.getGrid();
+        setupGridOrdering(grid);
         sendersGridFragment.setCaption("Senders");
+        ((Grid.Column<Participant, String>) grid.getColumn("outboundEmails")).setEditorComponent(new TextField(), Participant::setOutboundEmails);
+        ((Grid.Column<Participant, String>) grid.getColumn("inboundEmails")).setEditorComponent(new TextField(), Participant::setInboundEmails);
+        ((Grid.Column<Participant, String>) grid.getColumn("contactPerson")).setEditorComponent(new TextField(), Participant::setContactPerson);
+        ((Grid.Column<Participant, String>) grid.getColumn("responsiblePerson")).setEditorComponent(new TextField(), Participant::setResponsiblePerson);
+        grid.getEditor().setEnabled(true);
+        grid.getEditor().addSaveListener(event -> participantRepository.save((Participant) event.getBean()));
         addComponent(sendersGridFragment);
     }
 

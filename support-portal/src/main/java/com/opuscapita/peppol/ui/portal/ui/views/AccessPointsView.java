@@ -30,6 +30,7 @@ public class AccessPointsView extends VerticalLayout implements View {
     AccessPointRepository accessPointRepository;
 
     @PostConstruct
+    @SuppressWarnings("unchecked")
     void init() {
         setSizeFull();
         setDefaultComponentAlignment(Alignment.TOP_LEFT);
@@ -43,6 +44,7 @@ public class AccessPointsView extends VerticalLayout implements View {
         ((Grid.Column<AccessPoint,String>)grid.getColumn("emailList")).setEditorComponent(new TextField(), AccessPoint::setEmailList);
         ((Grid.Column<AccessPoint,String>)grid.getColumn("contactPerson")).setEditorComponent(new TextField(), AccessPoint::setContactPerson);
         grid.getEditor().setEnabled(true);
+        grid.getEditor().addSaveListener(event -> accessPointRepository.save((AccessPoint)event.getBean()));
         addComponent(sendersGridFragment);
     }
 
