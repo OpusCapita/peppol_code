@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.revised_model.Message;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.AbstractGridFragment;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentType;
+import com.opuscapita.peppol.ui.portal.ui.views.util.AdvancedFileDownloader;
 import com.opuscapita.peppol.ui.portal.util.FileService;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
@@ -204,16 +205,24 @@ public class MessagesGridFragment extends AbstractGridFragment {
 
             File fileToOperate = new File(attempt.getFilename());
 
-            if (fileToOperate.exists()) {
+            if (fileToOperate.exists()) {  //file exists, adding as resource
                 Resource resource = new FileResource(fileToOperate);
                 new FileDownloader(resource).extend(downloadBtn);
             } else {
-  //              downloadBtn.setEnabled(false);
-                downloadBtn.setComponentError(new UserError("File not available !"));
                 reprocessBtn.setEnabled(false);
-                reprocessBtn.setComponentError(new UserError("File not available !"));
+                reprocessBtn.setComponentError(new UserError("File not available for reprocess!"));
+                if (fileService.fileArchived(attempt.getFilename())) { //file can be fetched from archive in runtime only, download via listener
+                    AdvancedFileDownloader downloader = new AdvancedFileDownloader();  //have to create own downloader because vaadin doesn't support download in runtime
+                    downloader.addAdvancedDownloaderListener(downloadEvent -> {
+                        File fileToDownload = fileService.extractFromArchive(attempt.getFilename());  //tmp file
+                        downloader.setFilePath(fileToDownload.getAbsolutePath());                     //setting filepath in runtime
+                    });
+                    downloader.extend(downloadBtn);
+                } else {
+                    downloadBtn.setEnabled(false);
+                    downloadBtn.setComponentError(new UserError("File not available for download!"));
+                }
             }
-            downloadBtn.addClickListener((Button.ClickListener) event -> fileService.extractFromArchive(attempt.getFilename()));
             detailedContent.addComponent(downloadBtn);
 
             /*Reprocess functionality*/
