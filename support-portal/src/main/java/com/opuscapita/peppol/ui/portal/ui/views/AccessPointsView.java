@@ -9,6 +9,8 @@ import com.opuscapita.peppol.ui.portal.ui.views.util.ViewUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,6 +38,11 @@ public class AccessPointsView extends VerticalLayout implements View {
 
         PlainGridFragment sendersGridFragment = new PlainGridFragment(GridFragmentType.ACCESS_POINTS, GridFragmentMode.ALL, AccessPoint.class, getAccessPoints());
         sendersGridFragment.setCaption("Access points");
+        Grid grid = sendersGridFragment.getGrid();
+        grid.setColumnOrder("accessPointId", "accessPointName", "emailList", "contactPerson");
+        ((Grid.Column<AccessPoint,String>)grid.getColumn("emailList")).setEditorComponent(new TextField(), AccessPoint::setEmailList);
+        ((Grid.Column<AccessPoint,String>)grid.getColumn("contactPerson")).setEditorComponent(new TextField(), AccessPoint::setContactPerson);
+        grid.getEditor().setEnabled(true);
         addComponent(sendersGridFragment);
     }
 
