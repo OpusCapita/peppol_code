@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -96,8 +97,9 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 .setSortable(true)
                 .setSortProperty("recipient")
                 .setHidable(true);
-        grid.addColumn((ValueProvider<Message, String>) message -> Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString())
-                .setCaption("Arrived time")
+        grid.addColumn((ValueProvider<Message, String>) message ->
+                Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .setCaption("Created")
                 .setSortProperty("created")
                 .setSortable(true);
         grid.addColumn((ValueProvider<Message, String>) message -> String.valueOf(message.getAttempts().stream().flatMap(attempt -> attempt.getEvents().stream()).filter(event -> event.isTerminal()).count()))
@@ -156,7 +158,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
         HorizontalLayout processingInfo = new HorizontalLayout();
         processingInfo.setWidth(100, Unit.PERCENTAGE);
         processingInfo.setHeightUndefined();
-        Label processingStartLabel = new Label("<b>Processing started at:</b> " + Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime(), ContentMode.HTML);
+        Label processingStartLabel = new Label("<b>Processing started at:</b> " + Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), ContentMode.HTML);
         processingInfo.addComponent(processingStartLabel);
         Label attemptsLabel = new Label("<b>Attempts:</b> " + message.getAttempts().size(), ContentMode.HTML);
         processingInfo.addComponent(attemptsLabel);
