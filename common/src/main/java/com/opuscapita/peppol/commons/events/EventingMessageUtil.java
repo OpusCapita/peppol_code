@@ -116,7 +116,7 @@ public class EventingMessageUtil {
         if(containerMessage.getProcessingInfo() != null) {
             Message message = containerMessage.getProcessingInfo().getEventingMessage();
             if(message != null) {
-                message.getAttempts().last().updateFileName(containerMessage.getFileName());
+                message.getAttempts().last().setFileName(containerMessage.getFileName());
             }
         }
     }

@@ -38,10 +38,11 @@ public class Attempt implements Comparable<Attempt> {
 
     @Override
     public int compareTo(@NotNull Attempt other) {
-        return Integer.compare(id.hashCode(), other.getId().hashCode());
+        int res = Long.compare(Long.valueOf(id.substring(0,13)), Long.valueOf(other.getId().substring(0,13)));
+        return res != 0 ? res : id.compareTo(other.getId());
     }
 
-    public void updateFileName(String fileName) {
+    public void setFileName(String fileName) {
         this.filename = fileName;
     }
 }
