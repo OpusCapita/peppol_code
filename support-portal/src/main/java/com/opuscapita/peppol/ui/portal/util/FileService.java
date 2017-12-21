@@ -61,7 +61,7 @@ public class FileService {
     }
 
     //new event about file being reprocessed should be handled in transports
-    public void reprocessFile(Attempt attempt) {
+    public void reprocess(Attempt attempt) {
         try {
             File fileToReprocess = new File(attempt.getFilename());
             File result = new File(attempt.getMessage().isInbound() ? reprocessInboundDir : reprocessOutboundDir, fileToReprocess.getName());

@@ -13,6 +13,8 @@ import com.vaadin.server.*;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import com.vaadin.ui.components.grid.MultiSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +67,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 break;
         }
         count.set(all.get() ? messagesLazyLoadService.countByInbound(isInbound.get()) : messagesLazyLoadService.countByInboundAndTerminal(isInbound.get(), isTerminal.get()));
+        //TODO add filters here and to messages service also
         grid.setDataProvider(
                 (sortOrders, offset, limit) -> {
                     Map<String, Boolean> sortOrder = sortOrders.stream()
@@ -76,37 +79,42 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 },
                 () -> count.get()
         );
-
+        MultiSelectionModelImpl<Message> selectionModel = (MultiSelectionModelImpl<Message>) grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        selectionModel.setSelectAllCheckBoxVisibility(MultiSelectionModel.SelectAllCheckBoxVisibility.VISIBLE);
+        grid.asMultiSelect().addSelectionListener(new Editor(grid, fileService));
         addComponent(grid);
-        /*BackEndDataProvider backEndDataProvider;
-        grid.setItems(repository.findMessagesByInbound(isInbound));*/
-
     }
 
     private void setupGridColumns() {
         grid.addColumn(Message::getId).setCaption("Id")
                 .setSortable(true)
                 .setSortProperty("id")
+                .setId("id")
                 .setComparator((SerializableComparator<Message>) (o1, o2) -> o1.getId().compareTo(o2.getId()))
                 .setHidable(true);
         grid.addColumn(Message::getSender).setCaption("Sender")
                 .setSortable(true)
+                .setId("sender")
                 .setSortProperty("sender")
                 .setHidable(true);
         grid.addColumn(Message::getRecipient).setCaption("Recipient")
                 .setSortable(true)
+                .setId("recipient")
                 .setSortProperty("recipient")
                 .setHidable(true);
         grid.addColumn((ValueProvider<Message, String>) message ->
                 Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .setCaption("Created")
+                .setId("created")
                 .setSortProperty("created")
                 .setSortable(true);
         grid.addColumn((ValueProvider<Message, String>) message -> String.valueOf(message.getAttempts().stream().flatMap(attempt -> attempt.getEvents().stream()).filter(event -> event.isTerminal()).count()))
                 .setCaption("Delivered (times)")
+                .setId("delivered")
                 .setHidable(true);
         grid.addColumn((ValueProvider<Message, String>) Message::getLastStatus)
                 .setCaption("Last status")
+                .setId("lastStatus")
                 .setStyleGenerator((StyleGenerator<Message>) msg -> {
                     switch (msg.getLastStatus().toLowerCase()) {
                         case "delivered":
@@ -228,7 +236,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
             detailedContent.addComponent(downloadBtn);
 
             /*Reprocess functionality*/
-            reprocessBtn.addClickListener((Button.ClickListener) event -> fileService.reprocessFile(attempt));
+            reprocessBtn.addClickListener((Button.ClickListener) event -> fileService.reprocess(attempt));
             detailedContent.addComponent(reprocessBtn);
 
         });
