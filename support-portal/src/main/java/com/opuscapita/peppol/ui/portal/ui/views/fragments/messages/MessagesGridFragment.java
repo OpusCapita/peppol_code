@@ -79,10 +79,15 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 },
                 () -> count.get()
         );
+        addComponent(grid);
+
         MultiSelectionModelImpl<Message> selectionModel = (MultiSelectionModelImpl<Message>) grid.setSelectionMode(Grid.SelectionMode.MULTI);
         selectionModel.setSelectAllCheckBoxVisibility(MultiSelectionModel.SelectAllCheckBoxVisibility.VISIBLE);
-        grid.asMultiSelect().addSelectionListener(new Editor(grid, fileService));
-        addComponent(grid);
+        Editor messageEditor = new Editor(fileService);
+        grid.asMultiSelect().addSelectionListener(messageEditor);
+        addComponent(messageEditor);
+        setExpandRatio(grid,9);
+        setExpandRatio(messageEditor,1);
     }
 
     private void setupGridColumns() {
