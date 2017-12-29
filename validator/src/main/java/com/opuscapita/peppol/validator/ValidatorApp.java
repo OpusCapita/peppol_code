@@ -9,26 +9,34 @@ import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
-import com.opuscapita.peppol.validator.controller.ValidationController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.validation.SchemaFactory;
 
 /**
  * @author Sergejs.Roze
  */
-//@EnableDiscoveryClient
-//@SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
-//@EnableCaching
+@EnableDiscoveryClient
+@SpringBootApplication(scanBasePackages = "com.opuscapita.peppol")
+@EnableCaching
 public class ValidatorApp {
+    @SuppressWarnings("unused")
     private final static Logger logger = LoggerFactory.getLogger(ValidatorApp.class);
 
     @Value("${peppol.component.name}")
@@ -38,14 +46,39 @@ public class ValidatorApp {
 
     private final ValidationController controller;
 
-    //@Autowired
-    public ValidatorApp(ValidationController controller) {
+    @Autowired
+    public ValidatorApp(@NotNull @Lazy ValidationController controller) {
         this.controller = controller;
     }
 
-//    public static void main(String[] args) {
-//        SpringApplication.run(ValidatorApp.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(ValidatorApp.class, args);
+    }
+
+    // TODO remove this when finished with testing @SR
+//    @PostConstruct
+//    public void postConstruct() throws Exception {
+//        String file = "/home/redis/work/validator/test-peppol/validator/src/test/resources/test_data/difi_files/Valids2-list-ejt.xml";
+//        //String file = "/home/rozeser1/test-peppol/validator/src/test/resources/test_data/difi_files/Valids2-list-ejt.xml";
+//        ContainerMessage cm = new ContainerMessage("meatdata", file, Endpoint.TEST);
+//        DocumentInfo di = new DocumentInfo();
+//        di.setCustomizationId("urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0");
+//        di.setProfileId("urn:www.cenbii.eu:profile:bii05:ver2.0");
+//        di.setRootNodeName("CreditNote");
+//        cm.setDocumentInfo(di);
+//
+//        for (int i = 0; i < 1000000; i++) {
+//            //System.out.println(i);
+//            controller.validate(cm);
+//        }
+//        System.out.println("");
+//        for (DocumentError e : cm.getDocumentInfo().getErrors()) {
+//            System.out.println(e);
+//        }
+//
+//        System.exit(0);
 //    }
+
 
     @Bean
     MessageListenerAdapter listenerAdapter(@NotNull AbstractQueueListener receiver) {
@@ -96,6 +129,11 @@ public class ValidatorApp {
     @Bean
     public XMLInputFactory xmlInputFactory() {
         return XMLInputFactory.newFactory();
+    }
+
+    @Bean
+    public SchemaFactory schemaFactory() {
+        return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     }
 
 }

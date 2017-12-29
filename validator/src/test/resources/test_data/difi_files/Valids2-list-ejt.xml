@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<StandardBusinessDocument xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
   <StandardBusinessDocumentHeader>
     <HeaderVersion>1.0</HeaderVersion>
     <Sender>
@@ -26,7 +26,11 @@
       </Scope>
     </BusinessScope>
   </StandardBusinessDocumentHeader>
-  <CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:draft:UnqualifiedDataTypes:2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 UBL-CreditNote-2.0.xsd ">
+    <CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 UBL-CreditNote-2.0.xsd ">
  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
  <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0</cbc:CustomizationID>
  <cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
@@ -760,7 +764,7 @@ Mz5dPj4Kc3RhcnR4cmVmCjMzMzgwCiUlRU9GCg==
   <cbc:PaymentDueDate>2016-10-24</cbc:PaymentDueDate>
   <cbc:PaymentID>0010000300000533713000068</cbc:PaymentID>
   <cac:PayeeFinancialAccount>
-   <cbc:ID schemeID="BBAN">97500644722</cbc:ID>
+   <cbc:ID schemeID="LOCAL">97500644722</cbc:ID>
   </cac:PayeeFinancialAccount>
  </cac:PaymentMeans>
  <cac:PaymentMeans>
@@ -782,7 +786,7 @@ Mz5dPj4Kc3RhcnR4cmVmCjMzMzgwCiUlRU9GCg==
   <cbc:PaymentDueDate>2016-10-24</cbc:PaymentDueDate>
   <cbc:PaymentID>0010000300000533713000068</cbc:PaymentID>
   <cac:PayeeFinancialAccount>
-   <cbc:ID schemeID="BBAN">97500644722</cbc:ID>
+   <cbc:ID schemeID="LOCAL">97500644722</cbc:ID>
    <cac:FinancialInstitutionBranch>
     <cac:FinancialInstitution>
      <cbc:ID schemeID="BIC">ESSENOKX</cbc:ID>

@@ -18,9 +18,7 @@
         <BusinessScope>
             <Scope>
                 <Type>DOCUMENTID</Type>
-                <InstanceIdentifier>
-                    urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0
-                </InstanceIdentifier>
+                <InstanceIdentifier>urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0</InstanceIdentifier>
             </Scope>
             <Scope>
                 <Type>PROCESSID</Type>

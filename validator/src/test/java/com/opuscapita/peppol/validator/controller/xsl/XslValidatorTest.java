@@ -24,12 +24,13 @@ public class XslValidatorTest {
         Templates templates;
 
         try (InputStream xsl = XslValidatorTest.class.getResourceAsStream("/xsl/NOGOV-UBL-T10.xsl")) {
+            assertNotNull(xsl);
             Source xsltSource = new StreamSource(xsl);
             templates = transformerFactory.newTemplates(xsltSource);
         }
 
-        try (InputStream data = XslValidator.class.getResourceAsStream("/test_data/difi_files/OC-test-file.xml")) {
-
+        try (InputStream data = XslValidatorTest.class.getResourceAsStream("/test_data/difi_files/OC-test-file.xml")) {
+            assertNotNull(data);
             byte[] bytes = IOUtils.toByteArray(data);
 
             String result = validator.validate(bytes, templates).toString();
@@ -44,8 +45,8 @@ public class XslValidatorTest {
             assertTrue(result.contains("id=\"NOGOV-T10-R005\""));
         }
 
-        try (InputStream data = XslValidator.class.getResourceAsStream("/test_data/difi_files/OC-test-file-NOK.xml")) {
-
+        try (InputStream data = XslValidatorTest.class.getResourceAsStream("/test_data/difi_files/OC-test-file-NOK.xml")) {
+            assertNotNull(data);
             byte[] bytes = IOUtils.toByteArray(data);
 
             String result = validator.validate(bytes, templates).toString();

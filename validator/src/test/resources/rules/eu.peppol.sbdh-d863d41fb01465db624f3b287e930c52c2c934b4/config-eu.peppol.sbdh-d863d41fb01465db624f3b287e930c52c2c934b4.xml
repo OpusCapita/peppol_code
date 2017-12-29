@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configurations xmlns="http://difi.no/xsd/vefa/validator/1.0" name="eu.peppol.sbdh" timestamp="1475429113821" capabilities="sbdh">
+    <configuration weight="13" build="d863d41fb01465db624f3b287e930c52c2c934b4">
+        <identifier>sbdh-1.0</identifier>
+        <title>PEPPOL Standard Business Document Header (XSD)</title>
+        <file path="xsd/StandardBusinessDocumentHeader.xsd"/>
+    </configuration>
+    <configuration weight="13" build="d863d41fb01465db624f3b287e930c52c2c934b4">
+        <identifier>peppol-sbdh</identifier>
+        <title>OpenPEPPOL Business Message Envelope (SBDH) 1.0</title>
+        <standardId>SBDH:1.0</standardId>
+        <inherit>sbdh-1.0</inherit>
+        <file path="xsl/PEPPOL-SBDH.xsl"/>
+    </configuration>
+</configurations>

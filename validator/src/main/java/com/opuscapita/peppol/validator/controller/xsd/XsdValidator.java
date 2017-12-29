@@ -3,6 +3,7 @@ package com.opuscapita.peppol.validator.controller.xsd;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Component;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -13,7 +14,7 @@ import java.io.StringReader;
 /**
  * @author Sergejs.Roze
  */
-//@Component
+@Component
 public class XsdValidator {
 
     /**

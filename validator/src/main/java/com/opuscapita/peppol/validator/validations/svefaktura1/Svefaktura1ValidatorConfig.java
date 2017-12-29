@@ -1,5 +1,7 @@
 package com.opuscapita.peppol.validator.validations.svefaktura1;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
 import javax.annotation.Resource;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -11,9 +13,8 @@ import java.io.FileInputStream;
  * Created by bambr on 16.19.9.
  */
 @Resource
+@ConditionalOnProperty(name = "peppol.validator.difi.enabled", havingValue = "true", matchIfMissing = true)
 public class Svefaktura1ValidatorConfig {
-
-
     private final String schematronXslPath;
     private final Boolean schematronValidationEnabled;
     private final String svefaktura1XsdPath;
@@ -22,11 +23,8 @@ public class Svefaktura1ValidatorConfig {
         this.schematronValidationEnabled = schematronValidationEnabled;
         this.schematronXslPath = schematronXslPath;
         this.svefaktura1XsdPath = svefaktura1XsdPath;
-        System.out.println("schematronValidationEnabled: " + schematronValidationEnabled);
-        System.out.println("schematronXslPath: " + schematronXslPath);
         if (schematronValidationEnabled && (isBadFile(schematronXslPath) || !new File(svefaktura1XsdPath).exists())) {
-            // TODO: Re-write error message
-            throw new IllegalArgumentException("When 'svefaktura1.schematron.enabled' property is set to 'true', make sure you also set value for: 'svefaktura1.schematron.xsl' property and it is pointing to valid XSL schematron file");
+            throw new IllegalArgumentException("When 'svefaktura1.schematron.enabled' property is set to 'true', make sure you also set value for: 'svefaktura1.schematron.path' property and it is pointing to valid XSL schematron file");
         }
     }
 
@@ -41,7 +39,6 @@ public class Svefaktura1ValidatorConfig {
     private boolean isInvalidXslFile(String schematronXslFilePath) {
         try {
             File schematronXslFile = new File(schematronXslFilePath);
-            System.out.println(schematronXslFile.getAbsolutePath() + " exists: " + schematronXslFile.exists());
             StreamSource styleSource = new StreamSource(new FileInputStream(schematronXslFile));
             Transformer transformer = TransformerFactory.newInstance().newTransformer(styleSource);
         } catch (Exception e) {

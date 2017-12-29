@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configurations xmlns="http://difi.no/xsd/vefa/validator/1.0" name="org.oasis-open.ubl.ver20" timestamp="1480682536533">
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="applicationresponse">ubl-applicationresponse-2.0</identifier>
+        <title>UBL ApplicationResponse 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-ApplicationResponse-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="attacheddocument">ubl-attacheddocument-2.0</identifier>
+        <title>UBL AttachedDocument 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-AttachedDocument-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="billoflading">ubl-billoflading-2.0</identifier>
+        <title>UBL BillOfLading 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-BillOfLading-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="catalogue">ubl-catalogue-2.0</identifier>
+        <title>UBL Catalogue 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-Catalogue-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="cataloguedeletion">ubl-cataloguedeletion-2.0</identifier>
+        <title>UBL CatalogueDeletion 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-CatalogueDeletion-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="catalogueitemspecificationupdate">ubl-catalogueitemspecificationupdate-2.0</identifier>
+        <title>UBL CatalogueItemSpecificationUpdate 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-CatalogueItemSpecificationUpdate-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="cataloguepricingupdate">ubl-cataloguepricingupdate-2.0</identifier>
+        <title>UBL CataloguePricingUpdate 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-CataloguePricingUpdate-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="cataloguerequest">ubl-cataloguerequest-2.0</identifier>
+        <title>UBL CatalogueRequest 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-CatalogueRequest-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="certificateoforigin">ubl-certificateoforigin-2.0</identifier>
+        <title>UBL CertificateOfOrigin 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-CertificateOfOrigin-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="creditnote">ubl-creditnote-2.0</identifier>
+        <title>UBL CreditNote 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-CreditNote-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="debitnote">ubl-debitnote-2.0</identifier>
+        <title>UBL DebitNote 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-DebitNote-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="despatchadvice">ubl-despatchadvice-2.0</identifier>
+        <title>UBL DespatchAdvice 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-DespatchAdvice-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="forwardinginstructions">ubl-forwardinginstructions-2.0</identifier>
+        <title>UBL ForwardingInstructions 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-ForwardingInstructions-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="freightinvoice">ubl-freightinvoice-2.0</identifier>
+        <title>UBL FreightInvoice 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-FreightInvoice-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="invoice">ubl-invoice-2.0</identifier>
+        <title>UBL Invoice 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-Invoice-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="order">ubl-order-2.0</identifier>
+        <title>UBL Order 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-Order-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="ordercancellation">ubl-ordercancellation-2.0</identifier>
+        <title>UBL OrderCancellation 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-OrderCancellation-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="orderchange">ubl-orderchange-2.0</identifier>
+        <title>UBL OrderChange 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-OrderChange-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="orderresponse">ubl-orderresponse-2.0</identifier>
+        <title>UBL OrderResponse 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-OrderResponse-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="orderresponsesimple">ubl-orderresponsesimple-2.0</identifier>
+        <title>UBL OrderResponseSimple 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-OrderResponseSimple-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="packinglist">ubl-packinglist-2.0</identifier>
+        <title>UBL PackingList 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-PackingList-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="quotation">ubl-quotation-2.0</identifier>
+        <title>UBL Quotation 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-Quotation-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="receiptadvice">ubl-receiptadvice-2.0</identifier>
+        <title>UBL ReceiptAdvice 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-ReceiptAdvice-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="reminder">ubl-reminder-2.0</identifier>
+        <title>UBL Reminder 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-Reminder-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="remittanceadvice">ubl-remittanceadvice-2.0</identifier>
+        <title>UBL RemittanceAdvice 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-RemittanceAdvice-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="requestforquotation">ubl-requestforquotation-2.0</identifier>
+        <title>UBL RequestForQuotation 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-RequestForQuotation-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="selfbilledcreditnote">ubl-selfbilledcreditnote-2.0</identifier>
+        <title>UBL SelfBilledCreditNote 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-SelfBilledCreditNote-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="selfbilledinvoice">ubl-selfbilledinvoice-2.0</identifier>
+        <title>UBL SelfBilledInvoice 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-SelfBilledInvoice-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="statement">ubl-statement-2.0</identifier>
+        <title>UBL Statement 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-Statement-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="transportationstatus">ubl-transportationstatus-2.0</identifier>
+        <title>UBL TransportationStatus 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-TransportationStatus-2.0.xsd"/>
+    </configuration>
+    <configuration weight="11" build="e5f8371423685f23ea02dc4e71e3382c">
+        <identifier alias="waybill">ubl-waybill-2.0</identifier>
+        <title>UBL Waybill 2.0</title>
+        <file type="xml.xsd" path="maindoc/UBL-Waybill-2.0.xsd"/>
+    </configuration>
+</configurations>

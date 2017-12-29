@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.validation.XsdValidator;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
@@ -11,6 +12,7 @@ import org.w3c.dom.Document;
  * Created by bambr on 16.3.10.
  */
 @Component
+@ConditionalOnProperty(name = "peppol.validator.difi.enabled", havingValue = "true", matchIfMissing = true)
 public class Svefaktura1XsdValidator implements XsdValidator {
     private final Svefaktura1ValidatorConfig svefaktura1ValidatorConfig;
 

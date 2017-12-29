@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.validator.controller.xsl;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 import org.springframework.util.FastByteArrayOutputStream;
 
 import javax.xml.transform.*;
@@ -11,7 +12,7 @@ import java.io.StringReader;
 /**
  * @author Sergejs.Roze
  */
-//@Component
+@Component
 public class XslValidator {
 
     @NotNull

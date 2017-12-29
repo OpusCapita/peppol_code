@@ -21,11 +21,4 @@ public class SaxParserConfigurator {
         return factory;
     }
 
-    /*@Bean
-    @NotNull
-    @Scope("prototype")
-    @Lazy
-    SAXParser saxParser(@NotNull SAXParserFactory saxParserFactory) throws ParserConfigurationException, SAXException {
-        return saxParserFactory.newSAXParser();
-    }*/
 }

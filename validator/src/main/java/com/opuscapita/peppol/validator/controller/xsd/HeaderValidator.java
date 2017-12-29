@@ -6,13 +6,16 @@ import com.opuscapita.peppol.validator.controller.cache.XsdRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
 
 import javax.xml.validation.Schema;
+import java.io.IOException;
 
 /**
  * @author Sergejs.Roze
  */
-//@Component
+@Component
 public class HeaderValidator {
     private final XsdValidator xsdValidator;
     private final XsdRepository xsdRepository;
@@ -28,7 +31,10 @@ public class HeaderValidator {
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
-    public ContainerMessage validate(@NotNull byte[] data, @NotNull ContainerMessage cm) {
+    public ContainerMessage validate(@NotNull byte[] data, @NotNull ContainerMessage cm) throws SAXException, IOException {
+        if (data.length == 0) {
+            return cm;
+        }
         Schema schema = xsdRepository.getByName(xsdPath);
         ValidationError error = xsdValidator.validate(data, schema);
 

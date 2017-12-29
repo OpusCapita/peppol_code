@@ -1,9 +1,9 @@
 package com.opuscapita.peppol.validator.controller.body;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.document.Archetype;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,24 +15,19 @@ import java.io.IOException;
  *
  * @author Sergejs.Roze
  */
-//@Component
+@Component
 public class BodyValidator {
-    private final SvefakturaOneValidator svefakturaOneValidator;
     private final RuleSetValidator ruleSetValidator;
 
     @Autowired
-    public BodyValidator(@NotNull SvefakturaOneValidator svefakturaOneValidator, @NotNull RuleSetValidator ruleSetValidator) {
-        this.svefakturaOneValidator = svefakturaOneValidator;
+    public BodyValidator(@NotNull RuleSetValidator ruleSetValidator) {
         this.ruleSetValidator = ruleSetValidator;
     }
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
-    public ContainerMessage validate(@NotNull byte[] documentBody, @NotNull ContainerMessage cm) throws IOException, ParserConfigurationException, SAXException, TransformerException {
-        if (cm.getDocumentInfo().getArchetype() == Archetype.SVEFAKTURA1) {
-            return svefakturaOneValidator.validate(documentBody, cm);
-        }
-
+    public ContainerMessage validate(@NotNull byte[] documentBody, @NotNull ContainerMessage cm)
+            throws IOException, ParserConfigurationException, SAXException, TransformerException {
         return ruleSetValidator.validate(documentBody, cm);
     }
 
