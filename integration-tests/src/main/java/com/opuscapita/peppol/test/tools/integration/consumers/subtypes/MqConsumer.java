@@ -4,6 +4,8 @@ import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +24,10 @@ public class MqConsumer extends Consumer {
 
     @Override
     public TestResult consume(Object consumable) {
-        List<Object> messages = (List<Object>) consumable;
+        List<Object> messages = new ArrayList<>();
+        if(consumable != null) {
+            messages = (List<Object>) consumable;
+        }
         logger.info("MqConsumer: " + name + " starting!");
         boolean success = (expectedValue == messages.size());
         return new TestResult(name, success, "expected message count: " + expectedValue + " got messages: " + messages.size());
