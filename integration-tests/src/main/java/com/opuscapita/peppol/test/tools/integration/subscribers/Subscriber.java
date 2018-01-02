@@ -45,18 +45,23 @@ public abstract class Subscriber {
                 } else {
                     logger.info(this.getClass().getSimpleName() + ": got the result: "
                             + (consumable.toString().length() > 100 ? consumable.toString().substring(0, 100) : consumable));
-                    for (Consumer consumer : consumers) {
-                        logger.info("Passing data to consumer: " + consumer);
-                        TestResult testResult = consumer.consume(consumable);
-                        testResults.add(testResult);
-                    }
+                    consume();
                     return testResults;
                 }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        consume();
         return testResults;
+    }
+
+    private void consume() {
+        for (Consumer consumer : consumers) {
+            logger.info("Passing data to consumer: " + consumer);
+            TestResult testResult = consumer.consume(consumable);
+            testResults.add(testResult);
+        }
     }
 
     protected abstract void fetchConsumable();

@@ -24,11 +24,7 @@ public class MqSubscriber extends Subscriber implements MqListener {
 
     @Override
     protected void fetchConsumable() {
-        logger.info(queue + " Listener started");
-        if (messages.isEmpty()) {
-            logger.info("MqSubscriber: message list empty, waiting for messages .....");
-        } else {
-            logger.info("MqSubscriber: messages found: " + messages.size());
+        if (!messages.isEmpty()) {
             consumable = messages;
         }
     }
