@@ -3,7 +3,6 @@ package com.opuscapita.peppol.test.tools.integration.consumers;
 import com.opuscapita.peppol.test.tools.integration.consumers.subtypes.*;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +19,7 @@ public class ConsumerFactory {
         String testName = (String) properties.get("name");
         switch (name) {
             case "queue msg count check":
-                return new MqConsumer(id, testName, (List<String>) properties.get("subscribers"), properties.get("expected value"));
+                return new MqConsumer(id, testName, properties.get("expected value"));
             case "db check":
             case "db test":
                 return new DbConsumer(id, testName, properties.get("expected value"));

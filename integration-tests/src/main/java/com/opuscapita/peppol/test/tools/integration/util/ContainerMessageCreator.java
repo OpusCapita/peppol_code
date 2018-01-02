@@ -44,7 +44,7 @@ public class ContainerMessageCreator {
 
         if (!file.getName().contains("invalid")) {
             List<String> endpoints = Collections.singletonList(getRouteEndpoint()); //new queue for integration tests
-            cm.getProcessingInfo().setTransactionId("transactionId");
+            cm.getProcessingInfo().setTransactionId(file.getName());
             Route route = new Route();
             route.setEndpoints(endpoints);
             cm.getProcessingInfo().setRoute(route);
