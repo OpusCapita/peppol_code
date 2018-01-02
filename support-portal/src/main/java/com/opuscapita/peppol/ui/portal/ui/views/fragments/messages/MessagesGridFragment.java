@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.ui.portal.ui.views.fragments.messages;
 
+import com.opuscapita.peppol.commons.revised_model.Attempt;
 import com.opuscapita.peppol.commons.revised_model.Message;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.AbstractGridFragment;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
@@ -17,6 +18,7 @@ import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import java.io.File;
 import java.time.Instant;
@@ -86,8 +88,8 @@ public class MessagesGridFragment extends AbstractGridFragment {
         Editor messageEditor = new Editor(fileService);
         grid.asMultiSelect().addSelectionListener(messageEditor);
         addComponent(messageEditor);
-        setExpandRatio(grid,9);
-        setExpandRatio(messageEditor,1);
+        setExpandRatio(grid, 9);
+        setExpandRatio(messageEditor, 1);
     }
 
     private void setupGridColumns() {
@@ -140,6 +142,17 @@ public class MessagesGridFragment extends AbstractGridFragment {
             Button detailsBtn = new Button("Details");
             detailsBtn.addClickListener((Button.ClickListener) event -> showDetails(message));
             actionBar.addComponent(detailsBtn);
+
+            Button downloadBtn = createDownloadButton(message.getAttempts().last());
+            if (downloadBtn.isEnabled()) {
+                downloadBtn.setDescription("Latest file will be downloaded");
+            }
+            actionBar.addComponent(downloadBtn);
+
+            Button reprocessBtn = createReprocessButton(message.getAttempts().last());
+            actionBar.addComponent(reprocessBtn);
+
+
             result.addComponent(actionBar);
             return result;
         }).setCaption("");
@@ -215,33 +228,12 @@ public class MessagesGridFragment extends AbstractGridFragment {
             attemptDetails.addComponent(eventsGrid);
             detailedContent.addComponent(attemptDetails);*/
             /*Download functionality*/
-            Button downloadBtn = new Button("Download");
-            Button reprocessBtn = new Button("Reprocess");
+            Button reprocessBtn = createReprocessButton(attempt);
 
-            File fileToOperate = new File(attempt.getFilename());
-
-            if (fileToOperate.exists()) {  //file exists, adding as resource
-                Resource resource = new FileResource(fileToOperate);
-                new FileDownloader(resource).extend(downloadBtn);
-            } else {
-                reprocessBtn.setEnabled(false);
-                reprocessBtn.setComponentError(new UserError("File not available for reprocess!"));
-                if (fileService.fileArchived(attempt.getFilename())) { //file can be fetched from archive in runtime only, download via listener
-                    AdvancedFileDownloader downloader = new AdvancedFileDownloader();  //have to create own downloader because vaadin doesn't support download in runtime
-                    downloader.addAdvancedDownloaderListener(downloadEvent -> {
-                        File fileToDownload = fileService.extractFromArchive(attempt.getFilename());  //tmp file
-                        downloader.setFilePath(fileToDownload.getAbsolutePath());                     //setting filepath in runtime
-                    });
-                    downloader.extend(downloadBtn);
-                } else {
-                    downloadBtn.setEnabled(false);
-                    downloadBtn.setComponentError(new UserError("File not available for download!"));
-                }
-            }
+            Button downloadBtn = createDownloadButton(attempt);
             detailedContent.addComponent(downloadBtn);
 
             /*Reprocess functionality*/
-            reprocessBtn.addClickListener((Button.ClickListener) event -> fileService.reprocess(attempt));
             detailedContent.addComponent(reprocessBtn);
 
         });
@@ -255,6 +247,48 @@ public class MessagesGridFragment extends AbstractGridFragment {
             getUI().removeWindow(detailedView);
         });
         getUI().addWindow(detailedView);
+    }
+
+    private Button createReprocessButton(Attempt attempt) {
+        Button reprocessBtn = new Button("Reprocess");
+        File fileToOperate = new File(attempt.getFilename());
+        if (!fileToOperate.exists()) {
+            reprocessBtn.setEnabled(false);
+            reprocessBtn.setComponentError(new UserError("File not available for reprocess!"));
+        }
+
+        reprocessBtn.addClickListener((Button.ClickListener) event -> {
+            ConfirmDialog.show(getUI(), "Please Confirm:", "Are you really sure?", "YES", "NO", new ConfirmDialog.Listener() {
+                public void onClose(ConfirmDialog dialog) {
+                    if (dialog.isConfirmed()) {
+                        fileService.reprocess(attempt);
+                    }
+                }
+            });
+        });
+        return reprocessBtn;
+    }
+
+    private Button createDownloadButton(Attempt attempt) {
+        Button downloadBtn = new Button("Download");
+        File fileToOperate = new File(attempt.getFilename());
+        if (fileToOperate.exists()) {
+            Resource resource = new FileResource(fileToOperate);
+            new FileDownloader(resource).extend(downloadBtn);
+        } else {
+            if (fileService.fileArchived(attempt.getFilename())) { //file can be fetched from archive in runtime only, download via listener
+                AdvancedFileDownloader downloader = new AdvancedFileDownloader();  //have to create own downloader because vaadin doesn't support download in runtime
+                downloader.addAdvancedDownloaderListener(downloadEvent -> {
+                    File fileToDownload = fileService.extractFromArchive(attempt.getFilename());  //tmp file
+                    downloader.setFilePath(fileToDownload.getAbsolutePath());                     //setting filepath in runtime
+                });
+                downloader.extend(downloadBtn);
+            } else {
+                downloadBtn.setEnabled(false);
+                downloadBtn.setComponentError(new UserError("File not available for download!"));
+            }
+        }
+        return downloadBtn;
     }
 
     private long extractAttemptCreationTimestamp(String id) {
