@@ -11,7 +11,7 @@
     create: yes
     dest: "{{report_path}}/validator-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
-    line: 'Test counter,Test file,Expected test results,Test result'
+    line: 'Test counter,Test file,Expected test results,Test result, Notes'
 
 - name: update test results
   delegate_to: localhost
@@ -20,7 +20,7 @@
     dest: "{{report_path}}/validator-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
     line: '{{ counter }},{{ file }},{{ expected }} {{ expected1 }} 
-    {{ expected2 }} {{ expected3 }} {{ expected4 }} {{ expected5 }} {{ expected6 }} ,{{ assert_result }}'
+    {{ expected2 }} {{ expected3 }} {{ expected4 }} {{ expected5 }} {{ expected6 }} ,{{ assert_result }}, {{ notes }}'
 
 #kind of global variable reseter->
 - include: variable_cleaner.yml
