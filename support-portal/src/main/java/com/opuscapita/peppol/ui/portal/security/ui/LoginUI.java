@@ -3,6 +3,9 @@ package com.opuscapita.peppol.ui.portal.security.ui;
 import com.opuscapita.peppol.ui.portal.security.UmsAuthenticationProvider;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.event.FieldEvents;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
@@ -52,6 +55,28 @@ public class LoginUI extends UI {
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
+
+        ShortcutListener usernameShortCutListener = new ShortcutListener("Shortcut Name", ShortcutAction.KeyCode.ENTER, null) {
+            @Override
+            public void handleAction(Object sender, Object target) {
+                password.focus();
+            }
+        };
+
+        ShortcutListener passwordShortCutListener = new ShortcutListener("Shortcut Name", ShortcutAction.KeyCode.ENTER, null) {
+            @Override
+            public void handleAction(Object sender, Object target) {
+                loginButtonClick(null);
+            }
+        };
+
+        user.addFocusListener((FieldEvents.FocusListener) event -> user.addShortcutListener(usernameShortCutListener));
+        user.addBlurListener((FieldEvents.BlurListener) event -> user.removeShortcutListener(usernameShortCutListener));
+
+        password.addFocusListener((FieldEvents.FocusListener) event -> password.addShortcutListener(passwordShortCutListener));
+        password.addBlurListener((FieldEvents.BlurListener) event -> password.removeShortcutListener(passwordShortCutListener));
+
+
 
         VerticalLayout uiLayout = new VerticalLayout(fields);
         uiLayout.setSizeFull();
