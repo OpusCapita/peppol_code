@@ -15,4 +15,5 @@
 - set_fact: result_passed=
 - set_fact: result_identifier=
 - set_fact: result_validationError=
+- set_fact: notes=
 ...
