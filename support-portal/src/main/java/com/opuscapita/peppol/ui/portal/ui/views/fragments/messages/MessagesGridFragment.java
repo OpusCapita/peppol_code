@@ -18,7 +18,6 @@ import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.dialogs.ConfirmDialog;
 
 import java.io.File;
 import java.time.Instant;
@@ -84,7 +83,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
         addComponent(grid);
 
         MultiSelectionModelImpl<Message> selectionModel = (MultiSelectionModelImpl<Message>) grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        selectionModel.setSelectAllCheckBoxVisibility(MultiSelectionModel.SelectAllCheckBoxVisibility.VISIBLE);
+        selectionModel.setSelectAllCheckBoxVisibility(MultiSelectionModel.SelectAllCheckBoxVisibility.HIDDEN);
         Editor messageEditor = new Editor(fileService);
         grid.asMultiSelect().addSelectionListener(messageEditor);
         addComponent(messageEditor);
@@ -258,13 +257,45 @@ public class MessagesGridFragment extends AbstractGridFragment {
         }
 
         reprocessBtn.addClickListener((Button.ClickListener) event -> {
-            ConfirmDialog.show(getUI(), "Please Confirm:", "Are you really sure?", "YES", "NO", new ConfirmDialog.Listener() {
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        fileService.reprocess(attempt);
-                    }
-                }
+            Window yesNoDialog = new Window("Confirmation");
+            VerticalLayout layout = new VerticalLayout();
+            HorizontalLayout buttonLayout = new HorizontalLayout();
+            buttonLayout.setSizeFull();
+            Button yes = new Button("Yes");
+            yes.setSizeUndefined();
+            yes.addClickListener((Button.ClickListener) clickEvent -> {
+                fileService.reprocess(attempt);  //reprocess happens here
+                yesNoDialog.close();
             });
+            buttonLayout.addComponent(yes);
+
+            Button cancel = new Button("Cancel");
+            cancel.setSizeUndefined();
+            cancel.addClickListener((Button.ClickListener) clickEvent -> yesNoDialog.close());
+            buttonLayout.addComponent(cancel);
+
+            layout.addComponent(new Label("Reprocess " + new File(attempt.getFilename()).getName() + " ?"));
+            layout.setSpacing(true);
+            layout.setMargin(true);
+            layout.setSizeFull();
+            buttonLayout.setComponentAlignment(yes, Alignment.BOTTOM_LEFT);
+            buttonLayout.setComponentAlignment(cancel, Alignment.BOTTOM_RIGHT);
+            layout.addComponent(buttonLayout);
+            layout.setComponentAlignment(buttonLayout, Alignment.BOTTOM_CENTER);
+
+            yesNoDialog.setContent(layout);
+            yesNoDialog.setModal(true);
+            yesNoDialog.setResizable(false);
+            yesNoDialog.setHeight(200, Unit.PIXELS);
+            yesNoDialog.setWidth(500, Unit.PIXELS);
+            yesNoDialog.center();
+            yesNoDialog.addCloseListener((Window.CloseListener) e -> {
+                yesNoDialog.setModal(false);
+                yesNoDialog.setVisible(false);
+                getUI().removeWindow(yesNoDialog);
+            });
+
+            getUI().addWindow(yesNoDialog);
         });
         return reprocessBtn;
     }
