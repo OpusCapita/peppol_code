@@ -58,6 +58,16 @@ public class FileService {
             e.printStackTrace();
         }
         logger.info("Initialised archive catalogue with total of : " + catalogue.size() + " entries!");
+        try {
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(catalogue);
+            oos.close();
+            logger.info("Archive size: " + baos.size() + " bytes");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //new event about file being reprocessed should be handled in transports
@@ -84,9 +94,9 @@ public class FileService {
         String archive = archiveDirectory + catalogue.get(fileName);
         logger.info("Starting to unarchive file: " + fileName + " from: " + archive);
         try (                                                                                                                                           //using AutoCloseable
-               InputStream is = new BufferedInputStream(new GZIPInputStream(new FileInputStream(archive)));    //gz
-               TarArchiveInputStream tarInput = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", is);     //tar
-               BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(targetFileName))                                       //target
+                                                                                                                                                        InputStream is = new BufferedInputStream(new GZIPInputStream(new FileInputStream(archive)));    //gz
+                                                                                                                                                        TarArchiveInputStream tarInput = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", is);     //tar
+                                                                                                                                                        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(targetFileName))                                       //target
         ) {
             TarArchiveEntry entry;
             while ((entry = tarInput.getNextTarEntry()) != null) {

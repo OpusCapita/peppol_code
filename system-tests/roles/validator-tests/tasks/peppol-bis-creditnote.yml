@@ -2,13 +2,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R005.xml
 - set_fact: expected="'BII2-T14-R005'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -24,22 +24,26 @@
 
 #-------------------------------
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R006.xml
-- set_fact: expected="'BII2-T14-R006'"
+#- set_fact: expected="'BII2-T14-R006'"
+#this error happens before validation, in document loader so custom check is needed
+- set_fact: expected="Missing mandatory field{{":"}} sender_name"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
+- set_fact: notes="BII2-T14-R006- Missing mandatory field sender_name- custom test as document loader checks for mandatory fields before validation"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
+- set_fact: result_identifier="{{ result_errors.0.message }}"
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
+      - "expected in result_identifier"
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -50,13 +54,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R010.xml
 - set_fact: expected="'BII2-T14-R010'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -74,13 +78,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R011.xml
 - set_fact: expected="'BII2-T14-R011'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -98,13 +102,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R012.xml
 - set_fact: expected="'BII2-T14-R012'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -122,13 +126,16 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R015.xml
 - set_fact: expected="'BII2-T14-R015'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
+- debug: var=result_errors
+- debug: var=result_validationError
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
+- debug: var=result_identifier
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -147,15 +154,15 @@
 - set_fact: expected="'BII2-T14-R018'"
 - set_fact: expected1="'BII2-T14-R019'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -174,13 +181,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R021.xml
 - set_fact: expected="'BII2-T14-R021'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -198,13 +205,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R025.xml
 - set_fact: expected="'BII2-T14-R025'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -222,13 +229,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R026.xml
 - set_fact: expected="'BII2-T14-R026'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -247,15 +254,15 @@
 - set_fact: expected="'BII2-T14-R058'"
 - set_fact: expected1="'BII2-T14-R027'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -274,13 +281,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R029.xml
 - set_fact: expected="'BII2-T14-R029'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -298,13 +305,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R030.xml
 - set_fact: expected="'BII2-T14-R030'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -322,13 +329,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R032.xml
 - set_fact: expected="'BII2-T14-R032'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -346,13 +353,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R034.xml
 - set_fact: expected="'BII2-T14-R034'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -370,13 +377,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R035.xml
 - set_fact: expected="'BII2-T14-R035'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -394,13 +401,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R037.xml
 - set_fact: expected="'BII2-T14-R037'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -418,13 +425,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R043.xml
 - set_fact: expected="'BII2-T14-R043'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -442,13 +449,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R044.xml
 - set_fact: expected="'BII2-T14-R044'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -466,13 +473,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R045.xml
 - set_fact: expected="'BII2-T14-R045'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -490,13 +497,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R046.xml
 - set_fact: expected="'BII2-T14-R046'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -514,13 +521,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R047.xml
 - set_fact: expected="'BII2-T14-R047'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -539,15 +546,15 @@
 - set_fact: expected="'BII2-T14-R047'"
 - set_fact: expected1="'BII2-T14-R048'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
-- set_fact: result_identifier1="{{ result_errors1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -568,17 +575,17 @@
 - set_fact: expected1="'BII2-T14-R058'"
 - set_fact: expected2="'BII2-T14-R049'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -599,15 +606,15 @@
 - set_fact: expected="'BII2-T14-R050'"
 - set_fact: expected1="'BII2-T14-R045'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
-- set_fact: result_identifier1="{{ result_errors1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -626,13 +633,13 @@
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R051.xml
 - set_fact: expected="'BII2-T14-R051'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -652,17 +659,17 @@
 - set_fact: expected1="'BII2-T14-R052'"
 - set_fact: expected2="'BII2-T14-R053'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -683,15 +690,15 @@
 - set_fact: expected="'BII2-T14-R053'"
 - set_fact: expected1="'BII2-T14-R056'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -711,15 +718,15 @@
 - set_fact: expected="'BII2-T14-R052'"
 - set_fact: expected1="'BII2-T14-R054'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -739,15 +746,15 @@
 - set_fact: expected="'BII2-T14-R052'"
 - set_fact: expected1="'BII2-T14-R055'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -773,9 +780,9 @@
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_warnings.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -797,29 +804,20 @@
 - set_fact: expected1="'BII2-T14-R019'"
 - set_fact: expected2="'BII2-T14-R032'"
 - set_fact: expected3="'BII2-T14-R033'"
-- set_fact: expected4="'CL-T14-R003'"
-- set_fact: expected5="'PEPPOL_CORE_R001'"
-- set_fact: expected6="'PEPPOL_CORE_R002'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier3="{{ result_errors.3.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
-- set_fact: result_identifier4="{{ result_errors.4.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
-- set_fact: result_identifier5="{{ result_warnings.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
-- set_fact: result_identifier6="{{ result_warnings.1.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -830,9 +828,6 @@
       - "result_identifier1 == {{ expected1 }} "
       - "result_identifier2 == {{ expected2 }} "
       - "result_identifier3 == {{ expected3 }} "
-      - "result_identifier4 == {{ expected4 }} "
-      - "result_identifier5 == {{ expected5 }} "
-      - "result_identifier6 == {{ expected6 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -844,15 +839,15 @@
 - set_fact: expected="'EUGEN-T14-R055'"
 - set_fact: expected1="'PEPPOL_CORE_R001'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_warnings.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes

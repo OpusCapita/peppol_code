@@ -24,7 +24,7 @@ import org.springframework.session.config.annotation.web.http.EnableSpringHttpSe
 @EnableJpaRepositories(basePackages = {"com.opuscapita.peppol.ui.portal.model"})
 @EntityScan(basePackages = {"com.opuscapita.peppol.commons.model", "com.opuscapita.peppol.commons.revised_model"})
 @EnableDiscoveryClient
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 public class PortalApplication extends WebSecurityConfigurerAdapter {
     public static void main(String[] args) {
