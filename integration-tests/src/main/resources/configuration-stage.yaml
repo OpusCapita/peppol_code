@@ -253,11 +253,11 @@ tests:
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-error
-                timeout: 1500
+                timeout: 2000
                 consumers: 16
             - mq subscriber:
                 source queue: preprocessing-out
-                timeout: 1500
+                timeout: 2000
                 consumers: 17
             - directory subscriber:
                 consumers: 18 19
