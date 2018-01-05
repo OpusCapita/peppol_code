@@ -6,10 +6,10 @@ import com.opuscapita.peppol.commons.validation.ValidationResult;
 import com.opuscapita.peppol.test.util.ContainerMessageTestLoader;
 import com.opuscapita.peppol.validator.DifiTestConfig;
 import com.opuscapita.peppol.validator.validations.common.TestCommon;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,11 +23,10 @@ import static org.junit.Assert.fail;
 /**
  * Created by bambr on 16.7.10.
  */
-@Ignore("For some reason DocumentLoader refuses to load templates")
-
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = DifiTestConfig.class)
+@EnableConfigurationProperties
 public class DifiValidationControllerTest extends TestCommon {
     private String[] documentProfilesToBeTested = { "svefaktura1", "difi", "simpler_invoicing" };
 

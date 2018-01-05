@@ -23,6 +23,7 @@ peppol:
       enabled: true
     sbdh:
       xsd: xsd/StandardBusinessDocumentHeader.xsd
+      xsdplus: xsd/StandardBusinessDocumentHeader.xsd
     rules:
       directory: src/test/resources/rules
     svefaktura1:

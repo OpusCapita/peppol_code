@@ -21,7 +21,7 @@ public class OxalisErrorRecognizer {
     }
 
     @NotNull
-    public SendingErrors recognize(@NotNull Exception e) {
+    public SendingErrors recognize(@NotNull Throwable e) {
         if (e.getMessage() == null) {
             return SendingErrors.OTHER_ERROR;
         }

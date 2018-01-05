@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @author Sergejs.Roze
@@ -16,7 +15,7 @@ public class LocalFileSource implements FileSource {
     private String directory;
 
     @Override
-    public File getFile(@NotNull String fileName) throws IOException {
+    public File getFile(@NotNull String fileName) {
         return new File(directory, fileName);
     }
 
