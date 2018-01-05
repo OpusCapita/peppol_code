@@ -112,11 +112,15 @@ public class EventingMessageUtil {
         return result;
     }
 
-    public static void updateFileNameInAttempt(ContainerMessage containerMessage) {
+    public static void updateEventingInformation(ContainerMessage containerMessage) {
         if(containerMessage.getProcessingInfo() != null) {
             Message message = containerMessage.getProcessingInfo().getEventingMessage();
             if(message != null) {
                 message.getAttempts().last().setFileName(containerMessage.getFileName());
+                message.setDocumentType(containerMessage.getDocumentInfo().getDocumentType());
+                message.setDocumentNumber(containerMessage.getDocumentInfo().getDocumentId());
+                message.setDocumentDate(containerMessage.getDocumentInfo().getIssueDate());
+                message.setDueDate(containerMessage.getDocumentInfo().getDueDate());
             }
         }
     }

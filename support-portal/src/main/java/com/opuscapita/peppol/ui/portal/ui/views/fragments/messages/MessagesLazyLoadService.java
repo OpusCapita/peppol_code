@@ -63,4 +63,13 @@ public class MessagesLazyLoadService {
     }
 
 
+    public List<Message> findByInboundAndTerminalAndStatusContains(boolean inbound, boolean terminal, String keyWord, int offset, int limit, Map<String, Boolean> sortOrders) {
+        PageRequest pageRequest = composePageRequest(offset, limit, sortOrders);
+        List<Message> items = messagesRepository.findMessagesByInboundAndAttemptsEventsTerminalAndAttemptsEventsStatusContains(inbound, terminal, keyWord, pageRequest).getContent();
+        return items;
+    }
+
+    public int countByInboundAndTerminalAndStatusContains(boolean inbound, boolean terminal, String keyWord) {
+        return Math.toIntExact(messagesRepository.countMessagesByInboundAndAttemptsEventsTerminalAndAttemptsEventsStatusContains(inbound, terminal, keyWord));
+    }
 }

@@ -13,6 +13,10 @@ public class DTOTransformer {
         result.setId(internalMessage.getId());
         result.setCreated(internalMessage.getCreated());
         result.setAttempts(DTOTransformer.fromEventingAttempts(internalMessage.getAttempts(), result));
+        result.setDocumentType(internalMessage.getDocumentType());
+        result.setDocumentNumber(internalMessage.getDocumentNumber());
+        result.setDocumentDate(internalMessage.getDocumentDate());
+        result.setDueDate(internalMessage.getDueDate());
         return result;
     }
 

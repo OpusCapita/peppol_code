@@ -1,0 +1,708 @@
+peppol:
+  email-notificator:
+    queue:
+      in:
+        name: devnull
+  component:
+    name: validator
+  eventing:
+    queue:
+      in:
+        name: ignore
+  storage:
+    short: /tmp
+    long: /tmp
+  validation:
+    artifacts:
+      difi.path: src/test/resources/difi_artifacts
+      si.path: src/test/resources/difi_artifacts
+      at.path: src/test/resources/difi_artifacts
+    consume-queue: devnull
+  validator:
+    difi:
+      enabled: true
+    sbdh:
+      xsd: xsd/StandardBusinessDocumentHeader.xsd
+    rules:
+      directory: src/test/resources/rules
+    svefaktura1:
+      xsd:
+        path: svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd
+      schematron:
+        enabled: true
+        path: svefaktura1/rules_svefaktura_2016-09-01.xsl
+    document:
+      types:
+        # Svefaktura1
+        "urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:BasicInvoice:1:0":
+          - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
+          - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
+        "urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1|0":
+          - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
+          - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
+
+        # Artifacts-tool output
+        "urn:www|cenbii|eu:profile:bii01:ver2|0###urn:www|cenbii|eu:transaction:biitrns019:ver2|0:extended:urn:www|peppol|eu:bis:peppol1a:ver2|0":
+          - "eu.peppol.postaward.ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T19.xsl"
+          - "eu.peppol.postaward.ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T19.xsl"
+          - "org.oasis-open.ubl.ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Catalogue-2.1.xsd"
+          - "eu.peppol.postaward.ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+        "urn:www|cenbii|eu:profile:bii01:ver2|0###urn:www|cenbii|eu:transaction:biitrns019:ver2|0:extended:urn:www|peppol|eu:bis:peppol1a:ver2|0:extended:urn:www|difi|no:ehf:katalog:ver1|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T19|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T19|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T19|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Catalogue-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:bii01:ver2|0###urn:www|cenbii|eu:transaction:biitrns058:ver2|0:extended:urn:www|peppol|eu:bis:peppol1a:ver2|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T58|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T58|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-ApplicationResponse-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T58|xsl"
+        "urn:www|cenbii|eu:profile:bii01:ver2|0###urn:www|cenbii|eu:transaction:biitrns058:ver2|0:extended:urn:www|peppol|eu:bis:peppol1a:ver2|0:extended:urn:www|difi|no:ehf:katalogbekreftelse:ver1|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T58|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T58|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T58|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-ApplicationResponse-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:bii03:ver2|0###urn:www|cenbii|eu:transaction:biitrns001:ver2|0:extended:urn:www|peppol|eu:bis:peppol03a:ver2|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T01|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T01|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Order-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T01|xsl"
+        "urn:www|cenbii|eu:profile:bii04:ver1|0###urn:www|cenbii|eu:transaction:biicoretrdm010:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T10|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Invoice-2|1|xsd"
+        "urn:www|cenbii|eu:profile:bii04:ver2|0###urn:www|cenbii|eu:transaction:biitrns010:ver2|0:extended:urn:www|peppol|eu:bis:peppol4a:ver2|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T10|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T10|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Invoice-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T10|xsl"
+        "urn:www|cenbii|eu:profile:bii04:ver2|0###urn:www|cenbii|eu:transaction:biitrns010:ver2|0:extended:urn:www|peppol|eu:bis:peppol4a:ver2|0:extended:urn:www|difi|no:ehf:faktura:ver2|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NONAT-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T10|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Invoice-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:bii05:ver1|0###urn:www|cenbii|eu:transaction:biicoretrdm010:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T10|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Invoice-2|1|xsd"
+        "urn:www|cenbii|eu:profile:bii05:ver1|0###urn:www|cenbii|eu:transaction:biicoretrdm014:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T14|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-CreditNote-2|1|xsd"
+        "urn:www|cenbii|eu:profile:bii05:ver2|0###urn:www|cenbii|eu:transaction:biitrns010:ver2|0:extended:urn:www|peppol|eu:bis:peppol5a:ver2|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T10|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T10|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Invoice-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T10|xsl"
+        "urn:www|cenbii|eu:profile:bii05:ver2|0###urn:www|cenbii|eu:transaction:biitrns010:ver2|0:extended:urn:www|peppol|eu:bis:peppol5a:ver2|0:extended:urn:www|difi|no:ehf:faktura:ver2|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NONAT-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T10|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Invoice-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:bii05:ver2|0###urn:www|cenbii|eu:transaction:biitrns014:ver2|0:extended:urn:www|peppol|eu:bis:peppol5a:ver2|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T14|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T14|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-CreditNote-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T14|xsl"
+        "urn:www|cenbii|eu:profile:bii05:ver2|0###urn:www|cenbii|eu:transaction:biitrns014:ver2|0:extended:urn:www|peppol|eu:bis:peppol5a:ver2|0:extended:urn:www|difi|no:ehf:kreditnota:ver2|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NONAT-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T14|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-CreditNote-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:bii18:ver1|0###urn:www|cenbii|eu:transaction:biitrns077:ver2|0:extended:www|peppol|eu:bis:peppol18a:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T77|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T77|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Catalogue-2|1|xsd"
+        "urn:www|cenbii|eu:profile:bii18:ver1|0###urn:www|cenbii|eu:transaction:biitrns077:ver2|0:extended:www|peppol|eu:bis:peppol18a:ver1|0:extended:urn:fdc:difi|no:2017:ehf:spec:1|0":
+        "urn:www|cenbii|eu:profile:bii28:ver2|0###urn:www|cenbii|eu:transaction:biitrns001:ver2|0:extended:urn:www|peppol|eu:bis:peppol28a:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T01|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T01|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Order-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T01|xsl"
+        "urn:www|cenbii|eu:profile:bii28:ver2|0###urn:www|cenbii|eu:transaction:biitrns001:ver2|0:extended:urn:www|peppol|eu:bis:peppol28a:ver1|0:extended:urn:www|difi|no:ehf:ordre:ver1|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T01|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T01|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T01|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Order-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:bii28:ver2|0###urn:www|cenbii|eu:transaction:biitrns076:ver2|0:extended:urn:www|peppol|eu:bis:peppol28a:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T76|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T76|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-OrderResponse-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T76|xsl"
+        "urn:www|cenbii|eu:profile:bii28:ver2|0###urn:www|cenbii|eu:transaction:biitrns076:ver2|0:extended:urn:www|peppol|eu:bis:peppol28a:ver1|0:extended:urn:www|difi|no:ehf:ordrebekreftelse:ver1|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T76|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T76|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T76|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-OrderResponse-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:bii30:ver2|0###urn:www|cenbii|eu:transaction:biitrns016:ver1|0:extended:urn:www|peppol|eu:bis:peppol30a:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T16|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T16|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-DespatchAdvice-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T16|xsl"
+        "urn:www|cenbii|eu:profile:bii30:ver2|0###urn:www|cenbii|eu:transaction:biitrns016:ver1|0:extended:urn:www|peppol|eu:bis:peppol30a:ver1|0:extended:urn:www|difi|no:ehf:pakkseddel:ver1|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T16|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T16|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T16|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-DespatchAdvice-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:bii36:ver2|0###urn:www|cenbii|eu:transaction:biitrns071:ver2|0:extended:urn:www|peppol|eu:bis:peppol36a:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T71|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T71|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-ApplicationResponse-2|1|xsd"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOLCORE-UBL-T71|xsl"
+        "urn:www|cenbii|eu:profile:bii42:ver1|0###urn:www|cenbii|eu:transaction:biitrns110:ver1|0:extended:urn:www|peppol|eu:bis:peppol42a:ver1|0":
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/BIIRULES-UBL-T110|xsl"
+          - "eu|peppol|postaward|ver20-e5085a49db8fcf702be9109bf932295f4e838275/xsl/OPENPEPPOL-UBL-T110|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-OrderResponse-2|1|xsd"
+        "urn:www|cenbii|eu:profile:bii42:ver1|0###urn:www|cenbii|eu:transaction:biitrns110:ver1|0:extended:urn:www|peppol|eu:bis:peppol42a:ver1|0:extended:urn:fdc:difi|no:2017:ehf:spec:1|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-T110|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T110|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T110|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-OrderResponse-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:biixx:ver2|0###urn:www|cenbii|eu:transaction:biitrns014:ver2|0:extended:urn:www|cenbii|eu:profile:biixx:ver2|0:extended:urn:www|difi|no:ehf:kreditnota:ver2|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NONAT-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T14|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-CreditNote-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:biixy:ver1|0###urn:www|cenbii|eu:transaction:biicoretrdm017:ver1|0:#urn:www|cenbii|eu:profile:biixy:ver1|0#urn:www|difi|no:ehf:purring:ver1":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NONAT-UBL-T17|xsl"
+          - "org|oasis-open|ubl|ver20-e5f8371423685f23ea02dc4e71e3382c/maindoc/UBL-Reminder-2|0|xsd"
+        "urn:www|cenbii|eu:profile:biixy:ver2|0###urn:www|cenbii|eu:transaction:biitrns010:ver2|0:extended:urn:www|cenbii|eu:profile|eu:biixy:ver2|0:extended:urn:www|difi|no:ehf:faktura:ver2|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NONAT-UBL-T10|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T10|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-Invoice-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+        "urn:www|cenbii|eu:profile:biixy:ver2|0###urn:www|cenbii|eu:transaction:biitrns014:ver2|0:extended:urn:www|cenbii|eu:profile:biixy:ver2|0:extended:urn:www|difi|no:ehf:kreditnota:ver2|0":
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/BIIRULES-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/OPENPEPPOL-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NONAT-UBL-T14|xsl"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/NOGOV-UBL-T14|xsl"
+          - "org|oasis-open|ubl|ver21-d6122e53220eb8e2732ef0d0c7474b21/maindoc/UBL-CreditNote-2|1|xsd"
+          - "no|difi|ehf|postaward-2588ef1183f19c7010fe19a20fd07e118e34d0b9/xsl/EHF-UBL-COMMON|xsl"
+  common:
+    consistency_check_enabled: false
+    document_templates:
+      templates:
+        - name: SVEFAKTURA1.Invoice
+          root: "$SBD/Invoice"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/SellerParty/Party/EndpointID"
+            - "$ROOT/SellerParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/BuyerParty/Party/EndpointID"
+            - "$ROOT/BuyerParty/Party/PartyTaxScheme/CompanyID"
+            mandatory: true
+          - id: version_id
+            constant: '1.0'
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: due_date
+            paths:
+            - "$ROOT/PaymentMeans/DuePaymentDate"
+            mandatory: false
+          - id: sender_name
+            paths:
+            - "$ROOT/SellerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/SellerParty/Party/Address/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/BuyerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/BuyerParty/Party/Address/Country/IdentificationCode"
+            - "$ROOT/BuyerParty/Party/PartyTaxScheme/RegistrationAddress/Country/IdentificationCode"
+            mandatory: false
+            constant: SE
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: ".*urn:sfti:documents:BasicInvoice:1:0.*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            constant: urn:sfti:services:documentprocessing:BasicInvoice:1:0
+          - id: encoded_object_id
+            paths:
+            - "/StandardBusinessDocument/ObjectEnvelope/EncodedObject/ObjectID"
+            mask: "(?!.*).*"
+            mandatory: false
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            constant: urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0
+
+        - name: SVEFAKTURA1.Invoice
+          root: "$SBD/Invoice"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/SellerParty/Party/EndpointID"
+            - "$ROOT/SellerParty/Party/PartyIdentification/ID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/BuyerParty/Party/EndpointID"
+            - "$ROOT/BuyerParty/Party/PartyTaxScheme/CompanyID"
+            mandatory: true
+          - id: version_id
+            constant: '1.0'
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: due_date
+            paths:
+            - "$ROOT/PaymentMeans/DuePaymentDate"
+            mandatory: false
+          - id: sender_name
+            paths:
+            - "$ROOT/SellerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/SellerParty/Party/Address/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/BuyerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/BuyerParty/Party/Address/Country/IdentificationCode"
+            - "$ROOT/BuyerParty/Party/PartyTaxScheme/RegistrationAddress/Country/IdentificationCode"
+            mandatory: false
+            constant: SE
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: ".*urn:sfti:documents:BasicInvoice:1:0.*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            constant: urn:sfti:services:documentprocessing:BasicInvoice:1:0
+          - id: encoded_object_id
+            paths:
+            - "/StandardBusinessDocument/ObjectEnvelope/EncodedObject/ObjectID"
+            mandatory: true
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            constant: urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0
+
+        - name: EHF.CreditNote
+          root: "$SBD/CreditNote"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/AccountingSupplierParty/EndpointID"
+            - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf.*"
+
+        - name: EHF.Invoice
+          root: "$SBD/Invoice"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+            - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: due_date
+            paths:
+            - "$ROOT/PaymentMeans/PaymentDueDate"
+            mandatory: false
+          - id: sender_name
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf.*"
+
+        - name: EHF.Invoice
+          root: Invoice
+          fields:
+          - id: sender_id
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+            - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: due_date
+            paths:
+            - "$ROOT/PaymentMeans/PaymentDueDate"
+            mandatory: false
+          - id: sender_name
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: ".*extended:urn:www.difi.no:ehf.*"
+
+        - name: PEPPOL_BIS.CreditNote
+          root: "$SBD/CreditNote"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/AccountingSupplierParty/EndpointID"
+            - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: sender_name
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: "(?!.*extended:urn:www.difi.no:ehf.*).*"
+
+        - name: PEPPOL_BIS.Invoice
+          root: "$SBD/Invoice"
+          fields:
+          - id: sender_id
+            paths:
+            - "$SBDH/Sender/Identifier"
+            - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+            - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$SBDH/Receiver/Identifier"
+            - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$SBDH/DocumentIdentification/TypeVersion"
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: due_date
+            paths:
+            - "$ROOT/PaymentMeans/PaymentDueDate"
+            mandatory: false
+          - id: sender_name
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: svefaktura_id
+            paths:
+            - "$SBDH/DocumentIdentification/Standard"
+            mandatory: false
+            mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: "(?!.*extended:urn:www.difi.no:ehf.*).*"
+
+        - name: PEPPOL_BIS.Invoice
+          root: Invoice
+          fields:
+          - id: sender_id
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+            - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: recipient_id
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+            - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
+            mandatory: true
+          - id: version_id
+            paths:
+            - "$ROOT/UBLVersionID"
+            mandatory: true
+          - id: document_id
+            paths:
+            - "$ROOT/ID"
+            mandatory: true
+          - id: issue_date
+            paths:
+            - "$ROOT/IssueDate"
+            mandatory: true
+          - id: due_date
+            paths:
+            - "$ROOT/PaymentMeans/PaymentDueDate"
+            mandatory: false
+          - id: sender_name
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+            mandatory: true
+          - id: sender_country_code
+            paths:
+            - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: recipient_name
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+            mandatory: true
+          - id: recipient_country_code
+            paths:
+            - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+            mandatory: true
+          - id: profile_id
+            paths:
+            - "$ROOT/ProfileID"
+            mandatory: true
+            mask: urn:www\.cenbii\.eu:profile:bii(04|05|xx):ver[1-2]\.0
+          - id: customization_id
+            paths:
+            - "$ROOT/CustomizationID"
+            mandatory: true
+            mask: "(?!.*extended:urn:www.difi.no:ehf.*).*"
+
+snc:
+  enabled: true
+  rest:
+    url: localhost
+    username: test
+    password: test
+  bsc: test
+  from: test
+  businessGroup: test
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: false

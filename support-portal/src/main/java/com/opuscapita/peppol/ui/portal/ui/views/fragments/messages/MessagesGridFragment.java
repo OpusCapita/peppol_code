@@ -16,6 +16,7 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +24,12 @@ import java.io.File;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MessagesGridFragment extends AbstractGridFragment {
     private static final Logger logger = LoggerFactory.getLogger(MessagesGridFragment.class);
@@ -34,6 +37,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
     private final Grid<Message> grid;
     private final GridFragmentType direction;
     private final GridFragmentMode mode;
+    private final HorizontalLayout filterBar;
     private FileService fileService;
 
     public MessagesGridFragment(GridFragmentType direction, GridFragmentMode mode, MessagesLazyLoadService messagesLazyLoadService, FileService fileService) {
@@ -44,30 +48,8 @@ public class MessagesGridFragment extends AbstractGridFragment {
         grid = new Grid<>();
         setupGridColumns();
         grid.setSizeFull();
+        grid.addStyleName("cellFontSizeOverride");
 
-        AtomicBoolean isInbound = new AtomicBoolean(false);
-        AtomicBoolean isTerminal = new AtomicBoolean(false);
-        AtomicBoolean all = new AtomicBoolean(false);
-        AtomicInteger count = new AtomicInteger(0);
-        switch (direction) {
-            case INBOUND:
-                isInbound.set(true);
-                break;
-            case OUTBOUND:
-                isInbound.set(false);
-                break;
-            default:
-                throw new IllegalStateException("This component is supposed to handle only INBOUND and OUTBOUND as directions");
-        }
-        switch (mode) {
-            case DELIVERED:
-                isTerminal.set(true);
-                break;
-            case ALL:
-                all.set(true);
-                break;
-        }
-        count.set(all.get() ? messagesLazyLoadService.countByInbound(isInbound.get()) : messagesLazyLoadService.countByInboundAndTerminal(isInbound.get(), isTerminal.get()));
         //TODO add filters here and to messages service also
         grid.setDataProvider(
                 (sortOrders, offset, limit) -> {
@@ -75,20 +57,103 @@ public class MessagesGridFragment extends AbstractGridFragment {
                             .collect(Collectors.toMap(
                                     sort -> sort.getSorted(),
                                     sort -> sort.getDirection() == SortDirection.ASCENDING));
-
-                    return all.get() ? messagesLazyLoadService.findByInbound(isInbound.get(), offset, limit, sortOrder).stream() : messagesLazyLoadService.findByInboundAndTerminal(isInbound.get(), isTerminal.get(), offset, limit, sortOrder).stream();
+                    return prepareGridData(mode, direction, messagesLazyLoadService, offset, limit, sortOrder);
                 },
-                () -> count.get()
+                () -> getGridDataCount(mode, direction, messagesLazyLoadService)
         );
+
+        filterBar = new HorizontalLayout();
+        setupFilterBar();
+        filterBar.setSizeUndefined();
+        filterBar.setMargin(false);
+        filterBar.setVisible(true);
+        addComponent(filterBar);
         addComponent(grid);
 
         MultiSelectionModelImpl<Message> selectionModel = (MultiSelectionModelImpl<Message>) grid.setSelectionMode(Grid.SelectionMode.MULTI);
         selectionModel.setSelectAllCheckBoxVisibility(MultiSelectionModel.SelectAllCheckBoxVisibility.HIDDEN);
         Editor messageEditor = new Editor(fileService);
         grid.asMultiSelect().addSelectionListener(messageEditor);
+
         addComponent(messageEditor);
-        setExpandRatio(grid, 9);
+
+        setExpandRatio(filterBar, 1);
+        setExpandRatio(grid, 10);
         setExpandRatio(messageEditor, 1);
+    }
+
+    private void setupFilterBar() {
+        ArrayList<Map.Entry> fieldsList = new ArrayList<>();
+        grid.getColumns().stream().filter(column -> column.isSortable() && column.getId() != null).forEach(column -> fieldsList.add(new AbstractMap.SimpleEntry(column.getId(), column.getCaption())));
+        Label fieldLabel = new Label("Select filter field");
+        filterBar.addComponent(fieldLabel);
+        ComboBox<Map.Entry> fieldSelect = new ComboBox<>();
+        fieldSelect.setItems(fieldsList);
+        fieldSelect.setWidth(240, Unit.PIXELS);
+        fieldSelect.setItemCaptionGenerator((ItemCaptionGenerator<Map.Entry>) item -> item.getValue().toString());
+        filterBar.addComponent(fieldSelect);
+        TextField filterValue = new TextField();
+        filterValue.setPlaceholder("Enter filter criteria value, please...");
+        filterValue.setWidth(300, Unit.PIXELS);
+        filterBar.addComponent(filterValue);
+        Button performFilteringButton = new Button("Go!!!");
+        performFilteringButton.addClickListener((Button.ClickListener) event -> {
+            //Cast filtering spell magic here!!!
+        });
+        filterBar.addComponent(performFilteringButton);
+    }
+
+    private int getGridDataCount(GridFragmentMode mode, GridFragmentType direction, MessagesLazyLoadService messagesLazyLoadService) {
+        String keyWord = getKeyWordByMode(mode);
+        boolean inbound = direction == GridFragmentType.INBOUND;
+        if (mode == GridFragmentMode.ALL) {
+            return messagesLazyLoadService.countByInbound(inbound);
+        } else {
+            boolean terminal = mode != GridFragmentMode.REPROCESSING;
+            if (keyWord == null) {
+                return messagesLazyLoadService.countByInboundAndTerminal(inbound, terminal);
+            } else {
+                return messagesLazyLoadService.countByInboundAndTerminalAndStatusContains(inbound, terminal, keyWord);
+            }
+        }
+    }
+
+    private Stream<Message> prepareGridData(GridFragmentMode mode, GridFragmentType direction, MessagesLazyLoadService messagesLazyLoadService, int offset, int limit, Map<String, Boolean> sortOrder) {
+        String keyWord = getKeyWordByMode(mode);
+        boolean inbound = direction == GridFragmentType.INBOUND;
+        if (mode == GridFragmentMode.ALL) {
+            return messagesLazyLoadService.findByInbound(inbound, offset, limit, sortOrder).stream();
+        } else {
+            boolean terminal = mode != GridFragmentMode.REPROCESSING;
+            if (keyWord == null) {
+                return messagesLazyLoadService.findByInboundAndTerminal(inbound, terminal, offset, limit, sortOrder).stream();
+            } else {
+                return messagesLazyLoadService.findByInboundAndTerminalAndStatusContains(inbound, terminal, keyWord, offset, limit, sortOrder).stream();
+            }
+        }
+    }
+
+    @Nullable
+    private String getKeyWordByMode(GridFragmentMode mode) {
+        String keyWord = null;
+        switch (mode) {
+            case DELIVERED:
+                keyWord = "delivered";
+                break;
+            case ALL:
+                keyWord = null;
+                break;
+            case FAILED:
+                keyWord = "failed";
+                break;
+            case REJECTED:
+                keyWord = "failed with I/O error";
+                break;
+            case REPROCESSING:
+                keyWord = "reprocessing";
+                break;
+        }
+        return keyWord;
     }
 
     private void setupGridColumns() {
@@ -108,6 +173,22 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 .setId("recipient")
                 .setSortProperty("recipient")
                 .setHidable(true);
+        grid.addColumn(Message::getDocumentType).setCaption("Document type")
+                .setSortable(true)
+                .setId("document_type")
+                .setSortProperty("document_type")
+                .setHidable(true);
+        grid.addColumn(Message::getDocumentNumber).setCaption("Document number")
+                .setSortable(true)
+                .setId("document_number")
+                .setSortProperty("document_number")
+                .setHidable(true);
+        grid.addColumn(Message::getDocumentDate).setCaption("Document date")
+                .setSortable(true)
+                .setId("document_date")
+                .setSortProperty("document_date")
+                .setHidable(true);
+
         grid.addColumn((ValueProvider<Message, String>) message ->
                 Instant.ofEpochMilli(message.getCreated()).atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .setCaption("Created")
@@ -117,10 +198,12 @@ public class MessagesGridFragment extends AbstractGridFragment {
         grid.addColumn((ValueProvider<Message, String>) message -> String.valueOf(message.getAttempts().stream().flatMap(attempt -> attempt.getEvents().stream()).filter(event -> event.isTerminal()).count()))
                 .setCaption("Delivered (times)")
                 .setId("delivered")
+                .setSortable(false)
                 .setHidable(true);
         grid.addColumn((ValueProvider<Message, String>) Message::getLastStatus)
                 .setCaption("Last status")
                 .setId("lastStatus")
+                .setSortable(false)
                 .setStyleGenerator((StyleGenerator<Message>) msg -> {
                     switch (msg.getLastStatus().toLowerCase()) {
                         case "delivered":
@@ -142,19 +225,19 @@ public class MessagesGridFragment extends AbstractGridFragment {
             detailsBtn.addClickListener((Button.ClickListener) event -> showDetails(message));
             actionBar.addComponent(detailsBtn);
 
-            Button downloadBtn = createDownloadButton(message.getAttempts().last());
+            /*Button downloadBtn = createDownloadButton(message.getAttempts().last());
             if (downloadBtn.isEnabled()) {
                 downloadBtn.setDescription("Latest file will be downloaded");
             }
             actionBar.addComponent(downloadBtn);
 
             Button reprocessBtn = createReprocessButton(message.getAttempts().last());
-            actionBar.addComponent(reprocessBtn);
+            actionBar.addComponent(reprocessBtn);*/
 
 
             result.addComponent(actionBar);
             return result;
-        }).setCaption("");
+        }).setCaption("").setSortable(false);
     }
 
     protected void showDetails(Message message) {
@@ -200,32 +283,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 eventInfo += " " + event.getSource() + " " + event.getDetails() + " " + (event.isTerminal() ? "FINAL" : "");
                 attemptDetailsData.addItem(attemptInfo, eventInfo);
             });
-            /*VerticalLayout attemptDetails = new VerticalLayout();
-            attemptDetails.setSpacing(false);
-            attemptDetails.setMargin(false);
-            attemptDetails.setWidth(100, Unit.PERCENTAGE);
-            attemptDetails.setHeightUndefined();
-            Label attemptTimestampLabel = new Label("<b>Attempt:</b> " + Instant.ofEpochMilli(attempt.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime(), ContentMode.HTML);
-            attemptDetails.addComponent(attemptTimestampLabel);
-            Label attemptFileNameLabel = new Label("<b>Filename:</b> " + attempt.getFilename(), ContentMode.HTML);
-            attemptDetails.addComponent(attemptFileNameLabel);
-            Grid<com.opuscapita.peppol.commons.revised_model.Event> eventsGrid = new Grid<>("Events: " + attempt.getEvents().size());
-            eventsGrid.setWidth(640, Unit.PIXELS);
-            eventsGrid.setHeightMode(HeightMode.ROW);
-            eventsGrid.setHeightByRows(5);
-            eventsGrid.addColumn((ValueProvider<com.opuscapita.peppol.commons.revised_model.Event, String>) eventItem -> Instant.ofEpochMilli(eventItem.getId()).atZone(ZoneId.systemDefault()).toLocalDateTime().toString())
-                    .setCaption("When");
-            eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getSource)
-                    .setCaption("Source");
-            eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getDetails)
-                    .setCaption("Details");
-            eventsGrid.addColumn(com.opuscapita.peppol.commons.revised_model.Event::getStatus)
-                    .setCaption("Status");
-            eventsGrid.addColumn((ValueProvider<com.opuscapita.peppol.commons.revised_model.Event, String>) eventItem -> eventItem.isTerminal() ? "yes" : "no")
-                    .setCaption("Final");
-            eventsGrid.setItems(attempt.getEvents());
-            attemptDetails.addComponent(eventsGrid);
-            detailedContent.addComponent(attemptDetails);*/
+
             /*Download functionality*/
             Button reprocessBtn = createReprocessButton(attempt);
 
@@ -257,7 +315,14 @@ public class MessagesGridFragment extends AbstractGridFragment {
         }
 
         reprocessBtn.addClickListener((Button.ClickListener) event -> {
-            Window yesNoDialog = new Window("Confirmation");
+
+            new ConfirmDialog(
+                    "Confirmation",
+                    "Reprocess " + new File(attempt.getFilename()).getName() + " ?",
+                    o -> fileService.reprocess(attempt)
+            ).buildAndShow();
+
+            /*Window yesNoDialog = new Window("Confirmation");
             VerticalLayout layout = new VerticalLayout();
             HorizontalLayout buttonLayout = new HorizontalLayout();
             buttonLayout.setSizeFull();
@@ -295,7 +360,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 getUI().removeWindow(yesNoDialog);
             });
 
-            getUI().addWindow(yesNoDialog);
+            getUI().addWindow(yesNoDialog);*/
         });
         return reprocessBtn;
     }

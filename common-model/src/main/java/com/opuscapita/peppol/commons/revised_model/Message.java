@@ -27,6 +27,18 @@ public class Message implements  Comparable<Message> {
     @Column(name = "recipient")
     private String recipient;
 
+    @Column(name = "document_type")
+    private String documentType;
+
+    @Column(name = "document_date")
+    private String documentDate;
+
+    @Column(name = "due_date")
+    private String dueDate;
+
+    @Column(name = "document_number")
+    private String documentNumber;
+
 
     @Column
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -101,6 +113,38 @@ public class Message implements  Comparable<Message> {
         this.inbound = inbound;
     }
 
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
+    }
+
+    public String getDocumentDate() {
+        return documentDate;
+    }
+
+    public void setDocumentDate(String documentDate) {
+        this.documentDate = documentDate;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public String getLastStatus(){
         List<Event> list = attempts.stream().flatMap(attempt -> attempt.getEvents().stream()).collect(Collectors.toList());
         return list.size() > 0 ? list.get(list.size() - 1).getStatus() : "N\\A";
@@ -113,6 +157,10 @@ public class Message implements  Comparable<Message> {
                 ", created=" + created +
                 ", inbound=" + inbound +
                 ", sender='" + sender + '\'' +
+                ", document_type='" + documentType + '\'' +
+                ", document_number='" + documentNumber + '\'' +
+                ", document_date='" + documentDate + '\'' +
+                ", due_date='" + dueDate + '\'' +
                 ", recipient='" + recipient + '\'' +
                 ", attempts=" + attempts +
                 '}';

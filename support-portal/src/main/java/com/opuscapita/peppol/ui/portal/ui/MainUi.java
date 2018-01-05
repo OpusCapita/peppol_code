@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 @SpringUI
 @Theme("valo")
 public class MainUi extends UI {
+    public static final int NAVIGATION_BUTTON_WIDTH = 180;
     @Value(value = "${peppol.portal.baseUrl:/portal}")
     String baseUrl;
 
@@ -60,7 +61,7 @@ public class MainUi extends UI {
         body.addComponent(leftMenu);
         body.setExpandRatio(leftMenu, 1);
         body.addComponent(contentPanel);
-        body.setExpandRatio(contentPanel, 5);
+        body.setExpandRatio(contentPanel, 6);
 
         screen.addComponent(header);
         screen.addComponent(body);
@@ -95,25 +96,25 @@ public class MainUi extends UI {
 
     private void populateLeftMenu(VerticalLayout leftMenu) {
         Button inboundBtn = new Button("Inbound");
-        inboundBtn.setWidth(240, Unit.PIXELS);
+        inboundBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
         inboundBtn.addClickListener(createNavigatorClickListener(ViewName.INBOUND));
         Button outboundBtn = new Button("Outbound");
-        outboundBtn.setWidth(240, Unit.PIXELS);
+        outboundBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
         outboundBtn.addClickListener(createNavigatorClickListener(ViewName.OUTBOUND));
         Button sendersBtn = new Button("Senders");
-        sendersBtn.setWidth(240, Unit.PIXELS);
+        sendersBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
         sendersBtn.addClickListener(createNavigatorClickListener(ViewName.SENDERS));
         Button accessPointsBtn = new Button("Access points");
-        accessPointsBtn.setWidth(240, Unit.PIXELS);
+        accessPointsBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
         accessPointsBtn.addClickListener(createNavigatorClickListener(ViewName.ACCESS_POINTS));
         Button statisticsBtn = new Button("Statistics");
-        statisticsBtn.setWidth(240, Unit.PIXELS);
+        statisticsBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
         statisticsBtn.addClickListener(createNavigatorClickListener(ViewName.STATISTICS));
         Button advancedSearchBtn = new Button("Advanced search");
-        advancedSearchBtn.setWidth(240, Unit.PIXELS);
+        advancedSearchBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
         advancedSearchBtn.addClickListener(createNavigatorClickListener(ViewName.ADVANCED_SEARCH));
         Button helpBtn = new Button("Help");
-        helpBtn.setWidth(240, Unit.PIXELS);
+        helpBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
         helpBtn.addClickListener(createNavigatorClickListener(ViewName.HELP));
 
         leftMenu.addComponent(inboundBtn);
