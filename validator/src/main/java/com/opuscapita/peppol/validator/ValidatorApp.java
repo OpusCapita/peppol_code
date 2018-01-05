@@ -123,7 +123,9 @@ public class ValidatorApp {
 
     @Bean
     public SAXParserFactory saxParserFactory() {
-        return SAXParserFactory.newInstance();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        return factory;
     }
 
     @Bean
