@@ -36,7 +36,7 @@ public class HeaderValidator {
     @SuppressWarnings("ConstantConditions")
     @NotNull
     public ContainerMessage validate(@NotNull byte[] data, @NotNull ContainerMessage cm) throws SAXException, IOException {
-        logger.info("Checking header vs XSD: " + xsdPath);
+        logger.debug("Checking header vs XSD: " + xsdPath);
         if (data.length == 0) {
             return cm;
         }

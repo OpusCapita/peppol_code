@@ -33,7 +33,8 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
     private final BodyValidator bodyValidator;
 
     @Autowired
-    public ValidationControllerImpl(@NotNull DocumentSplitter splitter, @NotNull HeaderValidator headerValidator, @NotNull BodyValidator bodyValidator) {
+    public ValidationControllerImpl(@NotNull DocumentSplitter splitter, @NotNull HeaderValidator headerValidator,
+                                    @NotNull BodyValidator bodyValidator) {
         this.splitter = splitter;
         this.headerValidator = headerValidator;
         this.bodyValidator = bodyValidator;

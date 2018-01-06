@@ -45,7 +45,7 @@ public class StatusReporter {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public void reportError(@NotNull ContainerMessage cm, @Nullable Exception e) {
+    public void reportError(@NotNull ContainerMessage cm, @Nullable Throwable e) {
         if (cm.getProcessingInfo() == null) {
             cm.setProcessingInfo(new ProcessingInfo(
                     new Endpoint("status_reporter", ProcessType.UNKNOWN), "Process info missing in Container Message"));
@@ -61,7 +61,7 @@ public class StatusReporter {
         }
     }
 
-    private void failedToProcess(ContainerMessage cm, Exception e, String shortDescription) {
+    private void failedToProcess(ContainerMessage cm, Throwable e, String shortDescription) {
         logger.warn("Reporting an issue to ServiceNow: " + e.getMessage());
         try {
             if (cm == null) {

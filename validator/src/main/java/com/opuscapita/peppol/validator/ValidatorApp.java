@@ -1,16 +1,12 @@
 package com.opuscapita.peppol.validator;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
-import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
-import com.opuscapita.peppol.commons.template.AbstractQueueListener;
+import com.opuscapita.peppol.commons.template.CommonMessageReceiver;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -39,11 +35,14 @@ public class ValidatorApp {
     private String errorQueue;
 
     private final ValidationController controller;
+    private final MessageQueue messageQueue;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public ValidatorApp(@NotNull @Lazy ValidationController controller) {
+    public ValidatorApp(@NotNull @Lazy ValidationController controller,
+                        @NotNull @Lazy MessageQueue messageQueue) {
         this.controller = controller;
+        this.messageQueue = messageQueue;
     }
 
     public static void main(String[] args) {
@@ -76,39 +75,33 @@ public class ValidatorApp {
 
 
     @Bean
-    MessageListenerAdapter listenerAdapter(@NotNull AbstractQueueListener receiver) {
+    MessageListenerAdapter listenerAdapter(@NotNull CommonMessageReceiver receiver) {
+        receiver.setController(this::consume);
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
-    @Bean
-    AbstractQueueListener queueListener(@NotNull ErrorHandler errorHandler, @Nullable StatusReporter statusReporter,
-                                        @NotNull ContainerMessageSerializer serializer,
-                                        @NotNull MessageQueue messageQueue) {
-        return new AbstractQueueListener(errorHandler, statusReporter, serializer) {
-            @SuppressWarnings("ConstantConditions")
-            @Override
-            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
-                Endpoint endpoint = new Endpoint(componentName, cm.isInbound() ? ProcessType.IN_VALIDATION : ProcessType.OUT_VALIDATION);
+    @SuppressWarnings("ConstantConditions")
+    private void consume(@NotNull ContainerMessage cm) throws Exception {
+        Endpoint endpoint = new Endpoint(componentName, cm.isInbound() ? ProcessType.IN_VALIDATION : ProcessType.OUT_VALIDATION);
+        logger.info("Validating message " + cm.getFileName());
 
-                logger.info("Validating message " + cm.getFileName());
-                cm.getProcessingInfo().setCurrentStatus(endpoint, "performing validation");
-                EventingMessageUtil.reportEvent(cm, "Performing validation");
-                cm = controller.validate(cm);
+        cm.getProcessingInfo().setCurrentStatus(endpoint, "performing validation");
+        EventingMessageUtil.reportEvent(cm, "Performing validation");
+        cm = controller.validate(cm);
 
-                if (cm.hasErrors()) {
-                    cm.getProcessingInfo().setCurrentStatus(endpoint, "validation failed");
-                    EventingMessageUtil.reportEvent(cm, "Validation failed");
-                    messageQueue.convertAndSend(errorQueue, cm);
-                    logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
-                } else {
-                    String queueOut = cm.popRoute();
-                    cm.setStatus(endpoint, "validation passed");
-                    EventingMessageUtil.reportEvent(cm, "Validation passed, sent to: " + queueOut);
-                    messageQueue.convertAndSend(queueOut, cm);
-                    logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
-                }
-            }
-        };
+        if (cm.hasErrors()) {
+            cm.getProcessingInfo().setCurrentStatus(endpoint, "validation failed");
+            EventingMessageUtil.reportEvent(cm, "Validation failed");
+            messageQueue.convertAndSend(errorQueue, cm);
+            logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
+        } else {
+            String queueOut = cm.popRoute();
+            cm.setStatus(endpoint, "validation passed");
+            EventingMessageUtil.reportEvent(cm, "Validation passed, sent to: " + queueOut);
+            messageQueue.convertAndSend(queueOut, cm);
+            logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
+        }
     }
+
 
 }
