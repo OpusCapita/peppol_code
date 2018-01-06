@@ -1,12 +1,14 @@
-package com.opuscapita.peppol.commons.template;
+package com.opuscapita.peppol.commons.config;
 
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 
 /**
@@ -14,12 +16,16 @@ import org.springframework.core.env.Environment;
  */
 @Configuration
 public class ServiceNowConfigurator {
-    @Bean
+    @Bean @Lazy
+    @ConditionalOnMissingBean
+    @NotNull
     public ErrorHandler errorHandler(@NotNull ServiceNow serviceNowRest) {
         return new ErrorHandler(serviceNowRest);
     }
 
-    @Bean
+    @Bean @Lazy
+    @ConditionalOnMissingBean
+    @NotNull
     public ServiceNowConfiguration serviceNowConfiguration(@NotNull Environment environment) {
         return new ServiceNowConfiguration(
                 environment.getProperty("snc.rest.url"),
@@ -30,7 +36,9 @@ public class ServiceNowConfigurator {
                 environment.getProperty("snc.businessGroup"));
     }
 
-    @Bean
+    @Bean @Lazy
+    @ConditionalOnMissingBean
+    @NotNull
     public ServiceNow serviceNowRest(@NotNull Environment environment) {
         return new ServiceNowREST(serviceNowConfiguration(environment));
     }

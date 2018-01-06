@@ -23,12 +23,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.validation.SchemaFactory;
-
 /**
  * @author Sergejs.Roze
  */
@@ -46,6 +40,7 @@ public class ValidatorApp {
 
     private final ValidationController controller;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public ValidatorApp(@NotNull @Lazy ValidationController controller) {
         this.controller = controller;
@@ -55,7 +50,7 @@ public class ValidatorApp {
         SpringApplication.run(ValidatorApp.class, args);
     }
 
-    // TODO remove this when finished with testing @SR
+    // TODO remove performance tests when finished with testing @SR
 //    @PostConstruct
 //    public void postConstruct() throws Exception {
 //        String file = "/home/redis/work/validator/test-peppol/validator/src/test/resources/test_data/difi_files/Valids2-list-ejt.xml";
@@ -114,28 +109,6 @@ public class ValidatorApp {
                 }
             }
         };
-    }
-
-    @Bean
-    public TransformerFactory transformerFactory() {
-        return TransformerFactory.newInstance();
-    }
-
-    @Bean
-    public SAXParserFactory saxParserFactory() {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        return factory;
-    }
-
-    @Bean
-    public XMLInputFactory xmlInputFactory() {
-        return XMLInputFactory.newFactory();
-    }
-
-    @Bean
-    public SchemaFactory schemaFactory() {
-        return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     }
 
 }

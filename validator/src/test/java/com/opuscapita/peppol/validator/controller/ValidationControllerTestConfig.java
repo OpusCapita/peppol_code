@@ -18,9 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.validation.SchemaFactory;
 import java.util.Arrays;
 
@@ -30,27 +27,31 @@ import static org.mockito.Mockito.mock;
  * @author Sergejs.Roze
  */
 @Configuration
-@ComponentScan(basePackages = { "com.opuscapita.peppol.validator.controller", "com.opuscapita.peppol.commons.container" })
+@ComponentScan(basePackages = {
+        "com.opuscapita.peppol.validator.controller",
+        "com.opuscapita.peppol.commons.container",
+        "com.opuscapita.peppol.commons.config"
+})
 @EnableConfigurationProperties
 @EnableCaching
 public class ValidationControllerTestConfig {
 
-    @Bean
-    public TransformerFactory transformerFactory() {
-        return TransformerFactory.newInstance();
-    }
-
-    @Bean
-    public SAXParserFactory saxParserFactory() {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        return factory;
-    }
-
-    @Bean
-    public XMLInputFactory xmlInputFactory() {
-        return XMLInputFactory.newFactory();
-    }
+//    @Bean
+//    public TransformerFactory transformerFactory() {
+//        return TransformerFactory.newInstance();
+//    }
+//
+//    @Bean
+//    public SAXParserFactory saxParserFactory() {
+//        SAXParserFactory factory = SAXParserFactory.newInstance();
+//        factory.setNamespaceAware(true);
+//        return factory;
+//    }
+//
+//    @Bean
+//    public XMLInputFactory xmlInputFactory() {
+//        return XMLInputFactory.newFactory();
+//    }
 
     @Bean
     @ConditionalOnMissingBean

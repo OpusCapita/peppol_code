@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import javax.xml.parsers.SAXParserFactory;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
@@ -23,8 +22,11 @@ import static org.mockito.Mockito.mock;
  * Created by bambr on 16.17.10.
  */
 @Configuration
-@ComponentScan(basePackages = { "com.opuscapita.peppol.validator.validations",
-                                "com.opuscapita.peppol.commons.container"})
+@ComponentScan(basePackages = {
+        "com.opuscapita.peppol.validator.validations",
+        "com.opuscapita.peppol.commons.container",
+        "com.opuscapita.peppol.commons.config"
+})
 @EnableConfigurationProperties
 public class DifiTestConfig {
     public DifiTestConfig() throws URISyntaxException {
@@ -69,13 +71,6 @@ public class DifiTestConfig {
     @Bean
     public ConnectionFactory connectionFactory() {
         return mock(ConnectionFactory.class);
-    }
-
-    @Bean
-    public SAXParserFactory saxParserFactory() {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        return factory;
     }
 
     @Bean
