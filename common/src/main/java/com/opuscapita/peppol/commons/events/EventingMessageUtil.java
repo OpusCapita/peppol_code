@@ -45,6 +45,7 @@ public class EventingMessageUtil {
     public static void reportEvent(ContainerMessage containerMessage, String details) {
         if (containerMessage.getProcessingInfo() == null) {
             logger.error("No processing info for: " + containerMessage);
+            // FIXME NullPointerException imminent
         }
 
         boolean shouldCreateEventingMessage = containerMessage.getProcessingInfo().getEventingMessage() == null;
