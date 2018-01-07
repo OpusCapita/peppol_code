@@ -43,8 +43,9 @@ public class FakeSender implements PeppolSender {
 
         // useful for multi-threading tests
 //        try {
+//            logger.info("IN -> thread " + Thread.currentThread().getName());
 //            Thread.sleep(new Random().nextInt(9000));
-//            logger.info("I'm in " + Thread.currentThread().getName());
+//            logger.info("OUT <- thread " + Thread.currentThread().getName());
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }

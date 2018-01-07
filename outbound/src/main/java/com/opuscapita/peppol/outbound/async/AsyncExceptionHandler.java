@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.outbound;
+package com.opuscapita.peppol.outbound.async;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -13,12 +13,12 @@ import java.util.StringJoiner;
  * @author Sergejs.Roze
  */
 @Component
-public class OutboundExceptionHandler {
-    private static final Logger logger = LoggerFactory.getLogger(OutboundExceptionHandler.class);
+public class AsyncExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(AsyncExceptionHandler.class);
 
     private final ErrorHandler errorHandler;
 
-    public OutboundExceptionHandler(ErrorHandler errorHandler) {
+    public AsyncExceptionHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
 

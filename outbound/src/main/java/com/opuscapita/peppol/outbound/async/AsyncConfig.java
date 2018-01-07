@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.outbound;
+package com.opuscapita.peppol.outbound.async;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -15,7 +15,7 @@ import java.util.concurrent.Executor;
  */
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
-    private final OutboundExceptionHandler outboundExceptionHandler;
+    private final AsyncExceptionHandler asyncExceptionHandler;
 
     @Value("${peppol.outbound.consumers.default:2}")
     private int defaultConsumers;
@@ -23,8 +23,8 @@ public class AsyncConfig implements AsyncConfigurer {
     private int maxConsumers;
 
     @Autowired
-    public AsyncConfig(@NotNull OutboundExceptionHandler outboundExceptionHandler) {
-        this.outboundExceptionHandler = outboundExceptionHandler;
+    public AsyncConfig(@NotNull AsyncExceptionHandler asyncExceptionHandler) {
+        this.asyncExceptionHandler = asyncExceptionHandler;
     }
 
     @Override
@@ -40,6 +40,6 @@ public class AsyncConfig implements AsyncConfigurer {
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return outboundExceptionHandler::handle;
+        return asyncExceptionHandler::handle;
     }
 }

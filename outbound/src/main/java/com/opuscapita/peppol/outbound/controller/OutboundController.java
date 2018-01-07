@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.outbound.controller.sender.*;
 import eu.peppol.outbound.transmission.TransmissionResponse;
@@ -16,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,7 +56,6 @@ public class OutboundController {
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Async
     public void send(@NotNull ContainerMessage cm) throws Exception {
         Endpoint endpoint = new Endpoint(componentName, ProcessType.OUT_OUTBOUND);
 
@@ -101,6 +100,13 @@ public class OutboundController {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + e.getMessage());
             whatAboutRetry(cm, messageQueue, e, endpoint);
         }
+
+        if (StringUtils.isNotBlank(cm.getProcessingInfo().getTransactionId())) {
+            logger.debug("Message " + cm.getFileName() + "delivered with transaction id = " + cm.getProcessingInfo().getTransactionId());
+            cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "delivered");
+            EventingMessageUtil.reportEvent(cm, "Delivered to Peppol network");
+        }
+
     }
 
     // separated to be able to implement additional logic on demand

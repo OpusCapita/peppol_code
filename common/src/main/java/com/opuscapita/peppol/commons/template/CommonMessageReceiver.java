@@ -22,14 +22,14 @@ public class CommonMessageReceiver {
 
     private final ContainerMessageSerializer serializer;
     private final ErrorHandler errorHandler;
-    private final CommonMessageProcessor commonMessageProcessor;
+    private final ContainerMessageProcessor processor;
 
     @Autowired
     public CommonMessageReceiver(@NotNull ContainerMessageSerializer serializer, @NotNull ErrorHandler errorHandler,
-                                 @NotNull CommonMessageProcessor commonMessageProcessor) {
+                                 @NotNull ContainerMessageProcessor processor) {
         this.serializer = serializer;
         this.errorHandler = errorHandler;
-        this.commonMessageProcessor = commonMessageProcessor;
+        this.processor = processor;
     }
 
     public synchronized void receiveMessage(@NotNull byte[] bytes) {
@@ -48,7 +48,7 @@ public class CommonMessageReceiver {
             reportError(new IllegalArgumentException("Container message is null"), "Container message is null");
         } else {
             logger.debug("Message received, file id: " + cm.getFileName());
-            commonMessageProcessor.process(cm);
+            processor.process(cm);
         }
     }
 
@@ -74,8 +74,8 @@ public class CommonMessageReceiver {
         throw new AmqpRejectAndDontRequeueException("Deserialization failed", e);
     }
 
-    public void setController(ContainerMessageConsumer controller) {
-        this.commonMessageProcessor.setController(controller);
+    public void setContainerMessageConsumer(ContainerMessageConsumer controller) {
+        this.processor.setContainerMessageConsumer(controller);
     }
 
 }

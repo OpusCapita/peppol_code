@@ -76,7 +76,7 @@ public class ValidatorApp {
 
     @Bean
     MessageListenerAdapter listenerAdapter(@NotNull CommonMessageReceiver receiver) {
-        receiver.setController(this::consume);
+        receiver.setContainerMessageConsumer(this::consume);
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 

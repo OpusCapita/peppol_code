@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,13 +19,14 @@ import org.springframework.stereotype.Component;
  * @author Sergejs.Roze
  */
 @Component
-public class CommonMessageProcessor {
+@ConditionalOnProperty(name = "peppol.common.async.processing.enabled", havingValue = "false", matchIfMissing = true)
+public class CommonMessageProcessor implements ContainerMessageProcessor {
     private final static Logger logger = LoggerFactory.getLogger(CommonMessageProcessor.class);
 
     private final StatusReporter statusReporter;
     private final ErrorHandler errorHandler;
 
-    private ContainerMessageConsumer controller;
+    private ContainerMessageConsumer containerMessageConsumer;
 
     @Autowired
     public CommonMessageProcessor(@Nullable StatusReporter statusReporter, @NotNull ErrorHandler errorHandler) {
@@ -32,24 +34,24 @@ public class CommonMessageProcessor {
         this.errorHandler = errorHandler;
     }
 
-    public void setController(@NotNull ContainerMessageConsumer controller) {
-        this.controller = controller;
+    public void setContainerMessageConsumer(@NotNull ContainerMessageConsumer controller) {
+        this.containerMessageConsumer = controller;
     }
 
     public void process(@NotNull ContainerMessage cm) {
         try {
             logger.info("Processing message " + cm.getFileName());
-            controller.consume(cm);
+            containerMessageConsumer.consume(cm);
         } catch (Exception e) {
             logger.warn("Message processing failed: " + e.getMessage());
-            reportError(cm, e);
+            reportError(cm, e, errorHandler, statusReporter);
             throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
         }
 
-        reportStatus(cm);
+        reportStatus(cm, statusReporter);
     }
 
-    private void reportStatus(@NotNull ContainerMessage cm) {
+    static void reportStatus(@NotNull ContainerMessage cm, @Nullable StatusReporter statusReporter) {
         if (statusReporter != null) {
             statusReporter.report(cm);
         }
@@ -65,7 +67,8 @@ public class CommonMessageProcessor {
         }
     }
 
-    private void reportError(@NotNull ContainerMessage cm, @NotNull Throwable e) {
+    static void reportError(@NotNull ContainerMessage cm, @NotNull Throwable e,
+                                   @NotNull ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
         try {
             errorHandler.reportWithContainerMessage(cm, e, e.getMessage() == null ? "null" : e.getMessage());
             String customerId = cm.getCustomerId() == null ? "n/a" : cm.getCustomerId();
@@ -75,8 +78,12 @@ public class CommonMessageProcessor {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
 
-        if (statusReporter != null) {
-            statusReporter.reportError(cm, e);
+        try {
+            if (statusReporter != null) {
+                statusReporter.reportError(cm, e);
+            }
+        } catch (Exception weird) {
+            logger.error("Failed to report status using status reporter", weird);
         }
     }
 

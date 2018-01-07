@@ -45,6 +45,7 @@ public class ContainerMessageSerializerTest {
         ContainerMessageSerializer cms = new ContainerMessageSerializer();
 
         String message = cms.toJson(cm);
+        System.out.println(message);
 
         ContainerMessage cm2 = cms.fromJson(message);
 
