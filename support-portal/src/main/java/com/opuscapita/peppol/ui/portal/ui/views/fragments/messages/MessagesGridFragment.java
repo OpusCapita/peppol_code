@@ -27,7 +27,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -372,17 +371,18 @@ public class MessagesGridFragment extends AbstractGridFragment {
             Resource resource = new FileResource(fileToOperate);
             new FileDownloader(resource).extend(downloadBtn);
         } else {
-            if (fileService.fileArchived(attempt.getFilename())) { //file can be fetched from archive in runtime only, download via listener
-                AdvancedFileDownloader downloader = new AdvancedFileDownloader();  //have to create own downloader because vaadin doesn't support download in runtime
-                downloader.addAdvancedDownloaderListener(downloadEvent -> {
-                    File fileToDownload = fileService.extractFromArchive(attempt.getFilename());  //tmp file
+            AdvancedFileDownloader downloader = new AdvancedFileDownloader();  //have to create own downloader because vaadin doesn't support download in runtime
+            downloader.addAdvancedDownloaderListener(downloadEvent -> {
+                File fileToDownload = fileService.extractFromArchive(attempt.getFilename());
+                if (fileToDownload != null) {
                     downloader.setFilePath(fileToDownload.getAbsolutePath());                     //setting filepath in runtime
-                });
-                downloader.extend(downloadBtn);
-            } else {
-                downloadBtn.setEnabled(false);
-                downloadBtn.setComponentError(new UserError("File not available for download!"));
-            }
+                } else {
+                    NotificationDialog error = new NotificationDialog("Sorry", "File not available!");
+                    error.buildAndShow();
+                }
+
+            });
+            downloader.extend(downloadBtn);
         }
         return downloadBtn;
     }

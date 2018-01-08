@@ -42,7 +42,9 @@ public class ConfirmDialog extends Window {
         HorizontalLayout buttonLayout = new HorizontalLayout();
         Button yesButton = new Button("Yes");
         yesButton.addClickListener((Button.ClickListener) event -> {
-            ConfirmDialog.this.callback.accept(null);
+            if (callback != null ) {
+                ConfirmDialog.this.callback.accept(null);
+            }
             ConfirmDialog.this.close();
         });
         Button noButton = new Button("No");
@@ -52,9 +54,10 @@ public class ConfirmDialog extends Window {
         this.addCloseListener((CloseListener) e -> {
             ConfirmDialog.this.setModal(false);
             ConfirmDialog.this.setVisible(false);
-            getUI().removeWindow(ConfirmDialog.this);
+            UI.getCurrent().removeWindow(ConfirmDialog.this);
         });
-        getUI().addWindow(this);
+        setContent(mainLayout);
+        UI.getCurrent().addWindow(this);
         return this;
     }
 }
