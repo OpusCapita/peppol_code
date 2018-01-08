@@ -6,7 +6,8 @@
 #+++++++++++++++++++++++++++++++
 - include: ehf-invoice.yml
 - include: ehf-creditnote.yml
-- include: ehf-catalogue.yml
+#catalogue tests has to be reworked
+#- include: ehf-catalogue.yml
 - include: ehf-common.yml
 #-------------------------------
 
