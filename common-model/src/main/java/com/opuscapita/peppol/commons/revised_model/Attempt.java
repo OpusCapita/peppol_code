@@ -80,7 +80,9 @@ public class Attempt implements Comparable<Attempt> {
     @Override
     public int compareTo(@NotNull Attempt other) {
         int part1 = getMessage().compareTo(other.getMessage());
-        int part2 = Integer.compare(getId().hashCode(), other.getId().hashCode());
+        //int part2 = Integer.compare(getId().hashCode(), other.getId().hashCode());
+        int res = Long.compare(Long.valueOf(id.substring(0,13)), Long.valueOf(other.getId().substring(0,13)));
+        int part2 = res != 0 ? res : id.compareTo(other.getId());
         if(part1 != 0) {
             return part1;
         }
