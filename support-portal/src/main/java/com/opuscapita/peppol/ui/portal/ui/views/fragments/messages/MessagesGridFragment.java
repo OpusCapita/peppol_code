@@ -373,7 +373,7 @@ public class MessagesGridFragment extends AbstractGridFragment {
         } else {
             AdvancedFileDownloader downloader = new AdvancedFileDownloader();  //have to create own downloader because vaadin doesn't support download in runtime
             downloader.addAdvancedDownloaderListener(downloadEvent -> {
-                File fileToDownload = fileService.extractFromArchive(attempt.getFilename());
+                File fileToDownload = fileService.extractFromArchive(attempt);
                 if (fileToDownload != null) {
                     downloader.setFilePath(fileToDownload.getAbsolutePath());                     //setting filepath in runtime
                 } else {

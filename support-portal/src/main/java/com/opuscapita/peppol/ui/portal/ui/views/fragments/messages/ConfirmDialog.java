@@ -57,6 +57,8 @@ public class ConfirmDialog extends Window {
             UI.getCurrent().removeWindow(ConfirmDialog.this);
         });
         setContent(mainLayout);
+        center();
+        setResizable(false);
         UI.getCurrent().addWindow(this);
         return this;
     }

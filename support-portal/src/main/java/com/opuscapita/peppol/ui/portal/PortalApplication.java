@@ -19,7 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.ui.portal", "com.opuscapita.peppol.commons"})
 @EnableSpringHttpSession
 @EnableJpaRepositories(basePackages = {"com.opuscapita.peppol.ui.portal.model"})
 @EntityScan(basePackages = {"com.opuscapita.peppol.commons.model", "com.opuscapita.peppol.commons.revised_model"})

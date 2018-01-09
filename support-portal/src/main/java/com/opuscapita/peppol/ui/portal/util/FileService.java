@@ -1,15 +1,21 @@
 package com.opuscapita.peppol.ui.portal.util;
 
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.DocumentLoader;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.revised_model.Attempt;
+import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +28,11 @@ import java.util.zip.GZIPInputStream;
 @Service
 public class FileService {
     private static final Logger logger = LoggerFactory.getLogger(FileService.class);
+    private final DocumentLoader documentLoader;
+    private final MessageQueue messageQueue;
 
-    @Value(value = "${peppol.portal.reprocess.outbound.dir:/tmp}")
-    private String reprocessOutboundDir;
-
-    @Value(value = "${peppol.portal.reprocess.inbound.dir:/tmp}")
-    private String reprocessInboundDir;
+    @Value("${peppol.component.name}")
+    private String componentName;
 
     @Value(value = "${peppol.portal.archive.directory}")
     private String archiveDirectory;
@@ -35,7 +40,16 @@ public class FileService {
     @Value(value = "${peppol.portal.archive.tmpDirectory:/tmp}")
     private String tmpDirectory;
 
+    @Value(value = "${peppol.portal.reprocess.queue.name:preprocessing}")
+    private String queue;
+
     private File[] archiveLists;
+
+    @Autowired
+    public FileService(@NotNull MessageQueue messageQueue, @NotNull DocumentLoader documentLoader) {
+        this.messageQueue = messageQueue;
+        this.documentLoader = documentLoader;
+    }
 
     @PostConstruct
     public void initArchiveCatalogue() {
@@ -51,29 +65,40 @@ public class FileService {
     public void reprocess(Attempt attempt) {
         try {
             File fileToReprocess = new File(attempt.getFilename());
-            File result = new File(attempt.getMessage().isInbound() ? reprocessInboundDir : reprocessOutboundDir, fileToReprocess.getName());
+            Endpoint source = new Endpoint(componentName, getProcessType(attempt));
+            ContainerMessage cm = new ContainerMessage("Sending to reprocess " + componentName + " as " + fileToReprocess.getAbsolutePath(),
+                    fileToReprocess.getName(), source);
+            cm.setStatus(source, "reprocessing");
+            cm.setOriginalFileName(fileToReprocess.getAbsolutePath());
+            messageQueue.convertAndSend(queue, cm);
+            logger.info("File " + cm.getFileName() + " sent to " + queue + " queue");
+            /*File result = new File(attempt.getMessage().isInbound() ? reprocessInboundDir : reprocessOutboundDir, fileToReprocess.getName());
             IOUtils.copy(new FileInputStream(fileToReprocess), new FileOutputStream(result));
-            logger.info("Reprocessing, file moved from: " + fileToReprocess.getAbsolutePath() + " to: " + result.getAbsolutePath());
+            logger.info("Reprocessing, file moved from: " + fileToReprocess.getAbsolutePath() + " to: " + result.getAbsolutePath());*/
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private ProcessType getProcessType(Attempt attempt) {
+        return attempt.getMessage().isInbound() ? ProcessType.IN_REPROCESS : ProcessType.OUT_REPROCESS;
+    }
+
     /***
-     * @param fileName file name to search in archive
+     * @param attempt with a file name to search in archive
      * @return unarchived file or null if not found
      */
     public @Nullable
-    File extractFromArchive(String fileName) {
+    File extractFromArchive(Attempt attempt) {
         for (File f : archiveLists) {
             List<String> fileNames = null;
             try {
                 fileNames = FileUtils.readLines(f, Charset.defaultCharset());
-                if (fileNames.contains(fileName)) {
+                if (fileNames.contains(attempt.getFilename())) {
                     String archiveName = FilenameUtils.removeExtension(f.getName()) + ".tar.gz";
-                    String targetFileName = tmpDirectory + new File(fileName).getName();
+                    String targetFileName = tmpDirectory + new File(attempt.getFilename()).getName();
                     String archive = archiveDirectory + archiveName;
-                    logger.info("Starting to unarchive file: " + fileName + " from: " + archive);
+                    logger.info("Starting to unarchive file: " + attempt + " from: " + archive);
                     try (
                             InputStream is = new BufferedInputStream(new GZIPInputStream(new FileInputStream(archive)));    //gz
                             TarArchiveInputStream tarInput = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", is);     //tar
@@ -81,7 +106,7 @@ public class FileService {
                     ) {
                         TarArchiveEntry entry;
                         while ((entry = tarInput.getNextTarEntry()) != null) {
-                            if (("/" + entry.getName()).equals(fileName)) {
+                            if (("/" + entry.getName()).equals(attempt)) {
                                 if (tarInput.canReadEntryData(entry)) {
                                     byte data[] = new byte[2048];
                                     int count;
