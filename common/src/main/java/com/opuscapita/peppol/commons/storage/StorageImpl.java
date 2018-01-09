@@ -6,6 +6,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,8 @@ import java.util.Date;
  */
 @Component
 public class StorageImpl implements Storage {
+    private static final Logger logger = LoggerFactory.getLogger(StorageImpl.class);
+
     @Value("${peppol.storage.short}")
     private String shortTerm;
 
@@ -101,6 +105,10 @@ public class StorageImpl implements Storage {
     @NotNull
     @Override
     public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
+        if (file.getAbsolutePath().startsWith(longTerm)) {
+            logger.info("File already in long term storage, not moving: " + file.getAbsolutePath());
+            return file.getAbsolutePath();
+        }
         File dir = prepareDirectory(senderId, recipientId);
 
         File result = StorageUtils.prepareUnique(dir, file.getName());
