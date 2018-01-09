@@ -52,9 +52,6 @@ def release_version, next_version, code_hash, infra_hash
 try {
     node {
         stage('Checkout') {
-            // clean up the last time
-            dir('src/system-tests/reports') { deleteDir() }
-
             // get latest version of code
             checkout([
                 $class: 'GitSCM',
