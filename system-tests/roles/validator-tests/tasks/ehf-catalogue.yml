@@ -5,13 +5,13 @@
 - set_fact: valid="true"
 - set_fact: active="true"
 
-- name: send {{ file }} to validator REST
-  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
-  register: result
+- include: send_to_REST.yml
+- include: response_set.yml
 
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
+- set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
+  when: result_validationError!=''
+- debug: var=result_identifier
+
 - set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
 - set_fact: result_identifier1="{{ result_warnings.1.validationError.identifier }}"
 
@@ -36,16 +36,15 @@
 - set_fact: valid="false"
 - set_fact: active="true"
 
-- name: send {{ file }} to validator REST
-  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
-  register: result
+- include: send_to_REST.yml
+- include: response_set.yml
 
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!=''
 - set_fact: result_identifier1="{{ result_warnings.0.validationError.identifier }}"
+  when: result_validationError!=''
 - set_fact: result_identifier2="{{ result_warnings.1.validationError.identifier }}"
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
