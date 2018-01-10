@@ -74,8 +74,8 @@ public class CommonMessageReceiver {
         throw new AmqpRejectAndDontRequeueException("Deserialization failed", e);
     }
 
-    public void setContainerMessageConsumer(ContainerMessageConsumer controller) {
-        this.processor.setContainerMessageConsumer(controller);
+    public void setContainerMessageConsumer(ContainerMessageConsumer consumer) {
+        this.processor.setContainerMessageConsumer(consumer);
     }
 
 }
