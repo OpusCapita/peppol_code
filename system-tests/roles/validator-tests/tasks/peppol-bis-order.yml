@@ -1,0 +1,242 @@
+- set_fact: file=/test-materials/peppol-bis/order/T01-0001-valid.xml
+- set_fact: valid="true"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_errors == []"
+      - "result_passed == {{ valid }}"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/order/BII3-T110-R001.xml
+#- set_fact: expected="'BII3-T110-R001'"
+#this error happens before validation, in document loader so custom check is needed
+- set_fact: expected="matches following templates{{":"}} EHF.Order, PEPPOL_BIS.Order"
+- set_fact: valid="false"
+- set_fact: active="true"
+- set_fact: notes="BII3-T110-R001-An order agreement MUST have a customization identifier- custom test as document loader checks for mandatory fields before validation"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.message }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "expected in result_identifier"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/order/BII3-T110-R002.xml
+#- set_fact: expected="'BII3-T110-R002'"
+#this error happens before validation, in document loader so custom check is needed
+- set_fact: expected="Missing mandatory field{{":"}} profile_id"
+- set_fact: valid="false"
+- set_fact: active="true"
+- set_fact: notes="BII3-T110-R002- An order agreement MUST have a profile identifier- custom test as document loader checks for mandatory fields before validation"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.message }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "expected in result_identifier"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/order/BII3-T110-R003.xml
+#- set_fact: expected="'BII3-T110-R003'"
+#this error happens because of XSD exception so custom check is needed
+
+- set_fact: expected="Invalid content was found starting with element"
+- set_fact: expected1="ID}' is expected."
+
+- set_fact: valid="false"
+- set_fact: active="true"
+- set_fact: notes="BII3-T110-R003- Each order agreement line MUST have a document line identifier that is unique within the order agreement- this error happens because of XSD exception so custom check is needed"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.message }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "expected in result_identifier"
+      - "expected1 in result_identifier"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/order/BII3-T110-R004.xml
+#- set_fact: expected="'BII3-T110-R004'"
+#this error happens before validation, in document loader so custom check is needed
+- set_fact: expected="Missing mandatory field{{":"}} issue_date"
+- set_fact: valid="false"
+- set_fact: active="true"
+- set_fact: notes="BII3-T110-R004- An order agreement MUST have a issue_date- custom test as document loader checks for mandatory fields before validation"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.message }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "expected in result_identifier"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/order/BII3-T110-R006.xml
+#- set_fact: expected="'BII3-T110-R006'"
+#this error happens before validation, in document loader so custom check is needed
+- set_fact: expected="Missing mandatory field{{":"}} document_id"
+- set_fact: valid="false"
+- set_fact: active="true"
+- set_fact: notes="BII3-T110-R006- An order agreement MUST have a document_id- custom test as document loader checks for mandatory fields before validation"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.message }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "expected in result_identifier"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/order/BII3-T110-R021.xml
+#- set_fact: expected="'BII3-T110-R021'"
+#this error happens before validation, in document loader so custom check is needed
+- set_fact: expected="Missing mandatory field{{":"}} sender_id"
+- set_fact: expected1="Missing mandatory field{{":"}} sender_name"
+- set_fact: valid="false"
+- set_fact: active="true"
+- set_fact: notes="BII3-T110-R021- An order agreement MUST have the buyer party name or a buyer party identifier- custom test as document loader checks for mandatory fields before validation"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.message }}"
+- set_fact: result_identifier1="{{ result_errors.1.message }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "expected in result_identifier"
+      - "expected1 in result_identifier1"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/order/BII3-T110-R022.xml
+#- set_fact: expected="'BII3-T110-R022'"
+#this error happens before validation, in document loader so custom check is needed
+- set_fact: expected="Missing mandatory field{{":"}} recipient_id"
+- set_fact: expected1="Missing mandatory field{{":"}} recipient_name"
+- set_fact: valid="false"
+- set_fact: active="true"
+- set_fact: notes="BII3-T110-R022- An order agreement MUST have the seller party name or a seller party identifier- custom test as document loader checks for mandatory fields before validation"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.message }}"
+- set_fact: result_identifier1="{{ result_errors.1.message }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "expected in result_identifier"
+      - "expected1 in result_identifier1"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/peppol-bis/order/BII3-T110-R032.xml
+#- set_fact: expected="'BII3-T110-R032'"
+#this error happens because of XSD exception so custom check is needed
+
+- set_fact: expected="The content of element 'cac:OrderDocumentReference' is not complete"
+- set_fact: expected1="ID}' is expected."
+
+- set_fact: valid="false"
+- set_fact: active="true"
+- set_fact: notes="BII3-T110-R032- An order agreement MUST have a reference to an order- this error happens because of XSD exception so custom check is needed"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.message }}"
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_passed == {{ valid }}"
+      - "expected in result_identifier"
+      - "expected1 in result_identifier"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+
+- include: reporter.yml
+
