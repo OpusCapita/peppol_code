@@ -4,15 +4,16 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.StringJoiner;
 
 /**
+ * Unused, see {@link AsyncConfig}
+ *
  * @author Sergejs.Roze
  */
-@Component
+//@Component
 public class AsyncExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(AsyncExceptionHandler.class);
 

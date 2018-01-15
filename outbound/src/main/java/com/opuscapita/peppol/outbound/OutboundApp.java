@@ -15,14 +15,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * @author Sergejs.Roze
  */
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.outbound", "eu.peppol.outbound.transmission"})
 @EnableDiscoveryClient
-@EnableAsync
 public class OutboundApp {
     @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(OutboundApp.class);
@@ -60,8 +58,8 @@ public class OutboundApp {
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConcurrentConsumers(defaultConsumers > 0 ? defaultConsumers : 2);
-        container.setMaxConcurrentConsumers(maxConsumers >= defaultConsumers ? maxConsumers : 4);
+        //container.setConcurrentConsumers(defaultConsumers > 0 ? defaultConsumers : 2);
+        //container.setMaxConcurrentConsumers(maxConsumers >= defaultConsumers ? maxConsumers : 4);
         container.setStopConsumerMinInterval(consumersTimeout);
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queueName);

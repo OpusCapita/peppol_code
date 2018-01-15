@@ -4,16 +4,18 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
 /**
+ * Unused since we decided to drop asynchronous processing in outbound.
+ *
  * @author Sergejs.Roze
  */
-@Configuration
+//@Configuration
+@SuppressWarnings({"unused", "SpringJavaAutowiredMembersInspection"})
 public class AsyncConfig implements AsyncConfigurer {
     private final AsyncExceptionHandler asyncExceptionHandler;
 
