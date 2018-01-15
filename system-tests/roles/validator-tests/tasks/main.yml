@@ -15,6 +15,7 @@
 #+++++++++++++++++++++++++++++++
 - include: peppol-bis-invoice.yml
 - include: peppol-bis-creditnote.yml
+- include: peppol-bis-order.yml
 #-------------------------------
 
 #+++++++++++++++++++++++++++++++
