@@ -15,8 +15,11 @@ import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 /**
  * Base class for a standard listener that reads container message and processes it.
  *
+ * @deprecated Replaced with CommonMessageReceiver and two optional processors
+ *
  * @author Sergejs.Roze
  */
+@Deprecated
 public abstract class AbstractQueueListener {
     protected final static Logger logger = LoggerFactory.getLogger(AbstractQueueListener.class);
 
