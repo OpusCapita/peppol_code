@@ -1,7 +1,10 @@
 package com.opuscapita.peppol.validator.handler;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,14 +20,24 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 public class UploadResponseEnityExceptionHandler extends ResponseEntityExceptionHandler {
-    @Autowired
-    Environment environment;
+    private final String sizeLimit;
+    Logger logger = LoggerFactory.getLogger(UploadResponseEnityExceptionHandler.class);
+
+    public UploadResponseEnityExceptionHandler(@Value("${spring.http.multipart.max-file-size}") String sizeLimit) {
+        this.sizeLimit = sizeLimit;
+        if(sizeLimit == null) {
+            logger.error("spring.http.multipart.max-file-size property is not set, please, check configuration");
+            throw new IllegalArgumentException("spring.http.multipart.max-file-size is not set");
+        }
+    }
+
+
 
     @ExceptionHandler({MultipartException.class, FileUploadBase.FileSizeLimitExceededException.class, java.lang.IllegalStateException.class})
     public ResponseEntity<Object> handleSizeExceededException(final WebRequest request, final MultipartException ex) {
         return handleExceptionInternal(
                 ex,
-                "Uploaded file size exceeds the limit " + environment.getProperty("spring.http.multipart.max-file-size"),
+                "Uploaded file size exceeds the limit " + sizeLimit,
                 new HttpHeaders(),
                 HttpStatus.PAYLOAD_TOO_LARGE,
                 request
