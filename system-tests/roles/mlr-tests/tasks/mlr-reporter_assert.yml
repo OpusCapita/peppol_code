@@ -1,0 +1,23 @@
+---
+- name: get mlr-reporter log & check if uuid "{{ uuid }}" for "{{ file }}" is found
+  ignore_errors: yes
+  shell: docker logs mlr-reporter | grep "{{ uuid }}"
+  register: log
+  until: uuid in log.stdout
+  retries: 300
+  delay: 1
+- debug: var=log
+
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: mlr_result="Failed to find uuid"
+  when: log.rc != 0
+- set_fact: mlr_result="uuid is found"
+  when: log.rc == 0
+- debug: var=mlr_result
+
+#Currently log phrase used for successfull storing is "MLR successfully stored as <filepath/filename>"
+- name: check if MLR was stored uuid "{{ uuid }}" for "{{ file }}"
+  set_fact: mlr_result="Success- MLR successfully stored!"
+  when: log.stdout | search("MLR successfully stored as")
+- debug: var=mlr_result
+...

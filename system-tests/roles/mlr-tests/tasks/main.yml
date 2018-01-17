@@ -1,0 +1,25 @@
+---
+#- include: set-up.yml
+#- name: Stop transport
+#  shell: docker stop transport-from-a2a
+
+- name: Clean storage path
+  become: true
+#  become_user: peppol
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /peppol/data/storage/unknown/
+    - /peppol/data/storage/9908_987987987/
+    - /peppol/data/storage/9908_998877665/
+    - /peppol/data/storage/9908_789789789/
+    - /peppol/data/storage/987987987/
+
+- include: file_list.yml
+#- name: Start transport
+#  shell: docker start transport-from-a2a
+#- pause:
+#    minutes: 3
+#- include: log_checker.yml
+...

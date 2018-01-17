@@ -32,6 +32,11 @@ outbound-invalid-tests-s:
 	ansible-playbook -i stage.hosts -K outbound-invalid-tests.yml
 outbound-invalid-tests-l:
 	ansible-playbook -i local.hosts -K outbound-invalid-tests.yml
+mlr-tests-s:
+	ansible-playbook -i stage.hosts -K mlr-tests.yml
+mlr-tests-l:
+	ansible-playbook -i local.hosts -K mlr-tests.yml
+
 
 inbound-tests-t:
 	ansible-playbook -i test.hosts inbound-tests.yml
