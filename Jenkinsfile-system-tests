@@ -137,6 +137,26 @@ try {
                     archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
                 }
             }
+            milestone 4
+            stage('MLR Tests') {
+                try {
+                    dir('src/system-tests') {
+                        ansiblePlaybook(
+                            'mlr-tests.yml', 'stage.hosts', 'ansible-sudo',
+                            'report_path=$PWD/reports/'
+                        )
+                    }
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'System-tests: MLR Tests have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                }
+            }
         }
     }
 
