@@ -15,18 +15,18 @@
 #report update END -----------------------
 
 #checking for failures in report- test has to fail if any asseert has failed #
-- debug:
-    var: report_path
-- name: register report
-  delegate_to: localhost
-  shell: cat "{{report_path}}/mlr-report-{{ansible_date_time.iso8601_basic}}.csv"
-  register: report
+#- debug:
+#    var: report_path
+#- name: register report
+#  delegate_to: localhost
+#  shell: cat "{{report_path}}/mlr-report-{{ansible_date_time.iso8601_basic}}.csv"
+#  register: report
 
-- debug:
-    var: report
+#- debug:
+#    var: report
 
-- name: check if any assert has failed up until now
-  fail: msg="MLR-tests failed"
-  when:
-    - "'Failed' in report.stdout"
+#- name: check if any assert has failed up until now
+#  fail: msg="MLR-tests failed"
+#  when:
+#   - "'Failed' in report.stdout"
 ...

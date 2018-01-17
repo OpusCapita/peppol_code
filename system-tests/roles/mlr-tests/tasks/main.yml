@@ -22,4 +22,10 @@
 #- pause:
 #    minutes: 3
 #- include: log_checker.yml
+
+#+++++++++++++++++++++++++++++++
+#      Final report check
+#+++++++++++++++++++++++++++++++
+- include: report_checker.yml
+
 ...
