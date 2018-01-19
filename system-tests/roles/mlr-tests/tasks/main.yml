@@ -17,11 +17,14 @@
     - /peppol/data/storage/987987987/
 
 - include: file_list.yml
-#- name: Start transport
-#  shell: docker start transport-from-a2a
-#- pause:
-#    minutes: 3
-#- include: log_checker.yml
+
+- name: stop inbound for test #3
+  shell: docker stop inbound
+- pause:
+    seconds: 5
+- include: test_3.yml
+- name: start inbound after test #3 is done
+  shell: docker start inbound
 
 #+++++++++++++++++++++++++++++++
 #      Final report check
