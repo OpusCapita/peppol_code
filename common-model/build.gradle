@@ -10,16 +10,34 @@ buildscript {
     }
 }
 
+/*plugins {
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.9"
+}*/
+
+/*sourceSets {
+    querydsl {
+        java {
+            srcDir 'querydsl'
+        }
+
+    }
+}*/
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
+
+
 
 jar {
     baseName = 'common-model'
     version = '0.0.1-SNAPSHOT'
     from sourceSets.main.allSource
+    /*from sourceSets.querydsl.allSource*/
     bootRepackage.enabled = false
 }
+
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -33,7 +51,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-amqp'
     compile 'org.springframework.cloud:spring-cloud-starter-config:1.1.2.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-
+    /*compile 'com.querydsl:querydsl-jpa:4.1.4'*/
     compile 'com.intellij:annotations:12.0'
 
     compile 'org.yaml:snakeyaml:1.17'
@@ -49,6 +67,12 @@ dependencyManagement {
         mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Dalston.RELEASE'
     }
 }
+
+/*querydsl {
+    querydslDefault = true
+    jpa = true
+    querydslSourcesDir = 'querydsl'
+}*/
 
 eclipse {
     classpath {

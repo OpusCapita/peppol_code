@@ -7,6 +7,7 @@ import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentType;
 import com.opuscapita.peppol.ui.portal.ui.views.util.AdvancedFileDownloader;
 import com.opuscapita.peppol.ui.portal.util.FileService;
+import com.vaadin.data.HasValue;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.TreeDataProvider;
@@ -14,8 +15,10 @@ import com.vaadin.server.*;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +27,7 @@ import java.io.File;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.AbstractMap;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,10 +39,12 @@ public class MessagesGridFragment extends AbstractGridFragment {
     private final GridFragmentType direction;
     private final GridFragmentMode mode;
     private final HorizontalLayout filterBar;
+    private final MessagesLazyLoadService messagesLazyLoadService;
     private FileService fileService;
 
     public MessagesGridFragment(GridFragmentType direction, GridFragmentMode mode, MessagesLazyLoadService messagesLazyLoadService, FileService fileService) {
         this.fileService = fileService;
+        this.messagesLazyLoadService = messagesLazyLoadService;
         initLayout();
         this.direction = direction;
         this.mode = mode;
@@ -49,20 +53,14 @@ public class MessagesGridFragment extends AbstractGridFragment {
         grid.setSizeFull();
         grid.addStyleName("cellFontSizeOverride");
 
-        //TODO add filters here and to messages service also
-        grid.setDataProvider(
-                (sortOrders, offset, limit) -> {
-                    Map<String, Boolean> sortOrder = sortOrders.stream()
-                            .collect(Collectors.toMap(
-                                    sort -> sort.getSorted(),
-                                    sort -> sort.getDirection() == SortDirection.ASCENDING));
-                    return prepareGridData(mode, direction, messagesLazyLoadService, offset, limit, sortOrder);
-                },
-                () -> getGridDataCount(mode, direction, messagesLazyLoadService)
-        );
+        String keyWord = getKeyWordByMode(mode);
+        boolean inbound = direction == GridFragmentType.INBOUND;
+        Map<String, String> filters = prepareBasicFilters(mode, keyWord, inbound);
+
+        setDataProvider(filters);
 
         filterBar = new HorizontalLayout();
-        setupFilterBar();
+        setupFilterBar(filters);
         filterBar.setSizeUndefined();
         filterBar.setMargin(false);
         filterBar.setVisible(true);
@@ -81,8 +79,24 @@ public class MessagesGridFragment extends AbstractGridFragment {
         setExpandRatio(messageEditor, 1);
     }
 
-    private void setupFilterBar() {
-        ArrayList<Map.Entry> fieldsList = new ArrayList<>();
+    protected void setDataProvider(Map<String, String> filters) {
+        StringBuilder filterInfo = new StringBuilder("Setting data provider with following filters:\n");
+        filters.entrySet().forEach(entry -> filterInfo.append("\t").append(entry.getKey()).append(": ").append(entry.getValue()).append("\n"));
+        logger.info(filterInfo.toString());
+        grid.setDataProvider(
+                (sortOrders, offset, limit) -> {
+                    Map<String, Boolean> sortOrder = sortOrders.stream()
+                            .collect(Collectors.toMap(
+                                    sort -> sort.getSorted(),
+                                    sort -> sort.getDirection() == SortDirection.ASCENDING));
+                    return prepareGridData(filters, offset, limit, sortOrder);
+                },
+                () -> getGridDataCount(filters)
+        );
+    }
+
+    private void setupFilterBar(Map<String, String> filters) {
+        /*ArrayList<Map.Entry> fieldsList = new ArrayList<>();
         grid.getColumns().stream().filter(column -> column.isSortable() && column.getId() != null).forEach(column -> fieldsList.add(new AbstractMap.SimpleEntry(column.getId(), column.getCaption())));
         Label fieldLabel = new Label("Select filter field");
         filterBar.addComponent(fieldLabel);
@@ -99,37 +113,64 @@ public class MessagesGridFragment extends AbstractGridFragment {
         performFilteringButton.addClickListener((Button.ClickListener) event -> {
             //Cast filtering spell magic here!!!
         });
-        filterBar.addComponent(performFilteringButton);
+        filterBar.addComponent(performFilteringButton);*/
+        /*grid.getColumns()
+                .stream()
+                .forEach(column -> {
+                    TextField filterValue = new TextField();
+                    filterValue.setId(column.getId());
+                    filterValue.setWidth((float) column.getWidth(), Unit.PIXELS);
+                    filterValue.setReadOnly(!(column.isSortable() && column.getId() != null));
+                    filterBar.addComponent(filterValue);
+                });*/
+        HeaderRow headerRow = grid.prependHeaderRow();
+        grid.getColumns()
+                .stream()
+                .filter(column -> column.isSortable() && column.getId() != null)
+                .forEach(column -> {
+                    TextField filterField = new TextField();
+                    filterField.setHeight(32, Unit.PIXELS);
+                    filterField.setWidth(100, Unit.PERCENTAGE);
+                    filterField.addValueChangeListener((HasValue.ValueChangeListener<String>) event -> {
+                        updateFilter(filters, column.getId(), event.getValue());
+                    });
+                    headerRow.getCell(column.getId()).setComponent(filterField);
+                });
     }
 
-    private int getGridDataCount(GridFragmentMode mode, GridFragmentType direction, MessagesLazyLoadService messagesLazyLoadService) {
-        String keyWord = getKeyWordByMode(mode);
-        boolean inbound = direction == GridFragmentType.INBOUND;
+    private void updateFilter(Map<String, String> filters, String id, String value) {
+        System.out.println("Update filter for " + id + " with value: " + value);
+        filters.put(id, value);
+        setDataProvider(filters);
+    }
+
+    private int getGridDataCount(Map<String, String> filters) {
+        return messagesLazyLoadService.countByFilter(filters);
+    }
+
+    @NotNull
+    private Map<String, String> prepareBasicFilters(GridFragmentMode mode, String keyWord, boolean inbound) {
+        Map<String, String> filters = new HashMap<>();
+        filters.put("inbound", String.valueOf(inbound));
         if (mode == GridFragmentMode.ALL) {
-            return messagesLazyLoadService.countByInbound(inbound);
+            //return messagesLazyLoadService.countByInbound(inbound);
         } else {
             boolean terminal = mode != GridFragmentMode.REPROCESSING;
-            if (keyWord == null) {
+            filters.put("terminal", String.valueOf(terminal));
+            if (keyWord != null) {
+                filters.put("status", keyWord);
+            }
+            /*if (keyWord == null) {
                 return messagesLazyLoadService.countByInboundAndTerminal(inbound, terminal);
             } else {
                 return messagesLazyLoadService.countByInboundAndTerminalAndStatusContains(inbound, terminal, keyWord);
-            }
+            }*/
         }
+        return filters;
     }
 
-    private Stream<Message> prepareGridData(GridFragmentMode mode, GridFragmentType direction, MessagesLazyLoadService messagesLazyLoadService, int offset, int limit, Map<String, Boolean> sortOrder) {
-        String keyWord = getKeyWordByMode(mode);
-        boolean inbound = direction == GridFragmentType.INBOUND;
-        if (mode == GridFragmentMode.ALL) {
-            return messagesLazyLoadService.findByInbound(inbound, offset, limit, sortOrder).stream();
-        } else {
-            boolean terminal = mode != GridFragmentMode.REPROCESSING;
-            if (keyWord == null) {
-                return messagesLazyLoadService.findByInboundAndTerminal(inbound, terminal, offset, limit, sortOrder).stream();
-            } else {
-                return messagesLazyLoadService.findByInboundAndTerminalAndStatusContains(inbound, terminal, keyWord, offset, limit, sortOrder).stream();
-            }
-        }
+    private Stream<Message> prepareGridData(Map<String, String> filters, int offset, int limit, Map<String, Boolean> sortOrder) {
+        return messagesLazyLoadService.findByFilter(filters, offset, limit, sortOrder).stream();
     }
 
     @Nullable
@@ -156,7 +197,13 @@ public class MessagesGridFragment extends AbstractGridFragment {
     }
 
     private void setupGridColumns() {
-        grid.addColumn(Message::getId).setCaption("Id")
+        grid.addColumn((ValueProvider<Message, String>) message -> {
+            try {
+                return message.getId().split("_", 2)[1];
+            } catch (Exception e) {
+                return message.getId();
+            }
+        }).setCaption("Id")
                 .setSortable(true)
                 .setSortProperty("id")
                 .setId("id")
@@ -175,17 +222,23 @@ public class MessagesGridFragment extends AbstractGridFragment {
         grid.addColumn(Message::getDocumentType).setCaption("Document type")
                 .setSortable(true)
                 .setId("document_type")
-                .setSortProperty("document_type")
+                .setSortProperty("documentType")
                 .setHidable(true);
         grid.addColumn(Message::getDocumentNumber).setCaption("Document number")
                 .setSortable(true)
                 .setId("document_number")
-                .setSortProperty("document_number")
+                .setSortProperty("documentNumber")
                 .setHidable(true);
         grid.addColumn(Message::getDocumentDate).setCaption("Document date")
                 .setSortable(true)
                 .setId("document_date")
-                .setSortProperty("document_date")
+                .setSortProperty("documentDate")
+                .setHidable(true);
+
+        grid.addColumn(Message::getDocumentDate).setCaption("Due date")
+                .setSortable(true)
+                .setId("due_date")
+                .setSortProperty("dueDate")
                 .setHidable(true);
 
         grid.addColumn((ValueProvider<Message, String>) message ->
