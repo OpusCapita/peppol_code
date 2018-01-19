@@ -35,7 +35,7 @@ def test_modules = [
  * on how the groups are used in certain notifications.
  */
 recipients = [:]
-recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Gamans Sergejs <Sergejs.Gamans@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
+recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
 recipients.devops = "Didrihsons Edgars <Edgars.Didrihsons@opuscapita.com>"
 recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
 recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
