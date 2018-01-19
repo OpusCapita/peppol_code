@@ -22,7 +22,7 @@ import org.springframework.session.config.annotation.web.http.EnableSpringHttpSe
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.ui.portal", "com.opuscapita.peppol.commons"})
 @EnableSpringHttpSession
 @EnableJpaRepositories(basePackages = {"com.opuscapita.peppol.ui.portal.model"})
-@EntityScan(basePackages = {"com.opuscapita.peppol.commons.model", "com.opuscapita.peppol.commons.revised_model"})
+@EntityScan(basePackages = {"com.opuscapita.peppol.commons.revised_model"})
 @EnableDiscoveryClient
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)

@@ -231,7 +231,7 @@ public class DocumentInfo implements Serializable {
 
     @NotNull
     public String getProfileId() {
-        return profileId;
+        return profileId.trim();
     }
 
     public void setProfileId(String profileId) {
@@ -240,7 +240,7 @@ public class DocumentInfo implements Serializable {
 
     @NotNull
     public String getCustomizationId() {
-        return customizationId;
+        return customizationId.trim();
     }
 
     public void setCustomizationId(String customizationId) {
