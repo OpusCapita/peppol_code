@@ -85,27 +85,24 @@
 - include: reporter.yml
 #-------------------------------
 - set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R004.xml
-- set_fact: expected="'EHF-COMMON-R004'"
+#- set_fact: expected="'EHF-COMMON-R004'"
+#this error happens before validation, in document loader so custom check is needed
+- set_fact: expected="Missing mandatory field{{":"}} version_id"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
+- set_fact: notes="EHF-COMMON-R004- UBLVersionID must be present-  custom test as document loader checks for mandatory fields before validation"
 
-- name: send {{ file }} to validator REST
-  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
-  register: result
+- include: send_to_REST.yml
+- include: response_set.yml
 
-- set_fact: result_errors="{{ (result.stdout | from_json).errors }}"
-- set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
-- set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
-- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
-  when: active==true
+- set_fact: result_identifier="{{ result_errors.0.message }}"
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
   assert:
     that:
-      - "result_warnings == []"
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
+      - "expected in result_identifier"
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
