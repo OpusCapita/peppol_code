@@ -1,6 +1,7 @@
 ---
 - set_fact: file=/test-materials/EHF/EHF_2.0.12/creditnote/NONAT-T14-R033.xml
-- set_fact: expected="'NONAT-T10-R033'"
+- set_fact: expected="'EHF-COMMON-R003'"
+- set_fact: expected1="'NONAT-T14-R033'"
 - set_fact: valid="true"
 - set_fact: active="true"
 
@@ -10,6 +11,9 @@
 - set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
   when: result_validationError!=''
 - debug: var=result_identifier
+- set_fact: result_identifier1="{{ result_warnings.1.validationError.identifier }}"
+  when: result_validationError!=''
+- debug: var=result_identifier1
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -18,6 +22,7 @@
       - "result_errors == []"
       - "result_passed == {{ valid }}"
       - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result

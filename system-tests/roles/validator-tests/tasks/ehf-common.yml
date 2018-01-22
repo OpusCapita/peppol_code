@@ -32,7 +32,7 @@
 - set_fact: expected="'EHF-COMMON-R002'"
 - set_fact: expected1="'EUGEN-T10-R047'"
 - set_fact: valid="false"
-- set_fact: active="false"
+- set_fact: active="true"
 
 - name: send {{ file }} to validator REST
   shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
