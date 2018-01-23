@@ -65,13 +65,13 @@ dependencies {
 querydsl {
 	querydslDefault = true
 	jpa = true
-	querydslSourcesDir = 'querydsl'
+	querydslSourcesDir = 'build/querydsl'
 }
 
 idea {
 	module {
-		sourceDirs += file('querydsl')
-		generatedSourceDirs += file('querydsl')
+		sourceDirs += file('build/querydsl')
+		generatedSourceDirs += file('build/querydsl')
 	}
 }
 
