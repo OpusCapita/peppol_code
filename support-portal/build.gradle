@@ -10,7 +10,12 @@ buildscript {
 	}
 }
 
+plugins {
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.9"
+}
+
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
@@ -25,6 +30,7 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	maven { url "http://maven.vaadin.com/vaadin-addons" }
 }
 
 
@@ -42,6 +48,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	compile('org.springframework.boot:spring-boot-starter-jooq')
 	compile('org.springframework.session:spring-session')
+	compile 'com.querydsl:querydsl-core:4.1.4'
+	compile 'com.querydsl:querydsl-jpa:4.1.4'
 	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.15'
 	compile('com.vaadin:vaadin-spring-boot-starter')
 	compile fileTree(dir: 'libs', include: '*.jar')
@@ -54,7 +62,40 @@ dependencies {
 	optional "org.springframework.boot:spring-boot-configuration-processor"
 }
 
+querydsl {
+	querydslDefault = true
+	jpa = true
+	querydslSourcesDir = 'querydsl'
+}
+
+idea {
+	module {
+		sourceDirs += file('querydsl')
+		generatedSourceDirs += file('querydsl')
+	}
+}
+
+bootRun {
+	if ( project.hasProperty('jvmArgs') ) {
+		jvmArgs = (project.jvmArgs.split("\\s+") as List)
+
+	}
+}
+
+task copyModelFilesForQueryDslProcessing(type: Copy) {
+	from '../common-model/src/main/java/com/opuscapita/peppol/commons/revised_model'
+	into 'src/main/java/com/opuscapita/peppol/commons/revised_model'
+
+}
+
+tasks.withType(JavaExec) {
+	// Assign all Java system properties from
+	// the command line to the JavaExec task.
+	systemProperties System.properties
+}
+
 compileJava.dependsOn(processResources)
+compileJava.dependsOn(copyModelFilesForQueryDslProcessing)
 
 dependencyManagement {
 	imports {

@@ -31,6 +31,7 @@ public class OutboundView extends VerticalLayout implements View {
 
     @PostConstruct
     void init() {
+        setResponsive(true);
         setSizeFull();
         setDefaultComponentAlignment(Alignment.TOP_LEFT);
         setMargin(false);

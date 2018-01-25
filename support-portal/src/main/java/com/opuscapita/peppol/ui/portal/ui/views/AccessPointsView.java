@@ -1,6 +1,6 @@
 package com.opuscapita.peppol.ui.portal.ui.views;
 
-import com.opuscapita.peppol.commons.model.AccessPoint;
+import com.opuscapita.peppol.commons.revised_model.AccessPoint;
 import com.opuscapita.peppol.ui.portal.model.AccessPointRepository;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentMode;
 import com.opuscapita.peppol.ui.portal.ui.views.fragments.GridFragmentType;
