@@ -271,6 +271,53 @@
 
 - include: reporter.yml
 #-------------------------------
+
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R020-invoice-valid.xml
+- set_fact: valid="true"
+- set_fact: active="true"
+- set_fact: notes="Adding tax categories AE and G "
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_errors == []"
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R020-creditnote-valid.xml
+- set_fact: valid="true"
+- set_fact: active="true"
+- set_fact: notes="Adding tax categories AE and G "
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_errors == []"
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
 - set_fact: file=/test-materials/EHF/EHF_2.0.12/common/EHF-COMMON-R030.xml
 - set_fact: expected="'EHF-COMMON-R030'"
 - set_fact: valid="false"
