@@ -50,7 +50,6 @@ public class MessagesGridFragment extends AbstractGridFragment {
         this.direction = direction;
         this.mode = mode;
         grid = new Grid<>();
-        grid.addStyleName("cellFontSizeOverride");
         setupGridColumns();
         grid.setSizeFull();
         grid.addStyleName("cellFontSizeOverride");

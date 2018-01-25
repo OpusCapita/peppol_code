@@ -1,0 +1,32 @@
+---
+# doing asserts for each module #
+
+- include: mlr-reporter_assert.yml
+
+#report update START ---------------------
+- name: update test results
+  delegate_to: localhost
+  lineinfile:
+    create: no
+    dest: "{{report_path}}/mlr-report-{{ansible_date_time.iso8601_basic}}.csv"
+    state: present
+    regexp: "^{{counter}},{{file}},{{ uuid }}"
+    line: "{{counter}},{{file}},{{ uuid }},{{mlr_result}}"
+#report update END -----------------------
+
+#checking for failures in report- test has to fail if any asseert has failed #
+#- debug:
+#    var: report_path
+#- name: register report
+#  delegate_to: localhost
+#  shell: cat "{{report_path}}/mlr-report-{{ansible_date_time.iso8601_basic}}.csv"
+#  register: report
+
+#- debug:
+#    var: report
+
+#- name: check if any assert has failed up until now
+#  fail: msg="MLR-tests failed"
+#  when:
+#   - "'Failed' in report.stdout"
+...

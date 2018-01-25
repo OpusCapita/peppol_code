@@ -1,0 +1,16 @@
+---
+#File_list.yml#
+#This is where all the test materials are taken from #
+
+- include: file_to_transport-from-a2a.yml
+  vars: 
+    file: "{{item}}"
+  with_items:
+    - "{{test_data_path}}/custom_materials/MLR-ack-tests/1-test-mlr.xml"
+    - "{{test_data_path}}/custom_materials/MLR-ack-tests/2-test-mlr.xml"
+    - "{{test_data_path}}/custom_materials/MLR-ack-tests/4-test-mlr.xml"
+    - "{{test_data_path}}/custom_materials/MLR-ack-tests/5-test-mlr.xml"
+    - "{{test_data_path}}/custom_materials/MLR-ack-tests/6-test-mlr.xml"
+    - "{{test_data_path}}/custom_materials/MLR-ack-tests/7-test-mlr.xml"
+    - "{{test_data_path}}/custom_materials/MLR-ack-tests/9-test-mlr.xml"
+...

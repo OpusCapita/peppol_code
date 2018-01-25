@@ -21,7 +21,7 @@ import java.io.InputStream;
  * @author Sergejs.Roze
  */
 @Component
-@Lazy
+//@Lazy
 public class DocumentParser {
     private final static Logger logger = LoggerFactory.getLogger(DocumentParser.class);
     private final SAXParserFactory saxParserFactory;

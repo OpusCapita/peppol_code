@@ -1,4 +1,31 @@
 ---
+- set_fact: file=/test-materials/EHF/EHF_2.0.12/creditnote/NONAT-T14-R033.xml
+- set_fact: expected="'NONAT-T14-R033'"
+- set_fact: valid="false"
+- set_fact: active="true"
+
+- include: send_to_REST.yml
+- include: response_set.yml
+
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: result_validationError!=''
+- debug: var=result_identifier
+
+- name: check if validation is correct for {{ file }}
+  ignore_errors: yes
+  assert:
+    that:
+      - "result_warnings == []"
+      - "result_passed == {{ valid }}"
+      - "result_identifier == {{ expected }} "
+    msg: "Test for {{ file }} failed"
+  when: active==true
+  register: assert_result
+- debug: var=assert_result
+
+- include: reporter.yml
+#-------------------------------
+
 - set_fact: file=/test-materials/EHF/EHF_2.0.12/creditnote/NONAT-T14-R030.xml
 - set_fact: expected="'NONAT-T14-R030'"
 - set_fact: valid="false"

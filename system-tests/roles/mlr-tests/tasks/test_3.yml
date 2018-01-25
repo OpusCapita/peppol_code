@@ -1,0 +1,65 @@
+---
+#custom handling for MLR test #3 (see wiki) 
+
+#sending file to outbound, then doing asserts for each module
+- set_fact: uuid="{{99999 | random | to_uuid}}"
+- debug: var=uuid
+
+- set_fact: file="{{test_data_path}}/custom_materials/MLR-ack-tests/3-test-mlr.xml"
+- debug: var=file
+
+- name: Copy file to outbound from-a2a dir
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  copy:
+    remote_src: True
+    src: "{{ file }}"
+    dest: "{{transport_from_a2a_path}}/{{ file| basename }}-{{ uuid }}.xml"
+
+#report START ------
+- set_fact: counter="{{counter| int +1 }}"
+  register: counter
+- debug: var=counter
+
+- name: update test results
+  delegate_to: localhost
+  lineinfile:
+    create: yes
+    dest: "{{report_path}}/mlr-report-{{ansible_date_time.iso8601_basic}}.csv"
+    state: present
+    line: '{{counter}},{{file}},{{uuid}}'
+#report END -------
+
+# doing asserts for MLR #3 #
+
+- name: get mlr-reporter log & check if MLR is stored  uuid "{{ uuid }}" for "{{ file }}"
+  ignore_errors: yes
+  shell: docker logs mlr-reporter | grep "{{ uuid }}"| grep "MLR successfully stored"
+#  shell: docker logs mlr-reporter | grep "test what happens when it should fail"
+  register: log
+  until: log.rc == 0
+#  until: uuid in log.stdout
+  retries: 300
+  delay: 1
+- debug: var=log
+
+#rc is response code for shell commands 0=success and anything else=failed
+- set_fact: mlr_result="Failed to find uuid nr3"
+  when: log.rc != 0
+- set_fact: mlr_result="Success- MLR nr3 successfully stored!"
+  when: log.rc == 0
+- debug: var=mlr_result
+
+#report update START ---------------------
+- name: update test results
+  delegate_to: localhost
+  lineinfile:
+    create: no
+    dest: "{{report_path}}/mlr-report-{{ansible_date_time.iso8601_basic}}.csv"
+    state: present
+    regexp: "^{{counter}},{{file}},{{ uuid }}"
+    line: "{{counter}},{{file}},{{ uuid }},{{mlr_result}}"
+#report update END -----------------------
+
+...
+

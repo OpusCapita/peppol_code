@@ -2,7 +2,8 @@
 
 - name: get outbound log & check if uuid "{{ uuid }}" for "{{ file }}" is found
   ignore_errors: yes
-  shell: docker logs outbound | grep "{{ uuid }}"
+  shell: docker service logs peppol_outbound | grep "{{ uuid }}"
+#  shell: docker logs outbound | grep "{{ uuid }}"
   register: log
   until: uuid in log.stdout
   retries: 120
@@ -21,31 +22,5 @@
   when:
     - log.stdout | search(".*Message.*"+uuid+".*sent with")
 
-#- name: get outbound log & check if uuid "{{ uuid }}" "{{ file }}" is found in outbound log 
-#  ignore_errors: yes
-#  shell: docker logs outbound
-#  register: log
-#  until: log.stdout | search(".*Message.*"+uuid+".*sent with")
-#  retries: 10
-#  delay: 1
-#  register: search-result
-#- debug: var=search-result
-
-#- name: assert for real "{{ uuid }}"  "{{ file }}"
-#  ignore_errors: yes
-#  assert:
-#    that:
-#      - log.stdout | search(".*Message.*"+uuid+".*sent with")
-#    msg: "Failed"
-#  register: result
-
-#- set_fact: outbound_result="outbound={{result.msg}}"
 - debug: var=outbound_result
-
-#check for failures as well and adjust report accordingly->
-#- name: check if outbound sending has failed
-#  set_fact: outbound_result="outbound=Failed"
-#  when:
-#    - log.stdout | search(".*Message processing failed.*"+fileName)
-
 ...

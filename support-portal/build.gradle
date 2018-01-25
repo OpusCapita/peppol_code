@@ -65,13 +65,13 @@ dependencies {
 querydsl {
 	querydslDefault = true
 	jpa = true
-	querydslSourcesDir = 'querydsl'
+	querydslSourcesDir = 'build/querydsl'
 }
 
 idea {
 	module {
-		sourceDirs += file('querydsl')
-		generatedSourceDirs += file('querydsl')
+		sourceDirs += file('build/querydsl')
+		generatedSourceDirs += file('build/querydsl')
 	}
 }
 
@@ -86,12 +86,6 @@ task copyModelFilesForQueryDslProcessing(type: Copy) {
 	from '../common-model/src/main/java/com/opuscapita/peppol/commons/revised_model'
 	into 'src/main/java/com/opuscapita/peppol/commons/revised_model'
 
-}
-
-tasks.withType(JavaExec) {
-	// Assign all Java system properties from
-	// the command line to the JavaExec task.
-	systemProperties System.properties
 }
 
 compileJava.dependsOn(processResources)
