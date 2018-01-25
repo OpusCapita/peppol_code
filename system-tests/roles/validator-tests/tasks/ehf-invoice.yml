@@ -2,13 +2,13 @@
 
 - set_fact: file=/test-materials/EHF/EHF_2.0.12/invoice/NONAT-T10-R033.xml
 - set_fact: expected="'NONAT-T10-R033'"
-- set_fact: valid="true"
+- set_fact: valid="false"
 - set_fact: active="true"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
-- set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
   when: result_validationError!=''
 - debug: var=result_identifier
 
@@ -16,7 +16,7 @@
   ignore_errors: yes
   assert:
     that:
-      - "result_errors == []"
+      - "result_warnings == []"
       - "result_passed == {{ valid }}"
       - "result_identifier == {{ expected }} "
     msg: "Test for {{ file }} failed"
