@@ -88,6 +88,12 @@ task copyModelFilesForQueryDslProcessing(type: Copy) {
 
 }
 
+tasks.withType(JavaExec) {
+    // Assign all Java system properties from
+    // the command line to the JavaExec task.
+    systemProperties System.properties
+}
+
 compileJava.dependsOn(processResources)
 compileJava.dependsOn(copyModelFilesForQueryDslProcessing)
 
