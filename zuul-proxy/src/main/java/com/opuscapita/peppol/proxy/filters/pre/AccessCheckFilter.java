@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,15 +50,28 @@ public class AccessCheckFilter extends ZuulFilter {
 
     @Override
     public Object run() {
-        RequestContext requestContext = RequestContext.getCurrentContext();
-        HttpServletRequest request = requestContext.getRequest();
-        logger.debug(request.getRemoteAddr());
-        if (isNotAllowed(request)) {
-            // tell the context to stop this request and return 403
-            requestContext.unset();
-            requestContext.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
+        try {
+            RequestContext requestContext = RequestContext.getCurrentContext();
+            HttpServletRequest request = requestContext.getRequest();
+            logger.debug(request.getRemoteAddr());
+            if (isNotAllowed(request)) {
+                reject(requestContext);
+            }
+            return null;
+        } catch (Exception e) {
+            logger.error("Filter threw an exception: " + e.getMessage(), e);
+            reject(RequestContext.getCurrentContext());
+            return null;
         }
-        return null;
+    }
+
+    private void reject(RequestContext context) {
+        try {
+            context.unset();
+            context.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
+        } catch (Exception e) {
+            logger.error("Failed to set response status: " + e.getMessage(), e);
+        }
     }
 
     boolean isNotAllowed(HttpServletRequest request) {

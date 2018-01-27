@@ -33,7 +33,7 @@ public class RuleSetConfig {
      * @return the rule names or null
      */
     @Nullable
-    // there is a bug in Spring that prevents dots from being used in keys and values in YAML
+    // there is a feature in Spring that prevents dots from being used in keys and values in YAML
     // therefore all dots are replaced with pipes
     List<String> getRules(@NotNull String documentType) {
         if (types == null) {
