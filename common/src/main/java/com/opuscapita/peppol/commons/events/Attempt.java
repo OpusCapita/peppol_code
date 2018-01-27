@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.events;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.SortedSet;
@@ -38,7 +39,9 @@ public class Attempt implements Comparable<Attempt> {
 
     @Override
     public int compareTo(@NotNull Attempt other) {
-        int res = Long.compare(Long.valueOf(id.substring(0,13)), Long.valueOf(other.getId().substring(0,13)));
+        int res = Long.compare(
+                Long.valueOf(StringUtils.left(id, 13)),
+                Long.valueOf(StringUtils.left(other.getId(), 13)));
         return res != 0 ? res : id.compareTo(other.getId());
     }
 
