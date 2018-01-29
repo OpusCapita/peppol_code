@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -40,9 +39,6 @@ public class StorageImpl implements Storage {
     private void check(File file) throws IOException {
         if (!file.canRead()) {
             throw new IOException("Unable to read file " + file.getAbsolutePath());
-        }
-        if (!Files.isWritable(file.toPath())) { // file.isWritable checks for read-only attribute in DOS and that's all
-            throw new IOException("File is not writeable " + file.getAbsolutePath());
         }
         if (file.length() == 0) {
             throw new IOException("File is empty: " + file.getAbsolutePath());
