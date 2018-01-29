@@ -59,14 +59,14 @@ public class OutboundControllerTest {
     }
 
     @Test
-    public void testNoRetries() throws Exception {
+    public void testNotRetriableError() throws Exception {
         when(fakeSender.send(any())).thenThrow(new IOException("test exception"));
 
         OutboundController controller =
                 new OutboundController(messageQueue, ublSender, fakeSender, svefaktura1Sender, testSender, oxalisErrorRecognizer);
         controller.setEmailNotificatorQueue("email_notificator");
         controller.setComponentName("component_name");
-        when(oxalisErrorRecognizer.recognize(any(Exception.class))).thenReturn(SendingErrors.UNKNOWN_RECIPIENT);
+        when(oxalisErrorRecognizer.recognize(any(Exception.class))).thenReturn(SendingErrors.SECURITY_ERROR);
 
         ContainerMessage cm = new ContainerMessage("meatdata", "filename", Endpoint.TEST);
         DocumentInfo di = new DocumentInfo();
@@ -85,6 +85,34 @@ public class OutboundControllerTest {
             assertEquals(ProcessType.OUT_OUTBOUND, cm.getProcessingInfo().getCurrentEndpoint().getType());
             assertEquals("test exception", cm.getProcessingInfo().getProcessingException());
         }
+
+        verifyZeroInteractions(ublSender);
+        verifyZeroInteractions(testSender);
+        verifyZeroInteractions(svefaktura1Sender);
+        verifyZeroInteractions(messageQueue);
+    }
+
+    @Test
+    public void testEmailWithoutTicket() throws Exception {
+        when(fakeSender.send(any())).thenThrow(new IOException("test exception"));
+        when(oxalisErrorRecognizer.recognize(any(Throwable.class))).thenReturn(SendingErrors.UNKNOWN_RECIPIENT);
+
+        OutboundController controller =
+                new OutboundController(messageQueue, ublSender, fakeSender, svefaktura1Sender, testSender, oxalisErrorRecognizer);
+        controller.setEmailNotificatorQueue("email_notificator");
+        controller.setComponentName("component_name");
+
+        ContainerMessage cm = new ContainerMessage("meatdata", "filename", Endpoint.TEST);
+        DocumentInfo di = new DocumentInfo();
+        cm.setDocumentInfo(di);
+
+        Route route = new Route();
+        route.getEndpoints().add("next");
+        route.setDescription("test route");
+        assertNotNull(cm.getProcessingInfo());
+        cm.getProcessingInfo().setRoute(route);
+
+        controller.send(cm);
 
         verifyZeroInteractions(ublSender);
         verifyZeroInteractions(testSender);
