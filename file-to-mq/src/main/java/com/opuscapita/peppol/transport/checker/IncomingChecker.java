@@ -88,7 +88,7 @@ public class IncomingChecker {
     }
 
     // check subdirectories, file age and file mask
-    private void receive(File directory) throws Exception {
+    private void receive(File directory) {
         logger.debug("Checking directory " + directory.getAbsolutePath());
 
         Date earlier = DateUtils.addSeconds(new Date(), -age);
