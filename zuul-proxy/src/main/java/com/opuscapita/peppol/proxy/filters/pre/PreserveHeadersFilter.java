@@ -17,9 +17,9 @@ import java.util.List;
  */
 
 public class PreserveHeadersFilter extends ZuulFilter {
-    public static final String HEADER_HOST = "Host";
-    public static final String REQUEST_SERVICE = "Service";
-    public static final Logger logger = LoggerFactory.getLogger(PreserveHeadersFilter.class);
+    private static final String HEADER_HOST = "Host";
+    private static final String REQUEST_SERVICE = "Service";
+    private static final Logger logger = LoggerFactory.getLogger(PreserveHeadersFilter.class);
     private final PreserveHeaderFilterProperties preserveHeaderFilterProperties;
     private final String zuulServletPath;
 
@@ -42,23 +42,28 @@ public class PreserveHeadersFilter extends ZuulFilter {
         return true;
     }
 
+    @Override
     public Object run() {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        List<String> headersToPreserve = preserveHeaderFilterProperties.getHeadersToPreserve();
-        if (!headersToPreserve.contains(HEADER_HOST)) {
-            headersToPreserve.add(HEADER_HOST);
-        }
-        headersToPreserve.forEach(header -> {
-            logger.debug("Header: " + header + " does have value -> " + headerHasValue(ctx, header));
-            if (headerHasValue(ctx, header)) {
-                String value = ctx.getRequest().getHeaders(header).nextElement();
-                ctx.getZuulRequestHeaders().put(header, value);
-                logger.debug("Stored to zuul request headers [" + header + ":" + value + "]");
+        try {
+            RequestContext ctx = RequestContext.getCurrentContext();
+            List<String> headersToPreserve = preserveHeaderFilterProperties.getHeadersToPreserve();
+            if (!headersToPreserve.contains(HEADER_HOST)) {
+                headersToPreserve.add(HEADER_HOST);
             }
-        });
-        /*String host = ctx.getRequest().getHeaders(HEADER_HOST).nextElement();
-        ctx.getZuulRequestHeaders().put(HEADER_HOST, host);*/
-        ctx.getZuulRequestHeaders().put(REQUEST_SERVICE, RequestUtils.extractRequestedService(ctx.getRequest(), zuulServletPath));
+            headersToPreserve.forEach(header -> {
+                logger.debug("Header: " + header + " does have value -> " + headerHasValue(ctx, header));
+                if (headerHasValue(ctx, header)) {
+                    String value = ctx.getRequest().getHeaders(header).nextElement();
+                    ctx.getZuulRequestHeaders().put(header, value);
+                    logger.debug("Stored to zuul request headers [" + header + ":" + value + "]");
+                }
+            });
+            /*String host = ctx.getRequest().getHeaders(HEADER_HOST).nextElement();
+            ctx.getZuulRequestHeaders().put(HEADER_HOST, host);*/
+            ctx.getZuulRequestHeaders().put(REQUEST_SERVICE, RequestUtils.extractRequestedService(ctx.getRequest(), zuulServletPath));
+        } catch (Exception e) {
+            logger.error("Filter threw an exception: " + e.getMessage(), e);
+        }
         return null;
     }
 
