@@ -72,13 +72,13 @@ public class StorageImpl implements Storage {
     @NotNull
     @Override
     public String moveToTemporary(@NotNull File source) throws IOException {
-        check(source);
         return moveToTemporary(source, null);
     }
 
     @NotNull
     @Override
     public String moveToTemporary(@NotNull File source, @Nullable String backupDir) throws IOException {
+        check(source);
         File dir = createDailyDirectory();
 
         File result = StorageUtils.prepareUnique(dir, source.getName());
