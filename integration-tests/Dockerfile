@@ -2,7 +2,7 @@ FROM d-l-tools.ocnet.local:443/openjdk:8u141-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV INTEGRATION_TESTS_HOME "/opt/local/services/peppol2.0/integration-tests"
-ENV INTEGRATION_TESTS_CONFIG "/etc/peppol2.0/integration-tests"
+ENV INTEGRATION_TESTS_CONFIG "/peppol/config/integration-tests"
 ENV OXALIS_HOME "/peppol/config/oxalis"
 
 RUN \
