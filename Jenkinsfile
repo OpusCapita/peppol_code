@@ -18,7 +18,7 @@ def modules = [
     [name: 'support-ui'],
     [name: 'support-portal'],
     [name: 'validator'],
-
+    [name: 'mq-to-jms'],
     [name: 'configuration-server'],
     [name: 'service-discovery'],
     [name: 'zuul-proxy']
