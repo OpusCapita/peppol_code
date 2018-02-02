@@ -6,9 +6,12 @@ ENV INTEGRATION_TESTS_CONFIG "/peppol/config/integration-tests"
 ENV OXALIS_HOME "/peppol/config/oxalis"
 
 USER root
+
+ADD ["src/main/resources", "/etc/resources"]
 RUN set -x \
     && mkdir -p "${INTEGRATION_TESTS_HOME}" "${INTEGRATION_TESTS_CONFIG}" \
     && chown -R peppol "${INTEGRATION_TESTS_HOME}" "${INTEGRATION_TESTS_CONFIG}" \
+    && chown -R peppol /etc/resources \
     && ln -s "${INTEGRATION_TESTS_CONFIG}/" "${INTEGRATION_TESTS_HOME}/config"
 
 USER peppol
@@ -16,7 +19,6 @@ USER peppol
 WORKDIR "${INTEGRATION_TESTS_HOME}"
 ADD ["build/libs/integration-tests.jar", "integration-tests.jar"]
 
-ADD ["src/main/resources", "/etc/resources"]
 # oxalis-standalone for testing
 ADD ["bin/oxalis-standalone.jar", "oxalis-standalone.jar"]
 ADD ["bin/send-to-peppol.sh", "send-to-peppol.sh"]
