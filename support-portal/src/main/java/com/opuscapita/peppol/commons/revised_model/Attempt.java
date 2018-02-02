@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.revised_model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.jetbrains.annotations.NotNull;
@@ -81,7 +82,9 @@ public class Attempt implements Comparable<Attempt> {
     public int compareTo(@NotNull Attempt other) {
         int part1 = getMessage().compareTo(other.getMessage());
         //int part2 = Integer.compare(getId().hashCode(), other.getId().hashCode());
-        int res = Long.compare(Long.valueOf(id.substring(0,13)), Long.valueOf(other.getId().substring(0,13)));
+        int res = Long.compare(
+                Long.valueOf(StringUtils.left(id, 13)),
+                Long.valueOf(StringUtils.left(other.getId(), 13)));
         int part2 = res != 0 ? res : id.compareTo(other.getId());
         if(part1 != 0) {
             return part1;
