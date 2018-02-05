@@ -64,7 +64,7 @@ public class MessageQueueToJmsApp {
     public Context context(Environment environment,
                            @Value("${java.naming.factory.initial}") String initialContextConf,
                            @Value("${connectionfactory.qpidConnectionFactory}") String connectionFactoryConf,
-                           @Value("topic.peppol") String topicConf
+                           @Value("${topic.peppol}") String topicConf
     ) throws Exception {
         Properties properties = new Properties();
         /*Iterator<PropertySource<?>> iterator = ((AbstractEnvironment) environment)
