@@ -18,16 +18,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.env.PropertySource;
 
 import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.Iterator;
 import java.util.Properties;
 
 /**
@@ -65,9 +61,13 @@ public class MessageQueueToJmsApp {
     }
 
     @Bean
-    public Context context(Environment environment) throws Exception {
+    public Context context(Environment environment,
+                           @Value("${java.naming.factory.initial}") String initialContextConf,
+                           @Value("${connectionfactory.qpidConnectionFactory}") String connectionFactoryConf,
+                           @Value("topic.peppol") String topicConf
+    ) throws Exception {
         Properties properties = new Properties();
-        Iterator<PropertySource<?>> iterator = ((AbstractEnvironment) environment)
+        /*Iterator<PropertySource<?>> iterator = ((AbstractEnvironment) environment)
                 .getPropertySources()
                 .iterator();
         while (iterator.hasNext()) {
@@ -76,7 +76,10 @@ public class MessageQueueToJmsApp {
                 properties.putAll(((MapPropertySource)propertySource).getSource());
             }
         }
-
+*/
+        properties.put("java.naming.factory.initial", initialContextConf);
+        properties.put("connectionfactory.qpidConnectionFactory", connectionFactoryConf);
+        properties.put("topic.peppol", topicConf);
         properties.list(System.out);
         return new InitialContext(properties);
     }
