@@ -10,6 +10,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import de.steinwedel.messagebox.MessageBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,26 @@ public class LoginUI extends UI {
     public void loginButtonClick(Button.ClickEvent e) {
         //authorize/authenticate user
         //tell spring that my user is authenticated and dispatch to my mainUI
+        try {
+            performLogin();
+            redirectToStartPage();
+        } catch (Exception exc) {
+            MessageBox
+                    .createError()
+                    .withCaption("Login failed")
+                    .withMessage("Could not login you to portal, please check your credentials and/or contact support. \n" + exc.getMessage())
+                    .withOkButton(() -> redirectToStartPage())
+                    .open();
+        } finally {
+
+        }
+    }
+
+    protected void redirectToStartPage() {
+        getPage().setLocation(baseUrl.isEmpty() ? "/" : baseUrl);
+    }
+
+    protected void performLogin() {
         Authentication authenticated;
         if (user.getValue().equalsIgnoreCase("test") && password.getValue().equalsIgnoreCase("test")) {
             authenticated = new Authentication() {
@@ -140,7 +161,6 @@ public class LoginUI extends UI {
             authenticated = umsAuthenticationProvider.authenticate(auth);
         }
         SecurityContextHolder.getContext().setAuthentication(authenticated);
-        getPage().setLocation(baseUrl.isEmpty() ? "/" : baseUrl);
     }
 
 }
