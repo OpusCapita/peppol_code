@@ -1,3 +1,10 @@
+#Load tests
+load-tests-l:
+	ansible-playbook -i local.hosts -K load-tests.yml
+load-tests-s:
+	ansible-playbook -i stage.hosts -K load-tests.yml
+
+#------------------------------------------------------------
 #Spike tests
 spike-test-outbound-s:
 	ansible-playbook -i stage.hosts -K spike-test-outbound.yml
