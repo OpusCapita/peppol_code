@@ -47,7 +47,7 @@ public class CommonMessageReceiver {
             logger.warn("Container message is null, exiting");
             reportError(new IllegalArgumentException("Container message is null"), "Container message is null");
         } else {
-            logger.debug("Message received, file id: " + cm.getFileName());
+            //logger.debug("Message received, file id: " + cm.getFileName());
             processor.process(cm);
         }
     }

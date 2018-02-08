@@ -102,7 +102,6 @@ public class StorageImpl implements Storage {
                 throw new IOException("Failed to create directory: " + dir);
             }
         }
-
         return dir;
     }
 
