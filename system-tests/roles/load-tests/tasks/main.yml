@@ -34,6 +34,14 @@
 #  with_items:
 #    - /peppol/data/storage/performance-tests/tmp
 
+#convert string to date - ToDo find how to handle real timestamp!!
+- name: convert string to date
+  set_fact: date="{{ "2018-02-09 18:31:16" |to_datetime }}"
+- name: debug date
+  debug: var=date
+- pause:
+    minutes: 5
+
 #define stuff
 #- include: rabbitmqadmin.yml
 - set_fact: file="/peppol/data/storage/performance-tests/small-file/small-file-16KB.xml"
@@ -131,7 +139,7 @@
   register: first_timestamp
 - name: debug FIRST timestamp
   debug: var=first_timestamp
-- set_fact: first_timestamp="{{ first_timestamp }}"
+- set_fact: first_timestamp="{{ first_timestamp.stdout }}"
 - name: debug FIRST timestamp
   debug: var=first_timestamp
  
@@ -144,7 +152,22 @@
   until: 'uuidl in logl.stdout'
   retries: 300
   delay: 1
-- name: debug FIRST grep
+- name: debug LAST grep
   debug: var=logl.stdout
+- name: get timestamp
+  shell: echo "{{ logl.stdout }}" | awk '{sub(/INFO.*/,x)}1'
+  register: last_timestamp
+- name: debug LAST timestamp
+  debug: var=last_timestamp
+- set_fact: last_timestamp="{{ last_timestamp.stdout }}"
+- name: debug LAST timestamp
+  debug: var=last_timestamp
+
+#convert string to date
+- name: convert string to date
+  set_fact: date="{{ "2016-08-14 20:00:12" |to_datetime }}"
+- name: debug date
+  debug: var=date
+
 
 ...
