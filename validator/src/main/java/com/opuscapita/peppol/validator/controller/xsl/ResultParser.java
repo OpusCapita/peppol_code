@@ -66,7 +66,7 @@ public class ResultParser {
     private ValidationError parseAttributes(Attributes attr, ValidationRule rule) {
         String flag = getValue(attr, "flag");
         if ("fatal".equals(flag) || "warning".equals(flag)) {
-            if (rule.getSuppress() == null || !rule.getSuppress().contains(getValue(attr, "test"))) {
+            if (rule.getSuppress() == null || !rule.getSuppress().contains(getValue(attr, "id"))) {
                 return new ValidationError("Validation error")
                         .withTest(getValue(attr, "test"))
                         .withIdentifier(getValue(attr, "id"))
