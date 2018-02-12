@@ -128,7 +128,7 @@ try {
             stage('Integration Tests') {
                 try {
                     dir('infra/ap2/ansible') {
-                        ansiblePlaybook('integration-tests.yml', 'stage-integration.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                        ansiblePlaybook('integration-tests.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
                     }
                 } catch(e) {
                     failBuild(
