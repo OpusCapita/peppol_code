@@ -10,6 +10,8 @@ import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.transport.controller.TransportController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +37,6 @@ public class MessageQueueToJmsApp {
     @Value("${peppol.jms.destination}")
     String jmsDestination;
 
-    @Value(("${peppol.jms.user}"))
-    String jmsUser;
-
-    @Value("${peppol.jms.password}")
-    String jmsPassword;
-
     @Autowired
     Session session;
 
@@ -49,6 +45,8 @@ public class MessageQueueToJmsApp {
 
     @Autowired
     Connection connection;
+
+    private final static Logger logger = LoggerFactory.getLogger(MessageQueueToJmsApp.class);
 
 
     @Value("${peppol.component.name}")
@@ -90,10 +88,22 @@ public class MessageQueueToJmsApp {
     }
 
     @Bean
-    public Connection connection(Context context) throws Exception {
+    public Connection connection(Context context,
+                                 @Value("${peppol.jms.user}") String jmsUser,
+                                 @Value("${peppol.jms.password}") String jmsPassword
+    ) throws Exception {
         ConnectionFactory connectionFactory
                 = (ConnectionFactory) context.lookup("qpidConnectionFactory");
-        Connection connection = connectionFactory.createConnection();
+        Connection connection;
+        try {
+            logger.info("Trying anonymous JMS connection");
+            connection = connectionFactory.createConnection();
+            logger.info("Connected to JMS anonymously");
+        } catch (Exception e) {
+            logger.info("Anonymous connection to JMS failed, trying with credentials now.");
+            connection = connectionFactory.createConnection(jmsUser, jmsPassword);
+            logger.info("Connected to JMS with credentials.");
+        }
         connection.start();
         return connection;
     }
