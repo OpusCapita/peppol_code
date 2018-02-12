@@ -128,7 +128,7 @@ try {
             stage('Integration Tests') {
                 try {
                     dir('infra/ap2/ansible') {
-                        ansiblePlaybook('integration-tests.yml', 'stage-integration.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                        ansiblePlaybook('integration-tests.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
                     }
                 } catch(e) {
                     failBuild(
@@ -140,7 +140,7 @@ try {
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/integration-tests-results.html'
                     dir('infra/ap2/ansible') {
                         // clean up the integration-tests environment (destroy everything)
-                        ansiblePlaybook('integration-tests-clean.yml', 'stage-integration.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                        ansiblePlaybook('integration-tests-clean.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
                     }
                 }
             }
@@ -148,7 +148,7 @@ try {
             stage('Deployment to Stage') {
                 try {
                     dir('infra/ap2/ansible') {
-                        ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                        ansiblePlaybook('peppol-stage.yml', 'environments/stage/hosts', 'ansible-sudo', "peppol_version=${release_version}")
                     }
                 }
                 catch(e) {
@@ -187,7 +187,7 @@ try {
                 if (release_type in ['patch_release', 'minor_release', 'major_release']) {
                     try {
                         dir('infra/ap2/ansible') {
-                            ansiblePlaybook('peppol-components.yml', 'production.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                            ansiblePlaybook('peppol-production.yml', 'environments/production/hosts', 'ansible-sudo', "peppol_version=${release_version}")
                         }
                     }
                     catch(e) {
