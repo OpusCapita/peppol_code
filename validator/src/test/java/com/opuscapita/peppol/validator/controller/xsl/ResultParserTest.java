@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.validator.controller.body.ValidationRule;
 import org.junit.Test;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -29,7 +30,7 @@ public class ResultParserTest {
         cm.getProcessingInfo().setCurrentStatus(new Endpoint("test", ProcessType.TEST), "test");
 
         try (InputStream inputStream = ResultParserTest.class.getResourceAsStream("/xsl/result/no_error_result.xml")) {
-            cm = resultParser.parse(cm, inputStream);
+            cm = resultParser.parse(cm, inputStream, new ValidationRule());
         }
 
         assertTrue(cm.getDocumentInfo().getErrors().isEmpty());

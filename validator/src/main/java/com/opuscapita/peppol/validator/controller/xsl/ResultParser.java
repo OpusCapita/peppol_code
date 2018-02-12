@@ -3,6 +3,7 @@ package com.opuscapita.peppol.validator.controller.xsl;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.ValidationError;
+import com.opuscapita.peppol.validator.controller.body.ValidationRule;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
@@ -29,7 +30,8 @@ public class ResultParser {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public ContainerMessage parse(@NotNull ContainerMessage cm, @NotNull InputStream xml) throws ParserConfigurationException, SAXException, IOException {
+    public ContainerMessage parse(@NotNull ContainerMessage cm, @NotNull InputStream xml, @NotNull ValidationRule rule)
+            throws ParserConfigurationException, SAXException, IOException {
         SAXParser parser = saxParserFactory.newSAXParser();
         Endpoint endpoint = cm.getProcessingInfo().getCurrentEndpoint();
 
@@ -37,14 +39,14 @@ public class ResultParser {
             ValidationError current = null;
 
             @Override
-            public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+            public void startElement(String uri, String localName, String qName, Attributes attributes) {
                 if (attributes.getIndex("test") != -1) {
-                    current = parseAttributes(attributes);
+                    current = parseAttributes(attributes, rule);
                 }
             }
 
             @Override
-            public void characters(char[] ch, int start, int length) throws SAXException {
+            public void characters(char[] ch, int start, int length) {
                 String line = new String(ch, start, length);
                 if (current != null && StringUtils.isNotBlank(line)) {
                     current = current.withText(line);
@@ -61,14 +63,16 @@ public class ResultParser {
         return cm;
     }
 
-    private ValidationError parseAttributes(Attributes attr) {
+    private ValidationError parseAttributes(Attributes attr, ValidationRule rule) {
         String flag = getValue(attr, "flag");
         if ("fatal".equals(flag) || "warning".equals(flag)) {
-            return new ValidationError("Validation error")
-                    .withTest(getValue(attr, "test"))
-                    .withIdentifier(getValue(attr,"id"))
-                    .withLocation(getValue(attr, "location"))
-                    .withFlag(flag);
+            if (rule.getSuppress() == null || !rule.getSuppress().contains(getValue(attr, "test"))) {
+                return new ValidationError("Validation error")
+                        .withTest(getValue(attr, "test"))
+                        .withIdentifier(getValue(attr, "id"))
+                        .withLocation(getValue(attr, "location"))
+                        .withFlag(flag);
+            }
         }
         return null;
     }

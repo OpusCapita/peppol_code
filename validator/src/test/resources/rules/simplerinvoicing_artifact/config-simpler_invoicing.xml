@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configurations xmlns="http://difi.no/xsd/vefa/validator/1.0" name="si.ubl.invoice1.x">
+    <package>SI-UBL 1.1 and 1.2</package>
+    <configuration>
+        <identifier>SI-UBL-INV-1.1</identifier>
+        <title>SimplerInvoicing UBL Invoice v1.1 (PEPPOL BIS v2 profile 4a)</title>
+        <profileId>urn:www.cenbii.eu:profile:bii04:ver1.0</profileId>
+        <customizationId>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1</customizationId>
+        <file path="SI-UBL-INV-1.1.xsl"/>
+    </configuration>
+    <configuration>
+        <identifier>SI-UBL-INV-1.1.x</identifier>
+        <title>SimplerInvoicing UBL Invoice v1.1.x (PEPPOL BIS v2 profile 4a)</title>
+        <profileId>urn:www.cenbii.eu:profile:bii04:ver1.0</profileId>
+        <customizationId>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1.x</customizationId>
+        <file path="SI-UBL-INV-1.1.xsl"/>
+    </configuration>
+    <configuration>
+        <identifier>SI-UBL-INV-1.2</identifier>
+        <title>SimplerInvoicing UBL Invoice v1.2 (PEPPOL BIS v2 profile 4a)</title>
+        <profileId>urn:www.cenbii.eu:profile:bii04:ver1.0</profileId>
+        <customizationId>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2</customizationId>
+        <file path="SI-UBL-INV-1.2.xsl"/>
+    </configuration>
+    <configuration>
+        <identifier>SI-UBL-INV-1.2.x</identifier>
+        <title>SimplerInvoicing UBL Invoice v1.2.x (PEPPOL BIS v2 profile 4a)</title>
+        <profileId>urn:www.cenbii.eu:profile:bii04:ver1.0</profileId>
+        <customizationId>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2.x</customizationId>
+        <file path="SI-UBL-INV-1.2.xsl"/>
+    </configuration>
+    <!--<configuration>
+        <identifier>SI-UBL-PO-1.2</identifier>
+        <title>SimplerInvoicing UBL PurchaseOrder v1.2 (PEPPOL BIS v2 profile 4a)</title>
+        <profileId>urn:www.cenbii.eu:profile:bii04:ver1.0</profileId>
+        <customizationId>urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol3a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2::2.1</customizationId>
+        <file path="SI-UBL-INV-1.2.xsl"/>
+    </configuration>-->
+
+    <!--<configuration>
+        <identifier></identifier>
+        <title>SimplerInvoicing UBL Credit Note</title>
+        <profileId>urn:www.cenbii.eu:profile:bii05:ver1.0</profileId>
+        <customizationId>urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0:#urn:www.peppol.eu:bis:peppol5a:ver1.0#urn:www.simplerinvoicing.org:si-ubl:credit-note:ver1.0.x::2.0</customizationId>
+    </configuration>
+    <configuration>
+        <identifier></identifier>
+        <title>SimplerInvoicing UBL Invoice</title>
+        <profileId>urn:www.cenbii.eu:profile:bii04:ver1.0</profileId>
+        <customizationId>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0#urn:www.simplerinvoicing.org:si-ubl:invoice:ver1.0.x::2.0</customizationId>
+    </configuration>-->
+</configurations>
