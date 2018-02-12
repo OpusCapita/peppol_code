@@ -129,6 +129,7 @@ public class MessageQueueToJmsApp {
                 logger.info("Storing incoming message: " + cm.getFileName());
                 controller.send(cm);
                 cm.setStatus(new Endpoint(componentName, ProcessType.IN_MQ_TO_FILE), "delivered");
+                logger.info("Sent file " + cm.getFileName() + " to Sirius (Elon Musk must be jealous)!");
             }
         };
     }
