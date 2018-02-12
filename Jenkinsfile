@@ -148,7 +148,7 @@ try {
             stage('Deployment to Stage') {
                 try {
                     dir('infra/ap2/ansible') {
-                        ansiblePlaybook('peppol-components.yml', 'stage.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                        ansiblePlaybook('peppol-stage.yml', 'environments/stage/hosts', 'ansible-sudo', "peppol_version=${release_version}")
                     }
                 }
                 catch(e) {
@@ -187,7 +187,7 @@ try {
                 if (release_type in ['patch_release', 'minor_release', 'major_release']) {
                     try {
                         dir('infra/ap2/ansible') {
-                            ansiblePlaybook('peppol-components.yml', 'production.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                            ansiblePlaybook('peppol-production.yml', 'environments/production/hosts', 'ansible-sudo', "peppol_version=${release_version}")
                         }
                     }
                     catch(e) {
