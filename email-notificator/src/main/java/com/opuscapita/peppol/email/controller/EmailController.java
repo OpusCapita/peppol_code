@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.model.Customer;
 import com.opuscapita.peppol.email.model.CustomerRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +67,7 @@ public class EmailController {
         if (StringUtils.isBlank(customerId)) {
             String message = "Cannot determine customer ID from the file: " + cm.getFileName();
             logger.warn(message);
+            EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+message);
             if (errorHandler != null) {
                 errorHandler.reportWithContainerMessage(cm, null, message);
             }
@@ -77,6 +79,7 @@ public class EmailController {
         if (customer == null) {
             String message = "Customer not found in the database: " + customerId;
             logger.warn(message);
+            EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+message);
             if (errorHandler != null) {
                 errorHandler.reportWithContainerMessage(cm, null, message);
             }
@@ -101,21 +104,26 @@ public class EmailController {
         String fileName = getFileName(cm.getCustomerId());
         if (cm.getDocumentInfo() == null) {
             String msg = "Document is null";
+            EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+msg);
             logger.error(msg);
             throw new IllegalStateException(msg);
         }
 
         // if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) {
         if (!cm.hasErrors()) {
-            throw new IllegalArgumentException("Document received by email-notificator has no errors: " + cm.getFileName());
+            String message = "Document received by email-notificator has no errors: " + cm.getFileName();
+            EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+message);
+            throw new IllegalArgumentException(message);
         }
 
         // let's create 3 files per message: list of recipients, subjects in one line, bodies
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_TO)))) {
             printWriter.print(emails);
             storeDocument(cm, fileName);
+            EventingMessageUtil.reportEvent(cm, "Sucessfully sent e-mail for file: " + cm.getFileName());
         } catch (Exception e) {
             logger.error("Failed to store e-mail files: ", e);
+            EventingMessageUtil.reportEvent(cm, "Failed to store e-mail files " + e.getMessage());
             deleteSilently(fileName + EXT_TO);
             deleteSilently(fileName + EXT_BODY);
             deleteSilently(fileName + EXT_SUBJECT);
@@ -174,6 +182,7 @@ public class EmailController {
     private void processNoEmail(Customer customer, ContainerMessage cm) {
         String message = "E-mail address not set for the customer " + customer.getIdentifier() + " (" + customer.getName() + ")";
         logger.warn(message);
+        EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+message);
         if (errorHandler != null) {
             errorHandler.reportWithContainerMessage(cm, null, message);
         }
