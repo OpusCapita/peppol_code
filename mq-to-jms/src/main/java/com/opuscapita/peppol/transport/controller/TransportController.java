@@ -39,10 +39,15 @@ public class TransportController {
     }
 
     public void send(ContainerMessage cm) throws IOException, JMSException {
+        String jsonEncodedPayloadObject = createJsonEncodedPayloadObject(cm);
+        messageProducer.send(session.createTextMessage(jsonEncodedPayloadObject), DeliveryMode.PERSISTENT, javax.jms.Message.DEFAULT_DELIVERY_MODE, javax.jms.Message.DEFAULT_TIME_TO_LIVE);
+    }
+
+    protected String createJsonEncodedPayloadObject(ContainerMessage cm) throws IOException {
         String payload = new String(Base64.getEncoder().encode(Files.readAllBytes(Paths.get(cm.getFileName()))));
         JmsPayload jmsPayload = new JmsPayload(payload, new HashMap<String, Object>() {{
             put("created", cm.getProcessingInfo().getEventingMessage().getCreated());
         }});
-        messageProducer.send(session.createTextMessage(gson.toJson(payload)), DeliveryMode.PERSISTENT, javax.jms.Message.DEFAULT_DELIVERY_MODE, javax.jms.Message.DEFAULT_TIME_TO_LIVE);
+        return gson.toJson(jmsPayload);
     }
 }
