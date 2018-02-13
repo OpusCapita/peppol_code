@@ -123,7 +123,7 @@ try {
         }
     }
     node {
-        lock(resource: 'peppol-stage-servers') {
+        lock(inversePrecedence: true, resource: 'peppol-stage-servers') {
             milestone 3
             stage('Integration Tests') {
                 try {
