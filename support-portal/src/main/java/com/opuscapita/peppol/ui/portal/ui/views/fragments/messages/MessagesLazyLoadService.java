@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.revised_model.Message;
 import com.opuscapita.peppol.commons.revised_model.QMessage;
 import com.opuscapita.peppol.ui.portal.model.MessagesRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanPath;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,11 +89,15 @@ public class MessagesLazyLoadService {
         return messagesRepository.findAll(filterHolder.getFilter(), pageRequest).getContent();
     }
 
+    public List<String> findDocumentTypes() {
+        return messagesRepository.getDocumentTypes();
+    }
+
     @NotNull
     protected FilterHolder fillFilterHolder(Map<String, String> filterFields) {
         QMessage message = QMessage.message;
         FilterHolder filterHolder = new FilterHolder();
-        filterFields.entrySet().forEach(entry -> {
+        filterFields.entrySet().stream().filter(entry -> entry.getValue() != null && entry.getValue().length() >= 3).forEach(entry -> {
             String key = entry.getKey();
             String value = entry.getValue();
             switch (key) {
@@ -101,7 +106,7 @@ public class MessagesLazyLoadService {
                     filterHolder.and(isInbound);
                     break;
                 case "terminal":
-                    if(Boolean.valueOf(filterFields.get(key))) {
+                    if (Boolean.valueOf(filterFields.get(key))) {
                         message.attempts.any().events.any().terminal.isTrue();
                     } else {
                         message.attempts.any().events.any().terminal.isFalse();
@@ -120,7 +125,7 @@ public class MessagesLazyLoadService {
                     filterHolder.and(message.recipient.containsIgnoreCase(filterFields.get(key)));
                     break;
                 case "document_type":
-                    filterHolder.and(message.documentType.containsIgnoreCase(filterFields.get(key)));
+                        filterHolder.and(message.documentType.equalsIgnoreCase(filterFields.get(key)));
                     break;
                 case "document_number":
                     filterHolder.and(message.documentNumber.containsIgnoreCase(filterFields.get(key)));
@@ -156,7 +161,7 @@ public class MessagesLazyLoadService {
         }
 
         public FilterHolder and(BooleanExpression another) {
-            if(filter == null) {
+            if (filter == null) {
                 filter = another;
             } else {
                 filter = filter.and(another);
@@ -165,7 +170,7 @@ public class MessagesLazyLoadService {
         }
 
         public FilterHolder or(BooleanExpression another) {
-            if(filter == null) {
+            if (filter == null) {
                 filter = another;
             } else {
                 filter = filter.or(another);

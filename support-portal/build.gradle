@@ -52,6 +52,7 @@ dependencies {
 	compile 'com.querydsl:querydsl-jpa:4.1.4'
 	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.15'
 	compile('com.vaadin:vaadin-spring-boot-starter')
+	compile('de.steinwedel.vaadin.addon:messagebox:4.0.21')
 	compile fileTree(dir: 'libs', include: '*.jar')
 	compile project(':common')
 	compile project(':common-model')
@@ -86,6 +87,12 @@ task copyModelFilesForQueryDslProcessing(type: Copy) {
 	from '../common-model/src/main/java/com/opuscapita/peppol/commons/revised_model'
 	into 'src/main/java/com/opuscapita/peppol/commons/revised_model'
 
+}
+
+tasks.withType(JavaExec) {
+    // Assign all Java system properties from
+    // the command line to the JavaExec task.
+    systemProperties System.properties
 }
 
 compileJava.dependsOn(processResources)

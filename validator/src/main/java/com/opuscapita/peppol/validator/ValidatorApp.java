@@ -49,7 +49,7 @@ public class ValidatorApp {
         SpringApplication.run(ValidatorApp.class, args);
     }
 
-    // TODO remove performance tests when finished with testing @SR
+    // TODO remove performance tests when finished with it @SR
 //    @PostConstruct
 //    public void postConstruct() throws Exception {
 //        String file = "/home/redis/work/validator/test-peppol/validator/src/test/resources/test_data/difi_files/Valids2-list-ejt.xml";

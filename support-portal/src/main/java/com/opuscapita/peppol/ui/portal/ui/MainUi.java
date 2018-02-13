@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.servlet.http.HttpSession;
 
 @SpringUI
-@Theme("valo")
+@Theme("peppol")
 public class MainUi extends UI {
-    public static final int NAVIGATION_BUTTON_WIDTH = 180;
+    public static final int NAVIGATION_BUTTON_WIDTH = 140;
     @Value(value = "${peppol.portal.baseUrl:/portal}")
     String baseUrl;
 
@@ -97,24 +97,31 @@ public class MainUi extends UI {
     private void populateLeftMenu(VerticalLayout leftMenu) {
         Button inboundBtn = new Button("Inbound");
         inboundBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
+        inboundBtn.addStyleName("cellFontSizeOverride");
         inboundBtn.addClickListener(createNavigatorClickListener(ViewName.INBOUND));
         Button outboundBtn = new Button("Outbound");
         outboundBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
+        outboundBtn.addStyleName("cellFontSizeOverride");
         outboundBtn.addClickListener(createNavigatorClickListener(ViewName.OUTBOUND));
         Button sendersBtn = new Button("Senders");
         sendersBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
+        sendersBtn.addStyleName("cellFontSizeOverride");
         sendersBtn.addClickListener(createNavigatorClickListener(ViewName.SENDERS));
         Button accessPointsBtn = new Button("Access points");
         accessPointsBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
+        accessPointsBtn.addStyleName("cellFontSizeOverride");
         accessPointsBtn.addClickListener(createNavigatorClickListener(ViewName.ACCESS_POINTS));
         Button statisticsBtn = new Button("Statistics");
         statisticsBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
+        statisticsBtn.addStyleName("cellFontSizeOverride");
         statisticsBtn.addClickListener(createNavigatorClickListener(ViewName.STATISTICS));
         Button advancedSearchBtn = new Button("Advanced search");
         advancedSearchBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
+        advancedSearchBtn.addStyleName("cellFontSizeOverride");
         advancedSearchBtn.addClickListener(createNavigatorClickListener(ViewName.ADVANCED_SEARCH));
         Button helpBtn = new Button("Help");
         helpBtn.setWidth(NAVIGATION_BUTTON_WIDTH, Unit.PIXELS);
+        helpBtn.addStyleName("cellFontSizeOverride");
         helpBtn.addClickListener(createNavigatorClickListener(ViewName.HELP));
 
         leftMenu.addComponent(inboundBtn);
@@ -129,7 +136,6 @@ public class MainUi extends UI {
     private VerticalLayout initLeftMenu() {
         VerticalLayout leftMenu = new VerticalLayout();
         leftMenu.setMargin(new MarginInfo(false, false, true, true));
-        leftMenu.setWidth(30, Unit.PERCENTAGE);
         leftMenu.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         return leftMenu;
     }

@@ -125,13 +125,16 @@ public class OutboundController {
             logger.info("Exception of type " + errorType + " registered as non-retriable, rejecting message " + cm.getFileName());
             cm.getProcessingInfo().setProcessingException(e.getMessage());
 
+            // some issues should be solved by e-mail sending - to be removed later
             if (errorType == SendingErrors.DATA_ERROR) {
                 logger.info("Sending an e-mail to customer about invalid data");
                 messageQueue.convertAndSend(emailNotificatorQueue, cm);
+                return;
             }
             if (errorType == SendingErrors.UNKNOWN_RECIPIENT || errorType == SendingErrors.UNSUPPORTED_DATA_FORMAT) {
                 logger.info("Sending an e-mail to customer about unknown recipient or unsupported data format");
                 messageQueue.convertAndSend(emailNotificatorQueue, cm);
+                return;
             }
 
             throw e;

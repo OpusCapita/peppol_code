@@ -83,12 +83,12 @@ public class IncomingChecker {
         try {
             receive(dir);
         } catch (Exception e) {
-            errorHandler.reportWithoutContainerMessage(null, e, "Failed to read input file", "peppol-ap", null);
+            errorHandler.reportWithoutContainerMessage(null, e, "Failed to process input directory", "peppol-ap", null);
         }
     }
 
     // check subdirectories, file age and file mask
-    private void receive(File directory) throws Exception {
+    private void receive(File directory) {
         logger.debug("Checking directory " + directory.getAbsolutePath());
 
         Date earlier = DateUtils.addSeconds(new Date(), -age);
@@ -107,7 +107,12 @@ public class IncomingChecker {
 
             if (FilenameUtils.wildcardMatch(file.getName(), mask)) {
                 logger.info("Found outgoing file: " + file.getAbsolutePath());
-                send(file);
+                try {
+                    send(file);
+                } catch (Exception e) {
+                    errorHandler.reportWithoutContainerMessage(
+                            null, e, "Failed to process input file", null, file.getAbsolutePath());
+                }
             }
         }
     }

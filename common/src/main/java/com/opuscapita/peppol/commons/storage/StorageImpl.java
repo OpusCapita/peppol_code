@@ -36,6 +36,15 @@ public class StorageImpl implements Storage {
         return s.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
+    private void check(File file) throws IOException {
+        if (!file.canRead()) {
+            throw new IOException("Unable to read file " + file.getAbsolutePath());
+        }
+        if (file.length() == 0) {
+            throw new IOException("File is empty: " + file.getAbsolutePath());
+        }
+    }
+
     @NotNull
     @Override
     public String storeTemporary(@NotNull InputStream stream, @NotNull String fileName) throws IOException {
@@ -69,6 +78,7 @@ public class StorageImpl implements Storage {
     @NotNull
     @Override
     public String moveToTemporary(@NotNull File source, @Nullable String backupDir) throws IOException {
+        check(source);
         File dir = createDailyDirectory();
 
         File result = StorageUtils.prepareUnique(dir, source.getName());
@@ -92,7 +102,6 @@ public class StorageImpl implements Storage {
                 throw new IOException("Failed to create directory: " + dir);
             }
         }
-
         return dir;
     }
 
@@ -105,6 +114,7 @@ public class StorageImpl implements Storage {
     @NotNull
     @Override
     public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
+        check(file);
         if (file.getAbsolutePath().startsWith(longTerm)) {
             logger.info("File already in long term storage, not moving: " + file.getAbsolutePath());
             return file.getAbsolutePath();

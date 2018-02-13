@@ -3,6 +3,8 @@ package com.opuscapita.peppol.ui.portal.model;
 import com.opuscapita.peppol.commons.revised_model.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -37,4 +39,6 @@ public interface MessagesRepository extends PagingAndSortingRepository<Message, 
 
     Long countMessagesByInboundAndAttemptsEventsTerminalAndAttemptsEventsStatusContains(boolean inbound, boolean terminal, String status);
 
+    @Query("select distinct(m.documentType) from Message as m where m.documentType is not null ")
+    List<String> getDocumentTypes();
 }

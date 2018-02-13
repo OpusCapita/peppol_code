@@ -20,23 +20,23 @@ public class SmokeTestApp {
 
     public static void main(String[] args) {
 
-        logger.info("SmokeTestApp : Starting!");
+        logger.info("SmokeTestApp : Starting");
         configFile = args[0];
         testResultFileName = args[1];
         templateDir = args[2];
 
-        if(configFile == null || configFile.isEmpty()){
-            logger.error("Config file not specified, exiting!");
+        if (configFile == null || configFile.isEmpty()) {
+            logger.error("Config file not specified, exiting");
             return;
         }
 
-        if(testResultFileName == null || testResultFileName.isEmpty()){
-            logger.error("Test results file name empty or not specified, exiting!");
+        if (testResultFileName == null || testResultFileName.isEmpty()) {
+            logger.error("Test results file name empty or not specified, exiting");
             return;
         }
 
-        if(templateDir == null || templateDir.isEmpty()){
-            logger.error("Template directory empty or not specified, exiting!");
+        if (templateDir == null || templateDir.isEmpty()) {
+            logger.error("Template directory empty or not specified, exiting");
             return;
         }
 
@@ -44,8 +44,8 @@ public class SmokeTestApp {
         List<CheckResult> checkResults = config.runChecks();
         new LoggingResultBuilder().processResult(checkResults);
         new HtmlResultBuilder(testResultFileName, templateDir).processResult(checkResults);
-        logger.info("SmokeTestApp: Finished!");
-        int fails = (int)checkResults.stream().filter(res -> !res.isPassed()).count();
+        logger.info("SmokeTestApp: Finished");
+        int fails = (int) checkResults.stream().filter(res -> !res.isPassed()).count();
         System.exit(fails);
     }
 }

@@ -10,6 +10,7 @@ import com.opuscapita.peppol.ui.portal.util.FileService;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.server.*;
 import com.vaadin.shared.data.sort.SortDirection;
@@ -128,12 +129,20 @@ public class MessagesGridFragment extends AbstractGridFragment {
                 .stream()
                 .filter(column -> column.isSortable() && column.getId() != null)
                 .forEach(column -> {
-                    TextField filterField = new TextField();
+                    AbstractComponent filterField;
+                    if (column.getId().equalsIgnoreCase("document_type")) {
+                        filterField = new ComboBox<>();
+                        ((ComboBox) filterField).setDataProvider(new ListDataProvider(messagesLazyLoadService.findDocumentTypes()));
+                        ((ComboBox) filterField).addValueChangeListener((HasValue.ValueChangeListener) event -> updateFilter(filters, column.getId(), event.getValue() == null ? "" : event.getValue().toString()));
+                    } else {
+                        filterField = new TextField();
+                        ((TextField) filterField).addValueChangeListener((HasValue.ValueChangeListener<String>) event -> {
+                            updateFilter(filters, column.getId(), event.getValue());
+                        });
+                    }
                     filterField.setHeight(32, Unit.PIXELS);
                     filterField.setWidth(100, Unit.PERCENTAGE);
-                    filterField.addValueChangeListener((HasValue.ValueChangeListener<String>) event -> {
-                        updateFilter(filters, column.getId(), event.getValue());
-                    });
+
                     headerRow.getCell(column.getId()).setComponent(filterField);
                 });
     }
@@ -373,46 +382,6 @@ public class MessagesGridFragment extends AbstractGridFragment {
                     "Reprocess " + new File(attempt.getFilename()).getName() + " ?",
                     o -> fileService.reprocess(attempt)
             ).buildAndShow();
-
-            /*Window yesNoDialog = new Window("Confirmation");
-            VerticalLayout layout = new VerticalLayout();
-            HorizontalLayout buttonLayout = new HorizontalLayout();
-            buttonLayout.setSizeFull();
-            Button yes = new Button("Yes");
-            yes.setSizeUndefined();
-            yes.addClickListener((Button.ClickListener) clickEvent -> {
-                fileService.reprocess(attempt);  //reprocess happens here
-                yesNoDialog.close();
-            });
-            buttonLayout.addComponent(yes);
-
-            Button cancel = new Button("Cancel");
-            cancel.setSizeUndefined();
-            cancel.addClickListener((Button.ClickListener) clickEvent -> yesNoDialog.close());
-            buttonLayout.addComponent(cancel);
-
-            layout.addComponent(new Label("Reprocess " + new File(attempt.getFilename()).getName() + " ?"));
-            layout.setSpacing(true);
-            layout.setMargin(true);
-            layout.setSizeFull();
-            buttonLayout.setComponentAlignment(yes, Alignment.BOTTOM_LEFT);
-            buttonLayout.setComponentAlignment(cancel, Alignment.BOTTOM_RIGHT);
-            layout.addComponent(buttonLayout);
-            layout.setComponentAlignment(buttonLayout, Alignment.BOTTOM_CENTER);
-
-            yesNoDialog.setContent(layout);
-            yesNoDialog.setModal(true);
-            yesNoDialog.setResizable(false);
-            yesNoDialog.setHeight(200, Unit.PIXELS);
-            yesNoDialog.setWidth(500, Unit.PIXELS);
-            yesNoDialog.center();
-            yesNoDialog.addCloseListener((Window.CloseListener) e -> {
-                yesNoDialog.setModal(false);
-                yesNoDialog.setVisible(false);
-                getUI().removeWindow(yesNoDialog);
-            });
-
-            getUI().addWindow(yesNoDialog);*/
         });
         return reprocessBtn;
     }

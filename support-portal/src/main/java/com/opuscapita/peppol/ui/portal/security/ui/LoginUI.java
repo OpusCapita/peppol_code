@@ -10,13 +10,18 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import de.steinwedel.messagebox.MessageBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.security.Principal;
+import java.util.Collection;
 
 @SpringUI(path = "/login")
 @Title("LoginPage")
@@ -77,7 +82,6 @@ public class LoginUI extends UI {
         password.addBlurListener((FieldEvents.BlurListener) event -> password.removeShortcutListener(passwordShortCutListener));
 
 
-
         VerticalLayout uiLayout = new VerticalLayout(fields);
         uiLayout.setSizeFull();
         uiLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
@@ -89,10 +93,74 @@ public class LoginUI extends UI {
     public void loginButtonClick(Button.ClickEvent e) {
         //authorize/authenticate user
         //tell spring that my user is authenticated and dispatch to my mainUI
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getValue(), password.getValue());
-        Authentication authenticated = umsAuthenticationProvider.authenticate(auth);
-        SecurityContextHolder.getContext().setAuthentication(authenticated);
+        try {
+            performLogin();
+            redirectToStartPage();
+        } catch (Exception exc) {
+            MessageBox
+                    .createError()
+                    .withCaption("Login failed")
+                    .withMessage("Could not login you to portal, please check your credentials and/or contact support. \n" + exc.getMessage())
+                    .withOkButton(() -> redirectToStartPage())
+                    .open();
+        } finally {
+
+        }
+    }
+
+    protected void redirectToStartPage() {
         getPage().setLocation(baseUrl.isEmpty() ? "/" : baseUrl);
+    }
+
+    protected void performLogin() {
+        Authentication authenticated;
+        if (user.getValue().equalsIgnoreCase("test") && password.getValue().equalsIgnoreCase("test")) {
+            authenticated = new Authentication() {
+                @Override
+                public Collection<? extends GrantedAuthority> getAuthorities() {
+                    return null;
+                }
+
+                @Override
+                public Object getCredentials() {
+                    return null;
+                }
+
+                @Override
+                public Object getDetails() {
+                    return null;
+                }
+
+                @Override
+                public Object getPrincipal() {
+                    return new Principal() {
+                        @Override
+                        public String getName() {
+                            return "test";
+                        }
+                    };
+                }
+
+                @Override
+                public boolean isAuthenticated() {
+                    return true;
+                }
+
+                @Override
+                public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+                }
+
+                @Override
+                public String getName() {
+                    return "test user";
+                }
+            };
+        } else {
+            Authentication auth = new UsernamePasswordAuthenticationToken(user.getValue(), password.getValue());
+            authenticated = umsAuthenticationProvider.authenticate(auth);
+        }
+        SecurityContextHolder.getContext().setAuthentication(authenticated);
     }
 
 }

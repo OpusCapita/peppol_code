@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ASiCManifest xmlns="http://uri.etsi.org/02918/v1.2.1#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#">
+    <SigReference URI="META-INF/signature-16bcd0a3-be2c-435c-96f2-d04ed84a3ac3.p7s" MimeType="application/x-pkcs7-signature"/>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T14.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>MVx4GQkVqSmyKSt5L8Qb1OLX6Q/1eG0VTLgRH9wyrvM=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T14.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>pmwSOVBUZiiXpp1+oBjJ3aEr2AKQJVXB6IV+UMQuECU=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOLCORE-UBL-T14.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>8CEyhuA77VAogZPxd32WJhN4JOqMcSf6d5x5XP/eJDA=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T10.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>OxWn7Z22U/k6Jz+wM+3CM8KsUcY/cmfWc4ONOoFP6c0=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T10.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>C2c0HAub2BFgqHCGe0sLn0wnGfhGJBqa9AXka1t455o=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOLCORE-UBL-T10.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>EuY9NQ9zMFW37VeBd+dYueBcK9q1BSOMB4PyjA+ksqg=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T16.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>YXzUSQFdzJhcnC9jQUxfUtk/SR+pxUbw5PDrv7I187U=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T16.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>x98o29JI//BmDgqgK9LtWvlkW7JBUj0iMsrdfQUHFkQ=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOLCORE-UBL-T16.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>7497tYX8NhxYozFDhJZAaGF4W9gusATgFGgx1kzftK0=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T19.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>2Gy845nnkBg8tjsyO9b0raOrYf57dwKd7G4sQdYaew4=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T19.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>TvnRljRvDrMu3XVgGMxRZoo2zzdch9YV6sQkW0Cn6Xs=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOLCORE-UBL-T19.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>/5yJJAj1TZU1IqP6FsalGTA99fLsuv17gcblE3JPSmk=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T58.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>91/6eexp0t3eXDOU6cxf81dAeEEwsldf+4+Tm8bkizE=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T58.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>z1wzEwrZ3t00J5s5fqugNWiGLd0fHxg87Inen8lch8I=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOLCORE-UBL-T58.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>nZwL2yY3ie+7XQtdtUqtVpp3NkX3I/JAqz+xJ1/yASY=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T77.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>hPcbGIXvx2DhyGljwrbGAbruiVePTmHZ91JZMocjE6A=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T77.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>IL5AOMI7t57CK6AF9aDAz/FbhOqYUmz6Lj7Bdm7VYGM=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T01.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>V908UqxNqkuURgTfWBGoNTR/V9myw/qP+X5gUAa8aa0=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T01.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>wsBlkrrJrElgepreLmQH6er1LTegqXZn+IaMb2Itr5Y=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOLCORE-UBL-T01.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>Q/9mPx7tDD/fAVMcxJw1MGI9StXh7H/XZA7ZM+ylgq8=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T71.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>NoZMX2lSVQn1tQqbKLvzDL1fUJmyvdlxdvRGCpG5gkM=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T71.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>0twsVKCoAsKdIc+JuUmsD8v9go05yS8meJhFC5JQs1o=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOLCORE-UBL-T71.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>fPvDdwiEqarDUjVuMct2jwyK9bVLQLkgniXFEzKSS4c=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T76.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>N//RXiQDDOLzNP5A8LHg8uXokFFFmwQfvwQ5wUwfhJI=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T76.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>LaZCwcwwFBa1SxaJyY9kNupqdIKjAbaJS/rHB4Aw3Rs=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOLCORE-UBL-T76.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>UMWO3fxO26vgjATMycK28WNZK49NYwVE0NqZqmB19wE=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/BIIRULES-UBL-T110.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>zYPnc2hFqN2BrUfo9JzkxhNC5LDjsDk7v10EIKk5Tb4=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T110.xsl" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>Tv0Jn6wqT7UDm/XBU5bddnlQ7zTFG2ZkixSWGC8BIyQ=</ns2:DigestValue>
+    </DataObjectReference>
+    <DataObjectReference URI="config-eu.peppol.postaward.ver20-e5085a49db8fcf702be9109bf932295f4e838275.xml" MimeType="application/xml">
+        <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ns2:DigestValue>Oi7Hlhe4l/saCmqsXRrh6T6daXtQcPXAtdirUns+twU=</ns2:DigestValue>
+    </DataObjectReference>
+</ASiCManifest>

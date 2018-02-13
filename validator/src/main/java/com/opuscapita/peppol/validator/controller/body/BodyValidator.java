@@ -17,18 +17,18 @@ import java.io.IOException;
  */
 @Component
 public class BodyValidator {
-    private final RuleSetValidator ruleSetValidator;
+    private final ValidationRuleExecutor validationRuleExecutor;
 
     @Autowired
-    public BodyValidator(@NotNull RuleSetValidator ruleSetValidator) {
-        this.ruleSetValidator = ruleSetValidator;
+    public BodyValidator(@NotNull ValidationRuleExecutor validationRuleExecutor) {
+        this.validationRuleExecutor = validationRuleExecutor;
     }
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
     public ContainerMessage validate(@NotNull byte[] documentBody, @NotNull ContainerMessage cm)
             throws IOException, ParserConfigurationException, SAXException, TransformerException {
-        return ruleSetValidator.validate(documentBody, cm);
+        return validationRuleExecutor.validate(documentBody, cm);
     }
 
 }
