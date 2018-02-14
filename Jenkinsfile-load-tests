@@ -81,7 +81,7 @@ try {
                 catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'System-tests: Smoke tests have failed. Check the log for details.'
+                        'Load-tests: Smoke tests have failed. Check the log for details.'
                     )
                 }
                 finally {
