@@ -161,7 +161,7 @@ try {
             stage('Smoke Tests') {
                 try {
                     dir('infra/ap2/ansible') {
-                        ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                        ansiblePlaybook('smoke-tests.yml', 'environments/stage/hosts', 'ansible-sudo', "peppol_version=${release_version}")
                     }
                 }
                 catch(e) {
