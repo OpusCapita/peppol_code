@@ -1,0 +1,260 @@
+#!groovy
+
+/**
+ * List of modules. Each module is expected to be in subdirectory named as
+ * module for assemble, check and dockerBuild to work properly.
+ */
+
+/**
+ * A map of recipient groups. Each group should have comma separated list of
+ * email addresses to receive notifications. See 'handlers' section for details
+ * on how the groups are used in certain notifications.
+ */
+recipients = [:]
+
+//recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
+//recipients.devops = "Didrihsons Edgars <Edgars.Didrihsons@opuscapita.com>"
+//recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
+
+recipients.developers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+recipients.devops = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+recipients.ops = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>>"
+recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+
+
+import java.util.regex.*
+
+def code_version = params.CODE_BRANCH ?: 'master'
+def infra_version = params.INFRA_BRANCH ?: 'develop'
+def release_type = params.RELEASE_TYPE ?: 'development'
+def release_version, next_version, code_hash, infra_hash
+
+
+try {
+    node {
+        stage('Checkout') {
+            // clean up the last time
+            dir('src/system-tests/reports') { deleteDir() }
+ 
+            // get latest version of code
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: code_version]],
+                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git']],
+                extensions: [
+                    [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
+                    [$class: 'LocalBranch', localBranch: 'master']
+                ]
+            ])
+            // get latest version of infrastructure
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: infra_version]],
+                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git']],
+                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'infra']]
+            ])
+ 
+            // work around missing tuple handlings (https://issues.jenkins-ci.org/browse/JENKINS-38846)
+            def versions = getReleaseVersion(loadProperties('src/gradle.properties').version, release_type).split('##')
+            release_version = versions[0]
+            next_version = versions[1]
+            code_hash = getGitCommitID('src')
+            infra_hash = getGitCommitID('infra')
+            code_author = getGitCommitAuthor('src')
+            infra_author = getGitCommitAuthor('infra')
+ 
+            // install additional roles
+            dir('infra/ap2/ansible') {
+                sh 'make requirements'
+            }
+        }
+    }
+    node {
+        lock(resource: 'peppol-stage-servers') {
+            milestone 1
+            stage('Smoke Tests') {
+                try {
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook('smoke-tests.yml', 'stage.hosts', 'ansible-sudo', "peppol_version=latest")
+                    }
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'System-tests: Smoke tests have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
+                }
+            }
+            milestone 2
+            stage('Load tests') {
+                try {
+                    dir('src/system-tests') {
+                        parallel(
+                            "load-tests": { ansiblePlaybook(
+                                'load-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                'report_path=$PWD/reports/'
+                            )},
+                        )                    
+                    }   
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Load tests have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                }
+            }
+        }
+    }
+
+}
+catch(e) {
+    echo e.toString()
+    emailNotify('', "Load-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
+    throw e
+}
+
+/**
+ * Stages
+ */
+
+// execute ansible playbook on hosts using the credentials provided
+def ansiblePlaybook(playbook, hosts, credentials, extraVars='') {
+    def ansible_credentials = [[
+        $class: 'UsernamePasswordMultiBinding',
+        credentialsId: credentials,
+        passwordVariable: 'ANSIBLE_PASSWORD',
+        usernameVariable: 'ANSIBLE_USERNAME'
+    ]]
+
+    withCredentials(ansible_credentials) {
+        sh script: """
+            ansible-playbook -i '${hosts}' '${playbook}' \
+            --user='${ANSIBLE_USERNAME}' \
+            --extra-vars 'ansible_sudo_pass=${ANSIBLE_PASSWORD} ${extraVars}'
+        """
+    }
+}
+
+@NonCPS
+def getChangeString(MAX_MSG_LEN=100) {
+    def changeString = ""
+
+    echo "Gathering SCM changes"
+    def changeLogSets = currentBuild.changeSets
+    for (int i = 0; i < changeLogSets.size(); i++) {
+        def entries = changeLogSets[i].items
+        for (int j = 0; j < entries.length; j++) {
+            def entry = entries[j]
+            truncated_msg = entry.msg.take(MAX_MSG_LEN)
+            changeString += " - ${truncated_msg} [${entry.author}]\n"
+        }
+    }
+
+    if (!changeString?.trim()) {
+        changeString = " - No new changes"
+    }
+    return changeString
+}
+
+def getGitCommitID(path) {
+    dir(path) {
+        def commit_id = sh returnStdout: true, script: 'git rev-parse HEAD'
+        return commit_id
+    }
+}
+ 
+def getGitCommitAuthor(path) {
+    dir(path) {
+        def author_email = sh returnStdout: true, script: 'git show -s --pretty=%ae'
+        return author_email
+    }
+}
+ 
+def Properties loadProperties(String filename) {
+    Properties properties = new Properties()
+    String content = readFile "${filename}"
+    properties.load(new StringReader(content));
+    return properties
+}
+ 
+def getReleaseVersion(this_version, release_type) {
+    def parser = ~/(?<major>\d+).(?<minor>\d+).(?<patch>\d+)(-(?<build>SNAPSHOT))?/
+    def major, minor, patch, build
+    def release_version, next_version
+ 
+    def match = this_version =~ parser
+    if(match.matches()) {
+        major = match.group('major') as Integer
+        minor = match.group('minor') as Integer
+        patch = match.group('patch') as Integer
+        build = match.group('build')
+ 
+        // figure out the release number based on simple semver rules
+        switch (release_type) {
+            case 'patch_release':
+                // patch number was already increased the last time we were here
+                break
+            case 'minor_release':
+                patch = 0
+                minor += 1
+                break
+            case 'major_release':
+                // we should not have these for the foreseeable future but
+                // for the sake of completeness
+                patch = 0
+                minor = 0
+                major += 1
+                break
+            case 'development':
+                build = env.BUILD_NUMBER
+                break
+            default:
+                error "Unknown release type: ${release_type}"
+                break
+        }
+        release_version = [major, minor, patch].join('.')
+        if (release_type == 'development') {
+            release_version += "-${build}"
+        }
+ 
+        // assume next version is to be bugfix/patch release
+        patch += 1
+        next_version = [major, minor, patch].join('.')
+        next_version += '-SNAPSHOT'
+ 
+        return [release_version, next_version].join('##')
+    }
+    error "Could not parse the version string: ${this_version}"
+}
+ 
+def emailNotify(String whom, String message) {
+    def changes = getChangeString()
+
+    mail to: recipients.developers , cc: "${recipients.testers}, ${recipients.devops}",
+        subject: "Job '${JOB_NAME}': run ${BUILD_NUMBER} has failed!",
+        body: """
+${message}
+Please go to ${BUILD_URL} and check out why this happened!
+
+System-tests status: ${currentBuild.result}
+System-tests URL: ${BUILD_URL}
+Project: ${JOB_NAME}
+Test duration: ${currentBuild.durationString}
+
+CHANGE SET
+${changes}
+
+"""
+}
+
+def failBuild(String email_recipients, String message) {
+    emailNotify(email_recipients, message)
+    error message
+}
