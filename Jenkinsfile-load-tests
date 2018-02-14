@@ -114,11 +114,6 @@ try {
     }
 
 }
-catch(e) {
-    echo e.toString()
-    emailNotify('', "Load-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
-    throw e
-}
 
 /**
  * Stages
