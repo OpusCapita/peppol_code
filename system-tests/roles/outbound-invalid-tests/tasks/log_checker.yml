@@ -3,9 +3,10 @@
 
 - include: transport_assert.yml
 - include: preprocessing_assert.yml
-- include: email_notificator_assert.yml
+#- include: email_notificator_assert.yml
 - include: internal_routing_assert.yml
 - include: validator_assert.yml
+- include: email_notificator_assert.yml
 
 #report update START ---------------------
 - name: update test results
