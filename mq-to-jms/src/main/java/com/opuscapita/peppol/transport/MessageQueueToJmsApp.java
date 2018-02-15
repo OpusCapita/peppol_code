@@ -136,7 +136,7 @@ public class MessageQueueToJmsApp {
         return new AbstractQueueListener(errorHandler, reporter, serializer) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
-                logger.info("Storing incoming message: " + cm.getFileName());
+                logger.info("Processing incoming message: " + cm.getFileName());
                 controller.send(cm);
                 cm.setStatus(new Endpoint(componentName, ProcessType.IN_MQ_TO_FILE), "delivered");
                 logger.info("Sent file " + cm.getFileName() + " to Sirius (Elon Musk must be jealous)!");
