@@ -42,6 +42,12 @@
   when: transmissionId ==""
 - debug: var=validator_result
 
+#check case (Validation technical failure Validation rule not found for document type) andadjust report accordingly->
+- name: Check if validation fail for transmissionId "{{ transmissionId }}" for "{{ file }}"
+  set_fact: validator_result="Passed- Validation technical failure"
+  when: log.stdout is defined and log.stdout | search("Validation rule not found for document type")
+- debug: var=validator_result
+
 #final validator result->
 - debug: var=validator_result
 

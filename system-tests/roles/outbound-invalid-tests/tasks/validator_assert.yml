@@ -14,7 +14,7 @@
 - set_fact: validator_result="Passed"
   when: log.rc is defined and log.rc == 0
 - debug: var=validator_result
-#- debug: var=log.stdout
+- debug: var=log.stdout
 
 - name: get preprocessing result, in unknown document case handle like this->
   set_fact: validator_result="Passed- error reported to SNC through preprocessing"
@@ -37,6 +37,12 @@
 - name: Check if validation did not fail for uuid
   set_fact: validator_result="Failed- Validation success, but should have failed"
   when: log.stdout is defined and log.stdout | search("Validation passed for")
+
+#check case (Validation technical failure Validation rule not found for document type) andadjust report accordingly->
+- name: Check if validation fail for uuid "{{ uuid }}" for "{{ file }}" 
+  set_fact: validator_result="Passed- Validation technical failure"
+  when: log.stdout is defined and log.stdout | search("Validation rule not found for document type")
+- debug: var=validator_result
 
 #final validator result->
 - debug: var=validator_result

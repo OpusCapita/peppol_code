@@ -6,7 +6,9 @@
   until: uuid in log.stdout
   retries: 60
   delay: 1
-  when: preprocessing_result not in ["Passed- No matching document templates found"]
+  when: 
+    - preprocessing_result not in ["Passed- No matching document templates found"]
+    - validator_result not in ["Passed- Validation technical failure"]
 
 #rc is response code for shell commands 0=success and anything else=failed
 - set_fact: email_notificator_result="Failed- email was not sent"
@@ -18,6 +20,10 @@
 - name: get preprocessing result, in unknown document case handle like this->
   set_fact: email_notificator_result="Passed- error reported to SNC through preprocessing"
   when: preprocessing_result | search("No matching document templates found")
+
+- name: get validator result, in (Validation technical failure Validation rule not found for document type) case handle like this->
+  set_fact: email_notificator_result="Passed- error reported to SNC through validator"
+  when: validator_result | search("Passed- Validation technical failure")
 
 - debug: var=email_notificator_result
 
