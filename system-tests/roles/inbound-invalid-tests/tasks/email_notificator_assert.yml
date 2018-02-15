@@ -8,7 +8,7 @@
   delay: 1
   when:
     - preprocessing_result not in ["Passed- No matching document templates found"]
-    - validator_result not in ["Failed- Validation success, but should have failed"]
+    - validator_result not in ["Failed- Validation success, but should have failed","Passed- Validation technical failure"]
 
 #rc is response code for shell commands 0=success and anything else=failed
 - set_fact: email_notificator_result="Failed- email was not sent"
@@ -30,5 +30,10 @@
 - name: check if no transmissionId "{{ transmissionId }}" was found for "{{ file }}" in inbound
   set_fact: email_notificator_result="No transmissionId was set for this file in inbound"
   when: transmissionId ==""
-- debug: var=email_notificator_result
+- debug: var=email_notificator_resulti
+
+- name: get validator result, in (Validation technical failure Validation rule not found for document type) case handle like this->
+  set_fact: email_notificator_result="Passed- error reported to SNC through validator"
+  when: validator_result | search("Passed- Validation technical failure")
+
 ...
