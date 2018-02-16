@@ -11,7 +11,7 @@
 - set_fact: valid=
 - set_fact: active=
 - set_fact: result_errors=
-- set_fact: result_warnings=
+- set_fact: result_warnings=[]
 - set_fact: result_passed=
 - set_fact: result_identifier=
 - set_fact: result_validationError=
