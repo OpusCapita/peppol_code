@@ -37,9 +37,9 @@
 #define stuff
 - set_fact: file="/peppol/data/storage/performance-tests/small-file/small-file-16KB.xml"
 #expected validator processing time
-- set_fact: etalon="10"
+- set_fact: etalon="50"
 - set_fact: module="Validator"
-- set_fact: msg_count="2"
+- set_fact: msg_count="98"
 - set_fact: wait_time="200"
 
 # generate uuid with shell for FIRST file
