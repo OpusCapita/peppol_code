@@ -39,7 +39,7 @@
 #expected validator processing time
 - set_fact: etalon="10"
 - set_fact: module="Validator"
-- set_fact: msg_count="98"
+- set_fact: msg_count="2"
 - set_fact: wait_time="200"
 
 # generate uuid with shell for FIRST file
@@ -83,15 +83,21 @@
 - name: stop validator
   shell: docker stop validator
 
+- name: echo
+  shell: echo $PATH
+
 #send FIRST msg:
 - name: send FIRST msg to MQ
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload="{{ load_tests_first_rabbit }}"
-#  shell: "{{ rabbitmqadmin }} publish exchange=peppol routing_key=validator payload={{ load_tests_first_rabbit }}"
   environment:
     PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
 #send 98 other msg:
 - name: send msg to MQ
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   shell: "rabbitmqadmin publish exchange=peppol routing_key=validator payload={{ load_tests_middle_rabbit }}"
   with_sequence: count="{{ msg_count }}"
   environment:
@@ -118,7 +124,8 @@
 
 #send LAST msg:
 - name: send LAST msg to MQ
-#  shell: "{{ rabbitmqadmin }} publish exchange=peppol routing_key=validator payload={{ load_tests_last_rabbit }}"
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload="{{ load_tests_last_rabbit }}"
   environment:
     PATH: /home/peppol/bin:{{ ansible_env.PATH }}
@@ -127,7 +134,7 @@
   shell: docker start validator
 
 #- name: Read in FIRST processing timestamp
-- name: get validator log & check if "{{ uuidf }}" is found in validator
+- name: get validator log & check if FIRST "{{ uuidf }}" is found in validator
   ignore_errors: yes
   shell: docker logs validator | grep "Processing message.*{{ uuidf }}"
   register: logf
@@ -145,7 +152,7 @@
  
 
 #- name: Read in LAST processing timestamp
-- name: get validator log & check if  is found in validator
+- name: get validator log & check if LAST "{{ uuidl }}" is found in validator
   ignore_errors: yes
   shell: docker logs validator | grep "Validation passed for.*{{ uuidl }}"
   register: logl
