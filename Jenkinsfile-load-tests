@@ -88,14 +88,16 @@ def release_version, next_version, code_hash, infra_hash
             }
             milestone 2
             stage('Load tests') {
-                    try {
-                        dir('src/system-tests') { 
-                                "load-tests": { ansiblePlaybook(
-                                     'load-tests.yml', 'stage.hosts', 'ansible-sudo',
-                                     'report_path=$PWD/reports/'
-                                 )},                 
-                        }  
-                    }
+                try {
+                    dir('src/system-tests') {
+                        retry(5) { 
+                            "load-tests": { ansiblePlaybook(
+                                 'load-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                 'report_path=$PWD/reports/'
+                             )},
+                        }                 
+                    }  
+                }
                 catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
