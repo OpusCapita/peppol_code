@@ -35,7 +35,6 @@
 #    - /peppol/data/storage/performance-tests/tmp
 
 #define stuff
-#- include: rabbitmqadmin.yml
 - set_fact: file="/peppol/data/storage/performance-tests/small-file/small-file-16KB.xml"
 #expected validator processing time
 - set_fact: etalon="10"
@@ -87,12 +86,16 @@
 #send FIRST msg:
 - name: send FIRST msg to MQ
   shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload="{{ load_tests_first_rabbit }}"
+#  shell: "{{ rabbitmqadmin }} publish exchange=peppol routing_key=validator payload={{ load_tests_first_rabbit }}"
+  environment:
+    PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
 #send 98 other msg:
-
 - name: send msg to MQ
-  shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload='{{ load_tests_middle_rabbit }}'
+  shell: "rabbitmqadmin publish exchange=peppol routing_key=validator payload={{ load_tests_middle_rabbit }}"
   with_sequence: count="{{ msg_count }}"
+  environment:
+    PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
 #- name: generate uuid with shell
 - set_fact: uuidl="{{99999 | random | to_uuid}}"
@@ -115,7 +118,10 @@
 
 #send LAST msg:
 - name: send LAST msg to MQ
+#  shell: "{{ rabbitmqadmin }} publish exchange=peppol routing_key=validator payload={{ load_tests_last_rabbit }}"
   shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload="{{ load_tests_last_rabbit }}"
+  environment:
+    PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
 - name: start validator
   shell: docker start validator
@@ -156,9 +162,9 @@
   debug: var=last_timestamp
 
 #rc is response code for shell commands 0=success and anything else=failed
-- set_fact: first_timestamp="1987-01-01 24:00:00"
+- set_fact: first_timestamp="1987-01-01 23:00:00"
   when: logf.rc != 0
-- set_fact: last_timestamp="8001-01-01 24:00:00"
+- set_fact: last_timestamp="8001-01-01 23:00:00"
   when: logl.rc != 0
 
 - name: calculate processing time
