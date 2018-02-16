@@ -88,7 +88,6 @@ def release_version, next_version, code_hash, infra_hash
             }
             milestone 2
             stage('Load tests') {
-                retry(2) {
                     try {
                         dir('src/system-tests') { 
                                 "load-tests": { ansiblePlaybook(
@@ -97,7 +96,6 @@ def release_version, next_version, code_hash, infra_hash
                                  )},                 
                         }  
                     }
-                }
                 catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
