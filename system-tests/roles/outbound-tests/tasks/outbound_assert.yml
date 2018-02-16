@@ -2,7 +2,8 @@
 
 - name: get outbound log & check if uuid "{{ uuid }}" for "{{ file }}" is found
   ignore_errors: yes
-  shell: docker service logs peppol_outbound | grep "{{ uuid }}"
+  shell: grep "{{ uuid }}" /peppol/logs/outbound/*.log
+#  shell: docker service logs peppol_outbound | grep "{{ uuid }}"
 #  shell: docker logs outbound | grep "{{ uuid }}"
   register: log
   until: uuid in log.stdout
