@@ -64,15 +64,18 @@ public class ValidationControllerTest {
     private boolean compare(@NotNull ContainerMessage cm, @NotNull List<String> expected) {
         boolean passed = true;
         for (DocumentError de : cm.getDocumentInfo().getErrors()) {
+            assertNotNull(de.getValidationError());
             String line = "E: " + de.getValidationError().getIdentifier();
             if (expected.contains(line)) {
                 expected.remove(line);
             } else {
                 System.err.println("Unexpected error: " + line + " in file " + cm.getFileName());
+                System.err.println("\t" + de.getMessage());
                 passed = false;
             }
         }
         for (DocumentWarning dw : cm.getDocumentInfo().getWarnings()) {
+            assertNotNull(dw.getValidationError());
             String line = "W: " + dw.getValidationError().getIdentifier();
             if (expected.contains(line)) {
                 expected.remove(line);
