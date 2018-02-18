@@ -5,8 +5,10 @@ import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
+import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.validator.ValidationController;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
 /**
+ * Combines both old-style Daniil-tests and new style mine tests (directory "next_files").
+ *
+ * Should be separated to two different test scenarios but will require more time because of the Spring.
+ *
  * @author Sergejs.Roze
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,6 +44,56 @@ public class ValidationControllerTest {
 
     @Autowired
     private DocumentLoader documentLoader;
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void betterValidation() throws Exception {
+        File dir = new File(ValidationControllerTest.class.getResource("/test_data/next_files").getFile());
+        for (String file : dir.list((d, n) -> n.endsWith(".xml"))) {
+            String path = dir.getAbsolutePath() + File.separator + file;
+            List<String> expected = getExpected(path);
+
+            ContainerMessage cm = loadDocument(path);
+            cm = controller.validate(cm);
+
+            assertTrue(compare(cm, expected));
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private boolean compare(@NotNull ContainerMessage cm, @NotNull List<String> expected) {
+        boolean passed = true;
+        for (DocumentError de : cm.getDocumentInfo().getErrors()) {
+            String line = "E: " + de.getValidationError().getIdentifier();
+            if (expected.contains(line)) {
+                expected.remove(line);
+            } else {
+                System.err.println("Unexpected error: " + line + " in file " + cm.getFileName());
+                passed = false;
+            }
+        }
+        for (DocumentWarning dw : cm.getDocumentInfo().getWarnings()) {
+            String line = "W: " + dw.getValidationError().getIdentifier();
+            if (expected.contains(line)) {
+                expected.remove(line);
+            } else {
+                System.err.println("Unexpected warning: " + line + " in file " + cm.getFileName());
+                passed = false;
+            }
+        }
+        for (String s : expected) {
+            System.err.println("Expected error/warning " + s + " not catch in file " + cm.getFileName());
+            passed = false;
+        }
+        return passed;
+    }
+
+    private List<String> getExpected(@NotNull String file) throws IOException {
+        return Files.lines(new File(file).toPath())
+                .map(String::trim)
+                .filter(l -> l.startsWith("W: ") || l.startsWith("E: "))
+                .collect(Collectors.toList());
+    }
 
     @Test
     public void validate() throws Exception {

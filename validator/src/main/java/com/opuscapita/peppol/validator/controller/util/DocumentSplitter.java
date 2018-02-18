@@ -39,6 +39,21 @@ public class DocumentSplitter {
         }
     }
 
+    final static String MINIMAL_PDF =
+            "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2Vz\n" +
+            "IDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMg\n" +
+            "WzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+Pgpl\n" +
+            "bmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAg\n" +
+            "ICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAg\n" +
+            "ICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAg\n" +
+            "ICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+Pgog\n" +
+            "ICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoK\n" +
+            "CjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAg\n" +
+            "IDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYK\n" +
+            "MCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAw\n" +
+            "MDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAg\n" +
+            "PDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==";
+
     private final XMLInputFactory xmlInputFactory;
 
     public DocumentSplitter(@NotNull @Lazy XMLInputFactory xmlInputFactory) {
@@ -69,6 +84,7 @@ public class DocumentSplitter {
 
         boolean collectingSbdh = false;
         boolean collectingBody = false;
+        boolean putAttachment = false;
 
         XMLEventReader reader = xmlInputFactory.createXMLEventReader(inputStream);
         Writer sbdhWriter = new OutputStreamWriter(sbdh);
@@ -81,13 +97,13 @@ public class DocumentSplitter {
                 String name = start.getName().getLocalPart();
 
                 if ("StandardBusinessDocument".equals(name)) {
-                    collectingSbdh = true; collectingBody = false;
+                    collectingSbdh = true; collectingBody = false; putAttachment = false;
                 }
                 if (rootName.equals(name)) {
-                    collectingSbdh = false; collectingBody = true;
+                    collectingSbdh = false; collectingBody = true; putAttachment = false;
                 }
                 if ("Attachment".equals(name)) {
-                    collectingSbdh = false; collectingBody = false;
+                    collectingSbdh = false; collectingBody = false; putAttachment = true;
                 }
             }
 
@@ -97,15 +113,22 @@ public class DocumentSplitter {
             if (collectingBody) {
                 event.writeAsEncodedUnicode(bodyWriter);
             }
+            if (putAttachment) {
+                if (event.isCharacters() && !event.asCharacters().isWhiteSpace()) {
+                    bodyWriter.append(MINIMAL_PDF);
+                } else {
+                    event.writeAsEncodedUnicode(bodyWriter);
+                }
+            }
 
             if (event.isEndElement()) {
                 EndElement end = event.asEndElement();
                 String name = end.getName().getLocalPart();
                 if (rootName.equals(name)) {
-                    collectingSbdh = true; collectingBody = false;
+                    collectingSbdh = true; collectingBody = false; putAttachment = false;
                 }
                 if ("Attachment".equals(name)) {
-                    collectingSbdh = false; collectingBody = true;
+                    collectingSbdh = false; collectingBody = true; putAttachment = false;
                 }
             }
         }
