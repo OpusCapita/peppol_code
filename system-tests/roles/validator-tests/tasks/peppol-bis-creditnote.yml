@@ -179,7 +179,8 @@
 
 #-------------------------------
 - set_fact: file=/test-materials/peppol-bis/creditnote/BII2-T14-R021.xml
-- set_fact: expected="'BII2-T14-R021'"
+- set_fact: expected="'EUGEN-T14-R055'"
+- set_fact: expected1="'BII2-T14-R021'"
 - set_fact: valid="false"
 - set_fact: active="true"
 
@@ -188,6 +189,8 @@
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
   when: result_validationError!=''
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -195,6 +198,7 @@
     that:
       - "result_passed == {{ valid }}"
       - "result_identifier == {{ expected }} "
+      - "result_identifier1 == {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
