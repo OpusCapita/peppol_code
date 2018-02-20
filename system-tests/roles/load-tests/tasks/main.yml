@@ -34,14 +34,6 @@
 #  with_items:
 #    - /peppol/data/storage/performance-tests/tmp
 
-#define stuff
-#- set_fact: file="/peppol/data/storage/performance-tests/small-file/small-file-16KB.xml"
-#expected validator processing time
-#- set_fact: etalon="50"
-#- set_fact: module="Validator"
-#- set_fact: msg_count="98"
-#- set_fact: wait_time="200"
-
 # generate uuid with shell for FIRST file
 - set_fact: uuidf="{{99999 | random | to_uuid}}"
 - name: debug uuidf
@@ -82,9 +74,6 @@
 
 - name: stop validator
   shell: docker stop validator
-
-- name: echo
-  shell: echo $PATH
 
 #send FIRST msg:
 - name: send FIRST msg to MQ
@@ -202,7 +191,7 @@
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/load-test-report-{{ansible_date_time.date}}.csv"
+    dest: "{{report_path}}/{{ msg_type }}-load-test-report-{{ansible_date_time.date}}.csv"
     state: present
     line: "Module name,Processing start,Processing end,msg_count,msg_type,Processing time (sec),etalon,Test result"
 
@@ -210,7 +199,7 @@
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/load-test-report-{{ansible_date_time.date}}.csv"
+    dest: "{{report_path}}/{{ msg_type }}-load-test-report-{{ansible_date_time.date}}.csv"
     state: present
     line: "{{ module }},{{ first_timestamp }},{{ last_timestamp }},{{ msg_count }},{{ msg_type }},{{ proc_time }},{{ etalon }},{{ test_result }}"
 
@@ -219,14 +208,14 @@
     var: report_path
 - name: register report
   delegate_to: localhost
-  shell: cat "{{report_path}}/load-test-report-{{ansible_date_time.date}}.csv"
+  shell: cat "{{report_path}}/{{ msg_type }}-load-test-report-{{ansible_date_time.date}}.csv"
   register: report
 
 - debug:
     var: report
 
 - name: check if any assert has failed up until now
-  fail: msg="Load test have failed!"
+  fail: msg="Load test for {{ msg_type }} files have failed!"
   when:
     - "'Failed' in report.stdout"
 
