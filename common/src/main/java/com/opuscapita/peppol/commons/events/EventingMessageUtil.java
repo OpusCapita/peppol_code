@@ -49,9 +49,9 @@ public class EventingMessageUtil {
         }
 
         boolean shouldCreateEventingMessage = containerMessage.getProcessingInfo().getEventingMessage() == null;
-        logger.info("Should create eventing message: " + shouldCreateEventingMessage);
+        logger.debug("Should create eventing message: " + shouldCreateEventingMessage);
         Message message = shouldCreateEventingMessage ? createAndSetMessage(containerMessage, details) : containerMessage.getProcessingInfo().getEventingMessage();
-        logger.info("Eventing message: " + message);
+        logger.debug("Eventing message: " + message);
         message.getAttempts().last().getEvents().add(createEvent(containerMessage, details));
     }
 
