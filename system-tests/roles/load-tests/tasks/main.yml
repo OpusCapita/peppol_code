@@ -35,12 +35,12 @@
 #    - /peppol/data/storage/performance-tests/tmp
 
 #define stuff
-- set_fact: file="/peppol/data/storage/performance-tests/small-file/small-file-16KB.xml"
+#- set_fact: file="/peppol/data/storage/performance-tests/small-file/small-file-16KB.xml"
 #expected validator processing time
-- set_fact: etalon="50"
-- set_fact: module="Validator"
-- set_fact: msg_count="98"
-- set_fact: wait_time="200"
+#- set_fact: etalon="50"
+#- set_fact: module="Validator"
+#- set_fact: msg_count="98"
+#- set_fact: wait_time="200"
 
 # generate uuid with shell for FIRST file
 - set_fact: uuidf="{{99999 | random | to_uuid}}"
@@ -202,24 +202,24 @@
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/load-test-report-{{ansible_date_time.iso8601_basic}}.csv"
+    dest: "{{report_path}}/load-test-report-{{ansible_date_time.date}}.csv"
     state: present
-    line: "Module name,Processing start,Processing end,msg_count,Processing time (sec),etalon,Test result"
+    line: "Module name,Processing start,Processing end,msg_count,msg_type,Processing time (sec),etalon,Test result"
 
 - name: update test results
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/load-test-report-{{ansible_date_time.iso8601_basic}}.csv"
+    dest: "{{report_path}}/load-test-report-{{ansible_date_time.date}}.csv"
     state: present
-    line: "{{ module }},{{ first_timestamp }},{{ last_timestamp }},{{ msg_count }},{{ proc_time }},{{ etalon }},{{ test_result }}"
+    line: "{{ module }},{{ first_timestamp }},{{ last_timestamp }},{{ msg_count }},{{ msg_type }},{{ proc_time }},{{ etalon }},{{ test_result }}"
 
 #checking for failures in report- test has to fail if any asseert has failed #
 - debug:
     var: report_path
 - name: register report
   delegate_to: localhost
-  shell: cat "{{report_path}}/load-test-report-{{ansible_date_time.iso8601_basic}}.csv"
+  shell: cat "{{report_path}}/load-test-report-{{ansible_date_time.date}}.csv"
   register: report
 
 - debug:
