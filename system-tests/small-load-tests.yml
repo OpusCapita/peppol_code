@@ -1,0 +1,14 @@
+---
+- hosts: peppol
+  roles:
+    - load-tests
+  vars:
+    test_data_path: /test-materials
+    file: /peppol/data/storage/performance-tests/small-file/small-file-16KB.xml
+    etalon: 100
+    module: Validator
+    msg_count: 1
+    msg_type: small
+    wait_time: 200
+
+...
