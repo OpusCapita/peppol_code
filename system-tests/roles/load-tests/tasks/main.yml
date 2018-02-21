@@ -183,7 +183,6 @@
     - etalon|int >= proc_time|int
 - name: Success case test result
   debug: var=test_result
-
 #-------------------------------
 #      REPORT
 #-------------------------------
@@ -214,11 +213,17 @@
 - debug:
     var: report
 
-- name: check if any assert has failed up until now
-  fail: msg="Load test for {{ msg_type }} files have failed!"
-  when:
-    - "'Failed' in report.stdout"
+#- name: check if any assert has failed up until now
+#  fail: msg="Load test for {{ msg_type }} files have failed!"
+#  when:
+#    - "'Failed' in report.stdout"
 
 #-------------------------------
+
+- name: check if comparision failed
+  fail: msg="Load test for {{ msg_type }} files have failed!"
+  when:
+    - "'Failed' in test_result"
+
 
 ...
