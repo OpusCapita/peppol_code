@@ -158,7 +158,7 @@ try {
                 }
             }
         }
-   }
+    }
     node {
         stage('Turn parallel flow on') {
             finally {
