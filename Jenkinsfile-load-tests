@@ -87,12 +87,12 @@ def release_version, next_version, code_hash, infra_hash
                 }
             }
             milestone 2
-            stage('Load tests') {
+            stage('Load test with small files') {
                 try {
                     dir('src/system-tests') {
                         retry(5) { 
                              ansiblePlaybook(
-                                 'load-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                 'small-load-tests.yml', 'stage.hosts', 'ansible-sudo',
                                  'report_path=$PWD/reports/'
                              )
                         }                 
@@ -101,7 +101,51 @@ def release_version, next_version, code_hash, infra_hash
                 catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'Load tests have failed. Check the log for details.'
+                        'Load tests with small files have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                }
+            }
+            milestone 3
+            stage('Load tests with average files') {
+                try {
+                    dir('src/system-tests') {
+                        retry(5) { 
+                             ansiblePlaybook(
+                                 'average-load-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                 'report_path=$PWD/reports/'
+                             )
+                        }                 
+                    }  
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Load tests with average files have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                }
+            }
+            milestone 4
+            stage('Load tests with large files') {
+                try {
+                    dir('src/system-tests') {
+                        retry(5) { 
+                             ansiblePlaybook(
+                                 'large-load-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                 'report_path=$PWD/reports/'
+                             )
+                        }                 
+                    }  
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Load tests with large files have failed. Check the log for details.'
                     )
                 }
                 finally {
