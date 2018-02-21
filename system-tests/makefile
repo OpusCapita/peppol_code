@@ -6,7 +6,7 @@ small-load-tests-s:
 average-load-tests-l:
 	ansible-playbook -i local.hosts -K average-load-tests.yml
 average-load-tests-s:
-	ansible-playbook -i stage.hosts -K average-load-tests.ymlsmall-load-tests-l:
+	ansible-playbook -i stage.hosts -K average-load-tests.yml
 large-load-tests-l:
 	ansible-playbook -i local.hosts -K large-load-tests.yml
 large-load-tests-s:
