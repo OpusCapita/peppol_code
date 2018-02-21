@@ -29,6 +29,7 @@ def infra_version = params.INFRA_BRANCH ?: 'develop'
 def release_type = params.RELEASE_TYPE ?: 'development'
 def release_version, next_version, code_hash, infra_hash
 
+try {
     node {
         stage('Checkout') {
             // clean up the last time
@@ -157,7 +158,15 @@ def release_version, next_version, code_hash, infra_hash
                 }
             }
         }
+   }
+    node {
+        stage('Turn parallel flow on') {
+            finally {
+                build job: 'peppol2.0/support/parallel-flow', parameters: [booleanParam(name: 'FROM_PEPPOL', value: true), booleanParam(name: 'FROM_A2A', value: true), booleanParam(name: 'FROM_XIB', value: true)]
+            }
+        }
     }
+} 
 
 /**
  * Stages
