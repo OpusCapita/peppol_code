@@ -70,6 +70,10 @@ def release_version, next_version, code_hash, infra_hash
     node {
         lock(resource: 'peppol-stage-servers') {
             milestone 1
+            stage('Turn parallel flow off') {
+                build job: 'peppol2.0/support/parallel-flow', parameters: [booleanParam(name: 'FROM_PEPPOL', value: false), booleanParam(name: 'FROM_A2A', value: false), booleanParam(name: 'FROM_XIB', value: false)]
+            }
+            milestone 2
             stage('Smoke Tests') {
                 try {
                     dir('infra/ap2/ansible') {
@@ -86,7 +90,7 @@ def release_version, next_version, code_hash, infra_hash
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
                 }
             }
-            milestone 2
+            milestone 3
             stage('Load test with small files') {
                 try {
                     dir('src/system-tests') {
@@ -108,7 +112,7 @@ def release_version, next_version, code_hash, infra_hash
                     archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
                 }
             }
-            milestone 3
+            milestone 4
             stage('Load tests with average files') {
                 try {
                     dir('src/system-tests') {
@@ -130,7 +134,7 @@ def release_version, next_version, code_hash, infra_hash
                     archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
                 }
             }
-            milestone 4
+            milestone 5
             stage('Load tests with large files') {
                 try {
                     dir('src/system-tests') {
