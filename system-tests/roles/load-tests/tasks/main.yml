@@ -83,11 +83,18 @@
   environment:
     PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
+- name: debug load_tests_first_rabbit
+  debug: var=load_tests_first_rabbit
+- name: debug load_tests_middle_rabbit
+  debug: var=load_tests_middle_rabbit
+- name: debug load_tests_last_rabbit
+  debug: var=load_tests_last_rabbit
+
 #send 98 other msg:
 - name: send msg to MQ
   become: "{{sudo}}"
   become_user: "{{user}}"
-  shell: "rabbitmqadmin publish exchange=peppol routing_key=validator payload={{ load_tests_middle_rabbit }}"
+  shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload="{{ load_tests_middle_rabbit }}"
   with_sequence: count="{{ msg_count }}"
   environment:
     PATH: /home/peppol/bin:{{ ansible_env.PATH }}
