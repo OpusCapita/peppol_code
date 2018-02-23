@@ -5,6 +5,7 @@ import org.junit.Test;
 import javax.xml.stream.XMLInputFactory;
 import java.io.InputStream;
 
+import static com.opuscapita.peppol.validator.controller.util.DocumentSplitter.MINIMAL_PDF;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -35,6 +36,8 @@ public class DocumentSplitterTest {
         assertFalse(sbdh.contains("</Invoice>"));
         assertFalse(sbdh.contains("Attachment"));
 
+        System.out.println(body);
+
         assertTrue(body.length() > 0);
         assertTrue(body.startsWith("<Invoice"));
         assertTrue(body.trim().endsWith("</Invoice>"));
@@ -42,7 +45,7 @@ public class DocumentSplitterTest {
         assertFalse(body.contains("<StandardBusinessDocumentHeader>"));
         assertFalse(body.contains("</StandardBusinessDocumentHeader>"));
         assertFalse(body.contains("</StandardBusinessDocument>"));
-        assertFalse(body.contains("Attachment"));
+        assertTrue(body.contains("mimeCode=\"application/pdf\">" + MINIMAL_PDF + "<"));
     }
 
 }

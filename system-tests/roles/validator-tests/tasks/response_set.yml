@@ -3,7 +3,11 @@
 - set_fact: result_warnings="{{ (result.stdout | from_json).warnings }}"
 - set_fact: result_passed="{{ (result.stdout | from_json).passed }}"
 - set_fact: result_validationError="{{ result_errors.0.validationError }}"
-  when: result_errors!=[]
+  when:
+    - result_errors is defined
+    - result_errors.0 is defined
 - set_fact: result_validationError="{{ result_warnings.0.validationError }}"
-  when: result_warnings!=[]
+  when: 
+    - result_warnings is defined
+    - result_warnings.0 is defined
 ...

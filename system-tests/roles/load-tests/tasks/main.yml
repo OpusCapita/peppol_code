@@ -34,15 +34,6 @@
 #  with_items:
 #    - /peppol/data/storage/performance-tests/tmp
 
-#define stuff
-#- include: rabbitmqadmin.yml
-- set_fact: file="/peppol/data/storage/performance-tests/small-file/small-file-16KB.xml"
-#expected validator processing time
-- set_fact: etalon="10"
-- set_fact: module="Validator"
-- set_fact: msg_count="98"
-- set_fact: wait_time="200"
-
 # generate uuid with shell for FIRST file
 - set_fact: uuidf="{{99999 | random | to_uuid}}"
 - name: debug uuidf
@@ -86,13 +77,27 @@
 
 #send FIRST msg:
 - name: send FIRST msg to MQ
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload="{{ load_tests_first_rabbit }}"
+  environment:
+    PATH: /home/peppol/bin:{{ ansible_env.PATH }}
+
+- name: debug load_tests_first_rabbit
+  debug: var=load_tests_first_rabbit
+- name: debug load_tests_middle_rabbit
+  debug: var=load_tests_middle_rabbit
+- name: debug load_tests_last_rabbit
+  debug: var=load_tests_last_rabbit
 
 #send 98 other msg:
-
 - name: send msg to MQ
-  shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload='{{ load_tests_middle_rabbit }}'
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload="{{ load_tests_middle_rabbit }}"
   with_sequence: count="{{ msg_count }}"
+  environment:
+    PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
 #- name: generate uuid with shell
 - set_fact: uuidl="{{99999 | random | to_uuid}}"
@@ -115,13 +120,17 @@
 
 #send LAST msg:
 - name: send LAST msg to MQ
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   shell: rabbitmqadmin publish exchange=peppol routing_key=validator payload="{{ load_tests_last_rabbit }}"
+  environment:
+    PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
 - name: start validator
   shell: docker start validator
 
 #- name: Read in FIRST processing timestamp
-- name: get validator log & check if "{{ uuidf }}" is found in validator
+- name: get validator log & check if FIRST "{{ uuidf }}" is found in validator
   ignore_errors: yes
   shell: docker logs validator | grep "Processing message.*{{ uuidf }}"
   register: logf
@@ -139,7 +148,7 @@
  
 
 #- name: Read in LAST processing timestamp
-- name: get validator log & check if  is found in validator
+- name: get validator log & check if LAST "{{ uuidl }}" is found in validator
   ignore_errors: yes
   shell: docker logs validator | grep "Validation passed for.*{{ uuidl }}"
   register: logl
@@ -156,9 +165,9 @@
   debug: var=last_timestamp
 
 #rc is response code for shell commands 0=success and anything else=failed
-- set_fact: first_timestamp="1987-01-01 24:00:00"
+- set_fact: first_timestamp="1987-01-01 23:00:00"
   when: logf.rc != 0
-- set_fact: last_timestamp="8001-01-01 24:00:00"
+- set_fact: last_timestamp="8001-01-01 23:00:00"
   when: logl.rc != 0
 
 - name: calculate processing time
@@ -181,7 +190,6 @@
     - etalon|int >= proc_time|int
 - name: Success case test result
   debug: var=test_result
-
 #-------------------------------
 #      REPORT
 #-------------------------------
@@ -189,34 +197,40 @@
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/load-test-report-{{ansible_date_time.iso8601_basic}}.csv"
+    dest: "{{report_path}}/{{ msg_type }}-load-test-report-{{ansible_date_time.date}}.csv"
     state: present
-    line: "Module name,Processing start,Processing end,msg_count,Processing time (sec),etalon,Test result"
+    line: "Module name,Processing start,Processing end,msg_count,msg_type,Processing time (sec),etalon,Test result"
 
 - name: update test results
   delegate_to: localhost
   lineinfile:
     create: yes
-    dest: "{{report_path}}/load-test-report-{{ansible_date_time.iso8601_basic}}.csv"
+    dest: "{{report_path}}/{{ msg_type }}-load-test-report-{{ansible_date_time.date}}.csv"
     state: present
-    line: "{{ module }},{{ first_timestamp }},{{ last_timestamp }},{{ msg_count }},{{ proc_time }},{{ etalon }},{{ test_result }}"
+    line: "{{ module }},{{ first_timestamp }},{{ last_timestamp }},{{ msg_count }},{{ msg_type }},{{ proc_time }},{{ etalon }},{{ test_result }}"
 
 #checking for failures in report- test has to fail if any asseert has failed #
 - debug:
     var: report_path
 - name: register report
   delegate_to: localhost
-  shell: cat "{{report_path}}/load-test-report-{{ansible_date_time.iso8601_basic}}.csv"
+  shell: cat "{{report_path}}/{{ msg_type }}-load-test-report-{{ansible_date_time.date}}.csv"
   register: report
 
 - debug:
     var: report
 
-- name: check if any assert has failed up until now
-  fail: msg="Load test have failed!"
-  when:
-    - "'Failed' in report.stdout"
+#- name: check if any assert has failed up until now
+#  fail: msg="Load test for {{ msg_type }} files have failed!"
+#  when:
+#    - "'Failed' in report.stdout"
 
 #-------------------------------
+
+- name: check if comparision failed
+  fail: msg="Load test for {{ msg_type }} files have failed!"
+  when:
+    - "'Failed' in test_result"
+
 
 ...

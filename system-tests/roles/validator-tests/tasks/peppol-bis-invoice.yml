@@ -376,10 +376,9 @@
 #-------------------------------
 
 - set_fact: file=/test-materials/peppol-bis/invoice/BII2-T10-R026-R028-R030.xml
-- set_fact: expected="'BII2-T10-R026'"
-- set_fact: expected1="'EUGEN-T10-R028'"
-- set_fact: expected2="'EUGEN-T10-R030'"
-- set_fact: expected3="'PEPPOL_CORE_R001'"
+- set_fact: expected="'EUGEN-T10-R028'"
+- set_fact: expected1="'EUGEN-T10-R030'"
+- set_fact: expected2="'BII2-T10-R026'"
 - set_fact: valid="false"
 - set_fact: active="true"
 
@@ -390,10 +389,8 @@
   when: result_validationError!='' and result_errors != []
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
   when: result_validationError!='' and result_errors != []
-- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+- set_fact: result_identifier2="{{ result_errors.6.validationError.identifier }}"
   when: result_validationError!='' and result_errors != []
-- set_fact: result_identifier3="{{ result_warnings.0.validationError.identifier }}"
-  when: result_validationError!='' and result_warnings != []
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -403,7 +400,6 @@
       - "result_identifier == {{ expected }} "
       - "result_identifier1 == {{ expected1 }} "
       - "result_identifier2 == {{ expected2 }} "
-      - "result_identifier3 == {{ expected3 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result

@@ -1,8 +1,16 @@
 #Load tests
-load-tests-l:
-	ansible-playbook -i local.hosts -K load-tests.yml
-load-tests-s:
-	ansible-playbook -i stage.hosts -K load-tests.yml
+small-load-tests-l:
+	ansible-playbook -i local.hosts -K small-load-tests.yml
+small-load-tests-s:
+	ansible-playbook -i stage.hosts -K small-load-tests.yml
+average-load-tests-l:
+	ansible-playbook -i local.hosts -K average-load-tests.yml
+average-load-tests-s:
+	ansible-playbook -i stage.hosts -K average-load-tests.yml
+large-load-tests-l:
+	ansible-playbook -i local.hosts -K large-load-tests.yml
+large-load-tests-s:
+	ansible-playbook -i stage.hosts -K large-load-tests.yml
 
 #------------------------------------------------------------
 #Spike tests

@@ -29,6 +29,7 @@ def infra_version = params.INFRA_BRANCH ?: 'develop'
 def release_type = params.RELEASE_TYPE ?: 'development'
 def release_version, next_version, code_hash, infra_hash
 
+try {
     node {
         stage('Checkout') {
             // clean up the last time
@@ -70,6 +71,10 @@ def release_version, next_version, code_hash, infra_hash
     node {
         lock(resource: 'peppol-stage-servers') {
             milestone 1
+            stage('Turn parallel flow off') {
+                build job: 'peppol2.0/support/parallel-flow', parameters: [booleanParam(name: 'FROM_PEPPOL', value: false), booleanParam(name: 'FROM_A2A', value: false), booleanParam(name: 'FROM_XIB', value: false)]
+            }
+            milestone 2
             stage('Smoke Tests') {
                 try {
                     dir('infra/ap2/ansible') {
@@ -86,22 +91,66 @@ def release_version, next_version, code_hash, infra_hash
                     archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
                 }
             }
-            milestone 2
-            stage('Load tests') {
+            milestone 3
+            stage('Load test with small files') {
                 try {
                     dir('src/system-tests') {
-                        parallel(
-                            "load-tests": { ansiblePlaybook(
-                                'load-tests.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
-                            )},
-                        )                    
-                    }   
+                        retry(5) { 
+                             ansiblePlaybook(
+                                 'small-load-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                 'report_path=$PWD/reports/'
+                             )
+                        }                 
+                    }  
                 }
                 catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'Load tests have failed. Check the log for details.'
+                        'Load tests with small files have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                }
+            }
+            milestone 4
+            stage('Load tests with average files') {
+                try {
+                    dir('src/system-tests') {
+                        retry(5) { 
+                             ansiblePlaybook(
+                                 'average-load-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                 'report_path=$PWD/reports/'
+                             )
+                        }                 
+                    }  
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Load tests with average files have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                }
+            }
+            milestone 5
+            stage('Load tests with large files') {
+                try {
+                    dir('src/system-tests') {
+                        retry(5) { 
+                             ansiblePlaybook(
+                                 'large-load-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                 'report_path=$PWD/reports/'
+                             )
+                        }                 
+                    }  
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Load tests with large files have failed. Check the log for details.'
                     )
                 }
                 finally {
@@ -110,6 +159,12 @@ def release_version, next_version, code_hash, infra_hash
             }
         }
     }
+}
+finally {
+    stage('Turn parallel flow on') {    
+        build job: 'peppol2.0/support/parallel-flow', parameters: [booleanParam(name: 'FROM_PEPPOL', value: true), booleanParam(name: 'FROM_A2A', value: true), booleanParam(name: 'FROM_XIB', value: true)]
+    }
+}
 
 /**
  * Stages
