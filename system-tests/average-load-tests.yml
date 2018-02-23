@@ -4,7 +4,7 @@
     - load-tests
   vars:
     file: /peppol/data/storage/performance-tests/average-file/average-file-165KB.xml
-    etalon: 900
+    etalon: 1000
     module: Validator
     msg_count: 98
     msg_type: average
