@@ -74,6 +74,8 @@
 
 - name: stop validator
   shell: docker stop validator
+- name: stop preprocessing
+  shell: docker stop preprocessing
 
 #send FIRST msg:
 - name: send FIRST msg to MQ
@@ -169,6 +171,9 @@
   when: logf.rc != 0
 - set_fact: last_timestamp="8001-01-01 23:00:00"
   when: logl.rc != 0
+
+- name: start preprocessing
+  shell: docker start preprocessing
 
 - name: calculate processing time
   set_fact: proc_time="{{ ((last_timestamp | to_datetime) - (first_timestamp | to_datetime)).seconds }}"
