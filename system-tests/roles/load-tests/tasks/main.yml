@@ -85,12 +85,12 @@
   environment:
     PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
-- name: debug load_tests_first_rabbit
-  debug: var=load_tests_first_rabbit
-- name: debug load_tests_middle_rabbit
-  debug: var=load_tests_middle_rabbit
-- name: debug load_tests_last_rabbit
-  debug: var=load_tests_last_rabbit
+#- name: debug load_tests_first_rabbit
+#  debug: var=load_tests_first_rabbit
+#- name: debug load_tests_middle_rabbit
+#  debug: var=load_tests_middle_rabbit
+#- name: debug load_tests_last_rabbit
+#  debug: var=load_tests_last_rabbit
 
 #send 98 other msg:
 - name: send msg to MQ
