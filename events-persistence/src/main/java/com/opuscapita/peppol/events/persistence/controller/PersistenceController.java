@@ -4,13 +4,7 @@ package com.opuscapita.peppol.events.persistence.controller;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.*;
-import com.opuscapita.peppol.events.persistence.model.AccessPointRepository;
-import com.opuscapita.peppol.events.persistence.model.CustomerRepository;
-import com.opuscapita.peppol.events.persistence.model.FileInfoRepository;
-import com.opuscapita.peppol.events.persistence.model.MessageRepository;
-import com.opuscapita.peppol.events.persistence.model.FailedFileInfoRepository;
-import com.opuscapita.peppol.events.persistence.model.SentFileInfoRepository;
-import com.opuscapita.peppol.events.persistence.model.ReprocessFileInfoRepository;
+import com.opuscapita.peppol.events.persistence.model.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
@@ -30,16 +25,17 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 /**
  * Created by Daniil on 18.07.2016.
  */
 @Component
+@Lazy
 public class PersistenceController {
     private static final List<ProcessType> FINAL_STATUSES = new ArrayList<ProcessType>() {
         {
@@ -54,11 +50,11 @@ public class PersistenceController {
 
     private final AccessPointRepository accessPointRepository;
     private final MessageRepository messageRepository;
-    private final CustomerRepository customerRepository;
     private final FileInfoRepository fileInfoRepository;
     private final FailedFileInfoRepository failedFileInfoRepository;
     private final SentFileInfoRepository sentFileInfoRepository;
     private final ReprocessFileInfoRepository reprocessFileInfoRepository;
+    private final DataLoadService dataLoadService;
 
     @Value("${peppol.events-persistence.error.dir}")
     private String errorDirPath;
@@ -70,15 +66,15 @@ public class PersistenceController {
     public PersistenceController(
             AccessPointRepository accessPointRepository,
             MessageRepository messageRepository,
-            CustomerRepository customerRepository,
             FileInfoRepository fileInfoRepository,
             FailedFileInfoRepository failedFileInfoRepository,
             SentFileInfoRepository sentFileInfoRepository,
-            ReprocessFileInfoRepository reprocessFileInfoRepository
+            ReprocessFileInfoRepository reprocessFileInfoRepository,
+            DataLoadService dataLoadService
     ) {
+        this.dataLoadService = dataLoadService;
         this.accessPointRepository = accessPointRepository;
         this.messageRepository = messageRepository;
-        this.customerRepository = customerRepository;
         this.fileInfoRepository = fileInfoRepository;
         this.failedFileInfoRepository = failedFileInfoRepository;
         this.sentFileInfoRepository = sentFileInfoRepository;
@@ -90,6 +86,7 @@ public class PersistenceController {
     @Retryable(include = ConnectException.class, maxAttempts = 5, backoff = @Backoff(10000L))
     public void storePeppolEvent(PeppolEvent peppolEvent) throws Exception {
         logger.info("About to process peppol event " + peppolEvent);
+
         if (/*peppolEvent.getProcessType() == ProcessType.IN_INBOUND ||*/
                 peppolEvent.getProcessType() == ProcessType.OUT_FILE_TO_MQ ||
                         peppolEvent.getProcessType() == ProcessType.REST) {
@@ -102,19 +99,25 @@ public class PersistenceController {
         AccessPoint accessPoint = getAccessPoint(peppolEvent);
         Message message = getOrCreateMessage(peppolEvent);
         FileInfo fileInfo = getFileInfo(message, peppolEvent);
-        try {
+
+/*        try {*/
             setFileInfoStatus(fileInfo, peppolEvent, message);
-        } catch (Exception e) {
+        /*} catch (DataIntegrityViolationException e) {
             logger.warn(e.getMessage());
-            return;
-        }
+            logger.warn("Retrying after 2 seconds");
+            Thread.sleep(2000);
+            setFileInfoStatus(fileInfo, peppolEvent, message);
+            logger.warn("Retry succeeded");
+        }*/
+
         fileInfoRepository.save(fileInfo);
         Message persistedMessage = messageRepository.save(message);
         logger.info("Message[" + peppolEvent.getFileName() + " : AP - " + (accessPoint != null ? accessPoint : "N/A") + "] persisted with id: " + persistedMessage.getId());
     }
 
     private FileInfo getFileInfo(Message message, PeppolEvent peppolEvent) {
-        FileInfo fileInfo = fileInfoRepository.findByFilename(peppolEvent.getFileName());
+        long start = System.nanoTime();
+        FileInfo fileInfo = dataLoadService.fetchFileInfo(peppolEvent.getFileName());
         if (fileInfo == null) {
             fileInfo = new FileInfo();
             fileInfo.setFilename(peppolEvent.getFileName());
@@ -127,6 +130,8 @@ public class PersistenceController {
             fileInfo.setMessage(message);
             fileInfoRepository.save(fileInfo);
         }
+        long end = System.nanoTime();
+        System.out.println("Fetching file info took: " + (end - start) / 1000000 + "ms");
         return fileInfo;
     }
 
@@ -193,19 +198,26 @@ public class PersistenceController {
 
     }
 
-    private void addReprocessInfo(FileInfo fileInfo) {
+    protected void addReprocessInfo(FileInfo fileInfo) throws InterruptedException {
         ReprocessFileInfo reprocessFileInfo = new ReprocessFileInfo();
         reprocessFileInfo.setReprocessedFile(fileInfo);
-        reprocessFileInfo = reprocessFileInfoRepository.save(reprocessFileInfo);
-        if (fileInfo.getReprocessInfo() == null) {
+        reprocessFileInfo.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        /*reprocessFileInfo = */
+        reprocessFileInfoRepository.save(reprocessFileInfo);
+        /*if (fileInfo.getReprocessInfo() == null) {
             fileInfo.setReprocessInfo(new TreeSet<>());
         }
         fileInfo.getReprocessInfo().add(reprocessFileInfo);
-        fileInfoRepository.save(fileInfo);
+        fileInfoRepository.save(fileInfo);*/
+        //System.out.println("Sanity check for reprocess info size: " + fileInfo.getReprocessInfo().size());
     }
 
-    private void addErrorFileInfo(FileInfo fileInfo, PeppolEvent peppolEvent, boolean invalid) {
+    @Retryable(include = DataIntegrityViolationException.class, maxAttempts = 5, backoff = @Backoff(1000L))
+    public void addErrorFileInfo(FileInfo fileInfo, PeppolEvent peppolEvent, boolean invalid) throws Exception {
         FailedFileInfo failedFileInfo = new FailedFileInfo();
+        failedFileInfo.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        System.out.println("Trying to save error for: " + fileInfo.getId());
+        System.out.println("Timestamp: " + failedFileInfo.getTimestamp());
         failedFileInfo.setFailedFile(fileInfo);
         failedFileInfo.setErrorFilePath(findErrorFilePath(peppolEvent, invalid));
         failedFileInfo.setInvalid(invalid);
@@ -221,11 +233,9 @@ public class PersistenceController {
         }
         failedFileInfo.setErrorMessage(errorMessage);
 
-        failedFileInfo = failedFileInfoRepository.save(failedFileInfo);
-        if (fileInfo.getFailedInfo() == null) {
-            fileInfo.setFailedInfo(new TreeSet<>());
-        }
-        fileInfo.getFailedInfo().add(failedFileInfo);
+        /*failedFileInfo = */
+        failedFileInfoRepository.save(failedFileInfo);
+        //System.out.println("Sanity check for failed info size: " + fileInfo.getFailedInfo().size());
     }
 
     private String findErrorFilePath(PeppolEvent event, boolean invalid) {
@@ -264,6 +274,7 @@ public class PersistenceController {
             throw new Exception("For file: " + peppolEvent.getFileName() + " and status: " + peppolEvent.getProcessType() + " the transaction id is NULL!");
         }
         SentFileInfo sentFileInfo = new SentFileInfo();
+        sentFileInfo.setTimestamp(new Timestamp(System.currentTimeMillis()));
         sentFileInfo.setSentFile(fileInfo);
         String prefix = peppolEvent.getProcessType().name().split("_")[0];
         //Some intermediate phase events might miss the transaction id
@@ -277,20 +288,29 @@ public class PersistenceController {
             sentFileInfo.setApCompanyName(apInfo.getName());
             sentFileInfo.setApId(apInfo.getId());
         }
-        sentFileInfo = sentFileInfoRepository.save(sentFileInfo);
-        if (fileInfo.getSentInfo() == null) {
+        /*sentFileInfo = */
+        sentFileInfoRepository.save(sentFileInfo);
+        /*if (fileInfo.getSentInfo() == null) {
             fileInfo.setSentInfo(new TreeSet<>());
-        }
+        }*/
 
-        fileInfo.getSentInfo().add(sentFileInfo);
+        //Sanity check
+        //System.out.println("Sanity check for sent info size: " + fileInfo.getSentInfo().size());
+        //fileInfo.getSentInfo().add(sentFileInfo);
     }
 
     @NotNull
-    private Message getOrCreateMessage(@NotNull PeppolEvent peppolEvent) {
+    public Message getOrCreateMessage(@NotNull PeppolEvent peppolEvent) {
+        long start = System.nanoTime();
         Message message = fetchMessageByPeppolEvent(peppolEvent.getInvoiceId(), peppolEvent.getSenderName(), peppolEvent.getSenderId());
+        long end = System.nanoTime();
+        System.out.println("Fetching message took: " + (end - start) / 1000000 + "ms");
         if (message == null) {
             logger.info("Creating new message for file: " + peppolEvent.getFileName());
-            Customer customer = getOrCreateCustomer(peppolEvent.getSenderId(), peppolEvent.getSenderName());
+            start = System.nanoTime();
+            Customer customer = dataLoadService.getOrCreateCustomer(peppolEvent.getSenderId(), peppolEvent.getSenderName());
+            end = System.nanoTime();
+            System.out.println("Fetching customer took: " + (end - start) / 1000000 + "ms");
             message = new Message();
             message.setSender(customer);
             message.setRecipientId(peppolEvent.getRecipientId());
@@ -328,29 +348,23 @@ public class PersistenceController {
     }
 
     @Nullable
-    @Cacheable("messages_cache")
     public Message fetchMessageByPeppolEvent(String invoiceId, String senderName, String senderId) {
         try {
-            Customer customer = getOrCreateCustomer(senderId, senderName);
-            return messageRepository.findBySenderAndInvoiceNumber(customer, invoiceId);
+            long start = System.nanoTime();
+            Customer customer = dataLoadService.getOrCreateCustomer(senderId, senderName);
+            long end = System.nanoTime();
+            System.out.println("Fetching customer took: " + (end - start) / 1000000 + "ms");
+            start = System.nanoTime();
+            Message message = dataLoadService.fetchMessageFromDb(invoiceId, customer.getId());
+            end = System.nanoTime();
+            System.out.println("Low level fetching of message took: " + (end - start) / 1000000 + "ms");
+            return message;
         } catch (Exception e) {
             logger.error("Failed to get customer using document: " + e.getMessage());
         }
         return null;
     }
 
-    @NotNull
-    @Cacheable("customer_cache")
-    public Customer getOrCreateCustomer(String senderId, String senderName) {
-        Customer customer = customerRepository.findByIdentifier(senderId);
-        if (customer == null) {
-            customer = new Customer();
-            customer.setName(senderName);
-            customer.setIdentifier(senderId);
-            customer = customerRepository.save(customer);
-        }
-        return customer;
-    }
 
     @SuppressWarnings("deprecation")
     private void swapSenderAndReceiverForInbound(PeppolEvent peppolEvent) {
@@ -372,7 +386,6 @@ public class PersistenceController {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    @Cacheable("access_points_cache")
     public AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
         AccessPoint accessPoint = null;
         if (peppolEvent.getCommonName() != null) {

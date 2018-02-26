@@ -1,16 +1,18 @@
 package com.opuscapita.peppol.events.persistence.stats;
 
-import com.google.common.collect.EvictingQueue;
+
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Statistics {
     private final static AtomicLong lastMessageTimeStamp = new AtomicLong(0);
     private final static AtomicLong lastFailedMessageTimeStamp = new AtomicLong(0);
     private final static AtomicLong lastSuccessfulMessageTimeStamp = new AtomicLong(0);
-    private final static EvictingQueue<Long> aggregateTiming = EvictingQueue.create(100);
+    private final static Queue<Long> aggregateTiming = new CircularFifoQueue<>(100);
 
     public static void updateLastSuccessful(long start) {
         long current = System.currentTimeMillis();

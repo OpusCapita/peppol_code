@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,7 +48,14 @@ public class EventQueueListener {
 //                @Override
 //                public Void doWithRetry(RetryContext context) throws ConnectException {
 //                    logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");
-            persistenceController.storePeppolEvent(peppolEvent);
+            try {
+                persistenceController.storePeppolEvent(peppolEvent);
+            } catch (DataIntegrityViolationException e) {
+                logger.warn("Retrying after 2 seconds");
+                Thread.sleep(2000);
+                persistenceController.storePeppolEvent(peppolEvent);
+                logger.warn("Retry succeeded");
+            }
             logger.info("Message about file: " + peppolEvent.getFileName() + " stored");
 //                    return null;
 //                }

@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.events.persistence;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.errors.PeppolFailureAnalyser;
@@ -16,8 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.diagnostics.FailureAnalyzer;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,7 +27,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.net.ConnectException;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.opuscapita.peppol.events.persistence.model")
@@ -62,24 +58,6 @@ public class EventsPersistenceApplication {
         template.setBackOffPolicy(backOffPolicy);
 
         return template;
-    }
-
-    @Bean
-    public CacheManager cacheManager() {
-        String specAsString = "initialCapacity=100,maximumSize=500,expireAfterAccess=5m,recordStats";
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-        cacheManager.setAllowNullValues(false); //can happen if you get a value from a @Cachable that returns null
-        cacheManager.setCaffeine(caffeineCacheBuilder());
-        return cacheManager;
-    }
-
-    Caffeine<Object, Object> caffeineCacheBuilder() {
-        return Caffeine.newBuilder()
-                .initialCapacity(100)
-                .maximumSize(150)
-                .expireAfterAccess(5, TimeUnit.MINUTES)
-                .weakKeys()
-                .recordStats();
     }
 
     @Bean
