@@ -4,7 +4,7 @@
     - load-tests
   vars:
     file: /peppol/data/storage/performance-tests/small-file/small-file-16KB.xml
-    etalon: 2
+    etalon: 50
     module: Validator
     msg_count: 98
     msg_type: small
