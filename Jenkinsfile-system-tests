@@ -167,9 +167,11 @@ catch(e) {
             stage('Cleaning') {
                 try {
                     dir('src/system-tests') {
-                        ansiblePlaybook(
-                            'cleaner.yml', 'stage.hosts', 'ansible-sudo'
-                        )
+                        retry(5) {
+                            ansiblePlaybook(
+                                'cleaner.yml', 'stage.hosts', 'ansible-sudo'
+                            )
+                        }
                     }
                 }
                 catch(e) {
