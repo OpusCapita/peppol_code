@@ -36,19 +36,24 @@ public abstract class AbstractQueueListener {
 
     @SuppressWarnings({"unused", "ConstantConditions"})
     public synchronized void receiveMessage(@NotNull ContainerMessage cm) {
+        boolean eventReported = false;
         try {
             logger.debug("Message received, file id: " + (cm == null ? "UNAVAILABLE" : cm.getFileName()));
             processMessage(cm);
+            reportEvent(cm);
             if (reporter != null) {
                 reporter.report(cm);
             }
+            eventReported = true;
         } catch (Exception e) {
             handleError(cm.getCustomerId() == null ? "n/a" : cm.getCustomerId(), e, cm);
         }
-        try {
-            reportEvent(cm);
-        } catch (Exception e) {
-            handleError(cm.getCustomerId(), e, cm);
+        if(!eventReported) {
+            try {
+                reportEvent(cm);
+            } catch (Exception e) {
+                handleError(cm.getCustomerId(), e, cm);
+            }
         }
     }
 
