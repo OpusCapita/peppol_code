@@ -26,14 +26,6 @@
 #Author: Martins Berzins
 #Date: 2018
 
-#- name: Clean storage/performance-tests/tmp
-#  become: true
-#  file:
-#    state: absent
-#    path: "{{ item }}"
-#  with_items:
-#    - /peppol/data/storage/performance-tests/tmp
-
 # generate uuid with shell for FIRST file
 - set_fact: uuidf="{{99999 | random | to_uuid}}"
 - name: debug uuidf
