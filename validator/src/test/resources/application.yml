@@ -342,13 +342,6 @@ peppol:
             - "xsl/OPENPEPPOL-UBL-T58.xsl"
             - "maindoc/UBL-ApplicationResponse-2.1.xsd"
             - "xsl/EHF-UBL-COMMON.xsl"
-        # Unit test
-        - profile: "unit-test"
-          rules:
-            - "a"
-            - "b"
-          suppress:
-            - "c"
 
   common:
     consistency_check_enabled: false

@@ -1,5 +1,7 @@
 package com.opuscapita.peppol.commons.storage;
 
+import com.opuscapita.peppol.commons.template.bean.FileMustExist;
+import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -22,12 +24,14 @@ import java.util.Date;
  * @author Sergejs.Roze
  */
 @Component
-public class StorageImpl implements Storage {
+public class StorageImpl extends ValuesChecker implements Storage {
     private static final Logger logger = LoggerFactory.getLogger(StorageImpl.class);
 
+    @FileMustExist
     @Value("${peppol.storage.short}")
     private String shortTerm;
 
+    @FileMustExist
     @Value("${peppol.storage.long}")
     private String longTerm;
 

@@ -6,6 +6,8 @@ import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.model.Customer;
+import com.opuscapita.peppol.commons.template.bean.FileMustExist;
+import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import com.opuscapita.peppol.email.model.CustomerRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +31,7 @@ import java.nio.file.StandardOpenOption;
  */
 @Component
 @Lazy
-public class EmailController {
+public class EmailController extends ValuesChecker {
     public static final String EXT_TO = ".to";
     public static final String EXT_SUBJECT = ".subj";
     public static final String EXT_BODY = ".body";
@@ -40,7 +42,7 @@ public class EmailController {
     private final BodyFormatter bodyFormatter;
     private final OxalisErrorRecognizer oxalisErrorRecognizer;
 
-
+    @FileMustExist
     @Value("${peppol.email-notificator.directory}")
     private String directory;
     @Value("${peppol.email-notificator.out.invalid.subject}")
@@ -120,7 +122,7 @@ public class EmailController {
         try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(fileName + EXT_TO)))) {
             printWriter.print(emails);
             storeDocument(cm, fileName);
-            EventingMessageUtil.reportEvent(cm, "Sucessfully sent e-mail for file: " + cm.getFileName());
+            EventingMessageUtil.reportEvent(cm, "Successfully sent e-mail for file: " + cm.getFileName());
         } catch (Exception e) {
             logger.error("Failed to store e-mail files: ", e);
             EventingMessageUtil.reportEvent(cm, "Failed to store e-mail files " + e.getMessage());
@@ -190,6 +192,26 @@ public class EmailController {
 
     private String getFileName(String customerId) {
         return directory + File.separator + customerId;
+    }
+
+    // for unit tests
+    void setDirectory(@NotNull String directory) {
+        this.directory = directory;
+    }
+
+    // for unit tests
+    void setOutInvalidEmailSubject(@NotNull String outInvalidEmailSubject) {
+        this.outInvalidEmailSubject = outInvalidEmailSubject;
+    }
+
+    // for unit tests
+    void setOutLookupErrorEmailSubject(@NotNull String outLookupErrorEmailSubject) {
+        this.outLookupErrorEmailSubject = outLookupErrorEmailSubject;
+    }
+
+    // for unit tests
+    void setInInvalidEmailSubject(@NotNull String inInvalidEmailSubject) {
+        this.inInvalidEmailSubject = inInvalidEmailSubject;
     }
 
 }

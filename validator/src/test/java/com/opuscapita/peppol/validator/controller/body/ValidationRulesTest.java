@@ -25,10 +25,14 @@ public class ValidationRulesTest {
     public void testLoading() {
         assertNotNull(validationRules);
         assertNotNull(validationRules.getMap());
-        ValidationRule rule = validationRules.getByDocumentType("unit-test");
+        ValidationRule rule = validationRules.getByDocumentType(
+                "urn:www.cenbii.eu:profile:biixy:ver2.0###" +
+                        "urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.cenbii.eu:profile:biixy:ver2.0:" +
+                        "extended:urn:www.difi.no:ehf:kreditnota:ver2.0");
         assertNotNull(rule);
-        assertEquals(2, rule.getRules().size());
-        assertEquals(1, rule.getSuppress().size());
+        assertEquals(6, rule.getRules().size());
+        assertNotNull(rule.getSuppress());
+        assertEquals(11, rule.getSuppress().size());
     }
 
 }

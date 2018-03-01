@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.email.sender;
 
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.template.bean.FileMustExist;
+import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
@@ -32,14 +34,17 @@ import static com.opuscapita.peppol.email.controller.EmailController.*;
  * @author Sergejs.Roze
  */
 @Component
-public class DirectoryChecker {
+public class DirectoryChecker extends ValuesChecker {
     private final static Logger logger = LoggerFactory.getLogger(DirectoryChecker.class);
     private final EmailSender emailSender;
     private final ErrorHandler errorHandler;
+    @FileMustExist
     @Value("${peppol.email-notificator.directory}")
     private String directory;
+    @FileMustExist
     @Value("${peppol.email-notificator.sent.directory}")
     private String sent;
+    @FileMustExist
     @Value("${peppol.email-notificator.failed.directory}")
     private String failed;
     @Value("${peppol.email-notificator.wait.seconds:120}")
