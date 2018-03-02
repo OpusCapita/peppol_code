@@ -32,15 +32,15 @@ public class RestConsumer extends Consumer {
         List<String> linedResult;
         try {
             ValidationResult result;
-            linedResult = Files.readLines(new File((String)consumable), Charsets.UTF_8);
-            for(String line : linedResult){
+            linedResult = Files.readLines(new File((String) consumable), Charsets.UTF_8);
+            for (String line : linedResult) {
                 result = new Gson().fromJson(line, ValidationResult.class);
-                if(result.isPassed())
-                    passed ++;
+                if (result.isPassed())
+                    passed++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new TestResult(name, passed == expectedResult, "Expected: "+ expectedResult +" Got: " + passed);
+        return new TestResult(name, passed == expectedResult, "Expected: " + expectedResult + " Got: " + passed);
     }
 }

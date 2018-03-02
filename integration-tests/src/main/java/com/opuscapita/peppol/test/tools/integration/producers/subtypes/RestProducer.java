@@ -67,14 +67,14 @@ public class RestProducer implements Producer {
                 HttpResponse response = client.execute(post);
                 handleResponse(response);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error("Failed to send REST message: " + ex.getMessage(), ex);
             }
         }
         saveResult();
     }
 
     private void saveResult() {
-        logger.info("Results count: " + results.size());
+        logger.info("RestProducer: results count: " + results.size());
         if (results.isEmpty()) {
             return;
         }
