@@ -12,6 +12,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,30 +26,32 @@ public class RestProducer implements Producer {
     private final static Logger logger = LoggerFactory.getLogger(RestProducer.class);
     private final String sourceDirectory;
     private final String link;
-    private final String method;
     private String restResultDirectory;
     private List<String> results = new ArrayList<>();
 
+    @SuppressWarnings("unused")
     public RestProducer(Object sourceDirectory, Object link, Object method, String restResultDirectory) {
         this.sourceDirectory = (String) sourceDirectory;
         this.link = (String) link;
-        this.method = (String) method;
         this.restResultDirectory = restResultDirectory;
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void run() {
-        File directory = null;
+        File directory;
         try {
             directory = new File(sourceDirectory);
             if (!directory.isDirectory()) {
-                logger.error(this.sourceDirectory + " doesn't exist!");
+                logger.error(this.sourceDirectory + " doesn't exist");
                 return;
             }
         } catch (Exception ex) {
             logger.error("Error reading: " + sourceDirectory, ex);
             return;
         }
+
+        //noinspection ConstantConditions
         for (File file : directory.listFiles()) {
             try {
                 MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -71,14 +74,16 @@ public class RestProducer implements Producer {
     }
 
     private void saveResult() {
-        logger.info("RestProducer: results count: " + results.size());
-        if (results.isEmpty())
+        logger.info("Results count: " + results.size());
+        if (results.isEmpty()) {
             return;
+        }
+
         restResultDirectory += "/restResult";
-        try (FileWriter writer = new FileWriter(restResultDirectory)){
+        try (FileWriter writer = new FileWriter(restResultDirectory)) {
             logger.info("RestProducer: saving result to " + restResultDirectory);
             for (String str : results) {
-                writer.write(str+"\n");
+                writer.write(str + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,6 +94,7 @@ public class RestProducer implements Producer {
         try {
             String responseString = new BasicResponseHandler().handleResponse(response);
             results.add(responseString);
+            logger.info("REST result [" + results.size() + "]: " + responseString);
         } catch (IOException e) {
             e.printStackTrace();
         }
