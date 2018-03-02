@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
+import javax.annotation.PostConstruct;
 import javax.xml.validation.Schema;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -24,6 +26,8 @@ public class HeaderValidator {
     private final XsdValidator xsdValidator;
     private final XsdRepository xsdRepository;
 
+    @Value("${peppol.validator.rules.directory}")
+    private String rulesDirectory;
     @Value("${peppol.validator.sbdh.xsdplus}")
     private String xsdPath;
 
@@ -31,6 +35,14 @@ public class HeaderValidator {
     public HeaderValidator(@NotNull XsdValidator xsdValidator, @NotNull XsdRepository xsdRepository) {
         this.xsdValidator = xsdValidator;
         this.xsdRepository = xsdRepository;
+    }
+
+    @PostConstruct
+    private void checkValues() {
+        File file = new File(rulesDirectory, xsdPath);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("Required file not found: " + file.getAbsolutePath());
+        }
     }
 
     @SuppressWarnings("ConstantConditions")

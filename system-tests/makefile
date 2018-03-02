@@ -1,3 +1,9 @@
+#cleaner
+cleaner-l:
+	ansible-playbook -i local.hosts -K cleaner.yml
+cleaner-s:
+	ansible-playbook -i stage.hosts -K cleaner.yml
+#------------------------------------------------------------
 #Load tests
 small-load-tests-l:
 	ansible-playbook -i local.hosts -K small-load-tests.yml

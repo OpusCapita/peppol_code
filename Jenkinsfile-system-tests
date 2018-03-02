@@ -64,6 +64,12 @@ try {
             }
         }
     }
+}
+catch(e) {
+    echo e.toString()
+    emailNotify('', "System-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
+    throw e
+}
     node {
         lock(resource: 'peppol-stage-servers') {
             milestone 1
@@ -157,15 +163,29 @@ try {
                     archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
                 }
             }
+            milestone 5
+            stage('Cleaning') {
+                try {
+                    dir('src/system-tests') {
+                        retry(5) {
+                            ansiblePlaybook(
+                                'cleaner.yml', 'stage.hosts', 'ansible-sudo'
+                            )
+                        }
+                    }
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'System-tests: Cleaning has failed!'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                }
+            }
         }
     }
-
-}
-catch(e) {
-    echo e.toString()
-    emailNotify('', "System-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
-    throw e
-}
 
 /**
  * Stages
