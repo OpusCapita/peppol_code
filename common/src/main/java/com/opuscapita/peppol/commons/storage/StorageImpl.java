@@ -44,9 +44,6 @@ public class StorageImpl extends ValuesChecker implements Storage {
         if (!file.canRead()) {
             throw new IOException("Unable to read file " + file.getAbsolutePath());
         }
-        if (file.length() == 0) {
-            throw new IOException("File is empty: " + file.getAbsolutePath());
-        }
     }
 
     @NotNull
@@ -88,6 +85,9 @@ public class StorageImpl extends ValuesChecker implements Storage {
         File result = StorageUtils.prepareUnique(dir, source.getName());
         FileUtils.moveFile(source, result);
         if (!result.exists() || result.length() == 0) {
+            if (source.length() == 0) {
+                throw new IOException("Received and deleted empty file: " + source.getAbsolutePath());
+            }
             throw new IOException("Failed to move file " + source + " to " + result);
         }
 
@@ -119,6 +119,9 @@ public class StorageImpl extends ValuesChecker implements Storage {
     @Override
     public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
         check(file);
+        if (file.length() == 0) {
+            throw new IOException("File is empty: " + file.getAbsolutePath());
+        }
         if (file.getAbsolutePath().startsWith(longTerm)) {
             logger.info("File already in long term storage, not moving: " + file.getAbsolutePath());
             return file.getAbsolutePath();
