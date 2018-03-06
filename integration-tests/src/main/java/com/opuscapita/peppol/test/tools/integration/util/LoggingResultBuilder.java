@@ -3,6 +3,7 @@ package com.opuscapita.peppol.test.tools.integration.util;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -16,14 +17,17 @@ public class LoggingResultBuilder implements ResultBuilder {
     public void processResult(List<TestResult> testResults) {
         logger.info("LoggingResultBuilder start *****************************************");
         int success = 0, failed = 0;
-        if(testResults == null  || testResults.isEmpty())
-            logger.info("LoggingResultBuilder: empty test results! ");
+        if (testResults == null || testResults.isEmpty()) {
+            logger.error("LoggingResultBuilder: empty test results");
+            logger.info("LoggingResultBuilder end *****************************************");
+            return;
+        }
+
         for (TestResult result : testResults) {
             if (!result.isPassed()) {
-                logger.warn(result.toString());
+                logger.error(result.toString());
                 failed++;
-            }
-            else {
+            } else {
                 logger.info(result.toString());
                 success++;
             }
