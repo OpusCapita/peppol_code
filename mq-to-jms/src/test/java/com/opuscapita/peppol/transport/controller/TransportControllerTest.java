@@ -46,5 +46,6 @@ public class TransportControllerTest {
         assertTrue(jsonObject.has("payload"));
         assertTrue(jsonObject.has("metadata"));
         assertTrue(jsonObject.get("metadata").getAsJsonObject().has("created"));
+        assertTrue(jsonObject.get("metadata").getAsJsonObject().has("filename"));
     }
 }
