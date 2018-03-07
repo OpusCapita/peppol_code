@@ -1,5 +1,7 @@
 package com.opuscapita.peppol.commons.storage;
 
+import com.opuscapita.peppol.commons.template.bean.FileMustExist;
+import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -22,12 +24,14 @@ import java.util.Date;
  * @author Sergejs.Roze
  */
 @Component
-public class StorageImpl implements Storage {
+public class StorageImpl extends ValuesChecker implements Storage {
     private static final Logger logger = LoggerFactory.getLogger(StorageImpl.class);
 
+    @FileMustExist
     @Value("${peppol.storage.short}")
     private String shortTerm;
 
+    @FileMustExist
     @Value("${peppol.storage.long}")
     private String longTerm;
 
@@ -39,9 +43,6 @@ public class StorageImpl implements Storage {
     private void check(File file) throws IOException {
         if (!file.canRead()) {
             throw new IOException("Unable to read file " + file.getAbsolutePath());
-        }
-        if (file.length() == 0) {
-            throw new IOException("File is empty: " + file.getAbsolutePath());
         }
     }
 
@@ -84,6 +85,9 @@ public class StorageImpl implements Storage {
         File result = StorageUtils.prepareUnique(dir, source.getName());
         FileUtils.moveFile(source, result);
         if (!result.exists() || result.length() == 0) {
+            if (source.length() == 0) {
+                throw new IOException("Received and deleted empty file: " + source.getAbsolutePath());
+            }
             throw new IOException("Failed to move file " + source + " to " + result);
         }
 
@@ -115,6 +119,9 @@ public class StorageImpl implements Storage {
     @Override
     public String moveToLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull File file) throws IOException {
         check(file);
+        if (file.length() == 0) {
+            throw new IOException("File is empty: " + file.getAbsolutePath());
+        }
         if (file.getAbsolutePath().startsWith(longTerm)) {
             logger.info("File already in long term storage, not moving: " + file.getAbsolutePath());
             return file.getAbsolutePath();

@@ -9,6 +9,8 @@ import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.storage.Storage;
+import com.opuscapita.peppol.commons.template.bean.FileMustExist;
+import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
@@ -33,7 +35,7 @@ import java.util.Iterator;
  * @author Sergejs.Roze
  */
 @Component
-public class IncomingChecker {
+public class IncomingChecker extends ValuesChecker {
     private static final Logger logger = LoggerFactory.getLogger(IncomingChecker.class);
 
     private final MessageQueue messageQueue;
@@ -45,6 +47,7 @@ public class IncomingChecker {
     private String componentName;
     @Value("${peppol.file-to-mq.file.age.seconds:120}")
     private int age;
+    @FileMustExist
     @Value("${peppol.file-to-mq.input.directory}")
     private String directory;
     @Value("${peppol.file-to-mq.input.recursive:false}")

@@ -17,7 +17,6 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Daniil on 19.07.2016.
- * TODO separate between our errors that should be handled by DTP and service desk related stuff
  */
 @Component
 public class ErrorHandler {

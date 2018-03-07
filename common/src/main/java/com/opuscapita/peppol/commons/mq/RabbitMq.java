@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
-
 /**
  * @author Sergejs.Roze
  */
@@ -27,8 +24,7 @@ public class RabbitMq implements MessageQueue {
     }
 
     @Override
-    public void convertAndSend(@NotNull String connectionString, @NotNull ContainerMessage message)
-            throws IOException, TimeoutException {
+    public void convertAndSend(@NotNull String connectionString, @NotNull ContainerMessage message) {
         ConnectionString cs = new ConnectionString(connectionString);
 
         String exchange = cs.getExchange();

@@ -2,6 +2,8 @@ package com.opuscapita.peppol.transport.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.storage.StorageUtils;
+import com.opuscapita.peppol.commons.template.bean.FileMustExist;
+import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -19,9 +21,10 @@ import java.io.IOException;
  */
 @Component
 @Lazy
-public class TransportController {
+public class TransportController extends ValuesChecker {
     private static final Logger logger = LoggerFactory.getLogger(TransportController.class);
 
+    @FileMustExist
     @Value("${peppol.mq-to-file.output.directory}")
     private String directory;
     @Value("${peppol.mq-to-file.output.template:%FILENAME%}")
