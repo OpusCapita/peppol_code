@@ -2,10 +2,12 @@
 #change search so that "tail" is used for getting script output, then grep in that result
 
 - name: Copy file "{{file}}" to inbound
-  shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
+  shell: docker run -i --network peppol_back -v /test-materials:/test-materials -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f "{{ file }}" -u http://inbound:8080/peppol-ap-inbound/as2
+#inbound to swarm makes this obsolite->  shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
   register: inbound_output
 - set_fact: file="{{file}}"
-- debug: var=file
+- name: file that was sent to inbound
+  debug: var=file
 
 - pause:
     seconds: 5
@@ -14,7 +16,8 @@
   shell: echo "{{inbound_output.stdout_lines[-5:]}}" |grep -oh 'transmissionId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
   register: transmissionId
 - set_fact: transmissionId="{{ transmissionId.stdout}}"
-- debug: var=transmissionId
+- name: find file in inbound log
+  debug: var=transmissionId
 
 #report START ------:
 - set_fact: counter="{{counter| int +1 }}"
