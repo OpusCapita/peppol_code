@@ -26,16 +26,41 @@
 #Author: Martins Berzins
 #Date: 2018
 
-- name: Clean storage path
+- name: Ansible find storage tests files older than 3 days
+  become: true
+  find:
+    paths: 
+      - "/peppol/data/storage/9908_987987987/"
+      - "/peppol/data/storage/unknown/"
+      - "/peppol/data/storage/9908_998877665/"
+      - "/peppol/data/storage/9908_789789789/"
+      - "/peppol/data/storage/987987987/"
+      - "/peppol/data/storage/performance-tests/tmp/"
+    age: 3d
+    patterns: "*.xml"
+    recurse: yes
+  register: files_to_delete
+- name: debug files_to_delete
+  debug: var=files_to_delete.files
+
+- name: Ansible remove files older than found previously
   become: true
   file:
+    path: "{{ item.path }}"
     state: absent
-    path: "{{ item }}"
-  with_items:
-    - /peppol/data/storage/unknown/
-    - /peppol/data/storage/9908_987987987/
-    - /peppol/data/storage/9908_998877665/
-    - /peppol/data/storage/9908_789789789/
-    - /peppol/data/storage/987987987/
-    - /peppol/data/storage/performance-tests/tmp/
+  with_items: "{{ files_to_delete.files }}"
+
+#old way how to remove files- caused failed task on stage as files might be written to
+#- name: Clean storage path
+#  become: true
+#  file:
+#    state: absent
+#    path: "{{ item }}"
+#  with_items:
+#    - /peppol/data/storage/unknown/
+#    - /peppol/data/storage/9908_987987987/
+#    - /peppol/data/storage/9908_998877665/
+#    - /peppol/data/storage/9908_789789789/
+#    - /peppol/data/storage/987987987/
+#    - /peppol/data/storage/performance-tests/tmp/
 ...
