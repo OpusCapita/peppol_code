@@ -11,7 +11,6 @@ import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import com.opuscapita.peppol.email.model.CustomerRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +51,9 @@ public class EmailController extends ValuesChecker {
     @Value("${peppol.email-notificator.out.lookup-error.subject}")
     private String outLookupErrorEmailSubject;
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaInjectionPointsAutowiringInspection"})
     @Autowired
-    public EmailController(@NotNull CustomerRepository customerRepository, @Nullable ErrorHandler errorHandler,
+    public EmailController(@NotNull CustomerRepository customerRepository, @NotNull ErrorHandler errorHandler,
                            @NotNull BodyFormatter bodyFormatter, @NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
         this.customerRepository = customerRepository;
         this.errorHandler = errorHandler;
@@ -62,17 +61,15 @@ public class EmailController extends ValuesChecker {
         this.oxalisErrorRecognizer = oxalisErrorRecognizer;
     }
 
-    public void processMessage(@NotNull ContainerMessage cm) throws Exception {
+    public void processMessage(@NotNull ContainerMessage cm) {
         logger.info("Message received: " + cm.getFileName());
 
         String customerId = cm.getCustomerId();
         if (StringUtils.isBlank(customerId)) {
             String message = "Cannot determine customer ID from the file: " + cm.getFileName();
             logger.warn(message);
-            EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+message);
-            if (errorHandler != null) {
-                errorHandler.reportWithContainerMessage(cm, null, message);
-            }
+            EventingMessageUtil.reportEvent(cm, "Email notificator failure " + message);
+            errorHandler.reportWithContainerMessage(cm, null, message);
             return;
         }
 
@@ -81,10 +78,8 @@ public class EmailController extends ValuesChecker {
         if (customer == null) {
             String message = "Customer not found in the database: " + customerId;
             logger.warn(message);
-            EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+message);
-            if (errorHandler != null) {
-                errorHandler.reportWithContainerMessage(cm, null, message);
-            }
+            EventingMessageUtil.reportEvent(cm, "Email notificator failure " + message);
+            errorHandler.reportWithContainerMessage(cm, null, message);
             return;
         }
 
@@ -102,11 +97,11 @@ public class EmailController extends ValuesChecker {
         storeMessage(emails, cm);
     }
 
-    private void storeMessage(String emails, ContainerMessage cm) throws IOException {
+    private void storeMessage(String emails, ContainerMessage cm) {
         String fileName = getFileName(cm.getCustomerId());
         if (cm.getDocumentInfo() == null) {
             String msg = "Document is null";
-            EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+msg);
+            EventingMessageUtil.reportEvent(cm, "Email notificator failure. " + msg);
             logger.error(msg);
             throw new IllegalStateException(msg);
         }
@@ -114,7 +109,7 @@ public class EmailController extends ValuesChecker {
         // if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getErrors().size() == 0) {
         if (!cm.hasErrors()) {
             String message = "Document received by email-notificator has no errors: " + cm.getFileName();
-            EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+message);
+            EventingMessageUtil.reportEvent(cm, "Email notificator failure. " + message);
             throw new IllegalArgumentException(message);
         }
 
@@ -184,15 +179,15 @@ public class EmailController extends ValuesChecker {
     private void processNoEmail(Customer customer, ContainerMessage cm) {
         String message = "E-mail address not set for the customer " + customer.getIdentifier() + " (" + customer.getName() + ")";
         logger.warn(message);
-        EventingMessageUtil.reportEvent(cm, "Email notificator failure. "+message);
-        if (errorHandler != null) {
-            errorHandler.reportWithContainerMessage(cm, null, message);
-        }
+        EventingMessageUtil.reportEvent(cm, "Email notificator failure. " + message);
+        errorHandler.reportWithContainerMessage(cm, null, message);
     }
 
     private String getFileName(String customerId) {
         return directory + File.separator + customerId;
     }
+
+    // --------------------------------
 
     // for unit tests
     void setDirectory(@NotNull String directory) {
@@ -200,16 +195,19 @@ public class EmailController extends ValuesChecker {
     }
 
     // for unit tests
+    @SuppressWarnings("SameParameterValue")
     void setOutInvalidEmailSubject(@NotNull String outInvalidEmailSubject) {
         this.outInvalidEmailSubject = outInvalidEmailSubject;
     }
 
     // for unit tests
+    @SuppressWarnings("SameParameterValue")
     void setOutLookupErrorEmailSubject(@NotNull String outLookupErrorEmailSubject) {
         this.outLookupErrorEmailSubject = outLookupErrorEmailSubject;
     }
 
     // for unit tests
+    @SuppressWarnings("SameParameterValue")
     void setInInvalidEmailSubject(@NotNull String inInvalidEmailSubject) {
         this.inInvalidEmailSubject = inInvalidEmailSubject;
     }
