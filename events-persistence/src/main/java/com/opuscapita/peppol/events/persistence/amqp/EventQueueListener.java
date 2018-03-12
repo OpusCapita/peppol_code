@@ -12,6 +12,7 @@ import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.CannotCreateTransactionException;
 
 /**
  * Created by KALNIDA1 on 2016.07.12..
@@ -62,9 +63,15 @@ public class EventQueueListener {
 //            });
             Statistics.updateLastSuccessful(start);
         } catch (Exception e) {
+            logger.error(e.getClass().getCanonicalName());
             logger.warn("Failed to process message: " + data, e);
             Statistics.updateLastFailed(start);
-            handleError(data, customerId, e);
+            if(e instanceof CannotCreateTransactionException) {
+                throw new RuntimeException("Database connection problem, re-queueing");
+            } else {
+                handleError(data, customerId, e);
+            }
+
         }
 
     }
