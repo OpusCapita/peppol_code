@@ -39,6 +39,9 @@ public class DocumentError implements Serializable {
 
     @NotNull
     public String getMessage() {
+        if (validationError != null) {
+            return validationError.toString();
+        }
         return message;
     }
 
