@@ -145,6 +145,7 @@ public class ResultParser {
     }
 
     // for unit tests
+    @SuppressWarnings("SameParameterValue")
     void setCombineThreshold(int combineThreshold) {
         this.combineThreshold = combineThreshold;
     }

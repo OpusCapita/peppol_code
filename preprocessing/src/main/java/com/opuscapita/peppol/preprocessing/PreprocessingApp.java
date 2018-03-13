@@ -22,6 +22,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 
 import java.io.File;
 
@@ -44,7 +45,7 @@ public class PreprocessingApp {
     private final MessageQueue messageQueue;
 
     @Autowired
-    public PreprocessingApp(@NotNull PreprocessingController controller, @NotNull ErrorHandler errorHandler, @NotNull MessageQueue messageQueue) {
+    public PreprocessingApp(@Lazy @NotNull PreprocessingController controller, @NotNull ErrorHandler errorHandler, @NotNull MessageQueue messageQueue) {
         this.controller = controller;
         this.errorHandler = errorHandler;
         this.messageQueue = messageQueue;
