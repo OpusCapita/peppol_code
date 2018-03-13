@@ -86,6 +86,7 @@ public class StorageImpl extends ValuesChecker implements Storage {
         FileUtils.moveFile(source, result);
         if (!result.exists() || result.length() == 0) {
             if (source.length() == 0) {
+                logger.warn("Received and deleted empty file: " + source.getAbsolutePath());
                 throw new IOException("Received and deleted empty file: " + source.getAbsolutePath());
             }
             throw new IOException("Failed to move file " + source + " to " + result);
@@ -139,7 +140,8 @@ public class StorageImpl extends ValuesChecker implements Storage {
 
     @NotNull
     @Override
-    public String storeLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName, @NotNull InputStream inputStream) throws IOException {
+    public String storeLongTerm(@NotNull String senderId, @NotNull String recipientId, @NotNull String fileName, @NotNull InputStream inputStream)
+            throws IOException {
         File dir = prepareDirectory(senderId, recipientId);
 
         File result = StorageUtils.prepareUnique(dir, FilenameUtils.getName(fileName));
