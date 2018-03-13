@@ -3,6 +3,7 @@
   roles:
     - load-tests
   vars:
+    test_file: /test-materials/performance-tests-materials/average-file/average-file-165KB.xml
     file: /peppol/data/storage/performance-tests/average-file/average-file-165KB.xml
     etalon: 856
     module: Validator

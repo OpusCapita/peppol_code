@@ -3,6 +3,7 @@
   roles:
     - load-tests
   vars:
+    test_file: /test-materials/performance-tests-materials/large-file/large-file-100MB.xml
     file: /peppol/data/storage/performance-tests/large-file/large-file-100MB.xml
     etalon: 8200
     module: Validator

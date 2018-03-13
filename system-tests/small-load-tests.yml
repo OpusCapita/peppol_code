@@ -3,6 +3,7 @@
   roles:
     - load-tests
   vars:
+    test_file: /test-materials/performance-tests-materials/small-file/small-file-16KB.xml
     file: /peppol/data/storage/performance-tests/small-file/small-file-16KB.xml
     etalon: 57
     module: Validator
