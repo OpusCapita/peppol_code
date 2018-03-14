@@ -64,7 +64,7 @@ public class MessageQueueToFileApp {
                 logger.info("Processing incoming message: " + cm.getFileName());
                 controller.storeMessage(cm);
                 cm.setStatus(new Endpoint(componentName, ProcessType.IN_MQ_TO_FILE), "delivered");
-                EventingMessageUtil.reportEvent(cm, "File "+cm.getFileName()+ "delivered by " + componentName);
+                EventingMessageUtil.reportEvent(cm, "File "+cm.getFileName()+ " delivered by " + componentName);
                 rabbitTemplate.convertAndSend(eventingQueueName, cm);
             }
         };
