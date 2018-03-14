@@ -3,9 +3,10 @@ package com.opuscapita.peppol.commons.events;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.SortedSet;
 
-public class Attempt implements Comparable<Attempt> {
+public class Attempt implements Comparable<Attempt>, Serializable {
     private final String id;
     private final SortedSet<Event> events;
     private String filename;

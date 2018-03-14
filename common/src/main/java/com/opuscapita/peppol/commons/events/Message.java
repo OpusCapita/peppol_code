@@ -2,9 +2,10 @@ package com.opuscapita.peppol.commons.events;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.SortedSet;
 
-public class Message {
+public class Message implements Serializable {
     private final String id;
     private final long created;
     private final boolean isInbound;

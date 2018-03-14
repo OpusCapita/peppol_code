@@ -2,7 +2,9 @@ package com.opuscapita.peppol.commons.events;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Event implements Comparable<Event> {
+import java.io.Serializable;
+
+public class Event implements Comparable<Event>, Serializable {
     private final long id;
     private final String source;
     private final String status;
