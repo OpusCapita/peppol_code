@@ -113,8 +113,8 @@ public class IncomingChecker extends ValuesChecker {
                 try {
                     send(file);
                 } catch (Exception e) {
-                    errorHandler.reportWithoutContainerMessage(
-                            null, e, "Failed to process input file", null, file.getAbsolutePath());
+                    String shortDescription = e.getMessage() == null ? "Failed to process input file" : e.getMessage();
+                    errorHandler.reportWithoutContainerMessage(null, e, shortDescription, null, file.getAbsolutePath());
                 }
             }
         }

@@ -26,6 +26,28 @@
 #Author: Martins Berzins
 #Date: 2018
 
+#Since storage is cleaned automatially, need to store file to storage for each run
+- name: create directories in storage
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 7777
+  with_items:
+    - /peppol/data/storage/performance-tests/small-file
+    - /peppol/data/storage/performance-tests/average-file
+    - /peppol/data/storage/performance-tests/large-file
+    - /peppol/data/storage/performance-tests/tmp
+
+- name: Copy file to storage/performance-tests
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  copy:
+    remote_src: True
+    src: "{{ test_file }}"
+    dest: "{{ file }}"
+
 # generate uuid with shell for FIRST file
 - set_fact: uuidf="{{99999 | random | to_uuid}}"
 - name: debug uuidf
@@ -38,6 +60,7 @@
     remote_src: True
     src: "{{file}}"
     dest: "/peppol/data/storage/performance-tests/tmp/{{ file| basename }}-{{ uuidf }}.xml"
+    mode: 0774
 - name: debug filename
   debug: var=file
 
