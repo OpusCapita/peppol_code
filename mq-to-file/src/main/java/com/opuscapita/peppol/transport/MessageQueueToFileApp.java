@@ -6,13 +6,16 @@ import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
+import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.transport.controller.TransportController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,6 +33,12 @@ public class MessageQueueToFileApp {
     private String componentName;
     @Value("${peppol.mq-to-file.queue.in.name}")
     private String queueIn;
+
+    @Value("${peppol.eventing.queue.in.name}")
+    private String eventingQueueName;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     public static void main(String[] args) {
         SpringApplication.run(MessageQueueToFileApp.class, args);
@@ -55,6 +64,8 @@ public class MessageQueueToFileApp {
                 logger.info("Processing incoming message: " + cm.getFileName());
                 controller.storeMessage(cm);
                 cm.setStatus(new Endpoint(componentName, ProcessType.IN_MQ_TO_FILE), "delivered");
+                EventingMessageUtil.reportEvent(cm, "File "+cm.getFileName()+ "delivered by " + componentName);
+                rabbitTemplate.convertAndSend(eventingQueueName, cm);
             }
         };
     }
