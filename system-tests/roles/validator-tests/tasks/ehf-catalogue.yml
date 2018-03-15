@@ -21,8 +21,8 @@
     that:
       - "result_errors == []"
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -51,9 +51,9 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
-      - "result_identifier2 == {{ expected2 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
+      - "result_identifier2 == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
     msg: "Test for {{ file }} failed"
   when: active==true 
   register: assert_result
