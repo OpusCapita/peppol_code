@@ -6,19 +6,26 @@ import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
 import com.opuscapita.peppol.events.persistence.controller.PersistenceController;
 import com.opuscapita.peppol.events.persistence.stats.Statistics;
+import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.CannotCreateTransactionException;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by KALNIDA1 on 2016.07.12..
  */
 @Component
-public class EventQueueListener {
+public class EventQueueListener implements ChannelAwareMessageListener {
+    private static final int CONNECTION_FAILURES_THRESHOLD = 5;
+    private final AtomicInteger recentConnectionFailures = new AtomicInteger(0);
     private static final Logger logger = LoggerFactory.getLogger(EventQueueListener.class);
 
     private final PersistenceController persistenceController;
@@ -35,7 +42,8 @@ public class EventQueueListener {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public synchronized void receiveMessage(String data) {
+    public synchronized void receiveMessage(String data) throws Exception {
+
         long start = System.currentTimeMillis();
         String customerId = "n/a";
         try {
@@ -62,22 +70,20 @@ public class EventQueueListener {
 //                }
 //            });
             Statistics.updateLastSuccessful(start);
+            recentConnectionFailures.set(0);
         } catch (Exception e) {
-            logger.error(e.getClass().getCanonicalName());
-            logger.warn("Failed to process message: " + data, e);
-            Statistics.updateLastFailed(start);
-            if(e instanceof CannotCreateTransactionException) {
-                throw new RuntimeException("Database connection problem, re-queueing");
+            if (e instanceof CannotCreateTransactionException) {
+                throw e;
             } else {
+                Statistics.updateLastFailed(start);
                 handleError(data, customerId, e);
             }
-
         }
 
     }
 
     @SuppressWarnings("unused")
-    public synchronized void receiveMessage(byte[] data) {
+    public synchronized void receiveMessage(byte[] data) throws Exception {
         receiveMessage(new String(data));
     }
 
@@ -91,11 +97,11 @@ public class EventQueueListener {
     private void handleError(String message, String customerId, Exception e) {
         try {
             String fileName = extractFileNameFromMessage(message);
-            if(fileName != null && !fileName.toLowerCase().endsWith("xml")) {
+            if (fileName != null && !fileName.toLowerCase().endsWith("xml")) {
                 logger.warn("Ignored event for non-data file: " + fileName);
                 return;
             }
-            errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to persist event", fileName, fileName,message);
+            errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to persist event", fileName, fileName, message);
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
@@ -109,5 +115,27 @@ public class EventQueueListener {
             logger.info("No file name extracted for reporting error in message: " + message);
         }
         return "";
+    }
+
+    @Override
+    public void onMessage(Message message, Channel channel) throws Exception {
+        logger.info("onMessage invoked");
+        String data = new String(message.getBody());
+        try {
+            receiveMessage(data);
+        } catch (Exception e) {
+            logger.error(e.getClass().getCanonicalName());
+            logger.warn("Failed to process message: " + data, e);
+            boolean shouldRequeue = e instanceof CannotCreateTransactionException;
+            if(shouldRequeue) {
+                int connectionFailuresInRow = recentConnectionFailures.incrementAndGet();
+                logger.info("There has been " + connectionFailuresInRow +" connection failure(s) in row");
+                if(connectionFailuresInRow >= CONNECTION_FAILURES_THRESHOLD) {
+                    logger.info("Sleeping for 30 seconds due to connection failures threshold exceeded");
+                    Thread.sleep(30000);
+                }
+            }
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(), shouldRequeue);
+        }
     }
 }

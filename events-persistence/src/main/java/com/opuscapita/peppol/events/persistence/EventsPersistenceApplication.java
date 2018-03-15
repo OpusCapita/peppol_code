@@ -80,7 +80,7 @@ public class EventsPersistenceApplication {
     @Bean
     @ConditionalOnProperty("spring.rabbitmq.host")
     MessageListenerAdapter listenerAdapter(EventQueueListener receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
+        return new MessageListenerAdapter(receiver, "onMessage");
     }
 
     @Bean
