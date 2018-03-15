@@ -85,13 +85,19 @@
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
   when: result_validationError!=''
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier3="{{ result_errors.3.validationError.identifier }}"
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
+      - "expected == result_identifier or result_identifier1 or result_identifier2 or result_identifier3"
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -169,8 +175,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -197,8 +203,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -273,8 +279,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -301,8 +307,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -329,8 +335,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -396,13 +402,17 @@
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
   when: result_validationError!=''
+- set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: result_validationError!=''
+- set_fact: result_identifier2="{{ result_errors.2.validationError.identifier }}"
+  when: result_validationError!=''
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
+      - "expected == result_identifier or result_identifier1 or result_identifier2 or result_identifier3"
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -579,10 +589,9 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
-      - "result_identifier2 == {{ expected2 }} "
-      - "result_identifier3 == {{ expected3 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} or {{ expected2 }} or {{ expected3 }}"
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} or {{ expected2 }} or {{ expected3 }}"
+      - "result_identifier2 == {{ expected }} or {{ expected1 }} or {{ expected2 }} or {{ expected3 }}"
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -612,9 +621,9 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
-      - "result_identifier2 == {{ expected2 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
+      - "result_identifier2 == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -641,8 +650,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -696,9 +705,9 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
-      - "result_identifier2 == {{ expected2 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
+      - "result_identifier2 == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -725,8 +734,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -753,8 +762,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "    
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -781,8 +790,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -810,8 +819,8 @@
     that:
       - "result_errors == []"
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -844,10 +853,9 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
-      - "result_identifier2 == {{ expected2 }} "
-      - "result_identifier3 == {{ expected3 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
+      - "result_identifier2 == {{ expected }} or {{ expected1 }} or {{ expected2 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result
@@ -874,8 +882,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} "
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
     msg: "Test for {{ file }} failed"
   when: active==true
   register: assert_result

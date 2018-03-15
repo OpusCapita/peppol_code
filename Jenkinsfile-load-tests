@@ -285,8 +285,8 @@ def emailNotify(String whom, String message) {
 ${message}
 Please go to ${BUILD_URL} and check out why this happened!
 
-System-tests status: ${currentBuild.result}
-System-tests URL: ${BUILD_URL}
+Load-tests status: ${currentBuild.result}
+Load-tests URL: ${BUILD_URL}
 Project: ${JOB_NAME}
 Test duration: ${currentBuild.durationString}
 
