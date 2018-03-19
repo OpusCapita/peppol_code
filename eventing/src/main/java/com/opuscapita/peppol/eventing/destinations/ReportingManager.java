@@ -55,7 +55,7 @@ public class ReportingManager {
             processingExceptions.put("Exception during reporting to Events persistence", ex);
         }
 
-        if(!cm.isInbound()) {
+        if (!cm.isInbound()) {
             try {
                 rabbitTemplate.convertAndSend(mlrQueue, cm);
             } catch (Exception ex2) {
@@ -75,9 +75,8 @@ public class ReportingManager {
 
 
         if (errorHandler != null) {
-            processingExceptions.entrySet().forEach(entry -> errorHandler.reportWithContainerMessage(cm, entry.getValue(), entry.getKey()));
-        }
-        else {
+            processingExceptions.forEach((key, value) -> errorHandler.reportWithContainerMessage(cm, value, key));
+        } else {
             logger.warn("ErrorHandler is null, this should be avoided in production!");
         }
     }

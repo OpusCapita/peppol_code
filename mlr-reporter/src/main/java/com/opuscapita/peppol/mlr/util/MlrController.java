@@ -34,12 +34,14 @@ import java.text.ParseException;
  * @author Sergejs.Roze
  */
 @Component
-public class MessageLevelResponseReporter {
-    private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseReporter.class);
-    private final MessageLevelResponseCreator creator;
+public class MlrController {
+    private final static Logger logger = LoggerFactory.getLogger(MlrController.class);
+
+    private final MlrCreator creator;
     private final Storage storage;
     private final CustomerRepository customerRepository;
     private final MessageRepository messageRepository;
+
     @Value("${peppol.mlr-reporter.a2a}")
     private String destinationA2A;
     @Value("${peppol.mlr-reporter.xib}")
@@ -47,8 +49,10 @@ public class MessageLevelResponseReporter {
     @Value("${peppol.mlr-reporter.backup.enabled:false}")
     private boolean backupEnabled;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public MessageLevelResponseReporter(@NotNull MessageLevelResponseCreator creator, @NotNull Storage storage, CustomerRepository customerRepository, @NotNull MessageRepository messageRepository) {
+    public MlrController(@NotNull MlrCreator creator, @NotNull Storage storage,
+                         @NotNull CustomerRepository customerRepository, @NotNull MessageRepository messageRepository) {
         this.creator = creator;
         this.storage = storage;
         this.customerRepository = customerRepository;
@@ -115,6 +119,7 @@ public class MessageLevelResponseReporter {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void storeResponse(@NotNull String art, @NotNull ContainerMessage cm, @NotNull String result) throws IOException {
         boolean created = false;
         String originalSource = cm.getProcessingInfo().getOriginalSource();
@@ -167,6 +172,7 @@ public class MessageLevelResponseReporter {
         return message.getOriginalSource();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private boolean isReprocess(ContainerMessage cm) {
         return cm.getProcessingInfo().getSource().getType() == ProcessType.IN_REPROCESS ||
                 cm.getProcessingInfo().getSource().getType() == ProcessType.OUT_REPROCESS;

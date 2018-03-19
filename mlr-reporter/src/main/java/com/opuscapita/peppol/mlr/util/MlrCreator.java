@@ -27,14 +27,14 @@ import java.util.Date;
  */
 @Component
 @Lazy
-public class MessageLevelResponseCreator {
-    private final static Logger logger = LoggerFactory.getLogger(MessageLevelResponseCreator.class);
+public class MlrCreator {
+    private final static Logger logger = LoggerFactory.getLogger(MlrCreator.class);
 
     private final OxalisErrorRecognizer oxalisErrorRecognizer;
     private final static MessageLevelResponseTemplates templates = new MessageLevelResponseTemplates();
 
     @Autowired
-    public MessageLevelResponseCreator(@NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
+    public MlrCreator(@NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
         this.oxalisErrorRecognizer = oxalisErrorRecognizer;
     }
 
@@ -146,15 +146,6 @@ public class MessageLevelResponseCreator {
         }
 
         StringBuilder result = new StringBuilder();
-//        if (cm.getProcessingInfo().getProcessingException() != null) {
-//            String template = templates.getLineTemplate();
-//            template = replace(template, "doc_reference", di.getDocumentId());
-//            template = replace(template, "xpath", "NA");
-//            template = replace(template, "reference_id", cm.getProcessingInfo().getCurrentEndpoint().getName());
-//            template = replace(template, "description", cm.getProcessingInfo().getProcessingException());
-//            template = replace(template, "status_code", "SV");
-//            result.append(template);
-//        }
 
         for (DocumentError error : di.getErrors()) {
             String template = templates.getLineTemplate();
@@ -202,137 +193,5 @@ public class MessageLevelResponseCreator {
         value = StringUtils.replace(value, "&quot;", "\"");
         return StringUtils.replace(original, "${" + key + "}", value);
     }
-
-//    /**
-//     * Creates MLR file about an error.
-//     *
-//     * @param cm the container message
-//     */
-//    @SuppressWarnings("ConstantConditions")
-//    public ApplicationResponseType reportError2(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
-//        ApplicationResponseType result = commonPart(cm);
-//        DocumentInfo di = cm.getDocumentInfo();
-//        ProcessingInfo pi = cm.getProcessingInfo();
-//        if (pi == null) {
-//            throw new IllegalArgumentException("Missing processing info from the document");
-//        }
-//
-//        DocumentResponseType drt;
-//        if (StringUtils.isNotBlank(pi.getProcessingException())) {
-//            // processing exception at any step
-//            drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(),
-//                    oxalisErrorRecognizer.recognize(pi.getProcessingException()) + ": " + pi.getProcessingException());
-//        } else {
-//            if (pi.getCurrentEndpoint().getType() == ProcessType.OUT_VALIDATION ||
-//                    pi.getCurrentEndpoint().getType() == ProcessType.IN_VALIDATION) {
-//                // validation issue
-//                drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "VALIDATION_ERROR");
-//            } else {
-//                // document errors on some other step, probably preprocessing
-//                drt = createDocumentResponseType("RE", di.getDocumentBusinessIdentifier(), "DOCUMENT_ERROR");
-//            }
-//        }
-//
-//        if (!di.getErrors().isEmpty()) {
-//            drt.setLineResponse(createLineResponse(di.getErrors(), di));
-//        }
-//
-//        result.setDocumentResponse(Collections.singletonList(drt));
-//        return result;
-//    }
-//
-//    public ApplicationResponseType reportRetry(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
-//        ApplicationResponseType result = commonPart(cm);
-//
-//        DocumentInfo di = cm.getDocumentInfo();
-//        if (di == null || !di.getErrors().isEmpty()) {
-//            return reportError(cm);
-//        }
-//
-//        ProcessingInfo pi = cm.getProcessingInfo();
-//        if (pi == null) {
-//            throw new IllegalArgumentException("Missing processing info from the document");
-//        }
-//
-//        DocumentResponseType documentResponse = createDocumentResponseType("AB", di.getDocumentBusinessIdentifier(), pi.getCurrentStatus());
-//        List<LineResponseType> warnings = createLineResponse(di.getWarnings(), di);
-//        if (!warnings.isEmpty()) {
-//            documentResponse.setLineResponse(warnings);
-//        }
-//
-//        result.setDocumentResponse(Collections.singletonList(documentResponse));
-//
-//        return result;
-//    }
-//
-//    private List<LineResponseType> createLineResponse(List<? extends DocumentError> errors, DocumentInfo di) {
-//        List<LineResponseType> list = new ArrayList<>();
-//
-//        for (DocumentError error : errors) {
-//            LineResponseType lineResponse = new LineResponseType();
-//            ValidationError validationError = error.getValidationError();
-//
-//            LineReferenceType lineReference = new LineReferenceType();
-//            lineReference.setLineID("NA"); // where to get it from?
-//
-//            DocumentReferenceType documentReference = new DocumentReferenceType();
-//            documentReference.setID(di.getDocumentId());
-//            if (validationError != null) {
-//                XPathType xPathType = new XPathType(validationError.getLocation());
-//                documentReference.setXPath(Collections.singletonList(xPathType));
-//            }
-//            lineReference.setDocumentReference(documentReference);
-//            lineResponse.setLineReference(lineReference);
-//
-//            ResponseType response = new ResponseType();
-//            if (validationError != null) {
-//                response.setReferenceID(validationError.getIdentifier());
-//                response.setDescription(Collections.singletonList(new DescriptionType(validationError.getDetails())));
-//            } else {
-//                response.setDescription(Collections.singletonList(new DescriptionType(error.getMessage())));
-//            }
-//
-//            StatusType status = new StatusType();
-//            if (error instanceof DocumentWarning) {
-//                status.setStatusReasonCode("RVW");
-//            } else {
-//                if (validationError != null) {
-//                    status.setStatusReasonCode("RVF");
-//                } else {
-//                    status.setStatusReasonCode("SV");
-//                }
-//            }
-//            response.setStatus(Collections.singletonList(status));
-//            lineResponse.setResponse(Collections.singletonList(response));
-//            list.add(lineResponse);
-//        }
-//
-//        return list;
-//    }
-//
-//    /**
-//     * Creates MLR file about a successfull end of processing.
-//     *
-//     * @param cm the container message
-//     */
-//    @SuppressWarnings("ConstantConditions")
-//    public ApplicationResponseType reportSuccess2(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException {
-//        ApplicationResponseType art = commonPart(cm);
-//
-//        DocumentInfo di = cm.getDocumentInfo();
-//        if (!di.getErrors().isEmpty()) {
-//            return reportError(cm);
-//        }
-//
-//        DocumentResponseType drt = createDocumentResponseType("AP", di.getDocumentBusinessIdentifier(), null);
-//        List<LineResponseType> warnings = createLineResponse(di.getWarnings(), di);
-//        if (!warnings.isEmpty()) {
-//            drt.setLineResponse(warnings);
-//        }
-//
-//        art.setDocumentResponse(Collections.singletonList(drt));
-//
-//        return art;
-//    }
 
 }

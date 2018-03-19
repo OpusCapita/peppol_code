@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
  * @author Sergejs.Roze
  */
 @SuppressWarnings("ConstantConditions")
-public class MessageLevelResponseReporterTest {
+public class MlrControllerTest {
     private Storage storage = mock(Storage.class);
     private CustomerRepository customerRepository = mock(CustomerRepository.class);
     private MessageRepository messageRepository = mock(MessageRepository.class);
@@ -41,10 +41,10 @@ public class MessageLevelResponseReporterTest {
         ProcessingInfo pi = new ProcessingInfo(ep, "metadata").setCurrentStatus(ep, "ERROR");
         cm.setProcessingInfo(pi);
 
-        MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
+        MlrCreator creator = mock(MlrCreator.class);
 
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage, customerRepository, messageRepository);
+        MlrController reporter = new MlrController(creator, storage, customerRepository, messageRepository);
         reporter.process(cm);
         verify(creator, never()).reportError(any());
         verify(creator, never()).reportSuccess(any());
@@ -59,10 +59,10 @@ public class MessageLevelResponseReporterTest {
         ProcessingInfo pi = new ProcessingInfo(ep, "metadata").setCurrentStatus(ep, "ERROR");
         cm.setProcessingInfo(pi);
 
-        MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
+        MlrCreator creator = mock(MlrCreator.class);
         when(creator.reportError(any())).thenReturn("");
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage, customerRepository, messageRepository);
+        MlrController reporter = new MlrController(creator, storage, customerRepository, messageRepository);
         reporter.process(cm);
         verify(creator).reportError(cm);
         verify(creator, never()).reportSuccess(any());
@@ -78,10 +78,10 @@ public class MessageLevelResponseReporterTest {
         cm.setProcessingInfo(pi);
         pi.setTransactionId("transaction id");
 
-        MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
+        MlrCreator creator = mock(MlrCreator.class);
         when(creator.reportSuccess(any())).thenReturn("");
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage, customerRepository, messageRepository);
+        MlrController reporter = new MlrController(creator, storage, customerRepository, messageRepository);
         reporter.process(cm);
         verify(creator, never()).reportError(any());
         verify(creator).reportSuccess(cm);
@@ -96,9 +96,9 @@ public class MessageLevelResponseReporterTest {
         ProcessingInfo pi = new ProcessingInfo(ep, "metadata").setCurrentStatus(ep, "ERROR");
         cm.setProcessingInfo(pi);
 
-        MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
+        MlrCreator creator = mock(MlrCreator.class);
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage, customerRepository, messageRepository);
+        MlrController reporter = new MlrController(creator, storage, customerRepository, messageRepository);
         reporter.process(cm);
         verify(creator, never()).reportError(any());
         verify(creator, never()).reportSuccess(any());
@@ -108,9 +108,9 @@ public class MessageLevelResponseReporterTest {
     public void testProcessBadFormed() throws Exception {
         Endpoint ep = new Endpoint("xxx", ProcessType.OUT_PEPPOL_FINAL);
         ContainerMessage cm = new ContainerMessage("metadata", "test.txt", ep);
-        MessageLevelResponseCreator creator = mock(MessageLevelResponseCreator.class);
+        MlrCreator creator = mock(MlrCreator.class);
 
-        MessageLevelResponseReporter reporter = new MessageLevelResponseReporter(creator, storage, customerRepository, messageRepository);
+        MlrController reporter = new MlrController(creator, storage, customerRepository, messageRepository);
         reporter.process(cm);
         verify(creator, never()).reportError(any());
         verify(creator, never()).reportSuccess(any());

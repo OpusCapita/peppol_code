@@ -87,7 +87,7 @@ public class StorageImpl extends ValuesChecker implements Storage {
         if (!result.exists() || result.length() == 0) {
             if (source.length() == 0) {
                 logger.warn("Received and deleted empty file: " + source.getAbsolutePath());
-                throw new IOException("Received and deleted empty file: " + source.getAbsolutePath());
+                throw new EmptyFileException("Received and deleted empty file: " + source.getAbsolutePath());
             }
             throw new IOException("Failed to move file " + source + " to " + result);
         }

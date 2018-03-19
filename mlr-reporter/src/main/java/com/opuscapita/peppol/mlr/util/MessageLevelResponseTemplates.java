@@ -64,4 +64,5 @@ class MessageLevelResponseTemplates {
     @NotNull String getDescriptionTemplate() {
         return DESCRIPTION_TEMPLATE;
     }
+
 }

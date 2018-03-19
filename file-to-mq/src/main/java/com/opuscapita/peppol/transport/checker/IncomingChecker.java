@@ -2,12 +2,15 @@ package com.opuscapita.peppol.transport.checker;
 
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
+import com.opuscapita.peppol.commons.storage.EmptyFileException;
 import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.commons.template.bean.FileMustExist;
 import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
@@ -25,6 +28,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -62,6 +66,8 @@ public class IncomingChecker extends ValuesChecker {
     private boolean reprocess;
     @Value("${peppol.file-to-mq.direction:OUT}")
     private String direction;
+    @Value("${peppol.mlr-reporter.queue.in.name:''}")
+    private String mlrReporterQueue;
 
     @Autowired
     public IncomingChecker(@NotNull MessageQueue messageQueue, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
@@ -115,8 +121,38 @@ public class IncomingChecker extends ValuesChecker {
                 } catch (Exception e) {
                     String shortDescription = e.getMessage() == null ? "Failed to process input file" : e.getMessage();
                     errorHandler.reportWithoutContainerMessage(null, e, shortDescription, null, file.getAbsolutePath());
+                    if (e instanceof EmptyFileException) {
+                        sendEmptyFileReport(file.getAbsolutePath());
+                    }
                 }
             }
+        }
+    }
+
+    private void sendEmptyFileReport(@NotNull String fileName) {
+        Endpoint endpoint = new Endpoint(componentName, getProcessType());
+        String metadata = "Empty file " + fileName + " received by " + componentName;
+
+        ContainerMessage cm = new ContainerMessage(metadata, fileName, endpoint);
+
+        ProcessingInfo pi = new ProcessingInfo(endpoint, metadata);
+        pi.setProcessingException(metadata);
+        cm.setProcessingInfo(pi);
+
+        DocumentInfo di = new DocumentInfo();
+        di.setIssueDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        di.setSenderId("NA");
+        di.setSenderName("NA");
+        di.setRecipientId("NA");
+        di.setRecipientName("NA");
+        di.setDocumentId("empty_file");
+        cm.setDocumentInfo(di);
+
+        try {
+            messageQueue.convertAndSend(mlrReporterQueue, cm);
+        } catch (Exception e) {
+            logger.error("Failed to send message to MLR reporter: " + e.getMessage(), e);
+            errorHandler.reportWithContainerMessage(cm, e, "Failed to report empty file: " + fileName);
         }
     }
 
