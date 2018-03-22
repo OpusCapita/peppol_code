@@ -124,7 +124,7 @@ public class MlrController {
         boolean created = false;
         String originalSource = cm.getProcessingInfo().getOriginalSource();
         if (isReprocess(cm)) {
-            logger.info("Creating MLR for reprocessing!");
+            logger.info("Creating MLR for reprocessed message");
             originalSource = fetchOriginalSourceFromDb(cm);
         }
 
@@ -156,14 +156,12 @@ public class MlrController {
 
     @SuppressWarnings("ConstantConditions")
     private String fetchOriginalSourceFromDb(ContainerMessage cm) {
-        logger.info("customer repo: " + customerRepository.toString());
         Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
         if (customer == null) {
             logger.warn("Unable to create standard MLR. Could not fetch customer for file: " + cm.getFileName()
                     + " and customer id: " + cm.getDocumentInfo().getSenderId());
             return null;
         }
-        logger.info("customer id: " + customer.getId() + " " + " document_id = " + cm.getDocumentInfo().getDocumentId());
         Message message = messageRepository.findBySenderAndInvoiceNumber(customer, cm.getDocumentInfo().getDocumentId());
         if (message == null) {
             logger.warn("Unable to create standard MLR. Could not fetch original event message for file: " + cm.getFileName());
