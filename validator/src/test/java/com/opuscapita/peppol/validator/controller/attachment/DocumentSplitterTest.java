@@ -1,13 +1,14 @@
-package com.opuscapita.peppol.validator.controller.util;
+package com.opuscapita.peppol.validator.controller.attachment;
 
 import org.junit.Test;
 
 import javax.xml.stream.XMLInputFactory;
 import java.io.InputStream;
 
-import static com.opuscapita.peppol.validator.controller.util.DocumentSplitter.MINIMAL_PDF;
+import static com.opuscapita.peppol.validator.controller.attachment.DocumentSplitter.MINIMAL_PDF;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
@@ -22,7 +23,7 @@ public class DocumentSplitterTest {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
 
         try (InputStream inputStream = DocumentSplitterTest.class.getResourceAsStream("/test_data/difi_files/EHF_profile-bii05_invoice_invalid.xml")) {
-            DocumentSplitter.Result result = new DocumentSplitter(xmlInputFactory).split(inputStream, "Invoice");
+            DocumentSplitterResult result = new DocumentSplitter(xmlInputFactory, mock(AttachmentValidator.class)).split(inputStream, "Invoice");
             sbdh = new String(result.getSbdh());
             body = new String(result.getDocumentBody());
         }

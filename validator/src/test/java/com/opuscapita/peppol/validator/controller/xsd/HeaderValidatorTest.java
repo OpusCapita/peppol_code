@@ -4,8 +4,10 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.validator.controller.attachment.AttachmentValidator;
+import com.opuscapita.peppol.validator.controller.attachment.DocumentSplitter;
+import com.opuscapita.peppol.validator.controller.attachment.DocumentSplitterResult;
 import com.opuscapita.peppol.validator.controller.cache.XsdRepository;
-import com.opuscapita.peppol.validator.controller.util.DocumentSplitter;
 import org.junit.Test;
 
 import javax.xml.XMLConstants;
@@ -15,12 +17,14 @@ import java.io.File;
 import java.io.InputStream;
 
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Sergejs.Roze
  */
 public class HeaderValidatorTest {
-    private DocumentSplitter splitter = new DocumentSplitter(XMLInputFactory.newFactory());
+    private AttachmentValidator attachmentValidator = mock(AttachmentValidator.class);
+    private DocumentSplitter splitter = new DocumentSplitter(XMLInputFactory.newFactory(), attachmentValidator);
     private HeaderValidator validator;
 
 
@@ -41,7 +45,7 @@ public class HeaderValidatorTest {
     private void checkNoErrors(String fileName, ContainerMessage cm, String tag) throws Exception {
         System.out.println("Testing file " + fileName);
         try (InputStream inputStream = HeaderValidatorTest.class.getResourceAsStream(fileName)) {
-            DocumentSplitter.Result parts = splitter.split(inputStream, tag);
+            DocumentSplitterResult parts = splitter.split(inputStream, tag);
             validator.validate(parts.getSbdh(), cm);
         }
         if (cm.hasErrors()) {

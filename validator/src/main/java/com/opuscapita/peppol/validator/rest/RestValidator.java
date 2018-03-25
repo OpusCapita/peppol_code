@@ -32,6 +32,7 @@ public class RestValidator {
     private final Storage storage;
     private final Endpoint endpoint = new Endpoint("validator_rest", ProcessType.REST);
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public RestValidator(@NotNull ValidationController validationController, @NotNull DocumentLoader documentLoader,
                          @NotNull Storage storage) {
@@ -52,7 +53,7 @@ public class RestValidator {
         ContainerMessage containerMessage;
         try {
             containerMessage = MultiPartHelper.createContainerMessageFromMultipartFile(documentLoader, endpoint, storage, file, "REST", logger);
-            containerMessage = validationController.validate(containerMessage);
+            containerMessage = validationController.validate(containerMessage, endpoint);
 
             result = ValidationResult.fromContainerMessage(containerMessage);
 

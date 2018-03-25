@@ -42,6 +42,7 @@ public class IndexController {
     private final Storage storage;
     private final Tracer tracer;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public IndexController(@NotNull ValidationController validationController, @NotNull DocumentLoader documentLoader,
                            @NotNull ServerProperties serverProperties, @NotNull Storage storage, Tracer tracer) {
@@ -83,7 +84,7 @@ public class IndexController {
         ContainerMessage containerMessage;
         try {
             containerMessage = MultiPartHelper.createContainerMessageFromMultipartFile(documentLoader, endpoint, storage, dataFile, "WEB", logger);//loadContainerMessageFromMultipartFile(dataFile);
-            containerMessage = validationController.validate(containerMessage);
+            containerMessage = validationController.validate(containerMessage, endpoint);
             ValidationResult validationResult = ValidationResult.fromContainerMessage(containerMessage);
 
             logger.debug("Validation passed for: " + dataFile.getOriginalFilename() + " -> " + validationResult.isPassed());

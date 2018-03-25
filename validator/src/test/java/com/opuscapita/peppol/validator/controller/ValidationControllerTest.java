@@ -9,6 +9,7 @@ import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.validator.ValidationController;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,11 +68,17 @@ public class ValidationControllerTest {
         }
     }
 
+    @Test
+    @Ignore("Debug only")
+    public void testSingleFile() throws Exception {
+        processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/invalid_attachment.xml"));
+    }
+
     private void processFile(@NotNull File file) throws Exception {
         List<String> expected = getExpected(file);
 
         ContainerMessage cm = loadDocument(file.getAbsolutePath());
-        cm = controller.validate(cm);
+        cm = controller.validate(cm, Endpoint.TEST);
 
         assertTrue(compare(cm, expected));
     }

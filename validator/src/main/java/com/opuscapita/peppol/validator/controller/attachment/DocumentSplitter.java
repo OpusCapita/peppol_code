@@ -1,6 +1,7 @@
-package com.opuscapita.peppol.validator.controller.util;
+package com.opuscapita.peppol.validator.controller.attachment;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.validation.ValidationError;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -21,24 +22,6 @@ import java.io.*;
  */
 @Component
 public class DocumentSplitter {
-    public class Result {
-        private final byte[] sbdh;
-        private final byte[] documentBody;
-
-        private Result(byte[] sbdh, byte[] documentBody) {
-            this.sbdh = sbdh;
-            this.documentBody = documentBody;
-        }
-
-        public byte[] getSbdh() {
-            return sbdh;
-        }
-
-        public byte[] getDocumentBody() {
-            return documentBody;
-        }
-    }
-
     final static String MINIMAL_PDF =
             "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2Vz\n" +
             "IDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMg\n" +
@@ -55,9 +38,11 @@ public class DocumentSplitter {
             "PDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==";
 
     private final XMLInputFactory xmlInputFactory;
+    private final AttachmentValidator attachmentValidator;
 
-    public DocumentSplitter(@NotNull @Lazy XMLInputFactory xmlInputFactory) {
+    public DocumentSplitter(@NotNull @Lazy XMLInputFactory xmlInputFactory, @NotNull AttachmentValidator attachmentValidator) {
         this.xmlInputFactory = xmlInputFactory;
+        this.attachmentValidator = attachmentValidator;
     }
 
     /**
@@ -66,7 +51,7 @@ public class DocumentSplitter {
      * @param cm the container message
      * @return the original file split to two parts - SBDH and document body
      */
-    public Result split(@NotNull ContainerMessage cm) throws IOException, XMLStreamException {
+    public DocumentSplitterResult split(@NotNull ContainerMessage cm) throws IOException, XMLStreamException {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("No document info provided");
         }
@@ -78,7 +63,7 @@ public class DocumentSplitter {
         }
     }
 
-    public Result split(@NotNull InputStream inputStream, @NotNull String rootName) throws XMLStreamException, IOException {
+    public DocumentSplitterResult split(@NotNull InputStream inputStream, @NotNull String rootName) throws XMLStreamException, IOException {
         FastByteArrayOutputStream sbdh = new FastByteArrayOutputStream(2048); // seems like regular SBDH is inside this limit
         FastByteArrayOutputStream body = new FastByteArrayOutputStream(8192); // seems like regular file is inside this limit
 
@@ -90,11 +75,14 @@ public class DocumentSplitter {
         Writer sbdhWriter = new OutputStreamWriter(sbdh);
         Writer bodyWriter = new OutputStreamWriter(body);
 
+        ValidationError attachmentError = null;
+
+        String name = null;
         while (reader.hasNext()) {
             XMLEvent event = reader.nextEvent();
             if (event.isStartElement()) {
                 StartElement start = event.asStartElement();
-                String name = start.getName().getLocalPart();
+                name = start.getName().getLocalPart();
 
                 if ("StandardBusinessDocument".equals(name)) {
                     collectingSbdh = true; collectingBody = false; putAttachment = false;
@@ -114,7 +102,8 @@ public class DocumentSplitter {
                 event.writeAsEncodedUnicode(bodyWriter);
             }
             if (putAttachment) {
-                if (event.isCharacters() && !event.asCharacters().isWhiteSpace()) {
+                if (event.isCharacters() && !event.asCharacters().isWhiteSpace() && "EmbeddedDocumentBinaryObject".equals(name)) {
+                    attachmentError = attachmentValidator.validate(event.asCharacters().getData());
                     bodyWriter.append(MINIMAL_PDF);
                 } else {
                     event.writeAsEncodedUnicode(bodyWriter);
@@ -123,7 +112,7 @@ public class DocumentSplitter {
 
             if (event.isEndElement()) {
                 EndElement end = event.asEndElement();
-                String name = end.getName().getLocalPart();
+                name = end.getName().getLocalPart();
                 if (rootName.equals(name)) {
                     collectingSbdh = true; collectingBody = false; putAttachment = false;
                 }
@@ -135,7 +124,7 @@ public class DocumentSplitter {
         sbdhWriter.close();
         bodyWriter.close();
 
-        return new Result(sbdh.toByteArrayUnsafe(), body.toByteArrayUnsafe());
+        return new DocumentSplitterResult(sbdh.toByteArrayUnsafe(), body.toByteArrayUnsafe(), attachmentError);
     }
 
 }
