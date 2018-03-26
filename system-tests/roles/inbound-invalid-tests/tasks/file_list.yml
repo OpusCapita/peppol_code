@@ -19,4 +19,5 @@
     - "{{test_data_path}}/validation_test_suite/invalid/unrecognized_document_type.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/random.xml"
 #    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_OC.xml"
+    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_attachment.xml"
 ...
