@@ -1,3 +1,17 @@
+<!--
+Errors:
+ATTACHMENT
+
+Warnings:
+OP-T10-R057
+OP-T10-R056
+NONAT-T10-R010
+NOGOV-T10-R003
+NOGOV-T10-R005
+EHF-COMMON-R003
+
+-->
+
 <StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
     <StandardBusinessDocumentHeader>
         <HeaderVersion>1.0</HeaderVersion>
