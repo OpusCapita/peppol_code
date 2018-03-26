@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.validator;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -8,6 +9,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ValidationController {
 
-    ContainerMessage validate(@NotNull ContainerMessage cm) throws Exception;
+    ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull Endpoint endpoint) throws Exception;
 
 }

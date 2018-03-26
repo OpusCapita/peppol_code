@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<StandardBusinessDocument xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+  <StandardBusinessDocumentHeader>
+    <HeaderVersion>1.0</HeaderVersion>
+    <Sender>
+      <Identifier Authority="iso6523-actorid-upis">0037:01098230</Identifier>
+    </Sender>
+    <Receiver>
+      <Identifier Authority="iso6523-actorid-upis">9908:963296746</Identifier>
+    </Receiver>
+    <DocumentIdentification>
+      <Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
+      <TypeVersion>2.1</TypeVersion>
+      <InstanceIdentifier>6791b49a-2172-11e6-94c1-fb30772ea06c</InstanceIdentifier>
+      <Type>Invoice</Type>
+      <CreationDateAndTime>2016-05-24T08:43:13.295398+03:00</CreationDateAndTime>
+    </DocumentIdentification>
+    <BusinessScope>
+      <Scope>
+        <Type>DOCUMENTID</Type>
+        <InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1</InstanceIdentifier>
+      </Scope>
+      <Scope>
+        <Type>PROCESSID</Type>
+        <InstanceIdentifier>urn:www.cenbii.eu:profile:bii05:ver2.0</InstanceIdentifier>
+      </Scope>
+    </BusinessScope>
+  </StandardBusinessDocumentHeader>
+  <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:draft:UnqualifiedDataTypes:2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd ">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0</cbc:CustomizationID>
+    <cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+    <cbc:ID>9067031087</cbc:ID>
+    <cbc:IssueDate>2016-05-24</cbc:IssueDate>
+    <cbc:InvoiceTypeCode listAgencyID="6" listID="UNCL1001">380</cbc:InvoiceTypeCode>
+    <cbc:DocumentCurrencyCode listAgencyID="6" listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
+    <cac:OrderReference>
+      <cbc:ID>ID-20103766 - Odderøya RA</cbc:ID>
+    </cac:OrderReference>
+    <cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+      <cbc:ID>6791b49a-2172-11e6-94c1-fb30772ea06c.pdf</cbc:ID>
+      <cbc:DocumentType>Commercial Invoice</cbc:DocumentType>
+      <cac:Attachment>
+        <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf">JVBERi0xLjMNCjEgMCBvYmoNCjw8DQovUjkgMiAwIFINCj4+DQplbmRvYmoNCjIgMCBvYmoN
+Cjw8DQovVHlwZSAvRXh0R1N0YXRlDQovTmFtZSAvUjkNCi9UUiAvSWRlbnRpdHkNCi9CRyAz
+IDAgUg0KL1VDUiA0IDAgUg0KPj4NCmVuZG9iag0KMyAwIG9iag0KPDwNCi9GaWx0ZXIgL0Zs
+YXRlRGVjb2RlDQovRnVuY3Rpb25UeXBlIDANCi9Eb21haW4gWyAwIDEgXQ0KL1JhbmdlIFsg
+MCAxIF0NCi9CaXRzUGVyU2FtcGxlIDgNCi9TaXplIFsgMjU2IF0NCi9MZW5ndGggMTINCj4+
+DQpzdHJlYW0NCnicY2AY2QAAAQAAAQ0KZW5kc3RyZWFtDQplbmRvYmoNCjQgMCBvYmoNCjw8
+DQovRmlsdGVyIC9GbGF0ZURlY29kZQ0KL0Z1bmN0aW9uVHlwZSAwDQovRG9tYWluIFsgMCAx
+IF0NCi9SYW5nZSBbIC0xIDEgXQ0KL0JpdHNQZXJTYW1wbGUgOA0KL1NpemUgWyAyNTYgXQ0K
+L0xlbmd0aCAxMg0KPj4NCnN0cmVhbQ0KeJxraBjZAABEwIABDQplbmRzdHJlYW0NCmVuZG9i
+ag0KNSAwIG9iag0KPDwNCi9SMTAgNiAwIFINCj4+DQplbmRvYmoNCjYgMCBvYmoNCjw8DQov
+U3VidHlwZSAvSW1hZ2UNCi9Db2xvclNwYWNlIC9EZXZpY2VDTVlLDQovV2lkdGggNzENCi9I
+ZWlnaHQgMzcwDQovQml0c1BlckNvbXBvbmVudCA4DQovRmlsdGVyIC9GbGF0ZURlY29kZQ0K
+L0RlY29kZVBhcm1zIDw8IC9QcmVkaWN0b3IgMTUgL0NvbHVtbnMgNzEgL0NvbG9ycyA0ID4+
+DQovTGVuZ3RoIDYxMDgNCj4+DQpzdHJlYW0NCnic7Z0J3G7VvMf/R7o0KZXpog6JBkNx71EU
+b6SJBilkPKVOxe3odkNIkgoNishYHUIyEynEUaZkSOje3FRXg4xH0aBys77PevbbM+xnPXv/
+19p7r72f9ft8/p/znufde+31/p611/qv/7QWiMWWRtYy8v8y21jJyHVGLuM/C/ryLSP/ZuSO
+5voVBVYx8nEj+/IfiLmXkR8Z2bzBTsWETxrZix8SOeNI5DiQyHEgkeNAIseBRI4DiRwHEjkO
+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
+sFveStEIPh42dlcXuLa15OC820vZgYOkmBunteS8SezKowHaNVuPv065rk3k4D4iwKlHDmEY
+X1J2ABwtlmAX2kTO0N5qfbHV2rS+a8yh7EWWOa5pLTlAOylnIAiRigToPrfm/L5N5OC9WMwP
+GTkkfByr7MQgUAvY1eIcxMTJqMKtQiGRsxXtYU7BuE5iSpFAK9QK7EzEHhM+o1lohoxdAJMF
+JRtWUTSWBzwRlGuAHDqMN3ItRTt3SrmyD3cPCIHc91U8c8hMmoFJeWdFY11Dbj1kPH1faaQ7
+cSGXHN5rrHvbNNGjiDCxBvszxJZtCFHToq1wHm2A+ryk1u7EBSc5OPvxYjYZH9wkpp4Y8nSx
+k/Ms1mQvdNYM2iWK1L3q6FFEKHxKEVUJTipwXZdQ6nyr/Yy8W3TaZhtR+mQ0PJvYOdavqkcR
+QXWmHo6/4/o3dnkeUh84CLYVm9hB0FMXSfIiB6BBY/9ZLDZqy6dSU2zwJmcQmCLwQlC64bFi
+fWCkB2CmyBtZCyZ8PghsMkES50uCRYdA8l4U+z8BNJXjpA0KZW5kc3RyZWFtDQplbmRvYmoN
+CjcgMCBvYmoNCjw8IC9UeXBlIC9YT2JqZWN0IC9TdWJ0eXBlIC9Gb3JtDQovTmFtZSAvWGNh
+dA0KL0Zvcm1UeXBlIDENCi9CQm94IFsgMCAwIDU5NSA4NDIgXQ0KL01hdHJpeCBbIDEgMCAw
+IDEgMCAwIF0NCi9SZXNvdXJjZXMgPDwgL1Byb2NTZXQgWyAvUERGIC9JbWFnZUMgXSAvRXh0
+R1N0YXRlIDEgMCBSIC9YT2JqZWN0IDUgMCBSID4+DQovTGVuZ3RoIDExNA0KL0ZpbHRlciAv
+RmxhdGVEZWNvZGUNCj4+DQpzdHJlYW0NCnicbY2xDcMwDAT7n+IXCE1Gskn1XkBuMoALN5ID
+IfsDaQIXRqoDDrj/QRWjUi/uHQMVA8mSWNC1PCUv7JcooZJnNuRIMnv6Z35Ru680vHhi2gqP
+DwbNVVJZqFQ+IlxKOG8/e8e0mXJ9o6Ki4gup0CQfCg0KZW5kc3RyZWFtDQplbmRvYmoNCjgg
+MCBvYmoNCjw8L0xlbmd0aCA5ID4+DQpzdHJlYW0NCi9YY2F0IERvCmVuZHN0cmVhbQ0KZW5k
+b2JqDQo5IDAgb2JqDQo8PA0KL1R5cGUgL1BhZ2UNCi9QYXJlbnQgMTAgMCBSDQovUmVzb3Vy
+Y2VzIDw8IC9Gb250IDw8IC9GbXBkZjAgMTEgMCBSID4+IC9Qcm9jU2V0IDEyIDAgUiAvWE9i
+amVjdCA8PCAvWGNhdA0KNyAwIFIgPj4gPj4NCi9NZWRpYUJveCBbIDAgMCA1OTUuMjAwMDEy
+IDg0MS43OTk5ODggXQ0KL0Nyb3BCb3ggWyAwIDAgNTk1LjIwMDAxMiA4NDEuNzk5OTg4IF0N
+Ci9Sb3RhdGUgMA0KL0NvbnRlbnRzIFsgOCAwIFIgMTMgMCBSIF0NCj4+DQplbmRvYmoNCjEx
+IDAgb2JqDQo8PA0KL1R5cGUgL0ZvbnQNCi9TdWJ0eXBlIC9UeXBlMQ0KL05hbWUgL0ZtcGRm
+MA0KL0Jhc2VGb250IC9Db3VyaWVyLUJvbGQNCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5n
+DQo+Pg0KZW5kb2JqDQoxMyAwIG9iag0KPDwNCi9MZW5ndGggMjM3Nw0KL0ZpbHRlciBbIC9G
+bGF0ZURlY29kZSBdDQo+Pg0Kc3RyZWFtDQp4nNVcUVPjOBJ+51foZatm6yBjSbZs3xscMJsL
+JBTJUldzczXlIQpr4tiU7bDL/d/7D/N4HWI7cpATBykgUlNDxmS+r9X9qbslK7Y6FryQVfuR
+3h1YsuvXX+TXnz/vLN79eeCwjg9vmO93XPg5gwusw4Qr0cHw4N//QRYabwBTI7cte3FFIC+v
+vAE5pX6HOCJ5eeUNyJnXsWrcxYU9UB+cjA4+n88exhMLeYuraDQ5wNbiA2j03wNc+/xR8bO4
+Si1voQULuZ61MBP+x+zg0/lxb/T79fGvaHQvAJ2NnqnaItukQ18gI9lLice2aQe/4PEt5loU
+W56rBu5jCbiixSAUic/xt0/k268vgXWqZGdRuFbH3hg6vREU6YgN86VDLMwM8wmzwKq384lI
+d/O/NEdJOuZpnKLPaBzkiWHOcYpfLKw95SnPUMonPA3ijKtlE8+SMOzD3yI+XCGWC5cc8Db2
+DBUkFDWvtLh7egQWWtRlDB2hwRik8vMpQIq53CYyLn0+F1FB42iaxHkwzR94miWxYd4m/pZq
+pleOIt0/51n+FAeol6RZMDXML9hf5e7lzE/SuyAOsyC7T+IsTtUcYvnLBqvG0+hqYzyxSSHb
+XoYNCyJQFaL+wGeU+My12eWNJLcYY6i5/i87dr/zbCt07Bh6TXd791ioi7nuSmbnkC3naRCM
+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
+9ii8KlSiOYvupD/wfWbBih30J12F/h9gKy8CDQplbmRzdHJlYW0NCmVuZG9iag0KMTQgMCBv
+YmoNCjw8L0xlbmd0aCA5ID4+DQpzdHJlYW0NCi9YY2F0IERvCmVuZHN0cmVhbQ0KZW5kb2Jq
+DQoxNSAwIG9iag0KPDwNCi9UeXBlIC9QYWdlDQovUGFyZW50IDEwIDAgUg0KL1Jlc291cmNl
+cyA8PCAvRm9udCA8PCAvRm1wZGYwIDExIDAgUiA+PiAvUHJvY1NldCAxMiAwIFIgL1hPYmpl
+Y3QgPDwgL1hjYXQNCjcgMCBSID4+ID4+DQovTWVkaWFCb3ggWyAwIDAgNTk1LjIwMDAxMiA4
+NDEuNzk5OTg4IF0NCi9Dcm9wQm94IFsgMCAwIDU5NS4yMDAwMTIgODQxLjc5OTk4OCBdDQov
+Um90YXRlIDANCi9Db250ZW50cyBbIDE0IDAgUiAxNiAwIFIgXQ0KPj4NCmVuZG9iag0KMTYg
+MCBvYmoNCjw8DQovTGVuZ3RoIDExMTYNCi9GaWx0ZXIgWyAvRmxhdGVEZWNvZGUgXQ0KPj4N
+CnN0cmVhbQ0KeJzVWcFy2zYQvesr9thMbRogSJDwTYqlRFUjZSzW7UzbAxJCKk0K9ACUG/dL
++wP5hxwDSrIF2YxthVYH5WiGmhW172H3YbEAkYfMBWjnpuYd1GQ/f9NsXz0f1t/+7oTUi0ME
+lDEvMoaFMVAvtCxFZ9r5/U9AkD7irCV47KFwB3ttOAB0p5d0TgaLq3SGIK6tkMw6GNUPQPJP
+B+88f7y5b6wExXVEEEQx8ujqv4vOD4PuKPnlvPsKkkvLUT9ZQT3Xc+B75IFnaLpa4QQB8fAD
+HIZohAhGcdTOOcMNzlsyNkJpiLn/h/m8euj4JVWytygi5AWPpu5lM2jD+YGZL56PMHUsJhQZ
+Vv9dTGy4i8+qglKlQkkFJ5DyqnQsOOHmh5rtmVBCgxIzobjUol01iVEDwiHibfs3Fh9FxhSa
+aOPYUUES5sW3jIdnx4YhIhGlcAyT1Ejlyw2HlrU88JuwXi7mtlejcchLWfG8uhJKl9KxaPvs
+idXsZeVow/201NWN5DAqlea5Y3HBbFu71zO/VHMuM831ZSm1VO0Cgti6wdrB+WaonYnEYwp5
+6nJsWCYDdwvReMIo8RmNAvruoqG2OEP0fx//cCMmavYPd6rqcZlnclaqxWpynbrFNLT0/65/
+Pmqgt4fbmDS4bVleGVnfd3yOb+DDblxhpjgg8x9cL/vYcyzMVrN8IaQssrmu4IOoeAFVVsD1
+ZiEtgZkOBhCFADMWHsGw1x3DeBIFtR3RlRUytwYX4O3gpv3eEUx0UR5Bb/j6ZPrrcJBAfzrt
+jyej3xxLik+aklJeXc2zOiEVzExfszT9sILtFhWuRbpOXCbnjg0IB/aAUjCTA7SQd3RrqeXl
+YiEUiKoyDVu+TFOthKzE2gBFeS2kBs0rLZRbowsZtYpqPSKh3CqmYRxtGY5UpqvM7KW4TKEO
++lIKMDkQMvuiroVJi1vcqVVdA4oCGJ0Pp8mwO552x2duUQ2tejM27XUOi3JhZHyl6rBWXFaO
+6SLwLV2IRWZWqtd/mftHXmjoTt0iS6yq+K/i1yIzFQQHbpH0rUqHKUHwhi8KAQMlUpXluuKp
+W3xxuOWbFLNToAxICHH9cYspsqrsRM09qbxT04CwAIchwwyBK3uIW8ZR8GByTW4uW7WcGEUP
+fbfbjeyzOcLx+hjBRn/qOGGv47lwfYLz2OgOm+LbNyDUW+HXb0Bij5A9Vqst8/elynNemN0A
+r5ZAvhWaZ/nHOPLYfYDvyPOzwHzTf/r3wRJRwI8kjI0GIaYYt0MwmabPH04rLGKaH3Qfq7fU
+mRRaw/DM7M0Qi31yjA5dPfZSUmC1bO+9idcrPwEhDRz3URHavE2znX9nxdhPSTbggH+ylORj
+jFk7EBY9e1QvoyQb6FzMTT8tzPoOk9ks+yjgrSiMuPKD74X3khOxDn4QwjGCt/2fp8PxaHgE
+g0yaKtXQmOwjrYCtz5ptoCekdUDh3aXKpnPRTeqGgVHk49jor7Fh+ArW/H0fDQplbmRzdHJl
+YW0NCmVuZG9iag0KMTAgMCBvYmoNCjw8DQovVHlwZSAvUGFnZXMNCi9Db3VudCAyDQovS2lk
+cyBbIDkgMCBSIDE1IDAgUiBdDQovUGFyZW50IDE3IDAgUg0KPj4NCmVuZG9iag0KMTIgMCBv
+YmoNClsgL1BERiAvVGV4dCAvSW1hZ2VDIF0NCmVuZG9iag0KMTggMCBvYmoNCjw8DQovQ3Jl
+YXRvciAoRWxtYSBFbGVjdHJvbmljIFRyYWRpbmcpDQovQ3JlYXRpb25EYXRlIChEOjIwMTYw
+NTI0MDgyNTQzKQ0KL1Byb2R1Y2VyDQooQUZQMndlYiBWMi4xIHIyLCBNSFQgUERGTGliICBW
+Mi4xIHI5LCBBSVggNC4zIC8gcGRjYXQgXCh3d3cuZ2xhbmNlLmNoXCkpDQovQXV0aG9yIChV
+c2VyOiBLZW1pcmEgT3lqIFtrZW1pcmFdKQ0KL1RpdGxlIChlSW52b2ljZSkNCi9TdWJqZWN0
+IChFbG1hIGVJbnZvaWNlKQ0KL0tleXdvcmRzIChBRlAgTFBEIFBERiBUSUZGKQ0KPj4NCmVu
+ZG9iag0KMTcgMCBvYmoNCjw8DQovVHlwZSAvUGFnZXMNCi9LaWRzIFsgMTAgMCBSIF0NCi9D
+b3VudCAyDQo+Pg0KZW5kb2JqDQoxOSAwIG9iag0KPDwNCi9UeXBlIC9DYXRhbG9nDQovUGFn
+ZXMgMTcgMCBSDQo+Pg0KZW5kb2JqDQp4cmVmDQowIDIwDQowMDAwMDAwMDAwIDY1NTM1IGYN
+CjAwMDAwMDAwMTAgMDAwMDAgbg0KMDAwMDAwMDA0NiAwMDAwMCBuDQowMDAwMDAwMTM4IDAw
+MDAwIG4NCjAwMDAwMDAzMTMgMDAwMDAgbg0KMDAwMDAwMDQ4OSAwMDAwMCBuDQowMDAwMDAw
+NTI2IDAwMDAwIG4NCjAwMDAwMDY4NTkgMDAwMDAgbg0KMDAwMDAwNzIzNCAwMDAwMCBuDQow
+MDAwMDA3Mjk1IDAwMDAwIG4NCjAwMDAwMTE2NzYgMDAwMDAgbg0KMDAwMDAwNzU1OCAwMDAw
+MCBuDQowMDAwMDExNzY2IDAwMDAwIG4NCjAwMDAwMDc2ODIgMDAwMDAgbg0KMDAwMDAxMDE0
+NiAwMDAwMCBuDQowMDAwMDEwMjA4IDAwMDAwIG4NCjAwMDAwMTA0NzMgMDAwMDAgbg0KMDAw
+MDAxMjEwMiAwMDAwMCBuDQowMDAwMDExODA4IDAwMDAwIG4NCjAwMDAwMTIxNzAgMDAwMDAg
+bg0KdHJhaWxlcg0KPDwNCi9TaXplIDIwDQovSW5mbyAxOCAwIFINCi9Sb290IDE5IDAgUg0K
+L0lEIFs8NzJjYTI1MDgwMDhjMDAxMzA1YzAxZTkyMDgxYzUzMGQ+PDcyY2EyNTA4MDA4YzAw
+MTMwNWMwMWU5MjA4MWM1MzBkPl0NCj4+DQpzdGFydHhyZWYNCjEyMjI3DQolJUVPRg0K
+</cbc:EmbeddedDocumentBinaryObject>
+      </cac:Attachment>
+    </cac:AdditionalDocumentReference>
+    <cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+      <cbc:ID>ID-20103766 - Odderøya RA</cbc:ID>
+    </cac:AdditionalDocumentReference>
+    <cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+      <cbc:ID>1002077505</cbc:ID>
+    </cac:AdditionalDocumentReference>
+    <cac:AccountingSupplierParty>
+      <cac:Party>
+        <cbc:EndpointID schemeID="FI:OVT">01098230</cbc:EndpointID>
+        <cac:PartyName>
+          <cbc:Name>Kemira Oyj</cbc:Name>
+        </cac:PartyName>
+        <cac:PostalAddress>
+          <cbc:StreetName>Porkkalankatu 3</cbc:StreetName>
+          <cbc:CityName>HELSINKI</cbc:CityName>
+          <cbc:PostalZone>00180</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">FI</cbc:IdentificationCode>
+          </cac:Country>
+        </cac:PostalAddress>
+        <cac:PartyTaxScheme>
+          <cbc:CompanyID>NO996021858</cbc:CompanyID>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <cac:PartyLegalEntity>
+          <cbc:RegistrationName>Kemira Oyj</cbc:RegistrationName>
+          <cbc:CompanyID schemeID="FI:OVT">01098230</cbc:CompanyID>
+        </cac:PartyLegalEntity>
+      </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+      <cac:Party>
+        <cbc:EndpointID schemeID="NO:ORGNR">963296746</cbc:EndpointID>
+        <cac:PartyIdentification>
+          <cbc:ID schemeID="ZZZ">0000141329</cbc:ID>
+        </cac:PartyIdentification>
+        <cac:PartyName>
+          <cbc:Name>Kristiansand kommune</cbc:Name>
+        </cac:PartyName>
+        <cac:PostalAddress>
+          <cbc:StreetName>Postboks 408 Lund</cbc:StreetName>
+          <cbc:CityName>KRISTIANSAND</cbc:CityName>
+          <cbc:PostalZone>4604</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+          </cac:Country>
+        </cac:PostalAddress>
+        <cac:PartyTaxScheme>
+          <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82">963296746MVA</cbc:CompanyID>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:PartyTaxScheme>
+        <cac:PartyLegalEntity>
+          <cbc:RegistrationName>Kristiansand kommune</cbc:RegistrationName>
+          <cbc:CompanyID schemeID="NO:ORGNR">963296746</cbc:CompanyID>
+        </cac:PartyLegalEntity>
+        <cac:Contact>
+          <cbc:ID>N/A</cbc:ID>
+        </cac:Contact>
+      </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+      <cbc:ActualDeliveryDate>2016-05-22</cbc:ActualDeliveryDate>
+      <cac:DeliveryLocation>
+        <cac:Address>
+          <cbc:StreetName>Sjølystveien 31</cbc:StreetName>
+          <cbc:CityName>KRISTIANSAND</cbc:CityName>
+          <cbc:PostalZone>4610</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+          </cac:Country>
+        </cac:Address>
+      </cac:DeliveryLocation>
+    </cac:Delivery>
+    <cac:PaymentMeans xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+      <cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
+      <cbc:PaymentDueDate>2016-06-30</cbc:PaymentDueDate>
+      <cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+      <cac:PayeeFinancialAccount>
+        <cbc:ID schemeID="IBAN">97500641995</cbc:ID>
+        <cac:FinancialInstitutionBranch>
+          <cac:FinancialInstitution>
+            <cbc:ID schemeID="BIC">ESSENOKXXXX</cbc:ID>
+          </cac:FinancialInstitution>
+        </cac:FinancialInstitutionBranch>
+      </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:PaymentTerms>
+      <cbc:Note>30 days from end of invoicing month</cbc:Note>
+    </cac:PaymentTerms>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="NOK">14545.20</cbc:TaxAmount>
+      <cac:TaxSubtotal xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cbc:TaxableAmount currencyID="NOK">58180.80</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="NOK">14545.2</cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+          <cbc:Percent>25.000</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+      <cbc:LineExtensionAmount currencyID="NOK">58180.80</cbc:LineExtensionAmount>
+      <cbc:TaxExclusiveAmount currencyID="NOK">58180.80</cbc:TaxExclusiveAmount>
+      <cbc:TaxInclusiveAmount currencyID="NOK">72726.00</cbc:TaxInclusiveAmount>
+      <cbc:PayableAmount currencyID="NOK">72726.00</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+      <cbc:ID>1</cbc:ID>
+      <cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="TNE">31.620</cbc:InvoicedQuantity>
+      <cbc:LineExtensionAmount currencyID="NOK">58180.8</cbc:LineExtensionAmount>
+      <cac:Item>
+        <cbc:Name>KEMIRA PIX-311 BULK</cbc:Name>
+        <cac:ClassifiedTaxCategory>
+          <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+          <cbc:Percent>25.000</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:ClassifiedTaxCategory>
+      </cac:Item>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="NOK">1840.00</cbc:PriceAmount>
+        <cbc:BaseQuantity unitCodeListID="UNECERec20" unitCode="TNE">1</cbc:BaseQuantity>
+      </cac:Price>
+    </cac:InvoiceLine>
+  </Invoice>
+</StandardBusinessDocument>

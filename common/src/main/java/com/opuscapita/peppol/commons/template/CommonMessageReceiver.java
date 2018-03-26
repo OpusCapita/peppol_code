@@ -24,6 +24,7 @@ public class CommonMessageReceiver {
     private final ErrorHandler errorHandler;
     private final ContainerMessageProcessor processor;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public CommonMessageReceiver(@NotNull ContainerMessageSerializer serializer, @NotNull ErrorHandler errorHandler,
                                  @NotNull ContainerMessageProcessor processor) {

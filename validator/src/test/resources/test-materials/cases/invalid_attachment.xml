@@ -1,0 +1,209 @@
+
+<!--
+
+Errors:
+ATTACHMENT
+
+Warnings:
+OP-T10-R057
+OP-T10-R056
+NONAT-T10-R010
+NOGOV-T10-R003
+NOGOV-T10-R005
+EHF-COMMON-R003
+
+-->
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <StandardBusinessDocumentHeader>
+        <HeaderVersion>1.0</HeaderVersion>
+        <Sender>
+            <Identifier Authority="iso6523-actorid-upis">9908:980321800</Identifier>
+        </Sender>
+        <Receiver>
+            <Identifier Authority="iso6523-actorid-upis">9908:933649768</Identifier>
+        </Receiver>
+        <DocumentIdentification>
+            <Standard>
+                urn:oasis:names:specification:ubl:schema:xsd:Invoice-2
+            </Standard>
+            <TypeVersion>2.1</TypeVersion>
+            <InstanceIdentifier>100ce5ed263a11e8ca90000000cae46e</InstanceIdentifier>
+            <Type>Invoice</Type>
+            <CreationDateAndTime>2018-03-12T21:12:25Z</CreationDateAndTime>
+        </DocumentIdentification>
+        <BusinessScope>
+            <Scope>
+                <Type>DOCUMENTID</Type>
+                <InstanceIdentifier>
+                    urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1
+                </InstanceIdentifier>
+            </Scope>
+            <Scope>
+                <Type>PROCESSID</Type>
+                <InstanceIdentifier>urn:www.cenbii.eu:profile:bii05:ver2.0</InstanceIdentifier>
+            </Scope>
+        </BusinessScope>
+    </StandardBusinessDocumentHeader>
+    <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.0.xsd">
+        <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+        <cbc:CustomizationID>
+            urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0
+        </cbc:CustomizationID>
+        <cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+        <cbc:ID>9011375389</cbc:ID>
+        <cbc:IssueDate>2018-03-12</cbc:IssueDate>
+        <cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
+        <cbc:DocumentCurrencyCode listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
+        <cac:OrderReference>
+            <cbc:ID>8011481</cbc:ID>
+            <cbc:SalesOrderID>201102118</cbc:SalesOrderID>
+        </cac:OrderReference>
+        <cac:AdditionalDocumentReference>
+            <cbc:ID>9011375389.pdf</cbc:ID>
+            <cbc:DocumentType>Commercial Invoice</cbc:DocumentType>
+            <cac:Attachment>
+                <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf">9011375389</cbc:EmbeddedDocumentBinaryObject>
+            </cac:Attachment>
+        </cac:AdditionalDocumentReference>
+        <cac:AccountingSupplierParty>
+            <cac:Party>
+                <cbc:EndpointID schemeID="NO:ORGNR">980321800</cbc:EndpointID>
+                <cac:PartyName>
+                    <cbc:Name>Johs. Olsen AS</cbc:Name>
+                </cac:PartyName>
+                <cac:PostalAddress>
+                    <cbc:StreetName>Alfarvegen 20</cbc:StreetName>
+                    <cbc:CityName>Gjøvik</cbc:CityName>
+                    <cbc:PostalZone>2816</cbc:PostalZone>
+                    <cac:Country>
+                        <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+                    </cac:Country>
+                </cac:PostalAddress>
+                <cac:PartyTaxScheme>
+                    <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82">980321800MVA</cbc:CompanyID>
+                    <cac:TaxScheme>
+                        <cbc:ID>VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyLegalEntity>
+                    <cbc:RegistrationName>Johs. Olsen AS</cbc:RegistrationName>
+                    <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">980321800</cbc:CompanyID>
+                </cac:PartyLegalEntity>
+                <cac:Contact>
+                    <cbc:ID>Terje Brendbakken</cbc:ID>
+                    <cbc:Telephone>02330</cbc:Telephone>
+                    <cbc:Telefax>61131490</cbc:Telefax>
+                    <cbc:ElectronicMail>jo@norengros.no</cbc:ElectronicMail>
+                </cac:Contact>
+            </cac:Party>
+        </cac:AccountingSupplierParty>
+        <cac:AccountingCustomerParty>
+            <cac:Party>
+                <cbc:EndpointID schemeID="NO:ORGNR">933649768</cbc:EndpointID>
+                <cac:PartyIdentification>
+                    <cbc:ID schemeID="ZZZ">122767</cbc:ID>
+                </cac:PartyIdentification>
+                <cac:PartyName>
+                    <cbc:Name>ULLENSAKER KOMMUNE, FAKTURAMOTTAK</cbc:Name>
+                </cac:PartyName>
+                <cac:PostalAddress>
+                    <cbc:StreetName>Postboks 470</cbc:StreetName>
+                    <cbc:CityName>JESSHEIM</cbc:CityName>
+                    <cbc:PostalZone>2051</cbc:PostalZone>
+                    <cac:Country>
+                        <cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NO</cbc:IdentificationCode>
+                    </cac:Country>
+                </cac:PostalAddress>
+                <cac:PartyTaxScheme>
+                    <cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82">933649768MVA</cbc:CompanyID>
+                    <cac:TaxScheme>
+                        <cbc:ID>VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyLegalEntity>
+                    <cbc:RegistrationName>ULLENSAKER KOMMUNE, FAKTURAMOTTAK</cbc:RegistrationName>
+                    <cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">933649768</cbc:CompanyID>
+                </cac:PartyLegalEntity>
+                <cac:Contact>
+                    <cbc:ID>01320</cbc:ID>
+                    <cbc:Name>Wenche Torp</cbc:Name>
+                </cac:Contact>
+            </cac:Party>
+        </cac:AccountingCustomerParty>
+        <cac:Delivery>
+            <cbc:ActualDeliveryDate>2018-03-13</cbc:ActualDeliveryDate>
+            <cac:DeliveryLocation>
+                <cbc:ID schemeID="ZZZ">368608</cbc:ID>
+                <cbc:Description>
+                    KLØFTA BO-OG AKTIVITETSSENTER KAFE', Ullensaker Kommune - 01320
+                </cbc:Description>
+                <cac:Address>
+                    <cbc:StreetName>Hellenvegen 10</cbc:StreetName>
+                    <cbc:CityName>KLØFTA</cbc:CityName>
+                    <cbc:PostalZone>2040</cbc:PostalZone>
+                    <cac:Country>
+                        <cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NO</cbc:IdentificationCode>
+                    </cac:Country>
+                </cac:Address>
+            </cac:DeliveryLocation>
+        </cac:Delivery>
+        <cac:PaymentMeans>
+            <cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
+            <cbc:PaymentDueDate>2018-04-30</cbc:PaymentDueDate>
+            <cbc:PaymentID>90113753896</cbc:PaymentID>
+            <cac:PayeeFinancialAccount>
+                <cbc:ID schemeID="BBAN">94990587544</cbc:ID>
+            </cac:PayeeFinancialAccount>
+        </cac:PaymentMeans>
+        <cac:PaymentTerms>
+            <cbc:Note>Fri mnd + 30 dager</cbc:Note>
+        </cac:PaymentTerms>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="NOK">80.88</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="NOK">323.51</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="NOK">80.88</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+                    <cbc:Percent>25.0</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        <cac:LegalMonetaryTotal>
+            <cbc:LineExtensionAmount currencyID="NOK">323.51</cbc:LineExtensionAmount>
+            <cbc:TaxExclusiveAmount currencyID="NOK">323.51</cbc:TaxExclusiveAmount>
+            <cbc:TaxInclusiveAmount currencyID="NOK">404.39</cbc:TaxInclusiveAmount>
+            <cbc:PayableAmount currencyID="NOK">404.39</cbc:PayableAmount>
+        </cac:LegalMonetaryTotal>
+        <cac:InvoiceLine>
+            <cbc:ID>10</cbc:ID>
+            <cbc:InvoicedQuantity unitCode="CT" unitCodeListID="UNECERec20">1.000</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount currencyID="NOK">323.51</cbc:LineExtensionAmount>
+            <cac:OrderLineReference>
+                <cbc:LineID>10</cbc:LineID>
+            </cac:OrderLineReference>
+            <cac:TaxTotal>
+                <cbc:TaxAmount currencyID="NOK">80.88</cbc:TaxAmount>
+            </cac:TaxTotal>
+            <cac:Item>
+                <cbc:Name>Jif skurekrem 500ml</cbc:Name>
+                <cac:SellersItemIdentification>
+                    <cbc:ID>349360</cbc:ID>
+                </cac:SellersItemIdentification>
+                <cac:ClassifiedTaxCategory>
+                    <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+                    <cbc:Percent>25.000</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID>VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:ClassifiedTaxCategory>
+            </cac:Item>
+            <cac:Price>
+                <cbc:PriceAmount currencyID="NOK">323.51</cbc:PriceAmount>
+            </cac:Price>
+        </cac:InvoiceLine>
+    </Invoice>
+</StandardBusinessDocument>

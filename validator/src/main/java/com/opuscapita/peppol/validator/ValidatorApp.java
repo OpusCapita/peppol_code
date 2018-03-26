@@ -87,7 +87,7 @@ public class ValidatorApp {
 
         cm.getProcessingInfo().setCurrentStatus(endpoint, "performing validation");
         EventingMessageUtil.reportEvent(cm, "Performing validation");
-        cm = controller.validate(cm);
+        cm = controller.validate(cm, endpoint);
 
         if (cm.hasErrors()) {
             cm.getProcessingInfo().setCurrentStatus(endpoint, "validation failed");

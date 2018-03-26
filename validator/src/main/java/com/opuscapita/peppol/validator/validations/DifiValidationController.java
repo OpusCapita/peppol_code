@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentContentUtils;
 import com.opuscapita.peppol.commons.container.document.DocumentUtils;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.BasicValidator;
 import com.opuscapita.peppol.validator.ValidationController;
 import com.opuscapita.peppol.validator.validations.common.SbdhValidator;
@@ -43,7 +44,7 @@ public class DifiValidationController implements ValidationController {
     }
 
     @NotNull
-    public ContainerMessage validate(@NotNull ContainerMessage containerMessage) {
+    public ContainerMessage validate(@NotNull ContainerMessage containerMessage, @NotNull Endpoint endpoint) {
         if (containerMessage.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document is null for " + containerMessage.getFileName());
         }

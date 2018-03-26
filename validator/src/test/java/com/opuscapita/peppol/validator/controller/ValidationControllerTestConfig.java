@@ -4,7 +4,7 @@ import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.validator.ValidationController;
 import com.opuscapita.peppol.validator.controller.body.BodyValidator;
-import com.opuscapita.peppol.validator.controller.util.DocumentSplitter;
+import com.opuscapita.peppol.validator.controller.attachment.DocumentSplitter;
 import com.opuscapita.peppol.validator.controller.xsd.HeaderValidator;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -35,23 +35,6 @@ import static org.mockito.Mockito.mock;
 @EnableConfigurationProperties
 @EnableCaching
 public class ValidationControllerTestConfig {
-
-//    @Bean
-//    public TransformerFactory transformerFactory() {
-//        return TransformerFactory.newInstance();
-//    }
-//
-//    @Bean
-//    public SAXParserFactory saxParserFactory() {
-//        SAXParserFactory factory = SAXParserFactory.newInstance();
-//        factory.setNamespaceAware(true);
-//        return factory;
-//    }
-//
-//    @Bean
-//    public XMLInputFactory xmlInputFactory() {
-//        return XMLInputFactory.newFactory();
-//    }
 
     @Bean
     @ConditionalOnMissingBean

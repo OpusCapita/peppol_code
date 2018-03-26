@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,10 @@ public class DataLoadService {
     //LRUMap<String, Message> messageCache = new LRUMap<>(10);
     LRUMap<String, Customer> customerCache = new LRUMap<>(10);
     //LRUMap<String, FileInfo> fileInfoCache = new LRUMap<>(10);
+
+    @Value("${peppol.events-persistence.cache.enabled:false}")
+    Boolean chacheEnabled;
+
 
     @Autowired
     public DataLoadService(MessageRepository messageRepository, CustomerRepository customerRepository, FileInfoRepository fileInfoRepository) {
@@ -47,7 +52,7 @@ public class DataLoadService {
 
     @NotNull
     public Customer getOrCreateCustomer(String senderId, String senderName) {
-        if (customerCache.containsKey(senderId)) {
+        if (customerCache.containsKey(senderId) && chacheEnabled) {
             return customerCache.get(senderId);
         } else {
             Customer customer = customerRepository.findByIdentifier(senderId);

@@ -17,6 +17,7 @@ import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -130,6 +131,9 @@ public class IncomingChecker extends ValuesChecker {
     }
 
     private void sendEmptyFileReport(@NotNull String fileName) {
+        if (StringUtils.isBlank(mlrReporterQueue)) {
+            return;
+        }
         Endpoint endpoint = new Endpoint(componentName, getProcessType());
         String metadata = "Empty file " + fileName + " received by " + componentName;
 
