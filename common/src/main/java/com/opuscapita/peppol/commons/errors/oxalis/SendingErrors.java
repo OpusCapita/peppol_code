@@ -7,7 +7,9 @@ package com.opuscapita.peppol.commons.errors.oxalis;
  */
 public enum SendingErrors {
 
-    /** Error in input data */
+    /** Error with the document itself, e.g. empty file */
+    DOCUMENT_ERROR(false),
+    /** Error inside the document */
     DATA_ERROR(false),
     /** Failed to connect for some reason */
     CONNECTION_ERROR(true),
@@ -18,6 +20,8 @@ public enum SendingErrors {
     UNSUPPORTED_DATA_FORMAT(false),
     /** Security issue - expired, invalid, or unknown certificates */
     SECURITY_ERROR(false),
+    /** Issue with file validation, used in MLR reporter and shouldn't be used elsewhere */
+    VALIDATION_ERROR(false),
     /** All other errors */
     OTHER_ERROR(false);
 
