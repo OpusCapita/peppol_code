@@ -22,11 +22,15 @@ public class AttachmentValidator {
      */
     @Nullable
     public ValidationError validate(@NotNull String characters) {
-        if (characters.length() > 100 && Base64.isBase64(characters)) {
+        if (characters.length() % 4 == 0 && Base64.isBase64(characters)) {
             return null;
         }
-        return new ValidationError("Attachment is not base64 encoded")
-                .withText("Attachment is not base64 encoded")
+        if (characters.length() > 100) {
+            characters = characters.substring(0, 99) + "...";
+        }
+        return new ValidationError("Validation error")
+                .withText("[ATTACHMENT] - The attachment is not base64 encoded string: " + characters)
+                .withTest("Attachment contains only base64 allowed symbols and attachment length % 4 == 0")
                 .withFlag("fatal")
                 .withIdentifier("ATTACHMENT");
     }

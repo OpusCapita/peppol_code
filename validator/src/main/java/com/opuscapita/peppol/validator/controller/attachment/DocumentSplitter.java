@@ -104,6 +104,10 @@ public class DocumentSplitter {
             if (putAttachment) {
                 if (event.isCharacters() && !event.asCharacters().isWhiteSpace() && "EmbeddedDocumentBinaryObject".equals(name)) {
                     attachmentError = attachmentValidator.validate(event.asCharacters().getData());
+                    if (attachmentError != null) {
+                        attachmentError.withLocation("Line: " + event.getLocation().getLineNumber() + ", column: " +
+                                event.getLocation().getColumnNumber());
+                    }
                     bodyWriter.append(MINIMAL_PDF);
                 } else {
                     event.writeAsEncodedUnicode(bodyWriter);

@@ -74,6 +74,7 @@ public class ValidationControllerTest {
         processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/invalid_attachment.xml"));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void processFile(@NotNull File file) throws Exception {
         List<String> expected = getExpected(file);
 
@@ -81,6 +82,9 @@ public class ValidationControllerTest {
         cm = controller.validate(cm, Endpoint.TEST);
 
         assertTrue(compare(cm, expected));
+        System.out.println("PASSED: " + file.getAbsolutePath() +
+                " [" + cm.getDocumentInfo().getErrors().size() + " error(s), " +
+                cm.getDocumentInfo().getWarnings().size() + " warning(s)]");
     }
 
     // an assumption is made that file is formatted
