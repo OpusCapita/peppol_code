@@ -19,7 +19,7 @@
     state: present
     regexp: "^{{counter}},{{file}},{{transmissionId}}"
 #    line: "{{counter}},{{file}},{{transmissionId}},{{preprocessing_result}},{{email_notificator_result}}"
-    line: "{{counter}},{{file}},{{transmissionId}},{{preprocessing_result}},{{internal_routing_result}},{{validator_result}},{{email_notificator_result}}"
+    line: "{{counter}},{{file}},{{transmissionId}},{{inbound_result}},{{preprocessing_result}},{{internal_routing_result}},{{validator_result}},{{email_notificator_result}}"
 #report update END -----------------------
 
 - debug:

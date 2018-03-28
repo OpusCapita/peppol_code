@@ -14,6 +14,17 @@
 - set_fact: transmissionId="{{ transmissionId.stdout}}"
 - debug: var=transmissionId
 
+- name: ensure that transmissionId is not empty
+  ignore_errors: yes
+  assert:
+    that:
+      - transmissionId is defined and transmissionId != ""
+    msg: "Failed- transmissionId was not found in Inbound"
+  register: result
+
+- set_fact: inbound_result="{{result.msg}}"
+- debug: var=inbound_result
+
 #report START ------:
 - set_fact: counter="{{counter| int +1 }}"
   register: counter
@@ -26,7 +37,7 @@
     create: yes
     dest: "{{report_path}}/inbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
-    line: "Test num.,Test file,transmissionId,preprocessing result,internal-routing result, validator result,email-notificator result"
+    line: "Test num.,Test file,transmissionId,inbound result,preprocessing result,internal-routing result,validator result,email-notificator result"
 
 - name: update test results
   delegate_to: localhost
@@ -34,6 +45,6 @@
     create: no
     dest: "{{report_path}}/inbound-invalid-report-{{ansible_date_time.iso8601_basic}}.csv"
     state: present
-    line: "{{counter}},{{file}},{{transmissionId}}"
+    line: "{{counter}},{{file}},{{transmissionId}},{{inbound_result}}"
 #report END -------
 ...
