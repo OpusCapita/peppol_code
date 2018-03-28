@@ -1,12 +1,14 @@
 package com.opuscapita.peppol.validator.controller.body;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.validator.controller.cache.XsdRepository;
 import com.opuscapita.peppol.validator.controller.cache.XslRepository;
 import com.opuscapita.peppol.validator.controller.xsd.XsdValidator;
 import com.opuscapita.peppol.validator.controller.xsl.ResultParser;
 import com.opuscapita.peppol.validator.controller.xsl.XslValidator;
+import net.sf.saxon.trans.XPathException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class ValidationRuleExecutor {
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
-    public ContainerMessage validate(@NotNull byte[] body, @NotNull ContainerMessage cm)
+    public ContainerMessage validate(@NotNull byte[] body, @NotNull ContainerMessage cm, @NotNull Endpoint endpoint)
             throws TransformerException, IOException, SAXException, ParserConfigurationException {
 
         String documentType = cm.getDocumentInfo().getProfileId() + "###" + cm.getDocumentInfo().getCustomizationId();
@@ -63,7 +65,7 @@ public class ValidationRuleExecutor {
             logger.debug("Running check " + file + " against " + cm.getFileName());
             if (file.toLowerCase().endsWith(".xsl")) {
                 Templates template = xslRepository.getByFileName(file);
-                cm = resultParser.parse(cm, xslValidator.validate(body, template).getInputStream(), rule);
+                cm = executeXsl(body, cm, template, rule, file, endpoint);
             } else {
                 if (file.toLowerCase().endsWith(".xsd")) {
                     Schema schema = xsdRepository.getByName(file);
@@ -81,5 +83,22 @@ public class ValidationRuleExecutor {
         return cm;
     }
 
+    @NotNull
+    private ContainerMessage executeXsl(@NotNull byte[] body, @NotNull ContainerMessage cm, @NotNull Templates template, @NotNull ValidationRule rule,
+                                        @NotNull String file, @NotNull Endpoint endpoint)
+            throws TransformerException, IOException, SAXException, ParserConfigurationException {
+        try {
+            return resultParser.parse(cm, xslValidator.validate(body, template).getInputStream(), rule);
+        } catch (XPathException e) {
+            ValidationError validationError = new ValidationError("XSL parser failure")
+                    .withLocation(e.getLocator() == null ? "Undefined location" : e.getLocator().toString())
+                    .withText(e.getMessageAndLocation())
+                    .withIdentifier(e.getErrorCodeQName() == null ? "err" : e.getErrorCodeQName().toString())
+                    .withFlag("fatal")
+                    .withTest("XSL validation " + file);
+            cm.addError(validationError.toDocumentError(endpoint));
+            return cm;
+        }
+    }
 
 }

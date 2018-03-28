@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.validator.controller.body;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,9 +27,9 @@ public class BodyValidator {
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
-    public ContainerMessage validate(@NotNull byte[] documentBody, @NotNull ContainerMessage cm)
+    public ContainerMessage validate(@NotNull byte[] documentBody, @NotNull ContainerMessage cm, @NotNull Endpoint endpoint)
             throws IOException, ParserConfigurationException, SAXException, TransformerException {
-        return validationRuleExecutor.validate(documentBody, cm);
+        return validationRuleExecutor.validate(documentBody, cm, endpoint);
     }
 
 }
