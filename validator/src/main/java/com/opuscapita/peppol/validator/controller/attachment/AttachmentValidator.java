@@ -2,6 +2,7 @@ package com.opuscapita.peppol.validator.controller.attachment;
 
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
@@ -22,11 +23,15 @@ public class AttachmentValidator {
      */
     @Nullable
     public ValidationError validate(@NotNull String characters) {
+        characters = StringUtils.trim(characters);
         if (characters.length() % 4 == 0 && Base64.isBase64(characters)) {
             return null;
         }
         if (characters.length() > 100) {
             characters = characters.substring(0, 99) + "...";
+        }
+        if (characters.length() == 0) {
+            characters = "[empty]";
         }
         return new ValidationError("Validation error")
                 .withText("[ATTACHMENT] - The attachment is not base64 encoded string: " + characters)

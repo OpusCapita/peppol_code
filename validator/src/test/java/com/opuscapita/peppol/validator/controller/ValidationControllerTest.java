@@ -71,7 +71,7 @@ public class ValidationControllerTest {
     @Test
     @Ignore("Debug only")
     public void testSingleFile() throws Exception {
-        processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/invalid_string.xml"));
+        processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/attachment_bad_result.xml"));
     }
 
     @SuppressWarnings("ConstantConditions")

@@ -33,7 +33,7 @@ public class XsdValidator {
         try {
             validator.validate(source);
         } catch (Exception e) {
-            return new ValidationError("SBDH validation failure").withText(e.getMessage());
+            return new ValidationError("XSD validation failure").withText(e.getMessage());
         }
 
         return null;
