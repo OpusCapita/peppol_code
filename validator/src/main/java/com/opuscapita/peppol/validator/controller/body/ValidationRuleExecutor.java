@@ -92,10 +92,10 @@ public class ValidationRuleExecutor {
         } catch (XPathException e) {
             ValidationError validationError = new ValidationError("XSL parser failure")
                     .withLocation(e.getLocator() == null ? "Undefined location" : e.getLocator().toString())
-                    .withText(e.getMessageAndLocation())
+                    .withText(e.getMessage())
                     .withIdentifier(e.getErrorCodeQName() == null ? "err" : e.getErrorCodeQName().toString())
                     .withFlag("fatal")
-                    .withTest("XSL validation " + file);
+                    .withTest("XSL validation: " + file);
             cm.addError(validationError.toDocumentError(endpoint));
             return cm;
         }
