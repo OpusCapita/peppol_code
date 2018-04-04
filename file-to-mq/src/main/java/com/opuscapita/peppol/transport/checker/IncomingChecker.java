@@ -145,10 +145,10 @@ public class IncomingChecker extends ValuesChecker {
 
         DocumentInfo di = new DocumentInfo();
         di.setIssueDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-        di.setSenderId("NA");
-        di.setSenderName("NA");
-        di.setRecipientId("NA");
-        di.setRecipientName("NA");
+        di.setSenderId("unknown");
+        di.setSenderName("unknown");
+        di.setRecipientId("unknown");
+        di.setRecipientName("unknown");
         di.setDocumentId("empty_file");
         cm.setDocumentInfo(di);
 
