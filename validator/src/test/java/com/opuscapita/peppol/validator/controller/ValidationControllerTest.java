@@ -71,7 +71,7 @@ public class ValidationControllerTest {
     @Test
     @Ignore("Debug only")
     public void testSingleFile() throws Exception {
-        processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/invalid_attachment.xml"));
+        processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/attachment_bad_result.xml"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -128,7 +128,8 @@ public class ValidationControllerTest {
         boolean passed = true;
         for (DocumentError de : cm.getDocumentInfo().getErrors()) {
             assertNotNull(de.getValidationError());
-            String line = "E: " + de.getValidationError().getIdentifier();
+            String line = "E: " +
+                    (de.getValidationError() == null ? "null" : de.getValidationError().getIdentifier());
             if (expected.contains(line)) {
                 expected.remove(line);
             } else {
@@ -139,7 +140,8 @@ public class ValidationControllerTest {
         }
         for (DocumentWarning dw : cm.getDocumentInfo().getWarnings()) {
             assertNotNull(dw.getValidationError());
-            String line = "W: " + dw.getValidationError().getIdentifier();
+            String line = "W: " +
+                    (dw.getValidationError() == null ? "null" : dw.getValidationError().getIdentifier());
             if (expected.contains(line)) {
                 expected.remove(line);
             } else {

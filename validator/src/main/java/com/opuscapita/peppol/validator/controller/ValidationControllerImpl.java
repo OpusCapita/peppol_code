@@ -3,9 +3,9 @@ package com.opuscapita.peppol.validator.controller;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.validator.controller.attachment.DocumentSplitter;
 import com.opuscapita.peppol.validator.controller.attachment.DocumentSplitterResult;
 import com.opuscapita.peppol.validator.controller.body.BodyValidator;
-import com.opuscapita.peppol.validator.controller.attachment.DocumentSplitter;
 import com.opuscapita.peppol.validator.controller.xsd.HeaderValidator;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -57,7 +57,7 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
         DocumentSplitterResult parts = splitter.split(cm);
 
         cm = headerValidator.validate(parts.getSbdh(), cm);
-        cm = bodyValidator.validate(parts.getDocumentBody(), cm);
+        cm = bodyValidator.validate(parts.getDocumentBody(), cm, endpoint);
         if (parts.getAttachmentError() != null) {
             cm.addError(parts.getAttachmentError().toDocumentError(endpoint));
         }
