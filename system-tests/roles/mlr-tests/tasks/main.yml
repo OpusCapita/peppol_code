@@ -2,6 +2,12 @@
 - include: file_list.yml
 
 #disabled test case 3 since docker swarm inbound can't be stoped and started in easy fashion
+#----------
+# TODO
+#to disable inbound use:
+#docker service scale peppol_inbound=0 --detach=false
+
+#-------------
 #- name: stop inbound for test #3
 #  shell: docker stop inbound
 #- pause:
