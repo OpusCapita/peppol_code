@@ -1,6 +1,8 @@
 ---
 
 - name: get outbound log & check if uuid "{{ uuid }}" for "{{ file }}" is found
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   ignore_errors: yes
   shell: grep "{{ uuid }}" /peppol/logs/outbound/*.log
 #  shell: docker service logs peppol_outbound | grep "{{ uuid }}"
