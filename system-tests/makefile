@@ -1,3 +1,7 @@
+#file-prep
+file-prep-l:
+	ansible-playbook -i local.hosts -K file-prep.yml
+#------------------------------------------------------------
 #cleaner
 cleaner-l:
 	ansible-playbook -i local.hosts -K cleaner.yml

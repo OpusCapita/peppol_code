@@ -1,3 +1,104 @@
 ---
-- include: file_list.yml
+- include: templates_list.yml
+#sending file to outbound, then doing asserts for each module
+
+#- name: generate uuid with shell
+
+#- set_fact: uuid="{{99999 | random | to_uuid}}"
+#- debug: var=uuid
+
+#--------------------------------------------------
+# generate random values for XML files:
+#- set_fact: receiver_id=9908:987987987
+#- set_fact: receiver_endpoint_id=987987987
+#- set_fact: receiver_company_id_vat=987987987MVA
+#- set_fact: receiver_company_id_orgnr=987987987
+#- set_fact: receiver_name="{{ 999999999 | random }}"
+#- set_fact: sender_id=9908:987987987
+#- set_fact: sender_endpoint_id=987987987
+#- set_fact: sender_company_id_vat=987987987MVA
+#- set_fact: sender_company_id_orgnr=987987987
+#- set_fact: sender_name="{{ 999999999 | random }}"
+#- set_fact: document_id="{{ 999999999 | random | to_uuid }}"
+
+#- debug: var=receiver_id
+#- debug: var=receiver_endpoint_id
+#- debug: var=receiver_company_id_vat
+#- debug: var=receiver_company_id_orgnr
+#- debug: var=receiver_name
+#- debug: var=sender_id
+#- debug: var=sender_endpoint_id
+#- debug: var=sender_company_id_vat
+#- debug: var=sender_company_id_orgnr
+#- debug: var=sender_name
+#- debug: var=document_id
+#--------------------------------------------------
+
+#- name: copy test files
+#  become: "{{sudo}}"
+#  become_user: "{{user}}"
+#  vars:
+#    file: "{{ item }}"
+#  template:
+#    src: "{{ item }}"
+#    dest: "{{transport_from_a2a_path}}{{ file | basename }}-{{ uuid }}.xml"
+#  with_items:
+#    - templates/EHF_profile-bii05_invoice_OC.xml
+#   - templates/EHF_profile-bii05_invoice.xml
+#    - templates/EHF_profile-bii05_creditnote.xml
+#    - templates/EHF_profile-bii05_invoice.xml
+#    - templates/peppol-bis.xml
+#    - templates/SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml
+#    - templates/EHF_catalogue_document_type_test.xml
+#    - templates/EHF_profile-bii05_invoice_OC_zero_values.xml
+#    - templates/EHF_peppol-bis-5a_invoice.xml
+#    - templates/peppol-bis-svefaktura2.xml
+#    - templates/EHF_profile-bii05_invoice-SBDH-senderID-different-EndPointId.xml
+#    - templates/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml
+#    - templates/EHF-order-sample.xml
+#    - templates/EHF-order-response.xml
+#    - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.1.xml
+#    - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.1.x.xml
+#    - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.2.xml
+#AT stuff does not work for now and this file might be incorrect
+#    - templates/AT-UBL-Austria-profile-bii04-invoice.xml
+
+#  register: item
+
+#- set_fact: file="{{ item.results.0.invocation.module_args.original_basename }}"
+#- debug: var=file
+
+#- name: find fileName
+#  shell: echo "{{file_uuid}}" | grep .xml |xargs -L 1 basename
+#  register: fileName
+#- set_fact: fileName="{{fileName.stdout}}"
+#- debug: var=fileName
+
+
+#report START ------:
+#- set_fact: counter="{{counter| int +1 }}"
+#  register: counter
+#- debug: var=counter
+
+#- name: create report headers
+#  delegate_to: localhost
+#  lineinfile:
+#    create: yes
+#    dest: "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.csv"
+#    state: present
+#    line: "Test num.,Test file,transmissionId,transport-from-a2a,preprocessing result,internal-routing result,validator result,outbound result"
+
+#- name: update test results
+#  delegate_to: localhost
+#  lineinfile:
+#    create: yes
+#    dest: "{{report_path}}/outbound-report-{{ansible_date_time.iso8601_basic}}.csv"
+#    state: present
+#    line: '{{counter}},{{file}},{{uuid}}'
+#report END -------
+
+#- pause:
+#    seconds: 130
+
+#- include: log_checker.yml
 ...

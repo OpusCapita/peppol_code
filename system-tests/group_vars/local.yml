@@ -3,5 +3,6 @@ report_path: reports/
 transport_from_a2a_path: /peppol/data/transport/from-a2a/
 sudo: yes
 user: root
+group: "{{ansible_user_id}}"
 #user: "{{ansible_user_id}}"
 ...

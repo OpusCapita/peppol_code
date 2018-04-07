@@ -1,0 +1,27 @@
+---
+#File_list.yml#
+#This is where all the test materials are taken from #
+
+- include: send.yml
+  vars: 
+    file: "{{item}}"
+  with_items:
+    - templates/EHF_profile-bii05_invoice_OC.xml
+    - templates/EHF_profile-bii05_invoice.xml
+    - templates/EHF_profile-bii05_creditnote.xml
+    - templates/EHF_profile-bii05_invoice.xml
+    - templates/peppol-bis.xml
+    - templates/SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml
+    - templates/EHF_catalogue_document_type_test.xml
+    - templates/EHF_profile-bii05_invoice_OC_zero_values.xml
+    - templates/EHF_peppol-bis-5a_invoice.xml
+    - templates/peppol-bis-svefaktura2.xml
+    - templates/EHF_profile-bii05_invoice-SBDH-senderID-different-EndPointId.xml
+    - templates/SFTI_svefaktura_BasicInvoice-1.0_Invoice-SBDH-senderID-different-SellerParty.xml
+    - templates/EHF-order-sample.xml
+    - templates/EHF-order-response.xml
+    - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.1.xml
+    - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.1.x.xml
+    - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.2.xml
+
+...
