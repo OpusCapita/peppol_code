@@ -28,10 +28,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Combines both old-style Daniil-tests and new style mine tests (directory "next_files").
- *
- * Should be separated to two different test scenarios but will require more time because of the Spring.
- *
  * @author Sergejs.Roze
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -71,7 +67,7 @@ public class ValidationControllerTest {
     @Test
     @Ignore("Debug only")
     public void testSingleFile() throws Exception {
-        processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/attachment_bad_result.xml"));
+        processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/chernobyl.xml"));
     }
 
     @SuppressWarnings("ConstantConditions")
