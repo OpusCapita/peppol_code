@@ -1,8 +1,6 @@
 package com.opuscapita.peppol.validator.controller.attachment;
 
 import com.opuscapita.peppol.commons.validation.ValidationError;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Lazy;
@@ -23,8 +21,7 @@ public class AttachmentValidator {
      */
     @Nullable
     public ValidationError validate(@NotNull String characters) {
-        characters = StringUtils.trim(characters);
-        if (characters.length() % 4 == 0 && Base64.isBase64(characters)) {
+        if (isValidBase64(characters)) {
             return null;
         }
         if (characters.length() > 100) {
@@ -38,5 +35,34 @@ public class AttachmentValidator {
                 .withTest("Attachment contains only base64 allowed symbols and attachment length % 4 == 0")
                 .withFlag("fatal")
                 .withIdentifier("ATTACHMENT");
+    }
+
+    // allow all symbols in A-Za-z0-9+/ in groups of 4 padded with 1 or two '=' symbols
+    boolean isValidBase64(@NotNull String characters) {
+        int length = 0;
+        boolean padding = false;
+        int paddingLength = 0;
+        for (int i = 0; i < characters.length(); i++) {
+            char it = characters.charAt(i);
+            // whitespace
+            if (it == 9 || it == 10 || it == 13 || it == 32 && !padding) {
+                continue;
+            }
+            if (((it >= '0' && it <= '9') || (it >= 'a' && it <= 'z') || (it >= 'A' && it <= 'Z') || it == '/' || it == '+') && !padding) {
+                length++;
+                continue;
+            }
+            if (it == '=') {
+                padding = true;
+                paddingLength++;
+                if (paddingLength > 2) {
+                    return false;
+                }
+                length++;
+                continue;
+            }
+            return false;
+        }
+        return length % 4 == 0 && length > 0;
     }
 }
