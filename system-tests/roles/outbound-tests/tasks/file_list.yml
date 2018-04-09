@@ -25,4 +25,7 @@
     - "{{test_data_path}}/validation_test_suite/valid/SI-UBL-Netherlands-profile-bii04_invoice-ver1.2.xml"
 #AT stuff does not work for now and this file might be incorrect
 #    - "{{test_data_path}}/validation_test_suite/valid/AT-UBL-Austria-profile-bii04-invoice.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_OC_zero_val_has_attachment.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_OC_zero_val_has_attachment_new_line.xml"
+    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_invalid_4char_attachment.xml"
 ...

@@ -7,7 +7,7 @@
   retries: 60
   delay: 1
   when: preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to parse file", "Passed- No SBDH present in file" ]
-- debug: var=log
+#- debug: var=log
 
 #rc is response code for shell commands 0=success and anything else=failed
 - set_fact: internal_routing_result="Failed"

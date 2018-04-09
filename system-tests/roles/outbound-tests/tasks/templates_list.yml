@@ -23,5 +23,7 @@
     - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.1.xml
     - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.1.x.xml
     - templates/SI-UBL-Netherlands-profile-bii04_invoice-ver1.2.xml
-
+    - templates/EHF_profile-bii05_invoice_OC_zero_val_has_attachment_new_line.xml
+    - templates/EHF_profile-bii05_invoice_invalid_4char_attachment.xml
+    - templates/EHF_profile-bii05_invoice_OC_zero_val_has_attachment.xml
 ...

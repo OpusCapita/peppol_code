@@ -6,20 +6,23 @@
   vars:
     file: "{{item}}"
   with_items:
-    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/Svefaktura2_profile-bii05_invoice.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_2.0.9.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_no_SBDH_invalid.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_OC_zero_values_structural-error.xml" 
+#    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid.xml"
+#    - "{{test_data_path}}/validation_test_suite/invalid/Svefaktura2_profile-bii05_invoice.xml"
+#    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_2.0.9.xml"
+#    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_no_SBDH_invalid.xml"
+#    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_OC_zero_values_structural-error.xml" 
 #removed empty.xml until it is known how exactly it has to be handled
 #    - "{{test_data_path}}/validation_test_suite/invalid/empty.xml"
-#add handling for fiels that are rejected by Inbound!! ToDo!
-#    - "{{test_data_path}}/validation_test_suite/invalid/image_example.jpg.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/peppol-bis-04-32307653-invalid-ProfileID.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-biixy-ver2.0-invoice.xml"
-    - "{{test_data_path}}/validation_test_suite/invalid/unrecognized_document_type.xml"
-#add handling for fiels that are rejected by Inbound!! ToDo!
+#add handling for fields that are rejected by Inbound!! ToDo!
+    - "{{test_data_path}}/validation_test_suite/invalid/image_example.jpg.xml"
+#    - "{{test_data_path}}/validation_test_suite/invalid/peppol-bis-04-32307653-invalid-ProfileID.xml"
+#    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-biixy-ver2.0-invoice.xml"
+#    - "{{test_data_path}}/validation_test_suite/invalid/unrecognized_document_type.xml"
+#add handling for fields that are rejected by Inbound!! ToDo!
 #    - "{{test_data_path}}/validation_test_suite/invalid/random.xml"
 #    - "{{test_data_path}}/validation_test_suite/valid/EHF_profile-bii05_invoice_OC.xml"
+#    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_attachment.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_attachment.xml"
+    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_empty_attachment.xml"
+
 ...
