@@ -145,9 +145,7 @@ public class MlrController {
         if (backupEnabled) {
             try {
                 String backupMlr = storeBackup(art, cm, result);
-                if (!created) {
-                    logger.info("Backup MLR stored as " + backupMlr);
-                }
+                logger.info("Backup MLR stored as " + backupMlr);
             } catch (Exception e) {
                 logger.error("Failed to create MLR backup file: " + e.getMessage());
             }
