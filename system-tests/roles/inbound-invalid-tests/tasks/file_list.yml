@@ -24,5 +24,5 @@
 #    - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_attachment.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_attachment.xml"
     - "{{test_data_path}}/validation_test_suite/invalid/EHF_profile-bii05_invoice_invalid_empty_attachment.xml"
-
+    - "{{test_data_path}}/validation_test_suite/invalid/negative-sign-at-the-end.xml"
 ...
