@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<StandardBusinessDocument xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+	<StandardBusinessDocumentHeader>
+		<HeaderVersion>1.0</HeaderVersion>
+		<Sender>
+			<Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+		</Sender>
+		<Receiver>
+			<Identifier Authority="iso6523-actorid-upis">990:987987987</Identifier>
+		</Receiver>
+		<DocumentIdentification>
+			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
+			<TypeVersion>2.1</TypeVersion>
+			<InstanceIdentifier>c0f59b0a-42b4-11e7-ae48-7b3100322137</InstanceIdentifier>
+			<Type>Invoice</Type>
+			<CreationDateAndTime>2017-05-27T11:16:15.896535+03:00</CreationDateAndTime>
+		</DocumentIdentification>
+		<BusinessScope>
+			<Scope>
+				<Type>DOCUMENTID</Type>
+				<InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1</InstanceIdentifier>
+			</Scope>
+			<Scope>
+				<Type>PROCESSID</Type>
+				<InstanceIdentifier>urn:www.cenbii.eu:profile:bii05:ver2.0</InstanceIdentifier>
+			</Scope>
+		</BusinessScope>
+	</StandardBusinessDocumentHeader>
+	<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:draft:UnqualifiedDataTypes:2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd ">
+		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</cbc:CustomizationID>
+		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+		<cbc:ID>{{ document_id }}</cbc:ID>
+		<cbc:IssueDate>2017-05-28</cbc:IssueDate>
+		<cbc:InvoiceTypeCode listAgencyID="6" listID="UNCL1001">380</cbc:InvoiceTypeCode>
+		<cbc:DocumentCurrencyCode listAgencyID="6" listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
+		<cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+			<cbc:ID>1014528675</cbc:ID>
+		</cac:AdditionalDocumentReference>
+		<cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+			<cbc:ID>HKJ009</cbc:ID>
+		</cac:AdditionalDocumentReference>
+		<cac:AdditionalDocumentReference xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+			<cbc:ID>380-11</cbc:ID>
+		</cac:AdditionalDocumentReference>
+		<cac:AccountingSupplierParty>
+			<cac:Party>
+				<cbc:EndpointID schemeID="NO:ORGNR">987987987</cbc:EndpointID>
+				<cac:PartyName>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+					<cbc:CityName>Oslo</cbc:CityName>
+					<cbc:PostalZone>0001</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:PostalAddress>
+				<cac:PartyTaxScheme>
+					<cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82">987987987MVA</cbc:CompanyID>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyLegalEntity>
+					<cbc:RegistrationName>OpusCapita test</cbc:RegistrationName>
+					<cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">987987987</cbc:CompanyID>
+				</cac:PartyLegalEntity>
+				<cac:Contact>
+					<cbc:ID>N/A</cbc:ID>
+					<cbc:Telephone>04045 (nasjonal) +47 32316250 (International)</cbc:Telephone>
+					<cbc:Telefax>38179451</cbc:Telefax>
+					<cbc:ElectronicMail>opuscapitatest@opuscapita.com</cbc:ElectronicMail>
+				</cac:Contact>
+			</cac:Party>
+		</cac:AccountingSupplierParty>
+		<cac:AccountingCustomerParty>
+			<cac:Party>
+				<cbc:EndpointID schemeID="NO:ORGNR">987987987</cbc:EndpointID>
+				<cac:PartyName>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+					<cbc:AdditionalStreetName>POSTBOKS 223</cbc:AdditionalStreetName>
+					<cbc:Department>POLITIETS ENHET FOR VANDE</cbc:Department>
+					<cbc:CityName>MO I RANA</cbc:CityName>
+					<cbc:PostalZone>8601</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:PostalAddress>
+				<cac:PartyLegalEntity>
+					<cbc:RegistrationName>OpusCapita test</cbc:RegistrationName>
+					<cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">987987987</cbc:CompanyID>
+				</cac:PartyLegalEntity>
+				<cac:Contact>
+					<cbc:ID>HKJ009</cbc:ID>
+				</cac:Contact>
+				<cac:Person>
+					<cbc:FamilyName>HKJ009</cbc:FamilyName>
+				</cac:Person>
+			</cac:Party>
+		</cac:AccountingCustomerParty>
+		<cac:Delivery>
+			<cbc:ActualDeliveryDate>2017-05-28</cbc:ActualDeliveryDate>
+			<cac:DeliveryLocation>
+				<cbc:ID schemeID="ZZZ">FINNMARK POLITIDISTRIKT POLITIETS E</cbc:ID>
+				<cac:Address>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+					<cbc:AdditionalStreetName>STRANDGATA 44</cbc:AdditionalStreetName>
+					<cbc:CityName>VARDØ</cbc:CityName>
+					<cbc:PostalZone>9950</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:Address>
+			</cac:DeliveryLocation>
+		</cac:Delivery>
+		<cac:PaymentMeans xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+			<cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
+			<cbc:PaymentDueDate>2017-06-07</cbc:PaymentDueDate>
+			<cbc:PaymentChannelCode>BBAN</cbc:PaymentChannelCode>
+			<cbc:PaymentID>5052100673</cbc:PaymentID>
+			<cac:PayeeFinancialAccount>
+				<cbc:ID schemeID="BBAN">60030635097</cbc:ID>
+				<cac:FinancialInstitutionBranch>
+					<cac:FinancialInstitution>
+						<cbc:ID>NDEANOKK</cbc:ID>
+					</cac:FinancialInstitution>
+				</cac:FinancialInstitutionBranch>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:PaymentMeans xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+			<cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
+			<cbc:PaymentDueDate>2017-06-07</cbc:PaymentDueDate>
+			<cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+			<cbc:PaymentID>5052100673</cbc:PaymentID>
+			<cac:PayeeFinancialAccount>
+				<cbc:ID schemeID="IBAN">NO2560030635097</cbc:ID>
+				<cac:FinancialInstitutionBranch>
+					<cac:FinancialInstitution>
+						<cbc:ID schemeID="BIC">NDEANOKK</cbc:ID>
+					</cac:FinancialInstitution>
+				</cac:FinancialInstitutionBranch>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:PaymentTerms>
+			<cbc:Note>10DG</cbc:Note>
+		</cac:PaymentTerms>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="NOK">1216.65</cbc:TaxAmount>
+			<cac:TaxSubtotal xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+				<cbc:TaxableAmount currencyID="NOK">150.98</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="NOK">0.00</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+					<cbc:Percent>0</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+			<cac:TaxSubtotal xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+				<cbc:TaxableAmount currencyID="NOK">4866.58</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="NOK">1216.65</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:LegalMonetaryTotal>
+			<cbc:LineExtensionAmount currencyID="NOK">5017.56</cbc:LineExtensionAmount>
+			<cbc:TaxExclusiveAmount currencyID="NOK">5017.56</cbc:TaxExclusiveAmount>
+			<cbc:TaxInclusiveAmount currencyID="NOK">6234.21</cbc:TaxInclusiveAmount>
+			<cbc:PayableAmount currencyID="NOK">6234.21</cbc:PayableAmount>
+		</cac:LegalMonetaryTotal>
+		<cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+			<cbc:ID>1</cbc:ID>
+			<cbc:Note>Sætrum</cbc:Note>
+			<cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">832.00</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount currencyID="NOK">4866.58</cbc:LineExtensionAmount>
+			<cac:AllowanceCharge xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+				<cbc:Amount currencyID="NOK">727.190471</cbc:Amount>
+			</cac:AllowanceCharge>
+			<cac:TaxTotal>
+				<cbc:TaxAmount currencyID="NOK">1216.65</cbc:TaxAmount>
+			</cac:TaxTotal>
+			<cac:Item>
+				<cbc:Name>OpusCapita test</cbc:Name>
+				<cac:SellersItemIdentification>
+					<cbc:ID>18592</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="NOK">6.723285</cbc:PriceAmount>
+				<cbc:BaseQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:BaseQuantity>
+			</cac:Price>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+			<cbc:ID>2</cbc:ID>
+			<cbc:Note>Sætrum</cbc:Note>
+			<cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">11.00</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount currencyID="NOK">91.40</cbc:LineExtensionAmount>
+			<cac:AllowanceCharge xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+				<cbc:Amount currencyID="NOK">13.657816</cbc:Amount>
+			</cac:AllowanceCharge>
+			<cac:TaxTotal>
+				<cbc:TaxAmount currencyID="NOK">0.00</cbc:TaxAmount>
+			</cac:TaxTotal>
+			<cac:Item>
+				<cbc:Name>OpusCapita test</cbc:Name>
+				<cac:SellersItemIdentification>
+					<cbc:ID>18594</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+					<cbc:Percent>0</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="NOK">9.550920</cbc:PriceAmount>
+				<cbc:BaseQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:BaseQuantity>
+			</cac:Price>
+		</cac:InvoiceLine>
+		<cac:InvoiceLine xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+			<cbc:ID>3</cbc:ID>
+			<cbc:Note>Sætrum</cbc:Note>
+			<cbc:InvoicedQuantity unitCodeListID="UNECERec20" unitCode="EA">6.00</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount currencyID="NOK">59.58</cbc:LineExtensionAmount>
+			<cac:AllowanceCharge xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+				<cbc:Amount currencyID="NOK">8.903279</cbc:Amount>
+			</cac:AllowanceCharge>
+			<cac:TaxTotal>
+				<cbc:TaxAmount currencyID="NOK">0.00</cbc:TaxAmount>
+			</cac:TaxTotal>
+			<cac:Item>
+				<cbc:Name>OpusCapita test</cbc:Name>
+				<cac:SellersItemIdentification>
+					<cbc:ID>18595</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">Z</cbc:ID>
+					<cbc:Percent>0</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="NOK">11.414460</cbc:PriceAmount>
+				<cbc:BaseQuantity unitCodeListID="UNECERec20" unitCode="EA">1</cbc:BaseQuantity>
+			</cac:Price>
+		</cac:InvoiceLine>
+	</Invoice>
+</StandardBusinessDocument>

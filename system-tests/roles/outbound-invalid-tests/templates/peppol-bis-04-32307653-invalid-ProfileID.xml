@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+	<StandardBusinessDocumentHeader>
+		<HeaderVersion>1.0</HeaderVersion>
+		<Sender>
+			<Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+		</Sender>
+		<Receiver>
+			<Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+		</Receiver>
+		<DocumentIdentification>
+			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
+			<TypeVersion>2.1</TypeVersion>
+			<InstanceIdentifier>2db31216-60ab-40f4-a279-17cf7cd641e3</InstanceIdentifier>
+			<Type>Invoice</Type>
+			<CreationDateAndTime>2017-06-02T18:03:51.402+02:00</CreationDateAndTime>
+		</DocumentIdentification>
+		<BusinessScope>
+			<Scope>
+				<Type>DOCUMENTID</Type>
+				<InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1</InstanceIdentifier>
+			</Scope>
+			<Scope>
+				<Type>PROCESSID</Type>
+				<InstanceIdentifier>urn:www.cenbii.eu:profile:bii04:ver1.0</InstanceIdentifier>
+			</Scope>
+		</BusinessScope>
+	</StandardBusinessDocumentHeader>
+	<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:un:unece:uncefact:documentation:2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:sdt="urn:oasis:names:specification:ubl:schema:xsd:SpecializedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0</cbc:CustomizationID>
+		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</cbc:ProfileID>
+		<cbc:ID>{{ document_id }}</cbc:ID>
+		<cbc:IssueDate>2017-06-02</cbc:IssueDate>
+		<cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
+		<cbc:Note>Registrator</cbc:Note>
+		<cbc:Note>Andreas Nilsson, 08-52257641</cbc:Note>
+		<cbc:DocumentCurrencyCode listID="ISO4217">SEK</cbc:DocumentCurrencyCode>
+		<cac:OrderReference>
+			<cbc:ID>435533</cbc:ID>
+		</cac:OrderReference>
+		<cac:AdditionalDocumentReference>
+			<cbc:ID>1668717183</cbc:ID>
+			<cbc:DocumentType>Commercial Invoice</cbc:DocumentType>
+			<cac:Attachment/>
+		</cac:AdditionalDocumentReference>
+		<cac:AccountingSupplierParty>
+			<cac:Party>
+				<cbc:EndpointID schemeID="SE:ORGNR">987987987</cbc:EndpointID>
+				<cac:PartyName>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+					<cbc:CityName>LINKÖPING</cbc:CityName>
+					<cbc:PostalZone>582 25</cbc:PostalZone>
+				</cac:PostalAddress>
+				<cac:PartyTaxScheme>
+					<cbc:CompanyID schemeID="SE:VAT">SE556559545001</cbc:CompanyID>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyLegalEntity>
+					<cbc:RegistrationName>OpusCapita test</cbc:RegistrationName>
+					<cbc:CompanyID schemeID="SE:ORGNR">556559-5450</cbc:CompanyID>
+					<cac:RegistrationAddress>
+						<cbc:CityName>Stockholm</cbc:CityName>
+					</cac:RegistrationAddress>
+				</cac:PartyLegalEntity>
+				<cac:Contact>
+					<cbc:ID>IP</cbc:ID>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:Contact>
+			</cac:Party>
+			<cac:AccountingContact>
+				<cbc:Telephone>013-244134</cbc:Telephone>
+			</cac:AccountingContact>
+		</cac:AccountingSupplierParty>
+		<cac:AccountingCustomerParty>
+			<cac:Party>
+				<cbc:EndpointID schemeID="SE:ORGNR">987987987</cbc:EndpointID>
+				<cac:PartyIdentification>
+					<cbc:ID schemeID="ZZZ">1662</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyIdentification>
+					<cbc:ID schemeID="SE:ORGNR">202100-4235</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+					<cbc:CityName>Frösön</cbc:CityName>
+					<cbc:PostalZone>838 74</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listID="ISO3166-1:Alpha2">SE</cbc:IdentificationCode>
+						<cbc:Name>OpusCapita test</cbc:Name>
+					</cac:Country>
+				</cac:PostalAddress>
+				<cac:PartyTaxScheme>
+					<cbc:CompanyID schemeID="SE:VAT">SE202100423501</cbc:CompanyID>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyLegalEntity>
+					<cbc:RegistrationName>OpusCapita test</cbc:RegistrationName>
+					<cbc:CompanyID schemeID="SE:ORGNR">202100-4235</cbc:CompanyID>
+				</cac:PartyLegalEntity>
+				<cac:Contact>
+					<cbc:ID>930</cbc:ID>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:Contact>
+			</cac:Party>
+		</cac:AccountingCustomerParty>
+		<cac:Delivery>
+			<cbc:ActualDeliveryDate>2017-06-02</cbc:ActualDeliveryDate>
+			<cac:DeliveryLocation>
+				<cac:Address>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+				</cac:Address>
+			</cac:DeliveryLocation>
+			<cac:DeliveryParty>
+				<cac:PartyName>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+				</cac:PostalAddress>
+			</cac:DeliveryParty>
+		</cac:Delivery>
+		<cac:PaymentMeans>
+			<cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
+			<cbc:PaymentDueDate>2017-07-03</cbc:PaymentDueDate>
+			<cbc:PaymentChannelCode>SE:Bankgiro</cbc:PaymentChannelCode>
+			<cbc:PaymentID>3230765301</cbc:PaymentID>
+			<cac:PayeeFinancialAccount>
+				<cbc:ID schemeID="LOCAL">50759802</cbc:ID>
+				<cac:FinancialInstitutionBranch>
+					<cac:FinancialInstitution>
+						<cbc:ID schemeID="BIC">BGABSESS</cbc:ID>
+					</cac:FinancialInstitution>
+				</cac:FinancialInstitutionBranch>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:PaymentMeans>
+			<cbc:PaymentMeansCode listID="UNCL4461">31</cbc:PaymentMeansCode>
+			<cbc:PaymentDueDate>2017-07-03</cbc:PaymentDueDate>
+			<cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+			<cbc:PaymentID>3230765301</cbc:PaymentID>
+			<cac:PayeeFinancialAccount>
+				<cbc:ID schemeID="IBAN">SE2812000000012420135636</cbc:ID>
+				<cac:FinancialInstitutionBranch>
+					<cac:FinancialInstitution>
+						<cbc:ID schemeID="BIC">DABASESX</cbc:ID>
+						<cbc:Name>OpusCapita test</cbc:Name>
+					</cac:FinancialInstitution>
+				</cac:FinancialInstitutionBranch>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:PaymentTerms>
+			<cbc:Note>For overdue payment, the interest charge is 7.50 % P.A.</cbc:Note>
+			<cbc:Note>Net 30 days</cbc:Note>
+			<cbc:PenaltySurchargePercent>7.50</cbc:PenaltySurchargePercent>
+		</cac:PaymentTerms>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="SEK">15924.30</cbc:TaxAmount>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="SEK">63697.20</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="SEK">15924.30</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:LegalMonetaryTotal>
+			<cbc:LineExtensionAmount currencyID="SEK">63697.20</cbc:LineExtensionAmount>
+			<cbc:TaxExclusiveAmount currencyID="SEK">63697.20</cbc:TaxExclusiveAmount>
+			<cbc:TaxInclusiveAmount currencyID="SEK">79622.00</cbc:TaxInclusiveAmount>
+			<cbc:AllowanceTotalAmount currencyID="SEK">0.00</cbc:AllowanceTotalAmount>
+			<cbc:ChargeTotalAmount currencyID="SEK">0.00</cbc:ChargeTotalAmount>
+			<cbc:PayableRoundingAmount currencyID="SEK">0.50</cbc:PayableRoundingAmount>
+			<cbc:PayableAmount currencyID="SEK">79622.00</cbc:PayableAmount>
+		</cac:LegalMonetaryTotal>
+		<cac:InvoiceLine>
+			<cbc:ID>1</cbc:ID>
+			<cbc:Note>Datum           Tid              Rast  Timmar Övertid   OB
+02-May-17       08:00-16:30        30    8,00    0,00   0,00
+03-May-17       08:00-16:30        30    8,00    0,00   0,00
+04-May-17       08:00-16:30        30    8,00    0,00   0,00
+05-May-17       08:00-16:30        30    8,00    0,00   0,00
+08-May-17       08:00-16:30        30    8,00    0,00   0,00
+09-May-17       08:00-16:30        30    8,00    0,00   0,00
+10-May-17       08:00-16:30        30    8,00    0,00   0,00
+11-May-17       08:00-16:30        30    8,00    0,00   0,00
+12-May-17       08:00-16:30        30    8,00    0,00   0,00
+15-May-17       08:00-16:30        30    8,00    0,00   0,00
+16-May-17       08:00-16:30        30    8,00    0,00   0,00
+17-May-17       08:00-16:30        30    8,00    0,00   0,00
+18-May-17       08:00-16:30        30    8,00    0,00   0,00
+19-May-17       08:00-16:30        30    8,00    0,00   0,00
+22-May-17       08:00-16:30        30    8,00    0,00   0,00
+23-May-17       08:00-16:30        30    8,00    0,00   0,00
+24-May-17       08:00-16:30        30    8,00    0,00   0,00
+26-May-17       08:00-16:30        30    8,00    0,00   0,00
+29-May-17       08:00-16:30        30    8,00    0,00   0,00
+30-May-17       08:00-16:30        30    8,00    0,00   0,00
+31-May-17       08:00-16:30        30    8,00    0,00   0,00
+Totalssumma                   Antal    Pris      Summa
+Normal tid                    168.00   379.15    63697.20</cbc:Note>
+			<cbc:InvoicedQuantity unitCode="ZZ" unitCodeListID="UNECERec20">168.00</cbc:InvoicedQuantity>
+			<cbc:LineExtensionAmount currencyID="SEK">63697.20</cbc:LineExtensionAmount>
+			<cac:TaxTotal>
+				<cbc:TaxAmount currencyID="SEK">15924.30</cbc:TaxAmount>
+			</cac:TaxTotal>
+			<cac:Item>
+				<cbc:Name>OpusCapita test</cbc:Name>
+				<cac:SellersItemIdentification>
+					<cbc:ID>IP</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="SEK">379.15</cbc:PriceAmount>
+			</cac:Price>
+		</cac:InvoiceLine>
+	</Invoice>
+</StandardBusinessDocument>
