@@ -29,8 +29,8 @@
   become: "{{sudo}}"
   become_user: "{{user}}"
   file: 
-    path=/tmp/system-tests-tmp/ 
-    state=directory
+    path: /tmp/system-tests-tmp/ 
+    state: directory
     owner: "{{ user }}"
 
 - set_fact: uuid="{{99999 | random | to_uuid}}"
