@@ -26,9 +26,12 @@
 - debug: var=document_id
 #--------------------------------------------------
 - name: Creates directory for test files
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   file: 
     path=/tmp/system-tests-tmp/ 
     state=directory
+    owner: "{{ user }}"
 
 - set_fact: uuid="{{99999 | random | to_uuid}}"
 - debug: var=uuid
