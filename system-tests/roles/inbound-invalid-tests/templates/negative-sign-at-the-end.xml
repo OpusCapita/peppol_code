@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                Content:
+                Document with amounts with trailing minus signs
+
+                Errors:
+                err:FORG0001
+                
+                Warnings:
+                NONAT-T14-R020
+                NONAT-T14-R019
+                EHF-COMMON-R003
+-->
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<StandardBusinessDocumentHeader>
+		<HeaderVersion>1.0</HeaderVersion>
+		<Sender>
+			<Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+		</Sender>
+		<Receiver>
+			<Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+		</Receiver>
+		<DocumentIdentification>
+			<Standard>urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2</Standard>
+			<TypeVersion>2.1</TypeVersion>
+			<InstanceIdentifier>e714e0e1207211e889ac000000cae46e</InstanceIdentifier>
+			<Type>Invoice</Type>
+			<CreationDateAndTime>2018-03-05T12:44:11Z</CreationDateAndTime>
+		</DocumentIdentification>
+		<BusinessScope>
+			<Scope>
+				<Type>DOCUMENTID</Type>
+				<InstanceIdentifier>
+							urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0::2.1
+				</InstanceIdentifier>
+			</Scope>
+			<Scope>
+				<Type>PROCESSID</Type>
+				<InstanceIdentifier>urn:www.cenbii.eu:profile:bii05:ver2.0</InstanceIdentifier>
+			</Scope>
+		</BusinessScope>
+	</StandardBusinessDocumentHeader>
+	<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 UBL-CreditNote-2.0.xsd">
+		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0</cbc:CustomizationID>
+		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+		<cbc:ID>{{ document_id }}</cbc:ID>
+		<cbc:IssueDate>2018-03-05</cbc:IssueDate>
+		<cbc:DocumentCurrencyCode listID="ISO4217">NOK</cbc:DocumentCurrencyCode>
+		<cac:OrderReference>
+			<cbc:ID>Bonus 2017</cbc:ID>
+			<cbc:SalesOrderID>60246716</cbc:SalesOrderID>
+		</cac:OrderReference>
+		<cac:BillingReference>
+			<cac:CreditNoteDocumentReference>
+				<cbc:ID>9011371521</cbc:ID>
+			</cac:CreditNoteDocumentReference>
+		</cac:BillingReference>
+		<cac:AccountingSupplierParty>
+			<cac:Party>
+				<cbc:EndpointID schemeID="NO:ORGNR">987987987</cbc:EndpointID>
+				<cac:PartyIdentification>
+					<cbc:ID schemeID="GLN">7080000366484</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+					<cbc:CityName>Gjøvik</cbc:CityName>
+					<cbc:PostalZone>2816</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listID="ISO3166-1:Alpha2">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:PostalAddress>
+				<cac:PartyTaxScheme>
+					<cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82">987987987MVA</cbc:CompanyID>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyLegalEntity>
+					<cbc:RegistrationName>OpusCapita test</cbc:RegistrationName>
+					<cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">987987987</cbc:CompanyID>
+				</cac:PartyLegalEntity>
+				<cac:Contact>
+					<cbc:ID>Tom Hermansen</cbc:ID>
+					<cbc:Telephone>02330</cbc:Telephone>
+					<cbc:Telefax>61131490</cbc:Telefax>
+					<cbc:ElectronicMail>opuscapitatest@opuscapita.com</cbc:ElectronicMail>
+				</cac:Contact>
+			</cac:Party>
+		</cac:AccountingSupplierParty>
+		<cac:AccountingCustomerParty>
+			<cac:Party>
+				<cbc:EndpointID schemeID="NO:ORGNR">987987987</cbc:EndpointID>
+				<cac:PartyIdentification>
+					<cbc:ID schemeID="ZZZ">122725</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:Postbox>414</cbc:Postbox>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+					<cbc:CityName>LILLESTRØM</cbc:CityName>
+					<cbc:PostalZone>2001</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:PostalAddress>
+				<cac:PartyTaxScheme>
+					<cbc:CompanyID schemeID="NO:VAT" schemeAgencyID="82">987987987MVA</cbc:CompanyID>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:PartyTaxScheme>
+				<cac:PartyLegalEntity>
+					<cbc:RegistrationName>OpusCapita test</cbc:RegistrationName>
+					<cbc:CompanyID schemeID="NO:ORGNR" schemeName="Foretaksregisteret" schemeAgencyID="82">987987987</cbc:CompanyID>
+				</cac:PartyLegalEntity>
+				<cac:Contact>
+					<cbc:ID>Bonus 2017</cbc:ID>
+					<cbc:Name>OpusCapita test</cbc:Name>
+				</cac:Contact>
+			</cac:Party>
+		</cac:AccountingCustomerParty>
+		<cac:PaymentMeans>
+			<cbc:PaymentMeansCode listID="UNCL4461">30</cbc:PaymentMeansCode>
+			<cbc:PaymentDueDate>2018-04-04</cbc:PaymentDueDate>
+			<cac:PayeeFinancialAccount>
+				<cbc:ID schemeID="BBAN">94990587544</cbc:ID>
+			</cac:PayeeFinancialAccount>
+		</cac:PaymentMeans>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="NOK">15894.67-</cbc:TaxAmount>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="NOK">-63578.69</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="NOK">-15894.67</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25.0</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:LegalMonetaryTotal>
+			<cbc:LineExtensionAmount currencyID="NOK">63578.69-</cbc:LineExtensionAmount>
+			<cbc:TaxExclusiveAmount currencyID="NOK">63578.69-</cbc:TaxExclusiveAmount>
+			<cbc:TaxInclusiveAmount currencyID="NOK">79473.36-</cbc:TaxInclusiveAmount>
+			<cbc:PayableAmount currencyID="NOK">79473.36-</cbc:PayableAmount>
+		</cac:LegalMonetaryTotal>
+		<cac:CreditNoteLine>
+			<cbc:ID>10</cbc:ID>
+			<cbc:CreditedQuantity unitCode="EA" unitCodeListID="UNECERec20">-1.000</cbc:CreditedQuantity>
+			<cbc:LineExtensionAmount currencyID="NOK">-63578.69</cbc:LineExtensionAmount>
+			<cac:Delivery>
+				<cac:DeliveryAddress>
+					<cbc:ID>Ungdommens Hus         Renhold</cbc:ID>
+					<cbc:StreetName>OpusCapita test street</cbc:StreetName>
+					<cbc:CityName>LILLESTRØM</cbc:CityName>
+					<cbc:PostalZone>2001</cbc:PostalZone>
+					<cac:Country>
+						<cbc:IdentificationCode listID="ISO3166-1:Alpha2" listAgencyID="6">NO</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:DeliveryAddress>
+			</cac:Delivery>
+			<cac:TaxTotal>
+				<cbc:TaxAmount currencyID="NOK">-15894.67</cbc:TaxAmount>
+			</cac:TaxTotal>
+			<cac:Item>
+				<cbc:Name>OpusCapita test</cbc:Name>
+				<cac:SellersItemIdentification>
+					<cbc:ID>108531</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25.000</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="NOK">63578.69</cbc:PriceAmount>
+			</cac:Price>
+		</cac:CreditNoteLine>
+	</CreditNote>
+</StandardBusinessDocument>

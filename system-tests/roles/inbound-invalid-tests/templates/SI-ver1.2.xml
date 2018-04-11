@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<StandardBusinessDocument xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+  <StandardBusinessDocumentHeader>
+    <HeaderVersion>1.0</HeaderVersion>
+    <Sender>
+      <Identifier Authority="iso6523-actorid-upis">9944:NL987987987</Identifier>
+    </Sender>
+    <Receiver>
+      <Identifier Authority="iso6523-actorid-upis">9954:00000001856987987987</Identifier>
+    </Receiver>
+    <DocumentIdentification>
+      <Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
+      <TypeVersion>2.1</TypeVersion>
+      <InstanceIdentifier>a3aa56fe-d412-11e7-8e96-ff94ebb46b1c</InstanceIdentifier>
+      <Type>Invoice</Type>
+      <CreationDateAndTime>2017-11-28T10:03:37.841723+02:00</CreationDateAndTime>
+    </DocumentIdentification>
+    <BusinessScope>
+      <Scope>
+        <Type>DOCUMENTID</Type>
+        <InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2::2.1</InstanceIdentifier>
+      </Scope>
+      <Scope>
+        <Type>PROCESSID</Type>
+        <InstanceIdentifier>urn:www.cenbii.eu:profile:bii04:ver1.0</InstanceIdentifier>
+      </Scope>
+    </BusinessScope>
+  </StandardBusinessDocumentHeader>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:draft:UnqualifiedDataTypes:2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 UBL-Invoice-2.1.xsd ">
+	<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+	<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2</cbc:CustomizationID>
+	<cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</cbc:ProfileID>
+	<cbc:ID>{{ document_id }}</cbc:ID>
+	<cbc:IssueDate>2017-11-16</cbc:IssueDate>
+	<cbc:InvoiceTypeCode listAgencyID="6" listID="UNCL1001">380</cbc:InvoiceTypeCode>
+	<cbc:Note>OpusCapita test</cbc:Note>
+	<cbc:DocumentCurrencyCode listAgencyID="6" listID="ISO4217">EUR</cbc:DocumentCurrencyCode>
+	<cac:InvoicePeriod>
+		<cbc:StartDate>2017-01-01</cbc:StartDate>
+		<cbc:StartTime>00:00:00</cbc:StartTime>
+		<cbc:EndDate>2017-12-31</cbc:EndDate>
+		<cbc:EndTime>00:00:00</cbc:EndTime>
+	</cac:InvoicePeriod>
+	<cac:OrderReference>
+		<cbc:ID>TEST OC</cbc:ID>
+	</cac:OrderReference>
+	<cac:BillingReference>
+		<cac:InvoiceDocumentReference>
+			<cbc:ID>0955500000</cbc:ID>
+		</cac:InvoiceDocumentReference>
+	</cac:BillingReference>
+	<cac:ContractDocumentReference>
+		<cbc:ID>41397830</cbc:ID>
+	</cac:ContractDocumentReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID>TEST OC</cbc:ID>
+		<cbc:DocumentType>CR</cbc:DocumentType>
+	</cac:AdditionalDocumentReference>
+	<cac:AccountingSupplierParty>
+		<cbc:CustomerAssignedAccountID>NL987987987</cbc:CustomerAssignedAccountID>
+		<cac:Party>
+			<cbc:EndpointID schemeID="NL:VAT">NL987987987</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>KONE B.V.</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:Postbox>24005</cbc:Postbox>
+				<cbc:CityName>OpusCapita test street</cbc:CityName>
+				<cbc:PostalZone>2491 BG</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID schemeID="NL:VAT">NL987987987</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>OpusCapita test</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="NL:KVK">987987987</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:ID>OpusCapita test</cbc:ID>
+				<cbc:Name>OpusCapita test</cbc:Name>
+				<cbc:Telephone>022 22 22 000</cbc:Telephone>
+				<cbc:Telefax>022 22 22 400</cbc:Telefax>
+				<cbc:ElectronicMail>opuscapitatest@opuscapita.com</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cbc:SupplierAssignedAccountID>987987987</cbc:SupplierAssignedAccountID>
+		<cac:Party>
+			<cbc:EndpointID schemeID="NL:OIN">00000001856987987987</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>TEST OC</cbc:Name>
+			</cac:PartyName>
+			<cac:Language>
+				<cbc:ID>NL</cbc:ID>
+			</cac:Language>
+			<cac:PostalAddress>
+				<cbc:Postbox>16837</cbc:Postbox>
+				<cbc:CityName>TEST OC</cbc:CityName>
+				<cbc:PostalZone>2500 BV</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>TEST OC</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="NL:KVK">987987987</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:ID>N/A</cbc:ID>
+				<cbc:ElectronicMail>TEST OC</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:BuyerCustomerParty>
+		<cac:Party>
+			<cac:PartyName>
+				<cbc:Name>TEST OC</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:Postbox>20952</cbc:Postbox>
+				<cbc:CityName>TEST OC</cbc:CityName>
+				<cbc:PostalZone>2500 EZ</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+		</cac:Party>
+	</cac:BuyerCustomerParty>
+	<cac:Delivery>
+		<cbc:ID>CIF</cbc:ID>
+		<cbc:ActualDeliveryDate>2017-12-31</cbc:ActualDeliveryDate>
+		<cac:DeliveryLocation>
+			<cbc:Name>TEST OC</cbc:Name>
+			<cac:Address>
+				<cbc:Postbox>20952</cbc:Postbox>
+				<cbc:CityName>TEST OC</cbc:CityName>
+				<cbc:PostalZone>2500 EZ</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode listAgencyID="6" listID="ISO3166-1:Alpha2">NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:Address>
+		</cac:DeliveryLocation>
+		<cac:DeliveryTerms>
+			<cbc:SpecialTerms>TEST OC</cbc:SpecialTerms>
+		</cac:DeliveryTerms>
+	</cac:Delivery>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode listAgencyID="NES" listID="UNCL4461">31</cbc:PaymentMeansCode>
+		<cbc:PaymentDueDate>2017-12-16</cbc:PaymentDueDate>
+		<cbc:PaymentChannelCode>IBAN</cbc:PaymentChannelCode>
+		<cbc:PaymentID>0955500000</cbc:PaymentID>
+		<cac:PayeeFinancialAccount>
+			<cbc:ID schemeID="IBAN">NL19BNPA0987987987</cbc:ID>
+			<cac:FinancialInstitutionBranch>
+				<cac:FinancialInstitution>
+					<cbc:ID schemeID="BIC">BNPANL2A</cbc:ID>
+					<cbc:Name>BNP Paribas</cbc:Name>
+				</cac:FinancialInstitution>
+			</cac:FinancialInstitutionBranch>
+		</cac:PayeeFinancialAccount>
+	</cac:PaymentMeans>
+	<cac:PaymentTerms>
+		<cbc:Note>TEST OC</cbc:Note>
+	</cac:PaymentTerms>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR">1.26</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR">6.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">1.26</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID schemeAgencyID="6" schemeID="UNCL5305">S</cbc:ID>
+				<cbc:Percent>21.000</cbc:Percent>
+				<cbc:TaxExemptionReason>21% BTW</cbc:TaxExemptionReason>
+				<cac:TaxScheme>
+					<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR">6.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">6.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">7.26</cbc:TaxInclusiveAmount>
+		<cbc:PayableAmount currencyID="EUR">7.26</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>000001</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="ST" unitCodeListID="UNECERec20">1</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">6.00</cbc:LineExtensionAmount>
+		<cac:InvoicePeriod>
+			<cbc:StartDate>2017-01-01</cbc:StartDate>
+			<cbc:EndDate>2017-12-31</cbc:EndDate>
+		</cac:InvoicePeriod>
+		<cac:Delivery/>
+		<cac:AllowanceCharge>
+			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+			<cbc:Amount currencyID="EUR">6.00</cbc:Amount>
+		</cac:AllowanceCharge>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="EUR">1.26</cbc:TaxAmount>
+		</cac:TaxTotal>
+		<cac:Item>
+			<cbc:Name>TEST OC</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>43071633</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID schemeAgencyID="6" schemeID="UNCL5305">S</cbc:ID>
+				<cbc:Percent>21.000</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">6.00</cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice></StandardBusinessDocument>
