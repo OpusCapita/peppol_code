@@ -1,9 +1,47 @@
 ---
-#change search so that "tail" is used for getting script output, then grep in that result
+#--------------------------------------------------
+# generate random values for XML files:
+- set_fact: receiver_id=9908:987987987
+- set_fact: receiver_endpoint_id=987987987
+- set_fact: receiver_company_id_vat=987987987MVA
+- set_fact: receiver_company_id_orgnr=987987987
+- set_fact: receiver_name="{{ 999999999 | random }}"
+- set_fact: sender_id=9908:987987987
+- set_fact: sender_endpoint_id=987987987
+- set_fact: sender_company_id_vat=987987987MVA
+- set_fact: sender_company_id_orgnr=987987987
+- set_fact: sender_name="{{ 999999999 | random }}"
+- set_fact: document_id="{{ 999999999 | random | to_uuid }}"
 
-- name: Copy file "{{file}}" to inbound
-  shell: docker run -i --network peppol_back -v /test-materials:/test-materials -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f "{{ file }}" -u http://inbound:8080/peppol-ap-inbound/as2
-#inbound to swarm makes this obsolite->  shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
+- debug: var=receiver_id
+- debug: var=receiver_endpoint_id
+- debug: var=receiver_company_id_vat
+- debug: var=receiver_company_id_orgnr
+- debug: var=receiver_name
+- debug: var=sender_id
+- debug: var=sender_endpoint_id
+- debug: var=sender_company_id_vat
+- debug: var=sender_company_id_orgnr
+- debug: var=sender_name
+- debug: var=document_id
+#--------------------------------------------------
+- name: Creates directory for test files
+  file:
+    path=/tmp/system-tests-tmp/
+    state=directory
+
+- set_fact: uuid="{{99999 | random | to_uuid}}"
+- debug: var=uuid
+
+- name: copy test files
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  template:
+    src: "{{ file }}"
+    dest: "/tmp/system-tests-tmp/{{ file | basename }}-{{ uuid }}.xml"
+
+- name: send file via script to inbound module
+  shell: docker run -i --network peppol_back -v /tmp:/tmp -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f "/tmp/system-tests-tmp/{{ file|basename }}-{{ uuid }}.xml" -u http://inbound:8080/peppol-ap-inbound/as2
   register: inbound_output
 - set_fact: file="{{file}}"
 - name: file that was sent to inbound
