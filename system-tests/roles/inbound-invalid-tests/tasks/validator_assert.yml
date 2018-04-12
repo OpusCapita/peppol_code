@@ -1,7 +1,10 @@
 ---
 - name: get validator log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found in validator
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   ignore_errors: yes
-  shell: docker logs validator | grep "{{ transmissionId }}"
+  shell: grep "{{ transmissionId }}" /peppol/logs/validator/*.log
+#  shell: docker logs validator | grep "{{ transmissionId }}"
   register: log
   until: transmissionId in log.stdout
   retries: 300

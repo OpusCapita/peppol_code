@@ -1,7 +1,10 @@
 ---
 - name: get validator log & check if uuid "{{ uuid }}" for "{{ file }}" is found in validator
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   ignore_errors: yes
-  shell: docker logs validator | grep "{{ uuid }}"
+  shell: grep "{{ uuid }}" /peppol/logs/validator/*.log
+#  shell: docker logs validator | grep "{{ uuid }}"
   register: log
   until: uuid in log.stdout
   retries: 300
