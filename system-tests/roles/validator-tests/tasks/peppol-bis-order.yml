@@ -79,7 +79,7 @@
 - set_fact: expected3="ID}' is expected."
 
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 #- set_fact: notes="BII3-T110-R003- Each order agreement line MUST have a document line identifier that is unique within the order agreement- this error happens because of XSD exception so custom check is needed"
 
 - include: send_to_REST.yml
@@ -94,8 +94,8 @@
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} " 
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
       - "expected2 in result_identifier2"
       - "expected3 in result_identifier2"
     msg: "Test for {{ file }} failed"
