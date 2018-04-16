@@ -19,6 +19,8 @@ public class AttachmentValidatorTest {
         assertFalse(av.isValidBase64("YW55IGNhcm5hbC=BwbGVhcw="));
 
         assertTrue(av.isValidBase64("YW55IGNhcm5hbCBwbGVhcw=="));
+        assertTrue(av.isValidBase64("YW55IGNhcm5hbCBwbGVhcw==\n      "));
+        assertTrue(av.isValidBase64("YW55IGNhcm5hbCBwbGVhcw==\n       "));
         assertTrue(av.isValidBase64("YW55IGNhcm5hbCBwbGVhc3U="));
         assertTrue(av.isValidBase64("YW55IGNhcm5hbCBwbGVhc3Vy"));
         assertTrue(av.isValidBase64("YW55IGNhcm5hbCBwbGVhc3Vy\n"));
