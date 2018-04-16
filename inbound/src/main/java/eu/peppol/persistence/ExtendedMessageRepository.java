@@ -1,5 +1,7 @@
 package eu.peppol.persistence;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
@@ -35,11 +37,13 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
     private static final Logger logger = LoggerFactory.getLogger(ExtendedMessageRepository.class);
     private static final InboundProperties properties = new InboundProperties();
     private final InboundErrorHandler errorHandler;
+    private final Gson gson;
 
     @SuppressWarnings("ConstantConditions")
     public ExtendedMessageRepository() {
         super(new File(properties.getProperty(INBOUND_OUTPUT_DIR)));
         errorHandler = new InboundErrorHandler(properties);
+        gson = new GsonBuilder().disableHtmlEscaping().create();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -61,13 +65,15 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             errorHandler.report("Failed to store incoming message", e.getMessage(), metadata.getRecipientId().toString());
             throw new OxalisMessagePersistenceException(metadata, e);
         }
-
+        ContainerMessage cm = null;
+        String metadataString = null;
         // send file to MQ, no exception to sending AP here anymore, file already available
         try {
-            String metadataString = MetadataUtils.getHeadersAsJson(metadata);
+            metadataString = MetadataUtils.getHeadersAsJson(metadata);
             logger.debug("Message metadata: " + metadataString);
 
-            ContainerMessage cm = prepareMessage(dataFile, metadataString, properties.getProperty(COMPONENT_NAME));
+
+            cm = prepareMessage(dataFile, metadataString, properties.getProperty(COMPONENT_NAME));
             cm.getProcessingInfo().setTransactionId(metadata.getTransmissionId().toString());
             cm.setStatus(cm.getProcessingInfo().getSource(), "received");
             EventingMessageUtil.reportEvent(cm, "received file");
@@ -75,6 +81,12 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
         } catch (Exception e) {
             logger.error("Failed to report file " + dataFile + " to MQ: ", e);
             errorHandler.report("Failed to report received file to message queue", e.getMessage(), metadata.getRecipientId().toString());
+            if (metadataString != null) {
+                logger.error("Metadata dump: " + metadataString);
+            }
+            if (cm != null) {
+                logger.error("ContainerMessage dump: " + gson.toJson(cm));
+            }
         }
     }
 
@@ -102,8 +114,8 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
         return new File(messageDirectory, evidenceFileName);
     }
 
-     @Override
-     File prepareMessageDirectory(String inboundMessageStore, ParticipantId recipient, ParticipantId sender) {
+    @Override
+    File prepareMessageDirectory(String inboundMessageStore, ParticipantId recipient, ParticipantId sender) {
         String path = String.format("%s/%s", normalizeFilename(recipient.stringValue()), normalizeFilename(sender.stringValue()));
         File messageDirectory = new File(inboundMessageStore, path);
         if (!messageDirectory.exists() && !messageDirectory.mkdirs()) {
