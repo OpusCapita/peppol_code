@@ -26,4 +26,5 @@
     - templates/EHF_profile-bii05_invoice_OC_zero_val_has_attachment_new_line.xml
     - templates/EHF_profile-bii05_invoice_invalid_4char_attachment.xml
     - templates/EHF_profile-bii05_invoice_OC_zero_val_has_attachment.xml
+    - templates/EHF_profile-bii05_invoice_OC_zero_val_has_attachment_new_line_padding.xml
 ...
