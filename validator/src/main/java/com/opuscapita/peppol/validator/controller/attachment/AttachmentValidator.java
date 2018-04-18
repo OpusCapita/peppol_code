@@ -45,7 +45,7 @@ public class AttachmentValidator {
         for (int i = 0; i < characters.length(); i++) {
             char it = characters.charAt(i);
             // whitespace
-            if (it == 9 || it == 10 || it == 13 || it == 32 && !padding) {
+            if (it == 9 || it == 10 || it == 13 || it == 32) {
                 continue;
             }
             if (((it >= '0' && it <= '9') || (it >= 'a' && it <= 'z') || (it >= 'A' && it <= 'Z') || it == '/' || it == '+') && !padding) {

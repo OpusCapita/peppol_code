@@ -24,7 +24,7 @@
 #this error happens before validation, in document loader so custom check is needed
 - set_fact: expected="matches following templates{{":"}} EHF.Order, PEPPOL_BIS.Order"
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 - set_fact: notes="BII3-T110-R001-An order agreement MUST have a customization identifier- custom test as document loader checks for mandatory fields before validation"
 
 - include: send_to_REST.yml
@@ -50,13 +50,14 @@
 #this error happens before validation, in document loader so custom check is needed
 - set_fact: expected="Missing mandatory field{{":"}} profile_id"
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 - set_fact: notes="BII3-T110-R002- An order agreement MUST have a profile identifier- custom test as document loader checks for mandatory fields before validation"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.message }}"
+  when: active==true
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
@@ -79,23 +80,27 @@
 - set_fact: expected3="ID}' is expected."
 
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 #- set_fact: notes="BII3-T110-R003- Each order agreement line MUST have a document line identifier that is unique within the order agreement- this error happens because of XSD exception so custom check is needed"
 
 - include: send_to_REST.yml
 - include: response_set.yml
 
 - set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
+  when: active==true
 - set_fact: result_identifier1="{{ result_errors.1.validationError.identifier }}"
+  when: active==true
 - set_fact: result_identifier2="{{ result_errors.2.message }}"
+  when: active==true
+
 
 - name: check if validation is correct for {{ file }}
   ignore_errors: yes
   assert:
     that:
       - "result_passed == {{ valid }}"
-      - "result_identifier == {{ expected }} "
-      - "result_identifier1 == {{ expected1 }} "
+      - "result_identifier == {{ expected }} or {{ expected1 }} " 
+      - "result_identifier1 == {{ expected }} or {{ expected1 }} "
       - "expected2 in result_identifier2"
       - "expected3 in result_identifier2"
     msg: "Test for {{ file }} failed"
@@ -110,7 +115,7 @@
 #this error happens before validation, in document loader so custom check is needed
 - set_fact: expected="Missing mandatory field{{":"}} issue_date"
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 - set_fact: notes="BII3-T110-R004- An order agreement MUST have a issue_date- custom test as document loader checks for mandatory fields before validation"
 
 - include: send_to_REST.yml
@@ -136,7 +141,7 @@
 #this error happens before validation, in document loader so custom check is needed
 - set_fact: expected="Missing mandatory field{{":"}} document_id"
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 - set_fact: notes="BII3-T110-R006- An order agreement MUST have a document_id- custom test as document loader checks for mandatory fields before validation"
 
 - include: send_to_REST.yml
@@ -163,7 +168,7 @@
 - set_fact: expected="Missing mandatory field{{":"}} sender_id"
 - set_fact: expected1="Missing mandatory field{{":"}} sender_name"
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 - set_fact: notes="BII3-T110-R021- An order agreement MUST have the buyer party name or a buyer party identifier- custom test as document loader checks for mandatory fields before validation"
 
 - include: send_to_REST.yml
@@ -192,7 +197,7 @@
 - set_fact: expected="Missing mandatory field{{":"}} recipient_id"
 - set_fact: expected1="Missing mandatory field{{":"}} recipient_name"
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 - set_fact: notes="BII3-T110-R022- An order agreement MUST have the seller party name or a seller party identifier- custom test as document loader checks for mandatory fields before validation"
 
 - include: send_to_REST.yml
@@ -223,7 +228,7 @@
 - set_fact: expected1="ID}' is expected."
 
 - set_fact: valid="false"
-- set_fact: active="true"
+- set_fact: active="false"
 - set_fact: notes="BII3-T110-R032- An order agreement MUST have a reference to an order- this error happens because of XSD exception so custom check is needed"
 
 - include: send_to_REST.yml

@@ -1,5 +1,5 @@
 ---
 - name: send {{ file }} to validator REST
-  shell: curl -F "file=@{{ file }}" localhost:8083/validator/validate
+  shell: curl -F "file=@{{ file }}" "{{ validator }}" 
   register: result
 ...
