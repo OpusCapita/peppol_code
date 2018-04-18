@@ -4,5 +4,5 @@ transport_from_a2a_path: /peppol-a2a-nfs/out/test/data/
 sudo: yes
 user: peppol
 group: elmaci
-validator: s-l-web1.ocnet.local:8081/validator/validate
+validator: 127.0.0.1:8083/validator/validate
 ...

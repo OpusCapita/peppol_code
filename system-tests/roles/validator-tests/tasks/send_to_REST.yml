@@ -1,5 +1,5 @@
 ---
 - name: send {{ file }} to validator REST
-  shell: curl -F "file=@{{ file }}" "{{ validator }}" 
+  shell: curl --max-time 30 -F "file=@{{ file }}" "{{ validator }}" 
   register: result
 ...
