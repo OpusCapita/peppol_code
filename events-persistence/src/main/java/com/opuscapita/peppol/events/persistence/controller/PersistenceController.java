@@ -273,10 +273,16 @@ public class PersistenceController {
             //Terminal statuses imply that we do have transaction id
             throw new Exception("For file: " + peppolEvent.getFileName() + " and status: " + peppolEvent.getProcessType() + " the transaction id is NULL!");
         }
+        String prefix = peppolEvent.getProcessType().name().split("_")[0];
+        List<SentFileInfo> alreadyStoredSentInfo = sentFileInfoRepository.findBySentFileIdAndTransmissionId(fileInfo.getId(), prefix + peppolEvent.getTransactionId());
+        if(alreadyStoredSentInfo != null && alreadyStoredSentInfo.size() > 0) {
+            //We already have that data in, no need to duplicate
+            return;
+        }
         SentFileInfo sentFileInfo = new SentFileInfo();
         sentFileInfo.setTimestamp(new Timestamp(System.currentTimeMillis()));
         sentFileInfo.setSentFile(fileInfo);
-        String prefix = peppolEvent.getProcessType().name().split("_")[0];
+
         //Some intermediate phase events might miss the transaction id
         if (peppolEvent.getTransactionId() != null) {
             sentFileInfo.setTransmissionId(prefix + peppolEvent.getTransactionId());
