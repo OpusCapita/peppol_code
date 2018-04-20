@@ -88,7 +88,7 @@
   debug: var=last_filename
 
 - name: stop validator
-  shell: docker stop validator
+  shell: docker service scale peppol_validator=0
 - name: stop preprocessing
   shell: docker stop preprocessing
 
@@ -144,7 +144,7 @@
     PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
 - name: start validator
-  shell: docker start validator
+  shell: docker service scale peppol_validator=2
 
 #- name: Read in FIRST processing timestamp
 - name: get validator log & check if FIRST "{{ uuidf }}" is found in validator
