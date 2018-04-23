@@ -92,6 +92,11 @@
 - name: stop preprocessing
   shell: docker stop preprocessing
 
+- name: wait for validator to stop
+  pause: 
+    seconds: 10
+
+
 #send FIRST msg:
 - name: send FIRST msg to MQ
   become: "{{sudo}}"
@@ -144,12 +149,14 @@
     PATH: /home/peppol/bin:{{ ansible_env.PATH }}
 
 - name: start validator
-  shell: docker service scale peppol_validator=2
+  shell: docker service scale peppol_validator=1
 
 #- name: Read in FIRST processing timestamp
 - name: get validator log & check if FIRST "{{ uuidf }}" is found in validator
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   ignore_errors: yes
-  shell: docker logs validator | grep "Processing message.*{{ uuidf }}"
+  shell: grep "Processing message.*{{ uuidf }}" /peppol/logs/validator/*.log
   register: logf
   until: 'uuidf in logf.stdout'
   retries: "{{ wait_time }}"
@@ -157,7 +164,7 @@
 - name: debug FIRST grep
   debug: var=logf.stdout
 - name: get timestamp
-  shell: echo "{{ logf.stdout }}" | awk '{sub(/INFO.*/,x)}1' | cut -b 1-19
+  shell: echo "{{ logf.stdout }}" | awk '{sub(/INFO.*/,x)}1' | cut -b 83-101
   register: first_timestamp
 - set_fact: first_timestamp="{{ first_timestamp.stdout }}"
 - name: debug FIRST timestamp
@@ -166,8 +173,10 @@
 
 #- name: Read in LAST processing timestamp
 - name: get validator log & check if LAST "{{ uuidl }}" is found in validator
+  become: "{{sudo}}"
+  become_user: "{{user}}"
   ignore_errors: yes
-  shell: docker logs validator | grep "Validation passed for.*{{ uuidl }}"
+  shell: grep "Validation passed for.*{{ uuidl }}" /peppol/logs/validator/*.log
   register: logl
   until: 'uuidl in logl.stdout'
   retries: "{{ wait_time }}"
@@ -175,7 +184,7 @@
 - name: debug LAST grep
   debug: var=logl.stdout
 - name: get timestamp
-  shell: echo "{{ logl.stdout }}" | awk '{sub(/INFO.*/,x)}1' | cut -b 1-19
+  shell: echo "{{ logl.stdout }}" | awk '{sub(/INFO.*/,x)}1' | cut -b 83-101
   register: last_timestamp
 - set_fact: last_timestamp="{{ last_timestamp.stdout }}"
 - name: debug LAST timestamp
@@ -195,6 +204,9 @@
 - name: debug processing time
   debug: var=proc_time
 
+#-------------------------------
+#     Check result
+#-------------------------------
 #Failure case- compare test run processing time vs etalon
 - name: compare test run processing time vs etalon
   set_fact: test_result="Failed- {{ module }} processing time is {{ proc_time }} seconds and it is slower than etalon- {{ etalon }} seconds expected"
@@ -203,6 +215,11 @@
 - name: Failure case- test result
   debug: var=test_result
 
+- name: check if processing time was zero- it would mean that one of time values were incorrect
+  fail: msg="Load test for {{ msg_type }} files have failed! Reason processing time was zero- {{ proc_time }}"
+  when:
+    - proc_time|int == 0
+
 #Success case- compare test run processing time vs etalon
 - name: compare test run processing time vs etalon
   set_fact: test_result="Passed- {{ module }} processing time is {{ proc_time }} seconds, etalon {{ etalon }} seconds expected"
@@ -210,6 +227,7 @@
     - etalon|int >= proc_time|int
 - name: Success case test result
   debug: var=test_result
+
 #-------------------------------
 #      REPORT
 #-------------------------------
@@ -240,17 +258,10 @@
 - debug:
     var: report
 
-#- name: check if any assert has failed up until now
-#  fail: msg="Load test for {{ msg_type }} files have failed!"
-#  when:
-#    - "'Failed' in report.stdout"
-
 #-------------------------------
 
 - name: check if comparision failed
   fail: msg="Load test for {{ msg_type }} files have failed!"
   when:
     - "'Failed' in test_result"
-
-
 ...
