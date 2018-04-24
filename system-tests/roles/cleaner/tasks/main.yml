@@ -50,17 +50,13 @@
     state: absent
   with_items: "{{ files_to_delete.files }}"
 
-#old way how to remove files- caused failed task on stage as files might be written to
-#- name: Clean storage path
-#  become: true
-#  file:
-#    state: absent
-#    path: "{{ item }}"
-#  with_items:
-#    - /peppol/data/storage/unknown/
-#    - /peppol/data/storage/9908_987987987/
-#    - /peppol/data/storage/9908_998877665/
-#    - /peppol/data/storage/9908_789789789/
-#    - /peppol/data/storage/987987987/
-#    - /peppol/data/storage/performance-tests/tmp/
+#------------------------
+#   Setting Stage back to normal settings
+#------------------------
+
+- name: start validator with 2 instances
+  shell: docker service scale peppol_validator=2
+- name: start preprocessing
+  shell: docker start preprocessing
+
 ...
