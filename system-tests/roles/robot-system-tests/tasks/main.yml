@@ -1,0 +1,36 @@
+---
+#                                         s/.            ./s
+#                                          y.+/.        ./+.y
+#                                ./.-.     y  .+/.    ./+.  y      +./-
+#                                .:sy:     y    .//  //.    y     .hy+.
+#                                 .../+.+  y      s..s      y  +-/+.
+#                                    ./sy. s.     s..s     .y .os+-
+#                                       ./+-//.   s..s   .+/.//.
+#                           .+y/::::::::+:.:+-/+. s..s .+/.//.:+::::::::/y+.
+#                             .+/.       .+:.:+-/+y..y+/.//.:+.       ./+.
+#                               .+/.       .+:.:+-/.././/.:+.       ./+.
+#                                 .+/::::::::+y:.:ooo+/.:y+:::::::://.
+#                                   ............ :hhhh: ............
+#                                 .+/-------:+s:.+/++:+-:s+--------/+.
+#                               .+:        -+:.+/./../.:+-:+-        :+.
+#                             .+:        -+:.+/.//y..y//.:+-:+-        :+.
+#                           .+s/::::::::+-.+/.//. s..s .//.-+-:+::::::::/s+.
+#                                     ..-+:.//.   s..s   .//.-+-...
+#                                     :sy. y.     s..s     .y  ss+-
+#                                 -::+: :. y      s..s      y  :.-+:--.
+#                                 -+o/     y    .+:  :+.    y     .yo/.
+#                                .: ..     y  .+:      :+.  y      - -.
+#                                          y-+:          :+-y
+#                                          s:              :s
+
+#Author: Martins Berzins
+#Date: 2018
+
+- name: Run Robot Framework test
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  delegate_to: localhost
+  shell: robot --NoStatusRC /home/berzima1/git/peppol2.0/system-tests/robot-system-tests/test.robot
+  register: report
+
+...

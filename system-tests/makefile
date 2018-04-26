@@ -1,3 +1,7 @@
+#robot-system-tests
+robot-system-tests-l:
+	ansible-playbook -i local.hosts -K run-robot.yml
+#------------------------------------------------------------
 #file-prep
 file-prep-l:
 	ansible-playbook -i local.hosts -K file-prep.yml
