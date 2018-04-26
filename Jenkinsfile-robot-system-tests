@@ -95,19 +95,11 @@ catch(e) {
                     dir('src/system-tests') {
                         parallel(
                             "outbound-tests": { ansiblePlaybook(
-                                'outbound-tests.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
-                            )},
-                            "outbound-invalid-tests": { ansiblePlaybook(
-                                'outbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                'run-robot.yml', 'stage.hosts', 'ansible-sudo',
                                 'report_path=$PWD/reports/'
                             )},
                             "inbound-tests": { ansiblePlaybook(
-                                'inbound-tests.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
-                            )},
-                            "inbound-invalid-tests": { ansiblePlaybook(
-                                'inbound-invalid-tests.yml', 'stage.hosts', 'ansible-sudo',
+                                'run-robot.yml', 'stage.hosts', 'ansible-sudo',
                                 'report_path=$PWD/reports/'
                             )}
                         )                    
@@ -117,67 +109,6 @@ catch(e) {
                     failBuild(
                         "${recipients.testers}, ${infra_author}, ${code_author}",
                         'System tests have failed. Check the log for details.'
-                    )
-                }
-                finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
-                }
-            }
-            milestone 3
-            stage('Validator Tests') {
-                try {
-                    dir('src/system-tests') {
-                        ansiblePlaybook(
-                            'validator-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            'report_path=$PWD/reports/'
-                        )
-                    }
-                }
-                catch(e) {
-                    failBuild(
-                        "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'System-tests: Validator Tests have failed. Check the log for details.'
-                    )
-                }
-                finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
-                }
-            }
-            milestone 4
-            stage('MLR Tests') {
-                try {
-                    dir('src/system-tests') {
-                        ansiblePlaybook(
-                            'mlr-tests.yml', 'stage.hosts', 'ansible-sudo',
-                            'report_path=$PWD/reports/'
-                        )
-                    }
-                }
-                catch(e) {
-                    failBuild(
-                        "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'System-tests: MLR Tests have failed. Check the log for details.'
-                    )
-                }
-                finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
-                }
-            }
-            milestone 5
-            stage('Cleaning') {
-                try {
-                    dir('src/system-tests') {
-                        retry(5) {
-                            ansiblePlaybook(
-                                'cleaner.yml', 'stage.hosts', 'ansible-sudo'
-                            )
-                        }
-                    }
-                }
-                catch(e) {
-                    failBuild(
-                        "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'System-tests: Cleaning has failed!'
                     )
                 }
                 finally {
