@@ -26,37 +26,11 @@
 #Author: Martins Berzins
 #Date: 2018
 
-- name: Ansible find storage tests files older than 3 days
-  become: true
-  find:
-    paths: 
-      - "/peppol/data/storage/9908_987987987/"
-      - "/peppol/data/storage/unknown/"
-      - "/peppol/data/storage/9908_998877665/"
-      - "/peppol/data/storage/9908_789789789/"
-      - "/peppol/data/storage/987987987/"
-      - "/peppol/data/storage/performance-tests/tmp/"
-    age: 3d
-    patterns: "*.xml"
-    recurse: yes
-  register: files_to_delete
-- name: debug files_to_delete
-  debug: var=files_to_delete.files
-
-- name: Ansible remove files older than found previously
-  become: true
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  with_items: "{{ files_to_delete.files }}"
-
-#------------------------
-#   Setting Stage back to normal settings
-#------------------------
-
-- name: start validator with 2 instances
-  shell: docker service scale peppol_validator=2
-- name: start preprocessing
-  shell: docker start preprocessing
+- name: Run Robot Framework test
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  delegate_to: localhost
+  shell: robot --NoStatusRC /home/berzima1/git/peppol2.0/system-tests/robot-system-tests/test.robot
+  register: report
 
 ...
