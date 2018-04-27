@@ -11,7 +11,7 @@ Library   String
 Suite Setup   Prepare files
 
 *** Variables ***
-${source_file}=   /home/berzima1/git/peppol2.0/system-tests/robot-system-tests/resources/EHF_profile-bii05_invoice_OC.xml
+${source_file}=   /tmp/test-resources/EHF_profile-bii05_invoice_OC.xml
 *** Test Cases ***
 Inbound positive test EHF_profile-bii05_invoice
     Given Inbound flow runs
@@ -20,15 +20,15 @@ Inbound positive test EHF_profile-bii05_invoice
 
 *** Keywords ***
 Prepare files
-#    Copy File   ${source_file}    ${work_file}
     ${document_id} =  Generate Random String  20  [NUMBERS]
     Log     document_id: ${document_id}     console=true
     ${work_file}=     Get File   ${source_file}
     Log   work file: ${work_file}
     ${work_file}=     Replace String    ${work_file}    {{ document_id }}     ${document_id}
     Log   work file: ${work_file}
-    Create File     /tmp/EHF_profile-bii05_invoice_OC${document_id}.xml        ${work_file}       UTF-8
-    Set Global Variable     ${file}     /tmp/EHF_profile-bii05_invoice_OC_${document_id}.xml
+    Create File     /tmp/test-files/EHF_profile-bii05_invoice_OC_${document_id}.xml        ${work_file}       UTF-8
+#    ${change_file_rights}       Run Process     chmod 0774 /tmp/test-files/EHF_profile-bii05_invoice_OC${document_id}.xml       shell=true
+    Set Global Variable     ${file}     /tmp/test-files/EHF_profile-bii05_invoice_OC_${document_id}.xml
     Log     modified file name: ${file}     console=true
 #-------------------------------------------------------------
 Inbound flow runs
@@ -43,11 +43,10 @@ Send EHF_profile-bii05_invoice to inbound
     Log   Inbound log variable: ${inbound_log}
 
 Inbound tansmissionId should be found
-#    Set Global Variable   ${inbound_log}    ${EMPTY}
     Log   Inbound output: ${inbound_log}
     ${search_result}=   Get Lines Containing String   ${inbound_log}    transmissionId
     Log   transmissionId line: ${search_result}   console=false
     ${transmissionId}=    Get Substring   ${search_result}    -36
-    Should Not Be Empty   ${transmissionId}   msg=transmissionId was not found
+    Should Not Be Empty   ${transmissionId}   msg=transmissionId was not found in Inbound module
     Log   transmissionId: ${transmissionId}   console=true
 #-------------------------------------------------------------
