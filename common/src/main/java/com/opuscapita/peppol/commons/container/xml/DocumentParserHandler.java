@@ -97,6 +97,7 @@ public class DocumentParserHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (StringUtils.isNotBlank(value)) {
             String path = paths.getLast();
+            //System.out.println(path+"==>"+value);
             if (path.contains("Scope/InstanceIdentifier")) {
                 switch (previousValue) {
                     case "DOCUMENTID":
@@ -124,6 +125,7 @@ public class DocumentParserHandler extends DefaultHandler {
                         if (fp.equals(path)) {
                             if (!field.matches(value)) {
                                 // path is known but value not corresponds to the mask
+                                //System.out.println(field + " <> " +value);
                                 logger.debug("Removing unmatched template " + template.name);
                                 iterator.remove();
                             } else {
@@ -478,6 +480,16 @@ public class DocumentParserHandler extends DefaultHandler {
             return getMask() == null || value.matches(getMask());
         }
 
+        @Override
+        public String toString() {
+            return "Field{" +
+                    "values=" + values +
+                    ", id=" +getId() +
+                    ", constant=" +getConstant()+
+                    ", mask=" +getMask()+
+                    ", paths=" + (getPaths() != null ? getPaths().stream().collect(Collectors.joining(", ")) : "[]") +
+                    '}';
+        }
     }
 
 }

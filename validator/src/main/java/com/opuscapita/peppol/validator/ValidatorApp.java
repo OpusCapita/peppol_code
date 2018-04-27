@@ -49,31 +49,6 @@ public class ValidatorApp {
         SpringApplication.run(ValidatorApp.class, args);
     }
 
-    // TODO remove performance tests when finished with it @SR
-//    @PostConstruct
-//    public void postConstruct() throws Exception {
-//        String file = "/home/redis/work/validator/test-peppol/validator/src/test/resources/test_data/difi_files/Valids2-list-ejt.xml";
-//        //String file = "/home/rozeser1/test-peppol/validator/src/test/resources/test_data/difi_files/Valids2-list-ejt.xml";
-//        ContainerMessage cm = new ContainerMessage("meatdata", file, Endpoint.TEST);
-//        DocumentInfo di = new DocumentInfo();
-//        di.setCustomizationId("urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0");
-//        di.setProfileId("urn:www.cenbii.eu:profile:bii05:ver2.0");
-//        di.setRootNodeName("CreditNote");
-//        cm.setDocumentInfo(di);
-//
-//        for (int i = 0; i < 1000000; i++) {
-//            //System.out.println(i);
-//            controller.validate(cm);
-//        }
-//        System.out.println("");
-//        for (DocumentError e : cm.getDocumentInfo().getErrors()) {
-//            System.out.println(e);
-//        }
-//
-//        System.exit(0);
-//    }
-
-
     @Bean
     MessageListenerAdapter listenerAdapter(@NotNull CommonMessageReceiver receiver) {
         receiver.setContainerMessageConsumer(this::consume);

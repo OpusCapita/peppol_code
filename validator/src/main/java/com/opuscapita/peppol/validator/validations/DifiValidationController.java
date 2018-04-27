@@ -50,6 +50,7 @@ public class DifiValidationController implements ValidationController {
         }
 
         Archetype archetype = containerMessage.getDocumentInfo().getArchetype();
+        //System.out.println("Archetype: " + archetype);
         if (archetype == Archetype.INVALID || archetype == Archetype.UNRECOGNIZED) {
             return containerMessage;
         }
@@ -84,6 +85,9 @@ public class DifiValidationController implements ValidationController {
         try {
             dom = DocumentUtils.getDocument(cm);
             Document rootDocument = getRootDocument(cm, dom);
+            if(cm.getDocumentInfo().getDocumentType().equals("InvoiceWithObjectEnvelope")) {
+                rootDocument = getRootDocument(cm, rootDocument);
+            }
             data = DocumentContentUtils.getDocumentBytes(rootDocument);
         } catch (Exception e) {
             throw new IllegalArgumentException("Validation failed during XML transformation", e);
