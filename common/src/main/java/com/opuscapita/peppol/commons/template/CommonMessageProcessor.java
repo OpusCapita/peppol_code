@@ -53,7 +53,10 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
     }
 
     static void reportStatus(@NotNull ContainerMessage cm, @Nullable StatusReporter statusReporter) {
-        if (statusReporter != null && reportEnabled) {
+        if (!reportEnabled) {
+            return;
+        }
+        if (statusReporter != null) {
             statusReporter.report(cm);
         }
 
