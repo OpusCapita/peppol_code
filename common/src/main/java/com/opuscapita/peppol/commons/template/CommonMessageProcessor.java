@@ -25,6 +25,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
 
     private final StatusReporter statusReporter;
     private final ErrorHandler errorHandler;
+    private static boolean reportEnabled = true;
 
     private ContainerMessageConsumer containerMessageConsumer;
 
@@ -52,7 +53,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
     }
 
     static void reportStatus(@NotNull ContainerMessage cm, @Nullable StatusReporter statusReporter) {
-        if (statusReporter != null) {
+        if (statusReporter != null && reportEnabled) {
             statusReporter.report(cm);
         }
 
@@ -63,7 +64,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
                 throw new IllegalStateException("Processing info is missing from container message");
             }
         } catch (Exception e) {
-            logger.error("Failed to report message status: " + e.getMessage());
+            logger.error("Failed to report message status: " + e.getMessage(), e);
         }
     }
 
@@ -79,7 +80,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
         }
 
         try {
-            if (statusReporter != null) {
+            if (statusReporter != null && reportEnabled) {
                 statusReporter.reportError(cm, e);
             }
         } catch (Exception weird) {
@@ -87,4 +88,8 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
         }
     }
 
+    @Override
+    public void setReportEnabled(boolean enabled) {
+        reportEnabled = enabled;
+    }
 }

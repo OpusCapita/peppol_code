@@ -53,6 +53,7 @@ public class EmailNotificatorApp {
     @Bean
     MessageListenerAdapter listenerAdapter(@NotNull CommonMessageReceiver receiver) {
         receiver.setContainerMessageConsumer(controller::processMessage);
+        receiver.setReportEnabled(false);
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 

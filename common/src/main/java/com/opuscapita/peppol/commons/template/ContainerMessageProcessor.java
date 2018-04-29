@@ -10,4 +10,6 @@ public interface ContainerMessageProcessor {
     void process(@NotNull ContainerMessage cm);
 
     default void setContainerMessageConsumer(ContainerMessageConsumer controller) {}
+
+    default void setReportEnabled(boolean enabled) {}
 }
