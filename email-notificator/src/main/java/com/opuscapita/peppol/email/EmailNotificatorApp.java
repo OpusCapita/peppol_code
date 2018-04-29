@@ -1,20 +1,18 @@
 package com.opuscapita.peppol.email;
 
-import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
-import com.opuscapita.peppol.commons.errors.ErrorHandler;
-import com.opuscapita.peppol.commons.template.AbstractQueueListener;
+import com.opuscapita.peppol.commons.template.CommonMessageReceiver;
 import com.opuscapita.peppol.email.controller.EmailController;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.email"})
@@ -23,9 +21,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class EmailNotificatorApp {
     @Value("${peppol.component.name}")
     private String componentName;
-
     @Value("${peppol.email-notificator.queue.in.name}")
     private String queueName;
+
+    private final EmailController controller;
+
+    @Autowired
+    public EmailNotificatorApp(@NotNull @Lazy EmailController controller) {
+        this.controller = controller;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(EmailNotificatorApp.class, args);
@@ -42,20 +46,14 @@ public class EmailNotificatorApp {
         return container;
     }
 
+    /*
+        1. Controller stores message in files or appends to existing files for this recipient.
+        2. Sender checks for files and sends those out, then deletes files.
+     */
     @Bean
-    MessageListenerAdapter listenerAdapter(AbstractQueueListener receiver) {
+    MessageListenerAdapter listenerAdapter(@NotNull CommonMessageReceiver receiver) {
+        receiver.setContainerMessageConsumer(controller::processMessage);
         return new MessageListenerAdapter(receiver, "receiveMessage");
-    }
-
-    @Bean
-    AbstractQueueListener queueListener(@Nullable ErrorHandler errorHandler, @NotNull EmailController controller,
-                                        @NotNull ContainerMessageSerializer serializer) {
-        return new AbstractQueueListener(errorHandler, null, serializer) {
-            @Override
-            protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
-                controller.processMessage(cm);
-            }
-        };
     }
 
 }

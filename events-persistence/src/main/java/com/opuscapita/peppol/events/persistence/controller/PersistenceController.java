@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.events.persistence.controller;
 
 
+import com.opuscapita.peppol.commons.container.document.ApInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.*;
@@ -61,7 +62,7 @@ public class PersistenceController {
     @Value("${peppol.events-persistence.invalid.dir}")
     private String invalidDirPath;
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaInjectionPointsAutowiringInspection"})
     @Autowired
     public PersistenceController(
             AccessPointRepository accessPointRepository,
@@ -198,7 +199,7 @@ public class PersistenceController {
 
     }
 
-    protected void addReprocessInfo(FileInfo fileInfo) throws InterruptedException {
+    private void addReprocessInfo(FileInfo fileInfo) {
         ReprocessFileInfo reprocessFileInfo = new ReprocessFileInfo();
         reprocessFileInfo.setReprocessedFile(fileInfo);
         reprocessFileInfo.setTimestamp(new Timestamp(System.currentTimeMillis()));
@@ -212,8 +213,8 @@ public class PersistenceController {
         //System.out.println("Sanity check for reprocess info size: " + fileInfo.getReprocessInfo().size());
     }
 
-    @Retryable(include = DataIntegrityViolationException.class, maxAttempts = 5, backoff = @Backoff(1000L))
-    public void addErrorFileInfo(FileInfo fileInfo, PeppolEvent peppolEvent, boolean invalid) throws Exception {
+    @Retryable(include = DataIntegrityViolationException.class, maxAttempts = 5, backoff = @Backoff())
+    private void addErrorFileInfo(FileInfo fileInfo, PeppolEvent peppolEvent, boolean invalid) {
         FailedFileInfo failedFileInfo = new FailedFileInfo();
         failedFileInfo.setTimestamp(new Timestamp(System.currentTimeMillis()));
         System.out.println("Trying to save error for: " + fileInfo.getId());
@@ -306,7 +307,7 @@ public class PersistenceController {
     }
 
     @NotNull
-    public Message getOrCreateMessage(@NotNull PeppolEvent peppolEvent) {
+    private Message getOrCreateMessage(@NotNull PeppolEvent peppolEvent) {
         long start = System.nanoTime();
         Message message = fetchMessageByPeppolEvent(peppolEvent.getInvoiceId(), peppolEvent.getSenderName(), peppolEvent.getSenderId());
         long end = System.nanoTime();
@@ -354,7 +355,7 @@ public class PersistenceController {
     }
 
     @Nullable
-    public Message fetchMessageByPeppolEvent(String invoiceId, String senderName, String senderId) {
+    private Message fetchMessageByPeppolEvent(String invoiceId, String senderName, String senderId) {
         try {
             long start = System.nanoTime();
             Customer customer = dataLoadService.getOrCreateCustomer(senderId, senderName);
@@ -392,7 +393,7 @@ public class PersistenceController {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
+    private AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
         AccessPoint accessPoint = null;
         if (peppolEvent.getCommonName() != null) {
             ApInfo apInfo = ApInfo.parseFromCommonName(peppolEvent.getCommonName());

@@ -1,14 +1,14 @@
-package com.opuscapita.peppol.events.persistence.controller;
+package com.opuscapita.peppol.commons.container.document;
 
 /**
  * Created by bambr on 17.12.7.
  */
 public class ApInfo {
-    String id;
-    String name;
-    String country;
+    private String id;
+    private String name;
+    private String country;
 
-    public ApInfo(String id, String name, String country) {
+    private ApInfo(String id, String name, String country) {
         this.id = id;
         this.name = name;
         this.country = country;
@@ -22,8 +22,8 @@ public class ApInfo {
         if (parts.length == 1) {
             id = commonName;
         } else {
-            for (int i = 0; i < parts.length; i++) {
-                String[] keyValue = parts[i].split("=");
+            for (String part : parts) {
+                String[] keyValue = part.split("=");
                 switch (keyValue[0]) {
                     case "CN":
                         id = keyValue[1];

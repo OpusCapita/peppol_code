@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.email.sender;
+package com.opuscapita.peppol.email.send;
 
 import org.junit.Test;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class EmailSenderTest {
 
     @Test
-    public void getRecipients() throws Exception {
+    public void getRecipients() {
         EmailSender es = new EmailSender(mock(JavaMailSender.class));
 
         String[] result = es.getRecipients("test@test.a");
