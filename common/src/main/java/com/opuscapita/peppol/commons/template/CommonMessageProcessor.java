@@ -25,7 +25,6 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
 
     private final StatusReporter statusReporter;
     private final ErrorHandler errorHandler;
-    private static boolean reportEnabled = true;
 
     private ContainerMessageConsumer containerMessageConsumer;
 
@@ -53,9 +52,6 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
     }
 
     static void reportStatus(@NotNull ContainerMessage cm, @Nullable StatusReporter statusReporter) {
-        if (!reportEnabled) {
-            return;
-        }
         if (statusReporter != null) {
             statusReporter.report(cm);
         }
@@ -83,7 +79,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
         }
 
         try {
-            if (statusReporter != null && reportEnabled) {
+            if (statusReporter != null) {
                 statusReporter.reportError(cm, e);
             }
         } catch (Exception weird) {
@@ -91,8 +87,4 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
         }
     }
 
-    @Override
-    public void setReportEnabled(boolean enabled) {
-        reportEnabled = enabled;
-    }
 }

@@ -79,8 +79,4 @@ public class CommonMessageReceiver {
         this.processor.setContainerMessageConsumer(consumer);
     }
 
-    public void setReportEnabled(boolean enabled) {
-        this.processor.setReportEnabled(enabled);
-    }
-
 }
