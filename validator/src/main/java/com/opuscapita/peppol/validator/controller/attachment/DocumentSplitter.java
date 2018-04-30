@@ -52,12 +52,6 @@ public class DocumentSplitter {
      * @return the original file split to two parts - SBDH and document body
      */
     public DocumentSplitterResult split(@NotNull ContainerMessage cm) throws IOException, XMLStreamException {
-        if (cm.getDocumentInfo() == null) {
-            throw new IllegalArgumentException("No document info provided");
-        }
-        if (cm.getDocumentInfo().getRootNodeName() == null) {
-            throw new IllegalArgumentException("Root node name is missing from the message");
-        }
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             return split(inputStream, cm.getDocumentInfo().getRootNodeName());
         }

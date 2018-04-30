@@ -19,7 +19,9 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Sergejs.Roze
@@ -54,6 +56,7 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
             return cm;
         }
 
+        checkForDocumentRoot(cm);
         DocumentSplitterResult parts = splitter.split(cm);
 
         cm = headerValidator.validate(parts.getSbdh(), cm);
@@ -62,6 +65,23 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
             cm.addError(parts.getAttachmentError().toDocumentError(endpoint));
         }
 
+        //Svefaktura1 ObjectEnvelope parsing for the case when double SBDH wrap is applied
+        if(cm.getDocumentInfo().getDocumentType().equals("InvoiceWithObjectEnvelope")) {
+            try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
+                parts = splitter.split(inputStream, "ObjectEnvelope");
+                cm = bodyValidator.validate(parts.getDocumentBody(), cm, endpoint);
+            }
+        }
+
         return cm;
+    }
+
+    protected void checkForDocumentRoot(@NotNull ContainerMessage cm) {
+        if (cm.getDocumentInfo() == null) {
+            throw new IllegalArgumentException("No document info provided");
+        }
+        if (cm.getDocumentInfo().getRootNodeName() == null) {
+            throw new IllegalArgumentException("Root node name is missing from the message");
+        }
     }
 }

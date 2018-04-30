@@ -53,7 +53,7 @@ peppol:
   validation:
     consume-queue: validator
     respond-queue: validator-out
-    difi.enabled: true
+    difi.enabled: false
 
 # validation artifacts
     artifacts:
