@@ -44,7 +44,7 @@
     dest: "/tmp/system-tests-tmp/{{ file | basename }}-{{ uuid }}.xml"
 
 - name: send file via script to inbound module
-  shell: docker run -i --network peppol_back -v /tmp:/tmp -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f "/tmp/system-tests-tmp/{{ file|basename }}-{{ uuid }}.xml" -u http://inbound:8080/peppol-ap-inbound/as2
+  shell: docker run --rm -i --network peppol_back -v /tmp:/tmp -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f "/tmp/system-tests-tmp/{{ file|basename }}-{{ uuid }}.xml" -u http://inbound:8080/peppol-ap-inbound/as2
 #  shell: docker run -i --network peppol_back -v /test-materials:/test-materials -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f "{{ file }}" -u http://inbound:8080/peppol-ap-inbound/as2
 #inbound to swarm makes this obsolite->  shell: docker exec inbound ./send-to-peppol.sh -f "{{file}}"
   register: inbound_output
