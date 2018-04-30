@@ -1,5 +1,6 @@
-package com.opuscapita.peppol.email.sender;
+package com.opuscapita.peppol.email.send;
 
+import com.opuscapita.peppol.email.model.CombinedEmail;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -24,13 +25,17 @@ public class EmailSender {
 
     private final JavaMailSender mailSender;
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @SuppressWarnings({"SpringJavaAutowiringInspection", "SpringJavaInjectionPointsAutowiringInspection"})
     @Autowired
     public EmailSender(@NotNull JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
-    void sendMessage(@NotNull String to, @NotNull String subject, @NotNull String body) {
+    void sendMessage(@NotNull CombinedEmail combinedEmail) {
+        sendMessage(combinedEmail.getRecipients(), combinedEmail.getCombinedSubject(), combinedEmail.getCombinedBody());
+    }
+
+    private void sendMessage(@NotNull String to, @NotNull String subject, @NotNull String body) {
         String[] recipients;
         String delivered;
         if (StringUtils.isNotBlank(testRecipient)) {

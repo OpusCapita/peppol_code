@@ -1,10 +1,9 @@
-package com.opuscapita.peppol.email.controller;
+package com.opuscapita.peppol.email.prepare;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,18 +15,22 @@ import java.util.List;
  *
  * @author Sergejs.Roze
  */
-@Component
+@SuppressWarnings("WeakerAccess")
 public class BodyFormatter {
 
+    public static String getTicketHeader() {
+        return "The following e-mail was automatically created and sent:\n";
+    }
+
     @NotNull
-    String format(@NotNull ContainerMessage cm) {
+    public static String format(@NotNull ContainerMessage cm) {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Container message has no document set");
         }
         return formatDocument(cm) + formatErrors(cm);
     }
 
-    private String formatErrors(ContainerMessage cm) {
+    private static String formatErrors(ContainerMessage cm) {
         StringBuilder result = new StringBuilder();
         List<String> errorList = collectErrors(cm);
 
@@ -44,7 +47,7 @@ public class BodyFormatter {
         return result.toString();
     }
 
-    private List<String> collectErrors(ContainerMessage cm) {
+    private static List<String> collectErrors(ContainerMessage cm) {
         List<String> errors = new ArrayList<>();
         String errorText;
         if (cm.getProcessingInfo()!= null && (errorText = cm.getProcessingInfo().getProcessingException()) != null) {
@@ -58,7 +61,7 @@ public class BodyFormatter {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private String formatDocument(ContainerMessage cm) {
+    private static String formatDocument(ContainerMessage cm) {
         DocumentInfo doc = cm.getDocumentInfo();
 
         String result = "\n********************************************************************************";
@@ -73,6 +76,13 @@ public class BodyFormatter {
         }
 
         return result;
+    }
+
+    public static String getHeader() {
+        return "This is an automatically redirected electronic invoice rejection message:\n\n" +
+                "The following PEPPOL invoice(s) have been rejected by the operator (see Subject).\n\n" +
+                "Please correct invoice(s) and resend.\n\n" +
+                "If you have any questions concerning the rejection, please reply directly to this e-mail.";
     }
 
 }
