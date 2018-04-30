@@ -46,7 +46,7 @@
 - name: send file via script to inbound module
   become: "{{sudo}}"
   become_user: "{{user}}"
-  shell: docker run -i --network peppol_back -v /tmp:/tmp -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f "/tmp/system-tests-tmp/{{ file|basename }}-{{ uuid }}.xml" -u http://inbound:8080/peppol-ap-inbound/as2
+  shell: docker run --rm -i --network peppol_back -v /tmp:/tmp -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f "/tmp/system-tests-tmp/{{ file|basename }}-{{ uuid }}.xml" -u http://inbound:8080/peppol-ap-inbound/as2
   register: inbound_output
 - set_fact: file="{{file}}"
 - name: file that was sent to inbound
