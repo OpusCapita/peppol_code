@@ -112,8 +112,9 @@ catch(e) {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*'
                 }
+            }
             }
         }
     }
