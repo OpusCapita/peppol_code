@@ -71,24 +71,24 @@ catch(e) {
     throw e
 }
     node {
-        lock(resource: 'peppol-stage-servers') {
-            milestone 1
-            stage('Smoke Tests') {
-                try {
-                    dir('infra/ap2/ansible') {
-                        ansiblePlaybook('smoke-tests.yml', 'environments/stage/hosts', 'ansible-sudo', "peppol_version=latest")
-                    }
-                }
-                catch(e) {
-                    failBuild(
-                        "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'System-tests: Smoke tests have failed. Check the log for details.'
-                    )
-                }
-                finally {
-                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
-                }
-            }
+//        lock(resource: 'peppol-stage-servers') {
+//            milestone 1
+//            stage('Smoke Tests') {
+//                try {
+//                    dir('infra/ap2/ansible') {
+//                        ansiblePlaybook('smoke-tests.yml', 'environments/stage/hosts', 'ansible-sudo', "peppol_version=latest")
+//                    }
+//               }
+//                catch(e) {
+//                    failBuild(
+//                       "${recipients.testers}, ${infra_author}, ${code_author}",
+//                        'System-tests: Smoke tests have failed. Check the log for details.'
+//                    )
+//               }
+//                finally {
+//                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
+//                }
+//            }
             milestone 2
             stage('System Tests') {
                 try {
@@ -116,7 +116,7 @@ catch(e) {
                 }
             }
             }
-        }
+//        }
     }
 
 /**
