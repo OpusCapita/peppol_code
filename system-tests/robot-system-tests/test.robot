@@ -37,7 +37,7 @@ Inbound flow runs
 
 Send EHF_profile-bii05_invoice to inbound
     Log     modified file name: ${file}     console=true
-    ${inbound_result}=     Run Process    docker run -i --network peppol_back -v /tmp:/tmp -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f ${file} -u http://inbound:8080/peppol-ap-inbound/as2    shell=true    stdout=inbound_log
+    ${inbound_result}=     Run Process    docker run --rm -i --network peppol_back -v /tmp:/tmp -v /peppol:/peppol d-l-tools.ocnet.local:443/peppol2.0/inbound:latest ./send-to-peppol.sh -f ${file} -u http://inbound:8080/peppol-ap-inbound/as2    shell=true    stdout=inbound_log
     Log   Inbound output: ${inbound_result.stdout}
     Set Global Variable   ${inbound_log}    ${inbound_result.stdout}
     Log   Inbound log variable: ${inbound_log}

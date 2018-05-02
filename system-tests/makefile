@@ -1,6 +1,8 @@
 #robot-system-tests
-robot-system-tests-l:
-	ansible-playbook -i local.hosts -K run-robot.yml
+run-robot-l:
+	ansible-playbook -i local.hosts run-robot.yml
+run-robot-s:
+	ansible-playbook -i stage.hosts run-robot.yml
 #------------------------------------------------------------
 #file-prep
 file-prep-l:

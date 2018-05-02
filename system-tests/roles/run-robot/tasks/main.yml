@@ -26,26 +26,36 @@
 #Author: Martins Berzins
 #Date: 2018
 
-- name: copy Robot test to stage
-  become: "{{sudo}}"
-  become_user: "{{user}}"
+- name: create directories for Robot tests on remote machine
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /tmp/test-bin
+    - /tmp/test-resources    
+    - /tmp/test-reports
+    - /tmp/test-files
+
+- name: copy Robot test to remote target
+#  become: "{{sudo}}"
+#  become_user: "{{user}}"
   copy:
-    remote_src: True
-    src: /home/berzima1/git/peppol2.0/system-tests/robot-system-tests/test.robot
+#    remote_src: True
+    src: robot-system-tests/test.robot
     dest: /tmp/test-bin/test.robot
 
-- name: copy Robot test resources to stage
-  become: "{{sudo}}"
-  become_user: "{{user}}"
+- name: copy Robot test resources to remote target
+#  become: "{{sudo}}"
+#  become_user: "{{user}}"
   copy:
-    remote_src: True
-    src: /home/berzima1/git/peppol2.0/system-tests/robot-system-tests/resources/EHF_profile-bii05_invoice_OC.xml
+#    remote_src: True
+    src: robot-system-tests/resources/EHF_profile-bii05_invoice_OC.xml
     dest: /tmp/test-resources/EHF_profile-bii05_invoice_OC.xml
 
 - name: Run Robot Framework test
-  become: "{{sudo}}"
-  become_user: "{{user}}"
-  delegate_to: localhost
+#  become: "{{sudo}}"
+#  become_user: "{{user}}"
+#  delegate_to: localhost
   shell: robot --NoStatusRC --output /tmp/test-reports/output.xml --log /tmp/test-reports/log.html --report /tmp/test-reports/report.html /tmp/test-bin/test.robot
   register: report
 
