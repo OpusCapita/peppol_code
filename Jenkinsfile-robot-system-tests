@@ -67,7 +67,7 @@ try {
 }
 catch(e) {
     echo e.toString()
-    emailNotify('', "System-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
+    emailNotify('', "Robot System-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
     throw e
 }
     node {
@@ -90,7 +90,7 @@ catch(e) {
 //                }
 //            }
             milestone 2
-            stage('System Tests') {
+            stage('Robot Framework System Tests') {
                 try {
                     dir('src/system-tests') {
                         parallel(
@@ -117,7 +117,7 @@ catch(e) {
             }
             }
 //        }
-    }
+//    }
 
 /**
  * Stages
