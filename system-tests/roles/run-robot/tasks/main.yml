@@ -56,16 +56,10 @@
 - name: debug report
   debug: var=report
 
-
-
 - name: collect smoke-tests results
 #  become: yes
   become_user: peppol
   fetch:
     src=/tmp/test-reports/report.html dest={{ report_path }}/reports/
     flat=yes fail_on_missing=yes
-
-- debug: var=smoke_tests_container
-  when: "{{ smoke_tests_container.status|default(0) }}"
-
 ...
