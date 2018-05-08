@@ -112,7 +112,7 @@ catch(e) {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'robot-system-tests/src/system-tests/reports/*.html'
+                    archiveArtifacts artifacts: '$PWD/reports/*.html'
                 }
             }
             }
