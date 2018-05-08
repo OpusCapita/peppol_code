@@ -60,6 +60,6 @@
 #  become: yes
   become_user: peppol
   fetch:
-    src=/tmp/test-reports/report.html dest={{ report_path }}/reports/
+    src=/tmp/test-reports/report.html dest={{ report_path }}/
     flat=yes fail_on_missing=yes
 ...

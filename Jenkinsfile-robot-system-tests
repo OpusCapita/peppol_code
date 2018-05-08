@@ -96,11 +96,11 @@ catch(e) {
                         parallel(
                             "outbound-tests": { ansiblePlaybook(
                                 'run-robot.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
+                                'report_path=$PWD/'
                             )},
                             "inbound-tests": { ansiblePlaybook(
                                 'run-robot.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
+                                'report_path=$PWD/'
                             )}
                         )                    
                     }   
@@ -112,7 +112,7 @@ catch(e) {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*'
+                    archiveArtifacts artifacts: 'src/system-tests/*'
                 }
             }
             }
