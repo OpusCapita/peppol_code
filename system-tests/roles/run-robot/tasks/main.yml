@@ -55,6 +55,8 @@
 
 - name: debug report
   debug: var=report
+- name: debug report_path
+  debug: var=report_path
 
 - name: collect robot-system-tests results
 #  become_user: peppol
