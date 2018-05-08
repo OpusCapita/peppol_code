@@ -96,11 +96,11 @@ catch(e) {
                         parallel(
                             "outbound-tests": { ansiblePlaybook(
                                 'run-robot.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
+                                'report_path=reports/'
                             )},
                             "inbound-tests": { ansiblePlaybook(
                                 'run-robot.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
+                                'report_path=reports/'
                             )}
                         )                    
                     }   
