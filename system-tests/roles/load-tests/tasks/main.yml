@@ -89,8 +89,9 @@
 
 - name: stop validator
   shell: docker service scale peppol_validator=0
+
 - name: stop preprocessing
-  shell: docker stop preprocessing
+  shell: docker service scale peppol_preprocessing=0
 
 - name: wait for validator to stop
   pause: 
@@ -197,7 +198,7 @@
   when: logl.rc != 0
 
 - name: start preprocessing
-  shell: docker start preprocessing
+  shell: docker service scale peppol_preprocessing=1
 
 - name: calculate processing time
   set_fact: proc_time="{{ ((last_timestamp | to_datetime) - (first_timestamp | to_datetime)).seconds }}"
