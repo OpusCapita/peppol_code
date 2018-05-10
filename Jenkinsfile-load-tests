@@ -153,6 +153,27 @@ try {
                     archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
                 }
             }
+            milestone 6
+            stage('Cleaning') {
+                try {
+                    dir('src/system-tests') {
+                        retry(5) {
+                            ansiblePlaybook(
+                                'cleaner.yml', 'stage.hosts', 'ansible-sudo'
+                            )
+                        }
+                    }
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'System-tests: Cleaning has failed!'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.csv'
+                }
+            }
         }
     }
 }
