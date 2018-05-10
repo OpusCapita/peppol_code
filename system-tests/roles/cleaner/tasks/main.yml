@@ -56,7 +56,6 @@
 
 - name: start validator with 2 instances
   shell: docker service scale peppol_validator=2
-- name: start preprocessing
-  shell: docker start preprocessing
-
+- name: start preprocessing with 2 instances
+  shell: docker service scale peppol_preprocessing=2
 ...
