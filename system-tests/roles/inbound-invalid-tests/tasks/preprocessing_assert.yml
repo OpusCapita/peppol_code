@@ -1,7 +1,9 @@
 ---
 - name: get preprocessing log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found
   ignore_errors: yes
-  shell: docker logs preprocessing | grep "{{ transmissionId }}"
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  shell: grep "{{ transmissionId }}" /peppol/logs/preprocessing/*.log
   register: log
   until: log.stdout | search("Input file.*"+transmissionId)
   retries: 60

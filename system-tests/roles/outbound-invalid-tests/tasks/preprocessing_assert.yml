@@ -1,12 +1,9 @@
 ---
-#- set_fact: uuid=c1a2601b-148e-5c23-80d7-b6ffeaa259ff
-#- debug: var=uuid
-#- set_fact: file=file
-#- debug: var=file
-
 - name: get preprocessing log & check if uuid "{{ uuid }}" for "{{ file }}" is found
   ignore_errors: yes
-  shell: docker logs preprocessing | grep "{{ uuid }}"
+  become: "{{sudo}}"
+  become_user: "{{user}}"
+  shell: grep "{{ uuid }}" /peppol/logs/preprocessing/*.log
   register: log
   until: log.stdout | search("Input file.*"+uuid)
   retries: 60
