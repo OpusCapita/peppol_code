@@ -90,10 +90,12 @@ public class DirectoryChecker extends ValuesChecker {
                     String message = "Failed to send e-mail generated from " + next.getAbsolutePath();
                     logger.error(message, e);
                     errorHandler.reportWithoutContainerMessage(combinedEmail.getCustomerId(), e, message, next.getAbsolutePath(), next.getAbsolutePath());
+                    backup(next, combinedEmail.getSenderId(), combinedEmail.getRecipientId());
                     continue;
                 }
 
                 if (combinedEmail.isCreateTicket()) {
+                    logger.info("Creating ticket about successfully sent e-mail for " + next.getAbsolutePath());
                     errorHandler.reportWithoutContainerMessage(combinedEmail.getCustomerId(), null, BodyFormatter.getTicketHeader(),
                             next.getAbsolutePath(), next.getAbsolutePath(), combinedEmail.getCombinedBody());
                 }
@@ -112,10 +114,6 @@ public class DirectoryChecker extends ValuesChecker {
             logger.error(message, e);
             errorHandler.reportWithoutContainerMessage(null, e, message, file.getAbsolutePath(), file.getAbsolutePath());
         }
-    }
-
-    void setDirectory(@NotNull String directory) {
-        this.directory = directory;
     }
 
 }

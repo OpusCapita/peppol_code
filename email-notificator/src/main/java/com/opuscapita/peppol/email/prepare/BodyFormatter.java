@@ -82,7 +82,7 @@ public class BodyFormatter {
         return "This is an automatically redirected electronic invoice rejection message:\n\n" +
                 "The following PEPPOL invoice(s) have been rejected by the operator (see Subject).\n\n" +
                 "Please correct invoice(s) and resend.\n\n" +
-                "If you have any questions concerning the rejection, please reply directly to this e-mail.";
+                "If you have any questions concerning the rejection, please reply directly to this e-mail.\n\n";
     }
 
 }

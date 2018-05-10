@@ -14,7 +14,7 @@ recipients = [:]
 recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
 recipients.devops = "Didrihsons Edgars <Edgars.Didrihsons@opuscapita.com>"
 recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
-recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@posti.com>"
 
 
 import java.util.regex.*
@@ -67,7 +67,7 @@ try {
 }
 catch(e) {
     echo e.toString()
-    emailNotify('', "System-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
+    emailNotify('', "Robot System-tests: Unexpected error has occured. Check the log for details.\n${e}\n")
     throw e
 }
     node {
@@ -90,17 +90,17 @@ catch(e) {
 //                }
 //            }
             milestone 2
-            stage('System Tests') {
+            stage('Robot Framework System Tests') {
                 try {
                     dir('src/system-tests') {
                         parallel(
                             "outbound-tests": { ansiblePlaybook(
                                 'run-robot.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
+                                'report_path=reports/'
                             )},
                             "inbound-tests": { ansiblePlaybook(
                                 'run-robot.yml', 'stage.hosts', 'ansible-sudo',
-                                'report_path=$PWD/reports/'
+                                'report_path=reports/'
                             )}
                         )                    
                     }   
@@ -112,12 +112,12 @@ catch(e) {
                     )
                 }
                 finally {
-                    archiveArtifacts artifacts: 'src/system-tests/reports/*'
+                    archiveArtifacts artifacts: 'src/system-tests/reports/*.html'
                 }
             }
             }
 //        }
-    }
+//    }
 
 /**
  * Stages

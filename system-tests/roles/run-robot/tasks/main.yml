@@ -37,28 +37,30 @@
     - /tmp/test-files
 
 - name: copy Robot test to remote target
-#  become: "{{sudo}}"
-#  become_user: "{{user}}"
+  become_user: peppol
   copy:
-#    remote_src: True
     src: robot-system-tests/test.robot
     dest: /tmp/test-bin/test.robot
 
 - name: copy Robot test resources to remote target
-#  become: "{{sudo}}"
-#  become_user: "{{user}}"
+  become_user: peppol
   copy:
-#    remote_src: True
     src: robot-system-tests/resources/EHF_profile-bii05_invoice_OC.xml
     dest: /tmp/test-resources/EHF_profile-bii05_invoice_OC.xml
 
 - name: Run Robot Framework test
-#  become: "{{sudo}}"
-#  become_user: "{{user}}"
-#  delegate_to: localhost
+  become_user: peppol
   shell: robot --NoStatusRC --output /tmp/test-reports/output.xml --log /tmp/test-reports/log.html --report /tmp/test-reports/report.html /tmp/test-bin/test.robot
   register: report
 
 - name: debug report
   debug: var=report
+- name: debug report_path
+  debug: var=report_path
+
+- name: collect robot-system-tests results
+#  become_user: peppol
+  fetch:
+    src=/tmp/test-reports/report.html dest={{ report_path }}/
+    flat=yes fail_on_missing=yes
 ...
