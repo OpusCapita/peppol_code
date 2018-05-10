@@ -80,7 +80,8 @@ public class ExtendedMessageRepository extends SimpleMessageRepository {
             new InboundMessageSender(properties).send(cm);
         } catch (Exception e) {
             logger.error("Failed to report file " + dataFile + " to MQ: ", e);
-            errorHandler.report("Failed to report received file to message queue", e.getMessage(), metadata.getRecipientId().toString());
+            String transmissionId = metadata.getTransmissionId().toString();
+            errorHandler.report("Failed to report received file with transmission id " + transmissionId +" to message queue", e.getMessage() + (metadataString != null ? metadataString : metadata.toString()), metadata.getRecipientId().toString());
             if (metadataString != null) {
                 logger.error("Metadata dump: " + metadataString);
             }
