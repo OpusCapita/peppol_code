@@ -2,6 +2,7 @@ package com.opuscapita.peppol.validator.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.validator.controller.attachment.DocumentSplitter;
 import com.opuscapita.peppol.validator.controller.attachment.DocumentSplitterResult;
@@ -22,6 +23,10 @@ import javax.xml.transform.TransformerException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Sergejs.Roze
@@ -59,20 +64,50 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
         checkForDocumentRoot(cm);
         DocumentSplitterResult parts = splitter.split(cm);
 
-        cm = headerValidator.validate(parts.getSbdh(), cm);
-        cm = bodyValidator.validate(parts.getDocumentBody(), cm, endpoint);
-        if (parts.getAttachmentError() != null) {
-            cm.addError(parts.getAttachmentError().toDocumentError(endpoint));
-        }
 
+        cm = headerValidator.validate(parts.getSbdh(), cm);
+        System.out.println("SBDH validation errors(" + cm.getDocumentInfo().getErrors().size() + "): " + cm.getDocumentInfo().getErrors().stream().map(documentError -> "\t" + documentError.toString()).collect(Collectors.joining("\n")));
         //Svefaktura1 ObjectEnvelope parsing for the case when double SBDH wrap is applied
-        if(cm.getDocumentInfo().getDocumentType().equals("InvoiceWithObjectEnvelope")) {
-            try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
-                parts = splitter.split(inputStream, "ObjectEnvelope");
-                cm = bodyValidator.validate(parts.getDocumentBody(), cm, endpoint);
+        if (cm.getDocumentInfo().getDocumentType().equals("InvoiceWithObjectEnvelope")) {
+            Map<String, DocumentError> knownErrorsToBeParoled = new HashMap<String, DocumentError>() {
+                {
+                    put("Invalid content was found starting with element 'sh:StandardBusinessDocument'", null);
+                    put("Cannot find the declaration of element 'Invoice'", null);
+                    put("Cannot find the declaration of element 'ObjectEnvelope'", null);
+                }
+            };
+            cm = validateForDocumentRoot(cm, endpoint, "Invoice");
+            System.out.println("SBDH and Invoice validation errors(" + cm.getDocumentInfo().getErrors().size() + "): " + cm.getDocumentInfo().getErrors().stream().map(documentError -> "\t" + documentError.toString()).collect(Collectors.joining("\n")));
+            cm = validateForDocumentRoot(cm, endpoint, "ObjectEnvelope");
+            System.out.println("SBDH and Invoice and ObjectEnvelope validation errors(" + cm.getDocumentInfo().getErrors().size() + "): " + cm.getDocumentInfo().getErrors().stream().map(documentError -> "\t" + documentError.toString()).collect(Collectors.joining("\n")));
+            Iterator<DocumentError> documentErrorIterator = cm.getDocumentInfo().getErrors().iterator();
+            while (documentErrorIterator.hasNext()) {
+                DocumentError error = documentErrorIterator.next();
+                knownErrorsToBeParoled.keySet().forEach(knownError -> {
+                    if(error.getMessage().contains(knownError)) {
+                        knownErrorsToBeParoled.put(knownError, error);
+                        documentErrorIterator.remove();
+                    }
+                });
+            }
+        } else {
+            cm = bodyValidator.validate(parts.getDocumentBody(), cm, endpoint);
+            if (parts.getAttachmentError() != null) {
+                cm.addError(parts.getAttachmentError().toDocumentError(endpoint));
             }
         }
 
+
+        return cm;
+    }
+
+    @NotNull
+    protected ContainerMessage validateForDocumentRoot(@NotNull ContainerMessage cm, @NotNull Endpoint endpoint, String rootName) throws IOException, XMLStreamException, ParserConfigurationException, SAXException, TransformerException {
+        DocumentSplitterResult parts;
+        try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
+            parts = splitter.split(inputStream, rootName);
+            cm = bodyValidator.validate(parts.getDocumentBody(), cm, endpoint);
+        }
         return cm;
     }
 
