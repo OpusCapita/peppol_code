@@ -67,13 +67,14 @@ public class ValidationControllerTest {
     @Test
     @Ignore("Debug only")
     public void testSingleFile() throws Exception {
-        processFile(new File("/home/redis/work/current-peppol/validator/src/test/resources/test-materials/cases/chernobyl.xml"));
+        processFile(new File("/home/redis/work/peppol2.0/validator/out/test/resources/test-materials/peppol-bis/catalogue/svekatalog_small.xml"));
     }
 
     @SuppressWarnings("ConstantConditions")
     private void processFile(@NotNull File file) throws Exception {
         List<String> expected = getExpected(file);
 
+        System.out.println("TESTING: " + file.getAbsolutePath());
         ContainerMessage cm = loadDocument(file.getAbsolutePath());
         cm = controller.validate(cm, Endpoint.TEST);
 
@@ -123,7 +124,7 @@ public class ValidationControllerTest {
     private boolean compare(@NotNull ContainerMessage cm, @NotNull List<String> expected) {
         boolean passed = true;
         for (DocumentError de : cm.getDocumentInfo().getErrors()) {
-            assertNotNull(de.getValidationError());
+            assertNotNull("Check that it is validation error, not some other", de.getValidationError());
             String line = "E: " +
                     (de.getValidationError() == null ? "null" : de.getValidationError().getIdentifier());
             if (expected.contains(line)) {
