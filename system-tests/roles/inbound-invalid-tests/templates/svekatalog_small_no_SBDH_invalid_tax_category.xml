@@ -5,6 +5,12 @@
 
                 Errors:
                 EUGEN-T19-R049
+
+                Warnings:
+                OP-T19-R014
+                OP-T19-R014
+                OP-T19-R015
+                OP-T19-R015
 -->
 	<Catalogue xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2 ../UBL%202.1%20schema/maindoc/UBL-Catalogue-2.1.xsd" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2">
 		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
