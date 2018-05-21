@@ -1,3 +1,8 @@
+#MCI robot
+run-mci-l:
+	ansible-playbook -i edidev1.hosts run-mci.yml
+#------------------------------------------------------------
+#------------------------------------------------------------
 #robot-system-tests
 run-robot-l:
 	ansible-playbook -i local.hosts run-robot.yml
