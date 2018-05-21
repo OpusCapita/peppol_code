@@ -28,4 +28,5 @@
     - templates/EHF_profile-bii05_invoice_OC_zero_val_has_attachment.xml
     - templates/EHF_profile-bii05_invoice_OC_zero_val_has_attachment_new_line_padding.xml
     - templates/svefaktura_1_BasicInvoice_ObjectEnvelope_double_SBDH.XML
+    - templates/svekatalog_small.xml
 ...

@@ -26,4 +26,5 @@
 #    - templates/negative-sign-at-the-end.xml
 #    - templates/svefaktura_1_BasicInvoice_ObjectEnvelope_double_SBDH_missing_BuyerParty.xml
     - templates/svefaktura_1_BasicInvoice_ObjectEnvelope_double_SBDH_LineExtensionTotalAmount_invalid.xml
+    - templates/svekatalog_small_no_SBDH_invalid_tax_category.xml
 ...
