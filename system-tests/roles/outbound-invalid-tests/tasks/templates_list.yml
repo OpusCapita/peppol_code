@@ -21,4 +21,6 @@
     - templates/EHF_profile-bii05_invoice_invalid_attachment.xml
     - templates/EHF_profile-bii05_invoice_invalid_empty_attachment.xml
     - templates/negative-sign-at-the-end.xml
+    - templates/svefaktura_1_BasicInvoice_ObjectEnvelope_double_SBDH_missing_BuyerParty.xml
+    - templates/svefaktura_1_BasicInvoice_ObjectEnvelope_double_SBDH_LineExtensionTotalAmount_invalid.xml
 ...

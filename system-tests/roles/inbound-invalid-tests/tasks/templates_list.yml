@@ -6,22 +6,24 @@
   vars:
     file: "{{item}}"
   with_items:
-    - templates/EHF_profile-bii05_invoice_invalid.xml
-    - templates/Svefaktura2_profile-bii05_invoice.xml
-    - templates/EHF_profile-bii05_invoice_invalid_2.0.9.xml
-    - templates/EHF_profile-bii05_invoice_no_SBDH_invalid.xml
-    - templates/EHF_profile-bii05_invoice_OC_zero_values_structural-error.xml 
+#    - templates/EHF_profile-bii05_invoice_invalid.xml
+#    - templates/Svefaktura2_profile-bii05_invoice.xml
+#    - templates/EHF_profile-bii05_invoice_invalid_2.0.9.xml
+#    - templates/EHF_profile-bii05_invoice_no_SBDH_invalid.xml
+#    - templates/EHF_profile-bii05_invoice_OC_zero_values_structural-error.xml 
 #removed empty.xml until it is known how exactly it has to be handled
 #    - templates/empty.xml
 #add handling for fields that are rejected by Inbound!! ToDo!
 #    - templates/image_example.jpg.xml
-    - templates/peppol-bis-04-32307653-invalid-ProfileID.xml
-    - templates/EHF_profile-biixy-ver2.0-invoice.xml
-    - templates/unrecognized_document_type.xml
+#    - templates/peppol-bis-04-32307653-invalid-ProfileID.xml
+#    - templates/EHF_profile-biixy-ver2.0-invoice.xml
+#    - templates/unrecognized_document_type.xml
 #add handling for fields that are rejected by Inbound!! ToDo!
 #    - templates/random.xml
-    - templates/EHF_profile-bii05_invoice_invalid_attachment.xml
-    - templates/EHF_profile-bii05_invoice_invalid_attachment.xml
-    - templates/EHF_profile-bii05_invoice_invalid_empty_attachment.xml
-    - templates/negative-sign-at-the-end.xml
+#    - templates/EHF_profile-bii05_invoice_invalid_attachment.xml
+#    - templates/EHF_profile-bii05_invoice_invalid_attachment.xml
+#    - templates/EHF_profile-bii05_invoice_invalid_empty_attachment.xml
+#    - templates/negative-sign-at-the-end.xml
+#    - templates/svefaktura_1_BasicInvoice_ObjectEnvelope_double_SBDH_missing_BuyerParty.xml
+    - templates/svefaktura_1_BasicInvoice_ObjectEnvelope_double_SBDH_LineExtensionTotalAmount_invalid.xml
 ...
