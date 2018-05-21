@@ -1,0 +1,324 @@
+peppol:
+  validator:
+    rules:
+      map:
+        # Svefaktura1
+        - profile: "urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:BasicInvoice:1:0"
+          rules:
+            - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
+            - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
+        - profile: "urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0"
+          rules:
+            - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
+            - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
+        - profile: "urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope"
+          rules:
+            - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
+            - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
+            - "svefaktura1/maindoc/SFTI-ObjectEnvelope-1.0.xsd"
+        # SimplerInvoicing
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1"
+          rules:
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.1.xsl"
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1.x"
+          rules:
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.1.xsl"
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2"
+          rules:
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.2.xsl"
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2.x"
+          rules:
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.2.xsl"
+        # CEN BII Creditnote 1.0 (Profile 05)
+        - profile: "urn:www.cenbii.eu:profile:bii05:ver1.0###urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T14.xsl"
+            - "maindoc/UBL-CreditNote-2.1.xsd"
+        # PEPPOL BIS Creditnote 2.0 (Profile 05)
+        - profile: "urn:www.cenbii.eu:profile:bii05:ver2.0###urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0"
+          rules:
+            - "xsl/OPENPEPPOL-UBL-T14.xsl"
+            - "xsl/BIIRULES-UBL-T14.xsl"
+            - "maindoc/UBL-CreditNote-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T14.xsl"
+        # CEN BII Invoice 2.0 (Profile 04)
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+        # CEN BII Invoice 2.0 (Profile 05)
+        - profile: "urn:www.cenbii.eu:profile:bii05:ver1.0###urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+        # PEPPOL BIS Invoice 2.0 (Profile 04)
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0"
+          rules:
+            - "xsl/OPENPEPPOL-UBL-T10.xsl"
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T10.xsl"
+        # PEPPOL BIS Invoice 2.0 (Profile 05)
+        - profile: "urn:www.cenbii.eu:profile:bii05:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0"
+          rules:
+            - "xsl/OPENPEPPOL-UBL-T10.xsl"
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T10.xsl"
+        # PEPPOL BIS Despatch Advice 2.0 (Profile 30)
+        - profile: "urn:www.cenbii.eu:profile:bii30:ver2.0###urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T16.xsl"
+            - "xsl/OPENPEPPOL-UBL-T16.xsl"
+            - "maindoc/UBL-DespatchAdvice-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T16.xsl"
+        # PEPPOL BIS Catalogue 2.0 (Profile 01)
+        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T19.xsl"
+            - "xsl/OPENPEPPOL-UBL-T19.xsl"
+            - "maindoc/UBL-Catalogue-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T19.xsl"
+            - "xsl/OPENPEPPOL-UBL-T19.xsl"
+            - "maindoc/UBL-Catalogue-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+        # PEPPOL BIS Catalogue Response 2.0 (Profile 01)
+        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0###urn:www.cenbii.eu:transaction:biitrns058:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T58.xsl"
+            - "xsl/OPENPEPPOL-UBL-T58.xsl"
+            - "maindoc/UBL-ApplicationResponse-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T58.xsl"
+        # PEPPOL BIS Punch Out 1.0 (Profile 18)
+        - profile: "urn:www.cenbii.eu:profile:bii18:ver1.0###urn:www.cenbii.eu:transaction:biitrns077:ver2.0:extended:www.peppol.eu:bis:peppol18a:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T77.xsl"
+            - "xsl/OPENPEPPOL-UBL-T77.xsl"
+            - "maindoc/UBL-Catalogue-2.1.xsd"
+        # PEPPOL BIS Order 2.0 (Profile 03)
+        - profile: "urn:www.cenbii.eu:profile:bii03:ver2.0###urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol03a:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T01.xsl"
+            - "xsl/OPENPEPPOL-UBL-T01.xsl"
+            - "maindoc/UBL-Order-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T01.xsl"
+        # PEPPOL BIS Order 2.0 (Profile 28)
+        - profile: "urn:www.cenbii.eu:profile:bii28:ver2.0###urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T01.xsl"
+            - "xsl/OPENPEPPOL-UBL-T01.xsl"
+            - "maindoc/UBL-Order-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T01.xsl"
+        # PEPPOL BIS Message Level Response 2.0 (Profile 36)
+        - profile: "urn:www.cenbii.eu:profile:bii36:ver2.0###urn:www.cenbii.eu:transaction:biitrns071:ver2.0:extended:urn:www.peppol.eu:bis:peppol36a:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T71.xsl"
+            - "xsl/OPENPEPPOL-UBL-T71.xsl"
+            - "maindoc/UBL-ApplicationResponse-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T71.xsl"
+        # PEPPOL BIS Order Response 2.0 (Profile 28)
+        - profile: "urn:www.cenbii.eu:profile:bii28:ver2.0###urn:www.cenbii.eu:transaction:biitrns076:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T76.xsl"
+            - "xsl/OPENPEPPOL-UBL-T76.xsl"
+            - "maindoc/UBL-OrderResponse-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T76.xsl"
+        # PEPPOL BIS Order Agreement 1.0 (Profile 42)
+        - profile: "urn:www.cenbii.eu:profile:bii42:ver1.0###urn:www.cenbii.eu:transaction:biitrns110:ver1.0:extended:urn:www.peppol.eu:bis:peppol42a:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T110.xsl"
+            - "xsl/OPENPEPPOL-UBL-T110.xsl"
+            - "maindoc/UBL-OrderResponse-2.1.xsd"
+        # EHF Invoice 2.0 (Profile 04)
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "xsl/OPENPEPPOL-UBL-T10.xsl"
+            - "xsl/NONAT-UBL-T10.xsl"
+            - "xsl/NOGOV-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - BII2-T10-R025
+            - BII2-T10-R035
+            - BII2-T10-R037
+            - BII2-T10-R044
+            - BII2-T10-R047
+            - BII2-T10-R048
+            - BII2-T10-R049
+            - BII2-T10-R050
+            - EUGEN-T10-R041
+            - CL-T10-R001
+            - CL-T10-R007
+            - OP-T10-R004
+        # EHF Invoice 2.0 (Profile 05)
+        - profile: "urn:www.cenbii.eu:profile:bii05:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "xsl/OPENPEPPOL-UBL-T10.xsl"
+            - "xsl/NONAT-UBL-T10.xsl"
+            - "xsl/NOGOV-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - BII2-T10-R025
+            - BII2-T10-R035
+            - BII2-T10-R037
+            - BII2-T10-R044
+            - BII2-T10-R047
+            - BII2-T10-R048
+            - BII2-T10-R049
+            - BII2-T10-R050
+            - EUGEN-T10-R041
+            - CL-T10-R001
+            - CL-T10-R007
+            - OP-T10-R004
+        # EHF Invoice 2.0 (Profile XY)
+        - profile: "urn:www.cenbii.eu:profile:biixy:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.cenbii.eu:profile.eu:biixy:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "xsl/OPENPEPPOL-UBL-T10.xsl"
+            - "xsl/NONAT-UBL-T10.xsl"
+            - "xsl/NOGOV-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - BII2-T10-R025
+            - BII2-T10-R035
+            - BII2-T10-R037
+            - BII2-T10-R044
+            - BII2-T10-R047
+            - BII2-T10-R048
+            - BII2-T10-R049
+            - BII2-T10-R050
+            - EUGEN-T10-R041
+            - CL-T10-R001
+            - CL-T10-R007
+            - OP-T10-R004
+        # EHF Order 1.0 (Profile 28)
+        - profile: "urn:www.cenbii.eu:profile:bii28:ver2.0###urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0:extended:urn:www.difi.no:ehf:ordre:ver1.0"
+          rules:
+            - "xsl/NOGOV-UBL-T01.xsl"
+            - "xsl/BIIRULES-UBL-T01.xsl"
+            - "xsl/OPENPEPPOL-UBL-T01.xsl"
+            - "maindoc/UBL-Order-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - OP-T01-R008
+        # EHF Reminder 1.1 (Profile XY)
+        - profile: "urn:www.cenbii.eu:profile:biixy:ver1.0###urn:www.cenbii.eu:transaction:biicoretrdm017:ver1.0:#urn:www.cenbii.eu:profile:biixy:ver1.0#urn:www.difi.no:ehf:purring:ver1"
+          rules:
+            - "xsl/NONAT-UBL-T17.xsl"
+            - "maindoc/UBL-Reminder-2.0.xsd"
+        # EHF Despatch advise 1.0 (Profile 30)
+        - profile: "urn:www.cenbii.eu:profile:bii30:ver2.0###urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0:extended:urn:www.difi.no:ehf:pakkseddel:ver1.0"
+          rules:
+            - "xsl/NOGOV-UBL-T16.xsl"
+            - "xsl/BIIRULES-UBL-T16.xsl"
+            - "xsl/OPENPEPPOL-UBL-T16.xsl"
+            - "maindoc/UBL-DespatchAdvice-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+        # EHF Order Response 1.0 (Profile 28)
+        - profile: "urn:www.cenbii.eu:profile:bii28:ver2.0###urn:www.cenbii.eu:transaction:biitrns076:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0:extended:urn:www.difi.no:ehf:ordrebekreftelse:ver1.0"
+          rules:
+            - "xsl/NOGOV-UBL-T76.xsl"
+            - "xsl/BIIRULES-UBL-T76.xsl"
+            - "xsl/OPENPEPPOL-UBL-T76.xsl"
+            - "maindoc/UBL-OrderResponse-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - OP-T76-R008
+        # EHF Order Agreement 1.0 (Profile 42)
+        - profile: "urn:www.cenbii.eu:profile:bii42:ver1.0###urn:www.cenbii.eu:transaction:biitrns110:ver1.0:extended:urn:www.peppol.eu:bis:peppol42a:ver1.0:extended:urn:fdc:difi.no:2017:ehf:spec:1.0"
+          rules:
+            - "xsl/EHF-UBL-T110.xsl"
+            - "xsl/BIIRULES-UBL-T110.xsl"
+            - "xsl/OPENPEPPOL-UBL-T110.xsl"
+            - "maindoc/UBL-OrderResponse-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+        # EHF Catalogue 1.0 (Profile 01)
+        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.difi.no:ehf:katalog:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T19.xsl"
+            - "xsl/OPENPEPPOL-UBL-T19.xsl"
+            - "xsl/NOGOV-UBL-T19.xsl"
+            - "maindoc/UBL-Catalogue-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - CL-T19-R004
+            - BII2-T19-R021
+        # EHF Creditnote 2.0 (Profile XX)
+        - profile: "urn:www.cenbii.eu:profile:biixx:ver2.0###urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.cenbii.eu:profile:biixx:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T14.xsl"
+            - "xsl/OPENPEPPOL-UBL-T14.xsl"
+            - "xsl/NONAT-UBL-T14.xsl"
+            - "xsl/NOGOV-UBL-T14.xsl"
+            - "maindoc/UBL-CreditNote-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - EUGEN-T14-R047
+            - BII2-T14-R025
+            - BII2-T14-R035
+            - BII2-T14-R037
+            - BII2-T14-R044
+            - BII2-T14-R047
+            - BII2-T14-R048
+            - BII2-T14-R049
+            - BII2-T14-R050
+            - EUGEN-T14-R041
+            - CL-T14-R007
+            - OP-T14-R004
+        # EHF Creditnote 2.0 (Profile 05)
+        - profile: "urn:www.cenbii.eu:profile:bii05:ver2.0###urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T14.xsl"
+            - "xsl/OPENPEPPOL-UBL-T14.xsl"
+            - "xsl/NONAT-UBL-T14.xsl"
+            - "xsl/NOGOV-UBL-T14.xsl"
+            - "maindoc/UBL-CreditNote-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - BII2-T14-R025
+            - BII2-T14-R035
+            - BII2-T14-R037
+            - BII2-T14-R044
+            - BII2-T14-R047
+            - BII2-T14-R048
+            - BII2-T14-R049
+            - BII2-T14-R050
+            - EUGEN-T14-R041
+            - CL-T14-R007
+            - OP-T14-R004
+        # EHF Creditnote 2.0 (Profile XY)
+        - profile: "urn:www.cenbii.eu:profile:biixy:ver2.0###urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.cenbii.eu:profile:biixy:ver2.0:extended:urn:www.difi.no:ehf:kreditnota:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T14.xsl"
+            - "xsl/OPENPEPPOL-UBL-T14.xsl"
+            - "xsl/NONAT-UBL-T14.xsl"
+            - "xsl/NOGOV-UBL-T14.xsl"
+            - "maindoc/UBL-CreditNote-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"
+          suppress:
+            - BII2-T14-R025
+            - BII2-T14-R035
+            - BII2-T14-R037
+            - BII2-T14-R044
+            - BII2-T14-R047
+            - BII2-T14-R048
+            - BII2-T14-R049
+            - BII2-T14-R050
+            - EUGEN-T14-R041
+            - CL-T14-R007
+            - OP-T14-R004
+        # EHF Catalogue response 1.0 (Profile 01)
+        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0###urn:www.cenbii.eu:transaction:biitrns058:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.difi.no:ehf:katalogbekreftelse:ver1.0"
+          rules:
+            - "xsl/NOGOV-UBL-T58.xsl"
+            - "xsl/BIIRULES-UBL-T58.xsl"
+            - "xsl/OPENPEPPOL-UBL-T58.xsl"
+            - "maindoc/UBL-ApplicationResponse-2.1.xsd"
+            - "xsl/EHF-UBL-COMMON.xsl"

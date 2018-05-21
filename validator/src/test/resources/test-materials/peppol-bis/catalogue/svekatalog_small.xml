@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+                Content:
+                svekatalog 2.0 wrapped in SBDH.
+
+                Errors:
+                None
+
+                Warnings:
+                OP-T19-R014
+                OP-T19-R014
+                OP-T19-R015
+                OP-T19-R015
+-->
+<StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
+	<StandardBusinessDocumentHeader>
+		<HeaderVersion>1.0</HeaderVersion>
+		<Sender>
+			<Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+		</Sender>
+		<Receiver>
+			<Identifier Authority="iso6523-actorid-upis">9908:987987987</Identifier>
+		</Receiver>
+		<DocumentIdentification>
+			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2</Standard>
+			<TypeVersion>2.1</TypeVersion>
+			<InstanceIdentifier>f7a369d8-caf1-41cb-845f-4591cdf72d3c</InstanceIdentifier>
+			<Type>Catalogue</Type>
+			<CreationDateAndTime>2018-05-15T10:13:44Z</CreationDateAndTime>
+		</DocumentIdentification>
+		<BusinessScope>
+			<Scope>
+				<Type>DOCUMENTID</Type>
+				<InstanceIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2::Catalogue##urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0::2.1</InstanceIdentifier>
+			</Scope>
+			<Scope>
+				<Type>PROCESSID</Type>
+				<InstanceIdentifier>urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0</InstanceIdentifier>
+			</Scope>
+		</BusinessScope>
+	</StandardBusinessDocumentHeader>
+	<Catalogue xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2 ../UBL%202.1%20schema/maindoc/UBL-Catalogue-2.1.xsd" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2">
+		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0</cbc:CustomizationID>
+		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0</cbc:ProfileID>
+		<cbc:ID>441345002</cbc:ID>
+		<cbc:ActionCode listID="ACTIONCODE:PEPPOL">Replace</cbc:ActionCode>
+		<cbc:Name>OpusCapita test</cbc:Name>
+		<cbc:IssueDate>2018-05-08</cbc:IssueDate>
+		<cbc:VersionID>002</cbc:VersionID>
+		<cac:ValidityPeriod>
+			<cbc:StartDate>2018-05-08</cbc:StartDate>
+		</cac:ValidityPeriod>
+		<cac:ReferencedContract>
+			<cbc:ID>441345</cbc:ID>
+		</cac:ReferencedContract>
+		<cac:SourceCatalogueReference>
+			<cbc:ID>441345001</cbc:ID>
+		</cac:SourceCatalogueReference>
+		<cac:ProviderParty>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="GLN">987987987</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>OpusCapita test</cbc:Name>
+			</cac:PartyName>
+			<cac:PartyLegalEntity>
+				<cbc:CompanyID schemeID="SE:ORGNR">987987987</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+		</cac:ProviderParty>
+		<cac:ReceiverParty>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="GLN">987987987</cbc:ID>
+			</cac:PartyIdentification>
+		</cac:ReceiverParty>
+		<cac:CatalogueLine>
+			<cbc:ID>1</cbc:ID>
+			<cbc:ActionCode listID="ACTIONCODE:BII2">Add</cbc:ActionCode>
+			<cbc:OrderableUnit>EA</cbc:OrderableUnit>
+			<cbc:OrderQuantityIncrementNumeric>1.00</cbc:OrderQuantityIncrementNumeric>
+			<cbc:MinimumOrderQuantity unitCode="CT" unitCodeListID="UNECERec20">1.00</cbc:MinimumOrderQuantity>
+			<cac:ItemComparison>
+				<cbc:PriceAmount currencyID="SEK">2.54</cbc:PriceAmount>
+			</cac:ItemComparison>
+			<cac:RequiredItemLocationQuantity>
+				<cac:Price>
+					<cbc:PriceAmount currencyID="SEK">406.55</cbc:PriceAmount>
+				</cac:Price>
+			</cac:RequiredItemLocationQuantity>
+			<cac:RequiredItemLocationQuantity>
+				<cac:Price>
+					<cbc:PriceAmount currencyID="SEK">406.55</cbc:PriceAmount>
+					<cbc:PriceType>DPR</cbc:PriceType>
+				</cac:Price>
+			</cac:RequiredItemLocationQuantity>
+			<cac:Item>
+				<cbc:PackQuantity unitCode="CT" unitCodeListID="UNECERec20">4</cbc:PackQuantity>
+				<cbc:PackSizeNumeric>4</cbc:PackSizeNumeric>
+				<cbc:Name>xxxxx</cbc:Name>
+				<cbc:Keyword>Formar-Alumin,Plast,Upplaggfat</cbc:Keyword>
+				<cbc:BrandName>DUNI</cbc:BrandName>
+				<cac:SellersItemIdentification>
+					<cbc:ID>469544</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:ItemSpecificationDocumentReference>
+					<cbc:ID>1</cbc:ID>
+					<cac:Attachment>
+						<cac:ExternalReference>
+							<cbc:URI>OpusCapita test/se/-zid469544</cbc:URI>
+						</cac:ExternalReference>
+					</cac:Attachment>
+				</cac:ItemSpecificationDocumentReference>
+				<cac:ItemSpecificationDocumentReference>
+					<cbc:ID>1</cbc:ID>
+					<cac:Attachment>
+						<cac:ExternalReference>
+							<cbc:URI>OpusCapita test/media/derivates/2/001/552/$v5/469544_01_produktbild.jpg</cbc:URI>
+						</cac:ExternalReference>
+					</cac:Attachment>
+				</cac:ItemSpecificationDocumentReference>
+				<cac:CommodityClassification>
+					<cbc:ItemClassificationCode listID="ZZ">863</cbc:ItemClassificationCode>
+				</cac:CommodityClassification>
+				<cac:CommodityClassification>
+					<cbc:ItemClassificationCode listID="UNSPSC">52150000</cbc:ItemClassificationCode>
+				</cac:CommodityClassification>
+				<cac:TransactionConditions>
+					<cbc:ID>true</cbc:ID>
+					<cbc:ActionCode>CA</cbc:ActionCode>
+				</cac:TransactionConditions>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+					<cbc:Percent>25.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+			</cac:Item>
+		</cac:CatalogueLine>
+	</Catalogue>
+</StandardBusinessDocument>

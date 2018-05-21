@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 /**
  * @author Sergejs.Roze
  */
+@SuppressWarnings("UnusedAssignment")
 public class DocumentParserHandler extends DefaultHandler {
     private final static String SBD = "/StandardBusinessDocument";
     private final static String SBDH = SBD + "/StandardBusinessDocumentHeader";
@@ -329,7 +330,6 @@ public class DocumentParserHandler extends DefaultHandler {
 
         setFields(template, result);
         addErrorsAndWarnings(result, template);
-
 
         return result;
     }

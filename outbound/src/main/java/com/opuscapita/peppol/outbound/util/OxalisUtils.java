@@ -13,6 +13,9 @@ import org.jetbrains.annotations.NotNull;
 public class OxalisUtils {
 
     public static PeppolDocumentTypeId getPeppolDocumentTypeId(@NotNull DocumentInfo document) {
+        if(isSvefakturaOBjectEnvelope(document.getCustomizationId())) {
+            return PeppolDocumentTypeId.valueOf("urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0");
+        }
         return new PeppolDocumentTypeId(
                 document.getRootNameSpace(),
                 document.getRootNodeName(),
@@ -20,6 +23,10 @@ public class OxalisUtils {
                 document.getVersionId()
         );
 
+    }
+
+    private static boolean isSvefakturaOBjectEnvelope(String customizationId) {
+        return customizationId.contains("urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope");
     }
 
 }
