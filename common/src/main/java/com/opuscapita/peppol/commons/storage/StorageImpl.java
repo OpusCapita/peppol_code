@@ -102,11 +102,8 @@ public class StorageImpl extends ValuesChecker implements Storage {
     private File createDailyDirectory() throws IOException {
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
         File dir = new File(shortTerm, date);
-        if (!dir.exists()) {
-            if (!dir.mkdirs()) {
-                throw new IOException("Failed to create directory: " + dir);
-            }
-        }
+        createDirectories(dir);
+
         return dir;
     }
 
@@ -156,13 +153,28 @@ public class StorageImpl extends ValuesChecker implements Storage {
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         File dir = new File(longTerm + File.separator + senderId + File.separator + recipientId + File.separator + date);
-        if (!dir.exists()) {
-            if (!dir.mkdirs()) {
-                throw new IOException("Failed to create directory: " + dir);
-            }
-        }
+        createDirectories(dir);
 
         return dir;
+    }
+
+    // updated version of mkdir that is able to understand that someone created directory faster than we do
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void createDirectories(@NotNull File directory) throws IOException {
+        if (!directory.exists()) {
+            int retries = 0;
+            while (++retries <= 5) {
+                directory.mkdirs();
+                if (directory.exists()) {
+                    return;
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ignored) {}
+                logger.info("Failed to create directory " + directory.getAbsolutePath() + ", retrying, count = " + retries);
+            }
+            throw new IOException("Failed to create directory " + directory.getAbsolutePath() + " in 5 retries");
+        }
     }
 
     // for use without Spring context, sorry

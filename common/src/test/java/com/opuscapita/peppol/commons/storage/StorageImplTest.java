@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.storage;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.FastByteArrayOutputStream;
@@ -27,6 +28,12 @@ public class StorageImplTest {
         FileUtils.forceDeleteOnExit(new File(backupDir));
     }
 
+    @AfterClass
+    public static void finish() throws IOException {
+        FileUtils.deleteDirectory(new File(tempDir));
+        FileUtils.deleteDirectory(new File(backupDir));
+    }
+
     @Test
     public void testShortTerm() throws IOException {
         // create and check simple file
@@ -45,7 +52,7 @@ public class StorageImplTest {
         try {
             storage.storeTemporary(bytes.getInputStream(), "test.file.what", backupDir);
             fail("We've just created a directory inside a file");
-        } catch (IOException ignored) {}
+        } catch (IOException expected) {}
     }
 
 }
