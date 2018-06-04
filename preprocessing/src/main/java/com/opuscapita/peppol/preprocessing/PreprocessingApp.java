@@ -88,9 +88,7 @@ public class PreprocessingApp {
             throw new IllegalStateException("Processing info is missing from ContainerMessage for: " + cm.getFileName());
         }
         if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED) {
-            String fileName = new File(cm.getFileName()).getName();
-            String errorsSoFar = cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining("\n\r"));
-            logger.warn("Document type recognition for " + fileName + " failed with following errors: " + errorsSoFar);
+            String fileName = logFileErrors(cm);
             errorHandler.reportWithContainerMessage(cm, null, "Document not recognized by the parser in: " + fileName);
             cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file, document type unrecognized");
 
@@ -105,6 +103,14 @@ public class PreprocessingApp {
             messageQueue.convertAndSend(queueOut, cm);
             logger.info("Successfully processed and delivered to " + queueOut + " queue");
         }
+    }
+
+    @NotNull
+    private String logFileErrors(@NotNull ContainerMessage cm) {
+        String fileName = new File(cm.getFileName()).getName();
+        String errorsSoFar = cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining("\n\r"));
+        logger.warn("Document type recognition for " + fileName + " failed with following errors: " + errorsSoFar);
+        return fileName;
     }
 
 }
