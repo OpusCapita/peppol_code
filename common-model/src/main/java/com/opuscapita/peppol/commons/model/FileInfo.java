@@ -1,8 +1,8 @@
 package com.opuscapita.peppol.commons.model;
 
 import com.opuscapita.peppol.commons.model.util.TimeStampComparison;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
+import org.hibernate.annotations.SortNatural;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.io.File;
@@ -16,6 +16,7 @@ import java.util.SortedSet;
  * Time: 12:54
  * To change this template use File | Settings | File Templates.
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 @Entity
 @Table(name = "files")
 public class FileInfo implements Comparable<FileInfo> {
@@ -36,14 +37,16 @@ public class FileInfo implements Comparable<FileInfo> {
     @Column(name = "duplicate")
     private boolean duplicate;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "sentFile", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Sort(type = SortType.NATURAL)
+    @SortNatural
     private SortedSet<SentFileInfo> sentInfo;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "failedFile", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Sort(type = SortType.NATURAL)
+    @SortNatural
     private SortedSet<FailedFileInfo> failedInfo;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "reprocessedFile", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Sort(type = SortType.NATURAL)
+    @SortNatural
     private SortedSet<ReprocessFileInfo> reprocessInfo;
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "relatedFile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private EmailInfo emailInfo;
 
     public FileInfo() {
     }
@@ -55,7 +58,7 @@ public class FileInfo implements Comparable<FileInfo> {
     }
 
     @Override
-    public int compareTo(FileInfo fileInfo) {
+    public int compareTo(@NotNull FileInfo fileInfo) {
         return TimeStampComparison.compare(this.getArrivedTimeStamp(), fileInfo.getArrivedTimeStamp());
     }
 
@@ -129,5 +132,13 @@ public class FileInfo implements Comparable<FileInfo> {
 
     public void setReprocessInfo(SortedSet<ReprocessFileInfo> reprocessInfo) {
         this.reprocessInfo = reprocessInfo;
+    }
+
+    public EmailInfo getEmailInfo() {
+        return emailInfo;
+    }
+
+    public void setEmailInfo(EmailInfo emailInfo) {
+        this.emailInfo = emailInfo;
     }
 }

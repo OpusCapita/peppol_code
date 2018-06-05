@@ -38,6 +38,7 @@ public class DirectoryChecker extends ValuesChecker {
     private final ErrorHandler errorHandler;
     private final Storage storage;
     private final Gson gson;
+    private final PersistenceReporter persistenceReporter;
 
     @FileMustExist
     @Value("${peppol.email-notificator.directory}")
@@ -46,11 +47,13 @@ public class DirectoryChecker extends ValuesChecker {
     private int seconds;
 
     @Autowired
-    public DirectoryChecker(@NotNull EmailSender emailSender, @NotNull ErrorHandler errorHandler, @NotNull Storage storage, @NotNull Gson gson) {
+    public DirectoryChecker(@NotNull EmailSender emailSender, @NotNull ErrorHandler errorHandler, @NotNull Storage storage,
+                            @NotNull Gson gson, @NotNull PersistenceReporter persistenceReporter) {
         this.emailSender = emailSender;
         this.errorHandler = errorHandler;
         this.storage = storage;
         this.gson = gson;
+        this.persistenceReporter = persistenceReporter;
     }
 
     @Scheduled(fixedRate = 120_000) // 2 minutes
@@ -99,6 +102,8 @@ public class DirectoryChecker extends ValuesChecker {
                     errorHandler.reportWithoutContainerMessage(combinedEmail.getCustomerId(), null, BodyFormatter.getTicketHeader(),
                             next.getAbsolutePath(), next.getAbsolutePath(), combinedEmail.getCombinedBody());
                 }
+
+                persistenceReporter.updateStatus(next, combinedEmail);
 
                 backup(next, combinedEmail.getSenderId(), combinedEmail.getRecipientId());
             }

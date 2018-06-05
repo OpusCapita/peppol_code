@@ -43,12 +43,7 @@ public class EmailCreator extends ValuesChecker {
 
     String create(@NotNull String id, @NotNull ContainerMessage cm, @NotNull String recipients, @NotNull String subject,
                 @NotNull String body, boolean createTicket) throws IOException {
-        SingleEmail singleEmail = new SingleEmail();
-        singleEmail.setOriginalFileName(cm.getFileName());
-        singleEmail.setSender(cm.getDocumentInfo() == null ? "unknown" : cm.getDocumentInfo().getSenderId());
-        singleEmail.setRecipient(cm.getDocumentInfo() == null ? "unknown" : cm.getDocumentInfo().getRecipientId());
-        singleEmail.setSubject(subject);
-        singleEmail.setBody(body);
+        SingleEmail singleEmail = new SingleEmail(cm, subject, body);
 
         File combined = new File(directory, id + ".json");
         if (combined.exists()) {
@@ -67,7 +62,7 @@ public class EmailCreator extends ValuesChecker {
         }
         String json = gson.toJson(combinedEmail);
         FileUtils.writeStringToFile(file, json, Charset.defaultCharset());
-        logger.info("Mail about " + singleEmail.getOriginalFileName() + " successfully added to existing file " + file.getAbsolutePath());
+        logger.info("Mail about " + singleEmail.getFileName() + " successfully added to existing file " + file.getAbsolutePath());
     }
 
     private void create(File file, SingleEmail singleEmail, String recipients, boolean createTicket, String customerId) throws IOException {
@@ -75,7 +70,7 @@ public class EmailCreator extends ValuesChecker {
         combinedEmail.addMail(singleEmail);
         String json = gson.toJson(combinedEmail);
         FileUtils.writeStringToFile(file, json, Charset.defaultCharset());
-        logger.info("Created new e-mail file for " + singleEmail.getOriginalFileName() + ": " + file.getAbsolutePath());
+        logger.info("Created new e-mail file for " + singleEmail.getFileName() + ": " + file.getAbsolutePath());
     }
 
     void fail(@NotNull ContainerMessage cm, @NotNull String message) {
