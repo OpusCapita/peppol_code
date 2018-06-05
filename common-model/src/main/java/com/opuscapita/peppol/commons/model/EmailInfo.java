@@ -11,8 +11,8 @@ import java.sql.Timestamp;
  * @author Sergejs.Roze
  */
 @SuppressWarnings("unused")
-@Entity
-@Table(name = "emails")
+//@Entity
+//@Table(name = "emails")
 public class EmailInfo implements Comparable<EmailInfo> {
     @Id
     @Column(name = "id")

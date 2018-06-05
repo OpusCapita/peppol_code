@@ -45,8 +45,8 @@ public class FileInfo implements Comparable<FileInfo> {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "reprocessedFile", cascade = CascadeType.ALL, orphanRemoval = true)
     @SortNatural
     private SortedSet<ReprocessFileInfo> reprocessInfo;
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "relatedFile", cascade = CascadeType.ALL, orphanRemoval = true)
-    private EmailInfo emailInfo;
+//    @OneToOne(fetch = FetchType.EAGER, mappedBy = "relatedFile", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private EmailInfo emailInfo;
 
     public FileInfo() {
     }
@@ -134,11 +134,11 @@ public class FileInfo implements Comparable<FileInfo> {
         this.reprocessInfo = reprocessInfo;
     }
 
-    public EmailInfo getEmailInfo() {
-        return emailInfo;
-    }
-
-    public void setEmailInfo(EmailInfo emailInfo) {
-        this.emailInfo = emailInfo;
-    }
+//    public EmailInfo getEmailInfo() {
+//        return emailInfo;
+//    }
+//
+//    public void setEmailInfo(EmailInfo emailInfo) {
+//        this.emailInfo = emailInfo;
+//    }
 }
