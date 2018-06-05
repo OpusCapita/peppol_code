@@ -76,7 +76,7 @@ public abstract class AbstractQueueListener {
     }
 
     private void reportEvent(ContainerMessage cm) {
-        if(cm != null) {
+        if (cm != null && cm.getProcessingInfo() != null) {
             logger.info("Reporting event: " + cm.getProcessingInfo().getEventingMessage());
             EventingMessageUtil.reportEvent(cm, cm.getProcessingInfo().getCurrentStatus());
         }
@@ -114,7 +114,7 @@ public abstract class AbstractQueueListener {
                 logger.warn("No container message present, cannot report to eventing");
             }
         } else {
-            logger.error("Status reporter is null, cannot report errors");
+            logger.info("Status reporter is not set, skipping report to eventing");
         }
 
         throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
