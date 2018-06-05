@@ -4,8 +4,6 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
-import com.opuscapita.peppol.email.db.EmailInfoRepository;
-import com.opuscapita.peppol.email.db.FileInfoRepository;
 import com.opuscapita.peppol.email.model.CombinedEmail;
 import com.opuscapita.peppol.email.model.SingleEmail;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +24,8 @@ import java.io.File;
 public class PersistenceReporter {
     private final static Logger logger = LoggerFactory.getLogger(PersistenceReporter.class);
 
-    private final EmailInfoRepository emailInfoRepository;
-    private final FileInfoRepository fileInfoRepository;
+    //private final EmailInfoRepository emailInfoRepository;
+    //private final FileInfoRepository fileInfoRepository;
     private final ErrorHandler errorHandler;
     private final MessageQueue messageQueue;
 
@@ -36,10 +34,10 @@ public class PersistenceReporter {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public PersistenceReporter(@NotNull EmailInfoRepository emailInfoRepository, @NotNull FileInfoRepository fileInfoRepository,
+    public PersistenceReporter(/*@NotNull EmailInfoRepository emailInfoRepository, @NotNull FileInfoRepository fileInfoRepository,*/
                                @NotNull ErrorHandler errorHandler, @NotNull MessageQueue messageQueue) {
-        this.emailInfoRepository = emailInfoRepository;
-        this.fileInfoRepository = fileInfoRepository;
+        //this.emailInfoRepository = emailInfoRepository;
+        //this.fileInfoRepository = fileInfoRepository;
         this.errorHandler = errorHandler;
         this.messageQueue = messageQueue;
     }
