@@ -34,11 +34,15 @@ public class OutboundAppTest {
     static StatusReporter statusReporter = mock(StatusReporter.class);
     static ErrorHandler errorHandler = mock(ErrorHandler.class);
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     public void testSvefaktura1DoubleSbdh() throws Exception {
+        doIt("/sv1_double_SBDH.xml");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void doIt(String s) throws Exception {
         ContainerMessage cm = new ContainerMessage("meatdata", "file_name", Endpoint.TEST);
-        try (InputStream inputStream = OutboundAppTest.class.getResourceAsStream("/sv1_double_SBDH.xml")) {
+        try (InputStream inputStream = OutboundAppTest.class.getResourceAsStream(s)) {
             DocumentInfo di = documentLoader.load(inputStream, "fileName", Endpoint.TEST);
             assertEquals(Archetype.SVEFAKTURA1, di.getArchetype());
             cm.setDocumentInfo(di);
@@ -50,6 +54,12 @@ public class OutboundAppTest {
 
         System.out.println(OxalisUtils.getPeppolDocumentTypeId(cm.getDocumentInfo()));
     }
+
+    @Test
+    public void testSvekatalog() throws Exception {
+        doIt("/svekatalog_small.xml");
+    }
+
 
     @Test
     public void testError() throws Exception {
