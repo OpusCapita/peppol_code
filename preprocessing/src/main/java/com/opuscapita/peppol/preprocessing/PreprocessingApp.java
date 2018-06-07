@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
@@ -25,6 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
 import java.io.File;
+import java.util.stream.Collectors;
 
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.preprocessing"})
 @EnableDiscoveryClient
@@ -86,9 +88,10 @@ public class PreprocessingApp {
             throw new IllegalStateException("Processing info is missing from ContainerMessage for: " + cm.getFileName());
         }
         if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED) {
-            String fileName = new File(cm.getFileName()).getName();
+            String fileName = logFileErrors(cm);
             errorHandler.reportWithContainerMessage(cm, null, "Document not recognized by the parser in: " + fileName);
             cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file, document type unrecognized");
+
         } else if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
             cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file");
             EventingMessageUtil.reportEvent(cm, "Invalid file");
@@ -100,6 +103,14 @@ public class PreprocessingApp {
             messageQueue.convertAndSend(queueOut, cm);
             logger.info("Successfully processed and delivered to " + queueOut + " queue");
         }
+    }
+
+    @NotNull
+    private String logFileErrors(@NotNull ContainerMessage cm) {
+        String fileName = new File(cm.getFileName()).getName();
+        String errorsSoFar = cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining("\n\r"));
+        logger.warn("Document type recognition for " + fileName + " failed with following errors: " + errorsSoFar);
+        return fileName;
     }
 
 }

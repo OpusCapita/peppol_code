@@ -1,53 +1,51 @@
 package com.opuscapita.peppol.email.model;
 
+import com.opuscapita.peppol.commons.container.ContainerMessage;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author Sergejs.Roze
  */
 @SuppressWarnings("WeakerAccess")
 public class SingleEmail {
-    private String subject;
-    private String originalFileName;
-    private String sender;
-    private String recipient;
-    private String body;
+    private final String subject;
+    private final String body;
+    private final ContainerMessage cm;
 
+    public SingleEmail(@NotNull ContainerMessage cm, @NotNull String subject, @NotNull String body) {
+        this.cm = cm;
+        this.subject = subject;
+        this.body = body;
+    }
+
+    @NotNull
     public String getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    @NotNull
+    public String getFileName() {
+        return cm.getFileName();
     }
 
-    public String getOriginalFileName() {
-        return originalFileName;
-    }
-
-    public void setOriginalFileName(String originalFileName) {
-        this.originalFileName = originalFileName;
-    }
-
+    @NotNull
     public String getSender() {
-        return sender;
+        return cm.getDocumentInfo() == null ? "unknown" : cm.getDocumentInfo().getSenderId();
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
+    @NotNull
     public String getRecipient() {
-        return recipient;
+        return cm.getDocumentInfo() == null ? "unknown" : cm.getDocumentInfo().getRecipientId();
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
-    }
-
+    @NotNull
     public String getBody() {
         return body;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    @NotNull
+    public ContainerMessage getContainerMessage() {
+        return cm;
     }
+
 }

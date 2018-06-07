@@ -27,6 +27,10 @@ public class CombinedEmail {
         mails.add(singleEmail);
     }
 
+    public List<SingleEmail> getMails() {
+        return mails;
+    }
+
     @Nullable
     public String getCustomerId() {
         return customerId;

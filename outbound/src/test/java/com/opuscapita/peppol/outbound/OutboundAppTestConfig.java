@@ -10,7 +10,6 @@ import eu.peppol.outbound.transmission.OxalisOutboundModuleWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -20,8 +19,7 @@ import static org.mockito.Mockito.when;
  * @author Sergejs.Roze
  */
 @Configuration
-@ComponentScan(basePackages = { "com.opuscapita.peppol.outbound" })
-@EnableAsync
+@ComponentScan(basePackages = { "com.opuscapita.peppol.outbound", "com.opuscapita.peppol.commons" })
 public class OutboundAppTestConfig {
 
     @Bean
