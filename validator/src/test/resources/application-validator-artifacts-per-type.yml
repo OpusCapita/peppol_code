@@ -79,7 +79,15 @@ peppol:
             - "xsl/OPENPEPPOL-UBL-T19.xsl"
             - "maindoc/UBL-Catalogue-2.1.xsd"
             - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+        # SVE Catalogue with extension
         - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T19.xsl"
+            - "xsl/OPENPEPPOL-UBL-T19.xsl"
+            - "maindoc/UBL-Catalogue-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+        # SVE Catalogue w/o extension
+        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0::2.1"
           rules:
             - "xsl/BIIRULES-UBL-T19.xsl"
             - "xsl/OPENPEPPOL-UBL-T19.xsl"
