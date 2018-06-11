@@ -71,7 +71,11 @@ public class EmailController {
             logger.info("Preparing customer e-mail for " + cm.getFileName());
             customerEmailCreator.create(cm, createTicket);
         }
+    }
 
+    // for unit tests
+    void setOutboundActions(String... outboundActions) {
+        this.outboundActions = outboundActions;
     }
 
 }

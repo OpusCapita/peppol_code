@@ -35,12 +35,15 @@ public class AccessPointEmailCreator {
     public void create(@NotNull ContainerMessage cm, boolean createTicket) throws IOException {
         if (!cm.hasErrors()) {
             emailCreator.fail(cm, "Document has no errors: " + cm.getFileName() + ", nothing to report");
+            return;
         }
         if (cm.getProcessingInfo() == null) {
             emailCreator.fail(cm, "No processing info in document: " + cm.getFileName());
+            return;
         }
         if (StringUtils.isBlank(cm.getProcessingInfo().getCommonName())) {
             emailCreator.fail(cm, "Access Point information is not present in the document, cannot create e-mail to AP for " + cm.getFileName());
+            return;
         }
 
         ApInfo apInfo = ApInfo.parseFromCommonName(cm.getProcessingInfo().getCommonName());
@@ -49,11 +52,14 @@ public class AccessPointEmailCreator {
         if (accessPoint == null) {
             emailCreator.fail(cm, "Failed to determine access point by CN='" + cm.getProcessingInfo().getCommonName() +
                     "' for " + cm.getFileName());
+            return;
         }
 
         @SuppressWarnings("ConstantConditions") String recipients = accessPoint.getEmailList();
         if (StringUtils.isBlank(recipients)) {
-            emailCreator.fail(cm, "E-mail address not set for the Access Point: " + id + ", file: " + cm.getFileName());
+            emailCreator.fail(cm, "Please update the e-mail for the Access Point (AP): " + id + ", name: " + cm.getProcessingInfo().getCommonName() +
+                    "\nAfterwards reprocess the data file " + cm.getFileName() + " from the UI to send the e-mail notifications to this AP automatically");
+            return;
         }
 
         emailCreator.create("ap_" + id, cm, recipients, inInvalidEmailSubject, BodyFormatter.format(cm), createTicket);

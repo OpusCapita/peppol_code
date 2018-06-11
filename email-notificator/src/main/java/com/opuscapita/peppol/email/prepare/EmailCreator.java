@@ -77,7 +77,6 @@ public class EmailCreator extends ValuesChecker {
         logger.warn(message);
         EventingMessageUtil.reportEvent(cm, "Email notificator failure. " + message);
         errorHandler.reportWithContainerMessage(cm, null, message);
-        throw new IllegalStateException(message);
     }
 
     void setDirectory(String directory) {
