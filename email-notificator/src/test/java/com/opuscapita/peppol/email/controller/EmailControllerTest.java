@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,6 +42,6 @@ public class EmailControllerTest {
             fail("Should not throw exception on regular processing");
         }
 
-        verify(errorHandler, times(1)).reportWithContainerMessage(any(), any(), any());
+        verify(errorHandler, times(1)).reportWithContainerMessage(any(), any(), anyString(), anyString());
     }
 }

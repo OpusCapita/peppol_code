@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.model.Customer;
 import com.opuscapita.peppol.email.db.CustomerRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -43,10 +44,14 @@ public class CustomerEmailCreator {
 
     public void create(@NotNull ContainerMessage cm, boolean createTicket) throws IOException {
         if (!cm.hasErrors()) {
-            emailCreator.fail(cm, "Document has no errors: " + cm.getFileName() + ", nothing to report");
+            emailCreator.fail(cm, "Document has no errors: " + cm.getFileName() + ", nothing to report", null);
+            return;
         }
 
         Customer customer = findCustomer(cm);
+        if (customer == null) {
+            return;
+        }
         String emails = cm.isInbound() ? customer.getInboundEmails() : customer.getOutboundEmails();
         String id = "id_" + customer.getId();
 
@@ -67,21 +72,27 @@ public class CustomerEmailCreator {
         return outInvalidEmailSubject;
     }
 
-    @NotNull
+    @Nullable
     private Customer findCustomer(@NotNull ContainerMessage cm) {
         String customerId = cm.getCustomerId();
         if (StringUtils.isBlank(customerId)) {
-            emailCreator.fail(cm, "Cannot determine customer ID from the file: " + cm.getFileName());
+            emailCreator.fail(cm, "Cannot determine customer ID from the file: " + cm.getFileName(), null);
+            return null;
         }
 
         Customer customer = customerRepository.findByIdentifier(customerId);
         if (customer == null) {
-            emailCreator.fail(cm, "Customer for file " + cm.getFileName() + " not found in the database: " + customerId);
+            emailCreator.fail(cm, "Customer for file " + cm.getFileName() + " not found in the database: " + customerId, null);
+            return null;
         }
 
         @SuppressWarnings("ConstantConditions") String emails = cm.isInbound() ? customer.getInboundEmails() : customer.getOutboundEmails();
         if (StringUtils.isBlank(emails)) {
-            emailCreator.fail(cm, "E-mail address not set for the customer: " + customerId + ", file: " + cm.getFileName());
+            emailCreator.fail(cm, "E-mail address not set for the customer: " + customerId + " " + customer.getName(),
+                    "Please update the email for the customer " + customerId + " " + customer.getName() +
+                            "\nAfterwards reprocess the data file " + cm.getFileName() +
+                            " from the UI to send the email notification to the customer automatically.");
+            return null;
         }
 
         return customer;

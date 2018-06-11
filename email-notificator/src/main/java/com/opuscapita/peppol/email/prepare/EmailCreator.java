@@ -10,6 +10,7 @@ import com.opuscapita.peppol.email.model.CombinedEmail;
 import com.opuscapita.peppol.email.model.SingleEmail;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +74,10 @@ public class EmailCreator extends ValuesChecker {
         logger.info("Created new e-mail file for " + singleEmail.getFileName() + ": " + file.getAbsolutePath());
     }
 
-    void fail(@NotNull ContainerMessage cm, @NotNull String message) {
+    void fail(@NotNull ContainerMessage cm, @NotNull String message, @Nullable String details) {
         logger.warn(message);
         EventingMessageUtil.reportEvent(cm, "Email notificator failure. " + message);
-        errorHandler.reportWithContainerMessage(cm, null, message);
+        errorHandler.reportWithContainerMessage(cm, null, message, details);
     }
 
     void setDirectory(String directory) {
