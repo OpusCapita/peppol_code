@@ -1,7 +1,7 @@
 package com.opuscapita.peppol.email.send;
 
 import com.opuscapita.peppol.email.model.CombinedEmail;
-import com.opuscapita.peppol.email.prepare.BodyFormatter;
+import com.opuscapita.peppol.email.prepare.EmailTemplates;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class EmailSender {
     }
 
     void sendMessage(@NotNull CombinedEmail combinedEmail) {
-        sendMessage(combinedEmail.getRecipients(), combinedEmail.getCombinedSubject(), BodyFormatter.getHeader() + combinedEmail.getCombinedBody());
+        sendMessage(combinedEmail.getRecipient().getAddresses(), combinedEmail.getCombinedSubject(), EmailTemplates.getEmailFirstLine() + combinedEmail.getCombinedBody());
     }
 
     private void sendMessage(@NotNull String to, @NotNull String subject, @NotNull String body) {

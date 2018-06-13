@@ -49,8 +49,8 @@ public class PersistenceReporter {
             reportStatus(file, combinedEmail);
         } catch (Exception e) {
             logger.error("Failed to update message status in the DB: " + e.getMessage());
-            errorHandler.reportWithoutContainerMessage(combinedEmail.getCustomerId(), e,
-                    "Failed to update message status in the DB", combinedEmail.getRecipients(), file.getAbsolutePath());
+            errorHandler.reportWithoutContainerMessage(combinedEmail.getRecipient().getId(), e,
+                    "Failed to update message status in the DB", combinedEmail.getRecipient().getAddresses(), file.getAbsolutePath());
         }
     }
 

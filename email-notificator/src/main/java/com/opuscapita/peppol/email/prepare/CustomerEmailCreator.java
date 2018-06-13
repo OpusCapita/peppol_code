@@ -5,6 +5,7 @@ import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.model.Customer;
 import com.opuscapita.peppol.email.db.CustomerRepository;
+import com.opuscapita.peppol.email.model.Recipient;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,10 +53,11 @@ public class CustomerEmailCreator {
         if (customer == null) {
             return;
         }
-        String emails = cm.isInbound() ? customer.getInboundEmails() : customer.getOutboundEmails();
-        String id = "id_" + customer.getId();
+        String addresses = cm.isInbound() ? customer.getInboundEmails() : customer.getOutboundEmails();
 
-        emailCreator.create(id, cm, emails, generateSubject(cm), BodyFormatter.format(cm), createTicket);
+        Recipient recipient = new Recipient(Recipient.Type.CUSTOMER, Integer.toString(customer.getId()), customer.getName(), addresses);
+
+        emailCreator.create(recipient, cm, generateSubject(cm), EmailTemplates.format(cm), createTicket);
     }
 
     private String generateSubject(ContainerMessage cm) {
