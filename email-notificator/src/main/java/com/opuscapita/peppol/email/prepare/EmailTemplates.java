@@ -2,6 +2,7 @@ package com.opuscapita.peppol.email.prepare;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.email.model.Recipient;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,15 +12,15 @@ import java.util.List;
 /**
  * Moved to a separate class in order to have the possibility to introduce templates later.
  *
- * Works only if container message represents proper document, either invalid or valid.
+ * Works only if container message represents proper document, either valid or invalid.
  *
  * @author Sergejs.Roze
  */
 @SuppressWarnings("WeakerAccess")
-public class BodyFormatter {
+public class EmailTemplates {
 
-    public static String getTicketHeader() {
-        return "The following e-mail was automatically created and sent:\n";
+    public static String getTicketHeader(@NotNull String recipientId, @NotNull String recipientName) {
+        return "Email notification about the invalid data was sent to " + recipientId + " " + recipientName;
     }
 
     @NotNull
@@ -78,7 +79,17 @@ public class BodyFormatter {
         return result;
     }
 
-    public static String getHeader() {
+    public static String getTicketFirstLine(@NotNull Recipient recipient, @NotNull String transmissionIds) {
+        String result;
+        if (recipient.getType() == Recipient.Type.AP) {
+            result = "Email notification about the invalid data " + transmissionIds + " was sent to the AP ";
+        } else {
+            result = "Email notification about the invalid data " + transmissionIds + " was sent to the customer ";
+        }
+        return result + recipient.getId() + " " + recipient.getName();
+    }
+
+    public static String getEmailFirstLine() {
         return "This is an automatically redirected electronic invoice rejection message:\n\n" +
                 "The following PEPPOL invoice(s) have been rejected by the operator (see Subject).\n\n" +
                 "Please correct invoice(s) and resend.\n\n" +

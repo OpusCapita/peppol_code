@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.ApInfo;
 import com.opuscapita.peppol.commons.model.AccessPoint;
 import com.opuscapita.peppol.email.db.AccessPointRepository;
+import com.opuscapita.peppol.email.model.Recipient;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,15 +56,17 @@ public class AccessPointEmailCreator {
             return;
         }
 
-        @SuppressWarnings("ConstantConditions") String recipients = accessPoint.getEmailList();
-        if (StringUtils.isBlank(recipients)) {
+        @SuppressWarnings("ConstantConditions") String addresses = accessPoint.getEmailList();
+        if (StringUtils.isBlank(addresses)) {
             emailCreator.fail(cm, "E-mail address not set for the AP " + id + " " + cm.getProcessingInfo().getCommonName(),
                     "Please update the e-mail for the Access Point (AP): " + id + ", name: " + cm.getProcessingInfo().getCommonName() +
                     "\nAfterwards reprocess the data file " + cm.getFileName() + " from the UI to send the e-mail notifications to this AP automatically");
             return;
         }
 
-        emailCreator.create("ap_" + id, cm, recipients, inInvalidEmailSubject, BodyFormatter.format(cm), createTicket);
+        Recipient recipient = new Recipient(Recipient.Type.AP, id, apInfo.getName(), addresses);
+
+        emailCreator.create(recipient, cm, inInvalidEmailSubject, EmailTemplates.format(cm), createTicket);
     }
 
 }

@@ -6,11 +6,12 @@ import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.commons.template.bean.FileMustExist;
 import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import com.opuscapita.peppol.email.model.CombinedEmail;
-import com.opuscapita.peppol.email.prepare.BodyFormatter;
+import com.opuscapita.peppol.email.model.SingleEmail;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ public class DirectoryChecker extends ValuesChecker {
     private final Storage storage;
     private final Gson gson;
     private final PersistenceReporter persistenceReporter;
+    private final TicketsCreator ticketsCreator;
 
     @FileMustExist
     @Value("${peppol.email-notificator.directory}")
@@ -48,12 +50,13 @@ public class DirectoryChecker extends ValuesChecker {
 
     @Autowired
     public DirectoryChecker(@NotNull EmailSender emailSender, @NotNull ErrorHandler errorHandler, @NotNull Storage storage,
-                            @NotNull Gson gson, @NotNull PersistenceReporter persistenceReporter) {
+                            @NotNull Gson gson, @NotNull PersistenceReporter persistenceReporter, @NotNull TicketsCreator ticketsCreator) {
         this.emailSender = emailSender;
         this.errorHandler = errorHandler;
         this.storage = storage;
         this.gson = gson;
         this.persistenceReporter = persistenceReporter;
+        this.ticketsCreator = ticketsCreator;
     }
 
     @Scheduled(fixedRate = 120_000) // 2 minutes
@@ -83,7 +86,7 @@ public class DirectoryChecker extends ValuesChecker {
                     String message = "Failed to read and process JSON file " + next.getAbsolutePath();
                     logger.error(message, e);
                     errorHandler.reportWithoutContainerMessage(null, e, message, next.getAbsolutePath(), next.getAbsolutePath());
-                    backup(next, "unknown", "unknown");
+                    backup(next, null);
                     continue;
                 }
 
@@ -92,25 +95,32 @@ public class DirectoryChecker extends ValuesChecker {
                 } catch (Exception e) {
                     String message = "Failed to send e-mail generated from " + next.getAbsolutePath();
                     logger.error(message, e);
-                    errorHandler.reportWithoutContainerMessage(combinedEmail.getCustomerId(), e, message, next.getAbsolutePath(), next.getAbsolutePath());
-                    backup(next, combinedEmail.getSenderId(), combinedEmail.getRecipientId());
+                    errorHandler.reportWithoutContainerMessage(combinedEmail.getRecipient().getId(), e, message, next.getAbsolutePath(), next.getAbsolutePath());
+                    backup(next, combinedEmail);
                     continue;
                 }
 
-                if (combinedEmail.isCreateTicket()) {
-                    logger.info("Creating ticket about successfully sent e-mail for " + next.getAbsolutePath());
-                    errorHandler.reportWithoutContainerMessage(combinedEmail.getCustomerId(), null, BodyFormatter.getTicketHeader(),
-                            next.getAbsolutePath(), next.getAbsolutePath(), combinedEmail.getCombinedBody());
+                if (combinedEmail.isTicketRequested()) {
+                    ticketsCreator.createTicket(combinedEmail, next.getAbsolutePath());
                 }
 
                 persistenceReporter.updateStatus(next, combinedEmail);
 
-                backup(next, combinedEmail.getSenderId(), combinedEmail.getRecipientId());
+                backup(next, combinedEmail);
             }
         }
     }
 
-    private void backup(@NotNull File file, String senderId, String recipientId) {
+    private void backup(@NotNull File file, @Nullable CombinedEmail combinedEmail) {
+        String senderId;
+        String recipientId;
+        if (combinedEmail == null) {
+            senderId = "unknown";
+            recipientId = "unknown";
+        } else {
+            senderId = combinedEmail.getMails().stream().map(SingleEmail::getSender).findAny().orElse("unknown");
+            recipientId = combinedEmail.getMails().stream().map(SingleEmail::getRecipient).findAny().orElse("unknown");
+        }
         try {
             String result = storage.moveToLongTerm(senderId, recipientId, file);
             logger.info("Email file " + file.getAbsolutePath() + " moved to " + result);

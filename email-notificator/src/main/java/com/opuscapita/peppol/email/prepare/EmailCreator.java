@@ -7,6 +7,7 @@ import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.template.bean.FileMustExist;
 import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
 import com.opuscapita.peppol.email.model.CombinedEmail;
+import com.opuscapita.peppol.email.model.Recipient;
 import com.opuscapita.peppol.email.model.SingleEmail;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -42,15 +43,16 @@ public class EmailCreator extends ValuesChecker {
         this.gson = gson;
     }
 
-    String create(@NotNull String id, @NotNull ContainerMessage cm, @NotNull String recipients, @NotNull String subject,
-                @NotNull String body, boolean createTicket) throws IOException {
+    String create(@NotNull Recipient recipient, @NotNull ContainerMessage cm, @NotNull String subject, @NotNull String body, boolean createTicket)
+            throws IOException {
         SingleEmail singleEmail = new SingleEmail(cm, subject, body);
 
-        File combined = new File(directory, id + ".json");
+        String fileName = recipient.getType().name() + "_" + recipient.getId();
+        File combined = new File(directory, fileName + ".json");
         if (combined.exists()) {
             add(combined, singleEmail);
         } else {
-            create(combined, singleEmail, recipients, createTicket, cm.getCustomerId());
+            create(combined, singleEmail, recipient, createTicket);
         }
         return combined.getAbsolutePath();
     }
@@ -66,8 +68,8 @@ public class EmailCreator extends ValuesChecker {
         logger.info("Mail about " + singleEmail.getFileName() + " successfully added to existing file " + file.getAbsolutePath());
     }
 
-    private void create(File file, SingleEmail singleEmail, String recipients, boolean createTicket, String customerId) throws IOException {
-        CombinedEmail combinedEmail = new CombinedEmail(recipients, createTicket, customerId);
+    private void create(File file, SingleEmail singleEmail, Recipient recipient, boolean createTicket) throws IOException {
+        CombinedEmail combinedEmail = new CombinedEmail(createTicket, recipient);
         combinedEmail.addMail(singleEmail);
         String json = gson.toJson(combinedEmail);
         FileUtils.writeStringToFile(file, json, Charset.defaultCharset());

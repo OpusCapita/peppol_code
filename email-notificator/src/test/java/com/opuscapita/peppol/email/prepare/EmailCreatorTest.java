@@ -6,6 +6,7 @@ import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.email.model.CombinedEmail;
+import com.opuscapita.peppol.email.model.Recipient;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,25 +41,28 @@ public class EmailCreatorTest {
         cm.getDocumentInfo().setRecipientId("customer_id");
         cm.getDocumentInfo().setSenderId("customer_id");
 
-        String file = emailCreator.create("customer_id", cm, "Recipients", "Subject", "AAA", true);
+        Recipient recipient = new Recipient(Recipient.Type.CUSTOMER, "recipient_id", "recipient_name", "email_addresses");
+
+        String file = emailCreator.create(recipient, cm, "subject", "body_1", true);
         System.out.println(FileUtils.readFileToString(new File(file), Charset.defaultCharset()));
 
         CombinedEmail combinedEmail = new Gson().fromJson(FileUtils.readFileToString(new File(file), Charset.defaultCharset()), CombinedEmail.class);
-        assertEquals("customer_id", combinedEmail.getCustomerId());
-        assertEquals("Recipients", combinedEmail.getRecipients());
-        assertEquals("Subject", combinedEmail.getCombinedSubject());
-        assertEquals("AAA", combinedEmail.getCombinedBody());
+        assertEquals("recipient_id", combinedEmail.getRecipient().getId());
+        assertEquals("email_addresses", combinedEmail.getRecipient().getAddresses());
+        assertEquals("subject", combinedEmail.getCombinedSubject());
+        assertEquals("body_1", combinedEmail.getCombinedBody());
 
-        emailCreator.create("customer_id", cm, "Recipients2", "Subject2", "BBB", true);
+        emailCreator.create(recipient, cm, "subject_2", "body_2", true);
         combinedEmail = new Gson().fromJson(FileUtils.readFileToString(new File(file), Charset.defaultCharset()), CombinedEmail.class);
 
-        assertEquals("customer_id", combinedEmail.getCustomerId());
-        assertEquals("Recipients", combinedEmail.getRecipients());
-        assertTrue(combinedEmail.getCombinedSubject().equals("Subject; Subject2") || combinedEmail.getCombinedSubject().equals("Subject2; Subject"));
-        assertTrue(combinedEmail.getCombinedBody().contains("AAA"));
-        assertTrue(combinedEmail.getCombinedBody().contains("BBB"));
+        assertEquals("recipient_id", combinedEmail.getRecipient().getId());
+        assertEquals("email_addresses", combinedEmail.getRecipient().getAddresses());
+        assertTrue(combinedEmail.getCombinedSubject().equals("subject; subject_2") || combinedEmail.getCombinedSubject().equals("subject_2; subject"));
+        assertTrue(combinedEmail.getCombinedBody().contains("body_1"));
+        assertTrue(combinedEmail.getCombinedBody().contains("body_2"));
 
-        System.out.println(combinedEmail.getTicket());
+        System.out.println(combinedEmail.getTicketHeader());
+        System.out.println(combinedEmail.getTicketBody());
 
     }
 }
