@@ -36,7 +36,7 @@ def test_modules = [
  */
 recipients = [:]
 recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
-recipients.devops = "Didrihsons Edgars <Edgars.Didrihsons@opuscapita.com>,Tiwari Amit <Amit.Tiwari@opuscapita.com>"
+recipients.devops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
 recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
 recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
 
