@@ -87,6 +87,10 @@ public class PreprocessingApp {
         if (cm.getProcessingInfo() == null) {
             throw new IllegalStateException("Processing info is missing from ContainerMessage for: " + cm.getFileName());
         }
+        logger.info("Document info: " + cm.getDocumentInfo());
+        if(cm.getDocumentInfo() != null) {
+            logger.info("Archetype: " + cm.getDocumentInfo().getArchetype());
+        }
         if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED) {
             String fileName = logFileErrors(cm);
             errorHandler.reportWithContainerMessage(cm, null, "Document not recognized by the parser in: " + fileName);
