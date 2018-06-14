@@ -87,16 +87,16 @@ public class PreprocessingApp {
         if (cm.getProcessingInfo() == null) {
             throw new IllegalStateException("Processing info is missing from ContainerMessage for: " + cm.getFileName());
         }
-        logger.info("Document info: " + cm.getDocumentInfo());
-        if(cm.getDocumentInfo() != null) {
-            logger.info("Archetype: " + cm.getDocumentInfo().getArchetype());
-        }
+
         if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED) {
             String fileName = logFileErrors(cm);
             errorHandler.reportWithContainerMessage(cm, null, "Document not recognized by the parser in: " + fileName);
             cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file, document type unrecognized");
 
         } else if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
+            if(cm.getDocumentInfo() != null) {
+                logFileErrors(cm);
+            }
             cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file");
             EventingMessageUtil.reportEvent(cm, "Invalid file");
             messageQueue.convertAndSend(errorQueue, cm);
