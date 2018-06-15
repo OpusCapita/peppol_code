@@ -9,7 +9,7 @@
   until: transmissionId in log.stdout
   retries: 300
   delay: 1
-  when: preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to parse file", "Passed- No SBDH present in file" ]
+  when: preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to parse file", "Passed- No SBDH present in file", "Passed- failed to recognize file" ]
 
 #rc is response code for shell commands 0=success and anything else=failed
 - set_fact: validator_result="Failed to get transmissionId from log"
@@ -34,6 +34,11 @@
   when: preprocessing_result=="Passed- No SBDH present in file"
 - name: debug4- no SBDH then
   debug: var=validator_result
+
+- name: get preprocessing result, if fail to recognize file then handle like this->
+  set_fact: validator_result="Passed- preprocessing failed to recognize file"
+  when: preprocessing_result=="Passed- failed to recognize file"
+- debug: var=validator_result
 
 #check for successes as well and adjust report accordingly->
 - name: Check if validation did not fail for transmissionId "{{ transmissionId }}" "{{ file }}"

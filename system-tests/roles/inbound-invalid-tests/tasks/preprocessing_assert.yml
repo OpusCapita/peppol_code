@@ -41,4 +41,9 @@
 - name: debug- no transmissionId
   debug: var=preprocessing_result
 
+- name: get preprocessing result, if fail to recognize file then handle like this->
+  set_fact: preprocessing_result="Passed- failed to recognize file"
+  when: log.stdout | search("Document type recognition for .* failed")
+- name: debug- fail to recognize file
+  debug: var=preprocessing_result
 ...

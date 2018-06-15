@@ -6,7 +6,7 @@
   until: transmissionId in log.stdout
   retries: 60
   delay: 1
-  when: preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to parse file", "Passed- No SBDH present in file" ]
+  when: preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to parse file", "Passed- No SBDH present in file", "Passed- failed to recognize file" ]
 #- debug: var=log
 
 #rc is response code for shell commands 0=success and anything else=failed
@@ -39,5 +39,11 @@
   set_fact: internal_routing_result="No transmissionId was set for this file in inbound"
   when: transmissionId ==""
 - debug: var=internal_routing_result
+
+- name: get preprocessing result, if fail to recognize file then handle like this->
+  set_fact: internal_routing_result="Passed- preprocessing failed due to fail to recognize file"
+  when: preprocessing_result=="Passed- failed to recognize file"
+- name: debug5- fail to recognize file
+  debug: var=internal_routing_result
 
 ...

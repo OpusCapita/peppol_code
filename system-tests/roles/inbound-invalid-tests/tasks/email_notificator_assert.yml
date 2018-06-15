@@ -7,7 +7,7 @@
   retries: 60
   delay: 1
   when:
-    - preprocessing_result not in ["Passed- No matching document templates found"]
+    - preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to recognize file"]
     - validator_result not in ["Failed- Validation success, but should have failed","Passed- Validation technical failure"]
 
 #rc is response code for shell commands 0=success and anything else=failed
@@ -21,6 +21,12 @@
   set_fact: email_notificator_result="Passed- error reported to SNC through preprocessing"
   when: preprocessing_result | search("No matching document templates found")
 - debug: var=email_notificator_result
+
+- name: get preprocessing result, if fail to recognize file then handle like this->
+  set_fact: email_notificator_result="Passed- preprocessing failed due to fail to recognize file"
+  when: preprocessing_result=="Passed- failed to recognize file"
+- name: debug5- fail to recognize file
+  debug: var=email_notificator_result
 
 - name: get validator result, in Validation success case handle like this->
   set_fact: email_notificator_result="Passed- if validator passed then email should not be sent"
