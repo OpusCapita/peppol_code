@@ -7,6 +7,8 @@ import com.opuscapita.peppol.commons.template.AbstractQueueListener;
 import com.opuscapita.peppol.email.controller.EmailController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -21,9 +23,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableDiscoveryClient
 public class EmailNotificatorApp {
+    private static final Logger logger = LoggerFactory.getLogger(EmailNotificatorApp.class);
+
     @Value("${peppol.component.name}")
     private String componentName;
-
     @Value("${peppol.email-notificator.queue.in.name}")
     private String queueName;
 
