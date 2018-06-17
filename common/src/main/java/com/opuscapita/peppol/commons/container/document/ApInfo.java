@@ -47,7 +47,7 @@ public class ApInfo {
     }
 
     public String getName() {
-        return name;
+        return name == null ? id : name;
     }
 
     public String getCountry() {

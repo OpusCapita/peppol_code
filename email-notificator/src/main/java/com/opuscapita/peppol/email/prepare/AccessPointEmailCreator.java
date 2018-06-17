@@ -58,8 +58,8 @@ public class AccessPointEmailCreator {
 
         @SuppressWarnings("ConstantConditions") String addresses = accessPoint.getEmailList();
         if (StringUtils.isBlank(addresses)) {
-            emailCreator.fail(cm, "E-mail address not set for the AP " + id + " " + cm.getProcessingInfo().getCommonName(),
-                    "Please update the e-mail for the Access Point (AP): " + id + ", name: " + cm.getProcessingInfo().getCommonName() +
+            emailCreator.fail(cm, "E-mail address not set for the AP " + id + " " + apInfo.getName(),
+                    "Please update the e-mail for the Access Point (AP): " + id + ", name: " + apInfo.getName() +
                     "\nAfterwards reprocess the data file " + cm.getFileName() + " from the UI to send the e-mail notifications to this AP automatically");
             return;
         }
