@@ -56,7 +56,7 @@ public class EmailController {
         EmailActions.validate(Arrays.asList(outboundActions));
         EmailActions.validate(Arrays.asList(inboundActions));
         if (StringUtils.isNotBlank(statusFile)) {
-            String json = new Gson().toJson(new Status(inboundActions, outboundActions));
+            String json = new Gson().toJson(new EmailNotificatorStatus(inboundActions, outboundActions));
             try (OutputStream outputStream = new FileOutputStream(statusFile)) {
                 IOUtils.write(json, outputStream, Charset.forName("UTF-8"));
                 logger.info("Created status file " + statusFile);

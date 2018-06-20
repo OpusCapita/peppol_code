@@ -74,6 +74,11 @@ app.controller('CustomerCtrl', ['$scope', 'CustomerFactory', '$resource', '$loca
                     // ajax request to api
                     CustomerFactory.query(params.url(), function (data) {
                         $timeout(function () {
+                            if (!customer_list_enabled) {
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i].$edit = false;
+                                }
+                            }
                             // set new data
                             $defer.resolve(data);
                         }, 200);

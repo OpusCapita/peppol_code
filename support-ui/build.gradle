@@ -41,5 +41,7 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-orm', version: '4.0.1.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '4.0.1.RELEASE'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'com.google.code.gson:gson:2.7'
     compile fileTree(dir: 'src/main/webapp/WEB-INF/lib/', include: '*jar')
 }

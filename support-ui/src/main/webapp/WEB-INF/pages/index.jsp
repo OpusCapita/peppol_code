@@ -19,6 +19,11 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/oc-style.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 
+    <script type="text/javascript">
+        var customer_list_enabled = "${customerListEnabled}"
+        var customer_list_message = "${customerListMessage}"
+    </script>
+
     <!-- endbuild -->
 </head>
 <body ng-app="peppolApp">
