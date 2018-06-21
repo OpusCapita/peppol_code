@@ -83,8 +83,7 @@ public class PreprocessingController {
             try {
                 result = gson.fromJson(rawMetadata, PeppolMessageMetadataContainer.class).getPeppolMessageMetaData();
             } catch (Exception e) {
-                logger.warn("Failed to parse raw metadata: " + rawMetadata);
-                e.printStackTrace();
+                logger.warn("Failed to parse raw metadata: " + rawMetadata, e);
             }
         }
         return result;
