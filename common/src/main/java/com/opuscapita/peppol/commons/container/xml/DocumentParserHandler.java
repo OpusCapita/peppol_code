@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -79,7 +78,7 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         String path = paths.getLast() + "/" + localName;
         if (path.startsWith(SBDH)) {
             sbdhPresent = true;
@@ -95,7 +94,7 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         if (StringUtils.isNotBlank(value)) {
             String path = paths.getLast();
             //System.out.println(path+"==>"+value);
@@ -150,7 +149,7 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
+    public void characters(char[] ch, int start, int length) {
         value = new String(ch, start, length).trim();
     }
 
@@ -192,7 +191,7 @@ public class DocumentParserHandler extends DefaultHandler {
         if (templates.size() != 1) {
             //Template bestTemplate = templates.stream().min(Comparator.comparingInt(Template::errorsCount)).orElse(null);
             //trying to find best template according to which one has less errors
-            Collections.sort(templates, Comparator.comparingInt(Template::errorsCount));
+            templates.sort(Comparator.comparingInt(Template::errorsCount));
             if (templates.get(0).errorsCount() < templates.get(1).errorsCount()) {
                 result = oneResult(templates.get(0));
             } else {
@@ -227,12 +226,12 @@ public class DocumentParserHandler extends DefaultHandler {
             logger.warn("Profile id is missing in file: " + fileName);
         }
 
-        if (sbdhMandatoryFields.get("sender_id") && !eu.peppol.identifier.ParticipantId.isValidParticipantIdentifierSyntax(result.getSenderId())) {
+        if (sbdhMandatoryFields.get("sender_id") && !no.difi.oxalis.sniffer.identifier.ParticipantId.isValidParticipantIdentifierPattern(result.getSenderId())) {
             result.getErrors().add(new DocumentError(endpoint, "Invalid  sender id[" + result.getSenderId() + "] in file: " + fileName));
             logger.warn("Invalid sender id[" + result.getSenderId() + "] in file: " + fileName);
         }
 
-        if (sbdhMandatoryFields.get("recipient_id") && !eu.peppol.identifier.ParticipantId.isValidParticipantIdentifierSyntax(result.getRecipientId())) {
+        if (sbdhMandatoryFields.get("recipient_id") && !no.difi.oxalis.sniffer.identifier.ParticipantId.isValidParticipantIdentifierPattern(result.getSenderId())) {
             result.getErrors().add(new DocumentError(endpoint, "Invalid recipient id[" + result.getRecipientId() + "] in file: " + fileName));
             logger.warn("Invalid recipient id[" + result.getRecipientId() + "] in file: " + fileName);
         }
@@ -258,6 +257,7 @@ public class DocumentParserHandler extends DefaultHandler {
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void checkFields(Template template) {
         for (Field field : template.fields) {
             // add errors for overwritten fields
@@ -268,17 +268,17 @@ public class DocumentParserHandler extends DefaultHandler {
                 //== 1 because we are also comparing all values with the first one we have already, so if the first one will match only with itself, this is an error
                 if (checkSBDH || field.getPaths().get(0).contains("$SBDH")) {
                     if (field.values.stream().filter(v -> areEqual(field.getId(), first, v)).count() == 1) {
-                        String errorText = "There are different conflicting values in the document for the field '"
-                                + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator());
-                        errorText += "There should be at least one match in the document body for the " + field.getId() + " specified in SBDH" + System.lineSeparator();
-                        errorText += "Paths: " + System.lineSeparator();
+                        StringBuilder errorText = new StringBuilder("There are different conflicting values in the document for the field '"
+                                + field.getId() + ": " + String.join(", ", field.values + System.lineSeparator()));
+                        errorText.append("There should be at least one match in the document body for the ").append(field.getId()).append(" specified in SBDH").append(System.lineSeparator());
+                        errorText.append("Paths: ").append(System.lineSeparator());
                         for (String path : field.getPaths()) {
-                            errorText += "  " + path + System.lineSeparator();
+                            errorText.append("  ").append(path).append(System.lineSeparator());
                         }
                         if (shouldFailOnInconsistency) {
-                            template.addError(errorText);
+                            template.addError(errorText.toString());
                         } else {
-                            logger.warn(errorText);
+                            logger.warn(errorText.toString());
                         }
                     }
                 }
@@ -291,12 +291,12 @@ public class DocumentParserHandler extends DefaultHandler {
 
             // check mandatory fields presence
             if (field.values == null && field.isMandatory()) {
-                String errorText = "Missing mandatory field: " + field.getId() + System.lineSeparator();
-                errorText += "Paths: " + System.lineSeparator();
+                StringBuilder errorText = new StringBuilder("Missing mandatory field: " + field.getId() + System.lineSeparator());
+                errorText.append("Paths: ").append(System.lineSeparator());
                 for (String path : field.getPaths()) {
-                    errorText += "  " + path + System.lineSeparator();
+                    errorText.append("  ").append(path).append(System.lineSeparator());
                 }
-                template.addError(errorText);
+                template.addError(errorText.toString());
             }
         }
     }
@@ -394,7 +394,7 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     @Override
-    public void warning(SAXParseException e) throws SAXException {
+    public void warning(SAXParseException e) {
         warnings.add(new DocumentWarning(endpoint,
                 "Parser warning in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
         logger.warn("Parser warning in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +
@@ -402,7 +402,7 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     @Override
-    public void error(SAXParseException e) throws SAXException {
+    public void error(SAXParseException e) {
         errors.add(new DocumentError(endpoint,
                 "Parser error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
         logger.warn("Parser error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +
@@ -410,7 +410,7 @@ public class DocumentParserHandler extends DefaultHandler {
     }
 
     @Override
-    public void fatalError(SAXParseException e) throws SAXException {
+    public void fatalError(SAXParseException e) {
         errors.add(new DocumentError(endpoint,
                 "Fatal parser error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage()));
         logger.warn("Fatal parser error in position " + e.getLineNumber() + ":" + e.getColumnNumber() + " - " + e.getMessage() +

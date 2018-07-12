@@ -6,7 +6,7 @@ import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
-import eu.peppol.outbound.transmission.OxalisOutboundModuleWrapper;
+import com.opuscapita.peppol.outbound.controller.sender.OxalisWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +28,8 @@ public class OutboundAppTestConfig {
     }
 
     @Bean
-    OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper() {
-        return new OxalisOutboundModuleWrapper();
+    OxalisWrapper oxalisOutboundModuleWrapper() {
+        return new OxalisWrapper();
     }
 
     @Bean

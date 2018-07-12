@@ -1,7 +1,6 @@
 package com.opuscapita.peppol.inbound;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +12,10 @@ import java.util.Properties;
 /**
  * @author Sergejs.Roze
  */
-public class InboundProperties {
-    public final static String INBOUND_OUTPUT_DIR = "peppol.storage.short";
-    public final static String COMPONENT_NAME = "peppol.component.name";
-    public final static String INBOUND_COPY_DIR = "peppol.inbound.copy.directory";
+class InboundProperties {
+    final static String INBOUND_OUTPUT_DIR = "peppol.storage.short";
+    final static String COMPONENT_NAME = "peppol.component.name";
+    final static String INBOUND_COPY_DIR = "peppol.inbound.copy.directory";
     final static String INBOUND_MQ_EXCHANGE = "peppol.inbound.queue.exchange";
     final static String INBOUND_MQ_QUEUE = "peppol.inbound.queue.name";
     final static String INBOUND_MQ_HOST = "peppol.inbound.queue.host";
@@ -57,12 +56,9 @@ public class InboundProperties {
     }
 
     @Nullable
-    public String getProperty(String key) {
+    String getProperty(String key) {
         return it.getProperty(key);
     }
 
-    @NotNull Properties getProperties() {
-        return it;
-    }
 
 }

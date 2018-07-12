@@ -31,8 +31,8 @@ dependencies {
     compile project (':common')
 
     compile fileTree(dir: '../common/libs', include: 'service-now-connector-all.jar')
-    compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api-4.0.0-SNAPSHOT.jar')
-    compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-commons-4.0.0-SNAPSHOT.jar')
+    //compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api-4.0.0-SNAPSHOT.jar')
+    //compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-commons-4.0.0-SNAPSHOT.jar')
 
     testCompile 'junit:junit:4.12'
 }

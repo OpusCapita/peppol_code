@@ -40,8 +40,13 @@ dependencies {
 
     compile 'io.vavr:vavr:0.9.0'
 
+    compile group: 'no.difi.oxalis', name: 'oxalis-commons', version: '4.0.1'
+    compile group: 'no.difi.oxalis', name: 'oxalis-as2', version: '4.0.1'
+    compile group: 'no.difi.oxalis', name: 'oxalis-api', version: '4.0.1'
+    compile group: 'no.difi.oxalis', name: 'oxalis-document-sniffer', version: '4.0.1'
+
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api*.jar')
+    //compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api*.jar')
     testCompile 'junit:junit:4.12'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }

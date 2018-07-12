@@ -1,7 +1,10 @@
 package com.opuscapita.peppol.outbound.controller.sender;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import eu.peppol.outbound.transmission.TransmissionResponse;
+import no.difi.oxalis.api.lang.OxalisContentException;
+import no.difi.oxalis.api.lang.OxalisTransmissionException;
+import no.difi.oxalis.api.outbound.TransmissionResponse;
+import no.difi.vefa.peppol.common.lang.PeppolParsingException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -14,6 +17,6 @@ import java.io.IOException;
 @FunctionalInterface
 public interface PeppolSender {
 
-    TransmissionResponse send(@NotNull ContainerMessage containerMessage) throws IOException;
+    TransmissionResponse send(@NotNull ContainerMessage containerMessage) throws IOException, OxalisContentException, OxalisTransmissionException, PeppolParsingException;
 
 }

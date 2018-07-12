@@ -1,7 +1,6 @@
 package com.opuscapita.peppol.inbound;
 
-import eu.peppol.persistence.ExtendedMessageRepository;
-import eu.peppol.persistence.MessageRepository;
+import no.difi.oxalis.api.persist.PayloadPersister;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -21,17 +20,18 @@ public class LoaderTest {
 
     @Ignore("Properties file moved from resource to local file, no idea how to make it available for unit test")
     @Test
-    public void testLoader() throws Exception {
+    public void testLoader() {
         System.out.println(Paths.get(".").toAbsolutePath().normalize().toString());
-        ServiceLoader<MessageRepository> serviceLoader = createCustomServiceLoader("file:///main/");
+        ServiceLoader<PayloadPersister> serviceLoader = createCustomServiceLoader("file:///main/");
 
         assertNotNull(serviceLoader);
         assertTrue(serviceLoader.iterator().hasNext());
-        assertEquals(ExtendedMessageRepository.class, serviceLoader.iterator().next().getClass());
+        assertEquals(InboundReceiver.class, serviceLoader.iterator().next().getClass());
     }
 
     // code block from Oxalis library that loads custom persistence
-    private static ServiceLoader<MessageRepository> createCustomServiceLoader(String persistenceClassPath) {
+    @SuppressWarnings("SameParameterValue")
+    private static ServiceLoader<PayloadPersister> createCustomServiceLoader(String persistenceClassPath) {
         if (persistenceClassPath == null || persistenceClassPath.trim().length() == 0) {
             throw new IllegalArgumentException("persistence class path null or empty");
         }
@@ -44,13 +44,13 @@ public class LoaderTest {
             URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{classPathUrl}, Thread.currentThread().getContextClassLoader());
             System.out.println("Custom class loader: " + Arrays.toString(urlClassLoader.getURLs()));
 
-            System.out.println("Searching for " + "META-INF/services/" + MessageRepository.class.getName());
-            URL r = urlClassLoader.getResource("META-INF/services/" + MessageRepository.class.getName());
+            System.out.println("Searching for " + "META-INF/services/" + PayloadPersister.class.getName());
+            URL r = urlClassLoader.getResource("META-INF/services/" + PayloadPersister.class.getName());
             if (r == null) {
-                System.out.println("No META-INF/services file found for " + MessageRepository.class.getName());
+                System.out.println("No META-INF/services file found for " + PayloadPersister.class.getName());
             }
 
-            ServiceLoader<MessageRepository> serviceLoader = ServiceLoader.load(MessageRepository.class, urlClassLoader);
+            ServiceLoader<PayloadPersister> serviceLoader = ServiceLoader.load(PayloadPersister.class, urlClassLoader);
             System.out.println("Loading MessageRepository instances from " + classPathUrl.toExternalForm());
             return serviceLoader;
         } catch (MalformedURLException e) {

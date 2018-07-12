@@ -1,11 +1,9 @@
 package com.opuscapita.peppol.outbound.controller.sender;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import eu.peppol.BusDoxProtocol;
-import eu.peppol.PeppolStandardBusinessHeader;
-import eu.peppol.identifier.TransmissionId;
-import eu.peppol.outbound.transmission.TransmissionResponse;
-import eu.peppol.security.CommonName;
+import no.difi.oxalis.api.model.TransmissionIdentifier;
+import no.difi.oxalis.api.outbound.TransmissionResponse;
+import no.difi.vefa.peppol.common.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +12,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.UUID;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Faked sender for testing without sending real data. Does nothing, just returns fake TransmissionResponse.
@@ -41,48 +39,47 @@ public class FakeSender implements PeppolSender {
             throw new IllegalStateException("This sending expected to fail in test mode");
         }
 
-        // useful for multi-threading tests
-//        try {
-//            logger.info("IN -> thread " + Thread.currentThread().getName());
-//            Thread.sleep(new Random().nextInt(9000));
-//            logger.info("OUT <- thread " + Thread.currentThread().getName());
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
         logger.info("Returning fake transmission result, to enable real sending set 'peppol.outbound.sending.enabled' to true");
 
         return new TransmissionResponse() {
-            private final TransmissionId transmissionId = new TransmissionId(UUID.randomUUID());
-
             @Override
-            public TransmissionId getTransmissionId() {
-                return transmissionId;
+            public TransmissionIdentifier getTransmissionIdentifier() {
+                return TransmissionIdentifier.generateUUID();
             }
 
             @Override
-            public PeppolStandardBusinessHeader getStandardBusinessHeader() {
+            public Header getHeader() {
                 return null;
             }
 
             @Override
-            public URL getURL() {
+            public Date getTimestamp() {
                 return null;
             }
 
             @Override
-            public BusDoxProtocol getProtocol() {
+            public Digest getDigest() {
                 return null;
             }
 
             @Override
-            public CommonName getCommonName() {
+            public TransportProtocol getTransportProtocol() {
                 return null;
             }
 
             @Override
-            public byte[] getEvidenceBytes() {
-                return new byte[0];
+            public List<Receipt> getReceipts() {
+                return null;
+            }
+
+            @Override
+            public Receipt primaryReceipt() {
+                return null;
+            }
+
+            @Override
+            public Endpoint getEndpoint() {
+                return null;
             }
         };
     }

@@ -3,13 +3,15 @@ package com.opuscapita.peppol.outbound.controller.sender;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.outbound.util.OxalisUtils;
-import eu.peppol.BusDoxProtocol;
-import eu.peppol.PeppolStandardBusinessHeader;
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.PeppolProcessTypeId;
-import eu.peppol.identifier.TransmissionId;
-import eu.peppol.outbound.transmission.*;
-import eu.peppol.security.CommonName;
+import no.difi.oxalis.api.lang.OxalisContentException;
+import no.difi.oxalis.api.lang.OxalisTransmissionException;
+import no.difi.oxalis.api.model.TransmissionIdentifier;
+import no.difi.oxalis.api.outbound.TransmissionRequest;
+import no.difi.oxalis.api.outbound.TransmissionResponse;
+import no.difi.oxalis.api.outbound.Transmitter;
+import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
+import no.difi.vefa.peppol.common.lang.PeppolParsingException;
+import no.difi.vefa.peppol.common.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +25,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
-import java.net.URL;
+import java.util.Date;
+import java.util.List;
 
 /**
  * More advanced test sender that the {@link FakeSender}.
@@ -43,8 +46,8 @@ public class TestSender extends UblSender {
     private String testRecipient;
 
     @Autowired
-    public TestSender(@Nullable OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper, @NotNull FakeSender fakeSender) {
-        super(oxalisOutboundModuleWrapper);
+    public TestSender(@Nullable OxalisWrapper oxalisWrapper, @NotNull FakeSender fakeSender) {
+        super(oxalisWrapper);
         this.fakeSender = fakeSender;
     }
 
@@ -52,18 +55,18 @@ public class TestSender extends UblSender {
     @Autowired
     @Override
     public void initialize() {
-        oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
+        oxalisOutboundModule = oxalisWrapper.getOxalisOutboundModule();
     }
 
     @Override
     protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
-        return oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
+        return oxalisWrapper.getTransmissionRequestBuilder(true);
     }
 
     @SuppressWarnings("unused")
     @Override
     @NotNull
-    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException, OxalisContentException, OxalisTransmissionException, PeppolParsingException {
         if (StringUtils.isBlank(testRecipient)) {
             logger.warn("Test sender selected but property 'peppol.outbound.test.recipient' is empty, using FakeSender instead");
             return fakeSender.send(cm);
@@ -80,15 +83,15 @@ public class TestSender extends UblSender {
             requestBuilder.reset();
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
-                    .processType(PeppolProcessTypeId.valueOf(document.getProfileId()))
-                    .sender(new ParticipantId(document.getSenderId()))
-                    .receiver(new ParticipantId(testRecipient))
-                    .trace(true)
+                    .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
+                    .processType(ProcessIdentifier.parse(document.getProfileId()))
+                    .sender(ParticipantIdentifier.of(document.getSenderId()))
+                    .receiver(ParticipantIdentifier.of(testRecipient))
                     .payLoad(getUpdatedFileContent(cm, testRecipient));
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
             logger.info("Thread " + Thread.currentThread().getName() + " about to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: "
-                    + transmissionRequest.getEndpointAddress().getCommonName().toString());
+                    + transmissionRequest.getEndpoint());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 
@@ -103,42 +106,53 @@ public class TestSender extends UblSender {
             if (cm.getFileName().contains("-integration-test-")) {
                 TransmissionResponse fakeResult = new TransmissionResponse() {
                     @Override
-                    public TransmissionId getTransmissionId() {
-                        return new TransmissionId(new File(cm.getFileName()).getName());
-                    }
-
-                    @Override
-                    public PeppolStandardBusinessHeader getStandardBusinessHeader() {
+                    public Endpoint getEndpoint() {
                         return null;
                     }
 
                     @Override
-                    public URL getURL() {
+                    public TransmissionIdentifier getTransmissionIdentifier() {
+                        return TransmissionIdentifier.of(cm.getFileName());
+                    }
+
+                    @Override
+                    public Header getHeader() {
                         return null;
                     }
 
                     @Override
-                    public BusDoxProtocol getProtocol() {
+                    public Date getTimestamp() {
                         return null;
                     }
 
                     @Override
-                    public CommonName getCommonName() {
-                        return new CommonName("fake ap");
+                    public Digest getDigest() {
+                        return null;
                     }
 
                     @Override
-                    public byte[] getEvidenceBytes() {
-                        return new byte[0];
+                    public TransportProtocol getTransportProtocol() {
+                        return null;
                     }
+
+                    @Override
+                    public List<Receipt> getReceipts() {
+                        return null;
+                    }
+
+                    @Override
+                    public Receipt primaryReceipt() {
+                        return null;
+                    }
+
                 };
-                logger.info("created fake TransmissionResponse for integration test with transmission id: " + fakeResult.getTransmissionId());
+                logger.info("created fake TransmissionResponse for integration test with transmission id: " + fakeResult.getTransmissionIdentifier());
                 return fakeResult;
             }
 
             TransmissionResponse result = transmitter.transmit(transmissionRequest);
-            logger.info("Delivered message " + cm.getFileName() + " to URL " + result.getURL() + " with transmission ID: " +
-                    result.getTransmissionId());
+            logger.info("Delivered message " + cm.getFileName() + " to URL " + result.getEndpoint() + " with transmission ID: " +
+                    result.getTransmissionIdentifier());
             return result;
         }
     }

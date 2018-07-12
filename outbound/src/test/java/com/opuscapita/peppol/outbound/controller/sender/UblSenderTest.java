@@ -8,8 +8,7 @@ import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
 import com.opuscapita.peppol.outbound.OutboundApp;
 import com.opuscapita.peppol.outbound.controller.OutboundController;
 import com.opuscapita.peppol.test.util.ContainerMessageTestLoader;
-import eu.peppol.outbound.transmission.OxalisOutboundModuleWrapper;
-import eu.peppol.outbound.transmission.TransmissionRequestBuilder;
+import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
 import org.apache.commons.io.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -33,7 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @Ignore("Test goes crazy, has to review it")
 @RunWith(SpringRunner.class)
@@ -66,7 +66,7 @@ public class UblSenderTest {
                 add("/inconsistent_sender.xml");
             }
         };
-        UblSender ublSender = new UblSenderWrapper(new OxalisOutboundModuleWrapper());
+        UblSender ublSender = new UblSenderWrapper(new OxalisWrapper());
         ublSender.initialize();
 
         resourceFiles.forEach(file -> {
@@ -88,7 +88,7 @@ public class UblSenderTest {
     @Ignore
     @Test
     public void testSendWithJsonFromRabbitMq() throws Exception {
-        UblSender ublSender = new UblSenderWrapper(new OxalisOutboundModuleWrapper());
+        UblSender ublSender = new UblSenderWrapper(new OxalisWrapper());
         ublSender.initialize();
         ContainerMessage containerMessage = null;
         File jsonFileFromStage = getResourceFile(this.getClass().getResource("/msg-to-outbound.json.json"));
@@ -127,18 +127,18 @@ public class UblSenderTest {
 
     private class UblSenderWrapper extends UblSender {
 
-        UblSenderWrapper(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
-            super(oxalisOutboundModuleWrapper);
+        UblSenderWrapper(OxalisWrapper oxalisWrapper) {
+            super(oxalisWrapper);
         }
 
         @Override
         public void initialize() {
-            oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
+            oxalisOutboundModule = oxalisWrapper.getOxalisOutboundModule();
         }
 
         @Override
         protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
-            return oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true);
+            return oxalisWrapper.getTransmissionRequestBuilder(true);
         }
     }
 

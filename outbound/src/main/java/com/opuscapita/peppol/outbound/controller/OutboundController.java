@@ -8,7 +8,7 @@ import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.outbound.controller.sender.*;
-import eu.peppol.outbound.transmission.TransmissionResponse;
+import no.difi.oxalis.api.outbound.TransmissionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,9 +92,9 @@ public class OutboundController {
                     }
                 }
             }
-            logger.info("Message " + cm.getFileName() + " sent with transmission ID = " + transmissionResponse.getTransmissionId());
-            cm.getProcessingInfo().setTransactionId(transmissionResponse.getTransmissionId().toString());
-            cm.getProcessingInfo().setCommonName(transmissionResponse.getCommonName() != null ? transmissionResponse.getCommonName().toString() : "N/A");
+            logger.info("Message " + cm.getFileName() + " sent with transmission ID = " + transmissionResponse.getTransmissionIdentifier());
+            cm.getProcessingInfo().setTransactionId(transmissionResponse.getTransmissionIdentifier().toString());
+            cm.getProcessingInfo().setCommonName(transmissionResponse.getEndpoint() != null ? transmissionResponse.getEndpoint().toString() : "N/A");
             cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol() != null ? transmissionResponse.getProtocol().toString() : "N/A");
         } catch (Exception e) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + e.getMessage());

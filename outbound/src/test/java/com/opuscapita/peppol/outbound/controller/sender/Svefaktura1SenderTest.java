@@ -7,12 +7,13 @@ import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.container.xml.DocumentTemplates;
 import com.opuscapita.peppol.outbound.OutboundApp;
 import com.opuscapita.peppol.outbound.controller.OutboundController;
-import eu.peppol.identifier.PeppolDocumentTypeId;
-import eu.peppol.identifier.PeppolProcessTypeId;
-import eu.peppol.outbound.OxalisOutboundModule;
-import eu.peppol.outbound.transmission.*;
-import eu.peppol.security.CommonName;
-import eu.peppol.smp.SmpLookupManager;
+import no.difi.oxalis.api.outbound.TransmissionRequest;
+import no.difi.oxalis.api.outbound.TransmissionResponse;
+import no.difi.oxalis.api.outbound.Transmitter;
+import no.difi.oxalis.outbound.OxalisOutboundComponent;
+import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
+import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +34,6 @@ import java.io.InputStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,11 +48,10 @@ import static org.mockito.Mockito.when;
 public class Svefaktura1SenderTest {
 
     // mocks
-    private OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper = mock(OxalisOutboundModuleWrapper.class);
+    private OxalisWrapper oxalisWrapper = mock(OxalisWrapper.class);
     private TransmissionRequestBuilder requestBuilder = mock(TransmissionRequestBuilder.class);
     private TransmissionRequest request = mock(TransmissionRequest.class);
-    private SmpLookupManager.PeppolEndpointData peppolEndpointData = mock(SmpLookupManager.PeppolEndpointData.class);
-    private OxalisOutboundModule oxalisOutboundModule = mock(OxalisOutboundModule.class);
+    private OxalisOutboundComponent oxalisOutboundModule = mock(OxalisOutboundComponent.class);
     private Transmitter transmitter = mock(Transmitter.class);
     private TransmissionResponse response = mock(TransmissionResponse.class);
 
@@ -61,23 +60,21 @@ public class Svefaktura1SenderTest {
 
     @Test
     public void testSvefakturaData() throws Exception {
-        ArgumentCaptor<PeppolDocumentTypeId> documentTypeIdArgumentCaptor = ArgumentCaptor.forClass(PeppolDocumentTypeId.class);
-        ArgumentCaptor<PeppolProcessTypeId> peppolProcessTypeIdArgumentCaptor = ArgumentCaptor.forClass(PeppolProcessTypeId.class);
+        ArgumentCaptor<DocumentTypeIdentifier> documentTypeIdArgumentCaptor = ArgumentCaptor.forClass(DocumentTypeIdentifier.class);
+        ArgumentCaptor<ProcessIdentifier> peppolProcessTypeIdArgumentCaptor = ArgumentCaptor.forClass(ProcessIdentifier.class);
 
-        when(oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(true)).thenReturn(requestBuilder);
+        when(oxalisWrapper.getTransmissionRequestBuilder(true)).thenReturn(requestBuilder);
         when(requestBuilder.documentType(documentTypeIdArgumentCaptor.capture())).thenReturn(requestBuilder);
         when(requestBuilder.processType(peppolProcessTypeIdArgumentCaptor.capture())).thenReturn(requestBuilder);
         when(requestBuilder.sender(any())).thenReturn(requestBuilder);
         when(requestBuilder.receiver(any())).thenReturn(requestBuilder);
-        when(requestBuilder.trace(anyBoolean())).thenReturn(requestBuilder);
         when(requestBuilder.payLoad(any())).thenReturn(requestBuilder);
         when(requestBuilder.build()).thenReturn(request);
-        when(request.getEndpointAddress()).thenReturn(peppolEndpointData);
-        when(peppolEndpointData.getCommonName()).thenReturn(new CommonName("common_name"));
+        when(request.getEndpoint()).thenReturn(null);
         when(oxalisOutboundModule.getTransmitter()).thenReturn(transmitter);
         when(transmitter.transmit(any())).thenReturn(response);
 
-        Svefaktura1Sender sender = new Svefaktura1Sender(oxalisOutboundModuleWrapper);
+        Svefaktura1Sender sender = new Svefaktura1Sender(oxalisWrapper);
         sender.oxalisOutboundModule = oxalisOutboundModule;
 
         String fileName = copyTestFile();
@@ -91,10 +88,11 @@ public class Svefaktura1SenderTest {
 
         sender.send(cm);
 
+        System.out.println(documentTypeIdArgumentCaptor.getValue().toString());
         assertEquals("urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0",
                 documentTypeIdArgumentCaptor.getValue().toString());
         System.out.println(peppolProcessTypeIdArgumentCaptor.getValue().toString());
-        assertEquals("urn:sfti:services:documentprocessing:BasicInvoice:1:0",
+        assertEquals("cenbii-procid-ubl::urn:sfti:services:documentprocessing:BasicInvoice:1:0",
                 peppolProcessTypeIdArgumentCaptor.getValue().toString());
     }
 

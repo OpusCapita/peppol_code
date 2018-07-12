@@ -3,10 +3,16 @@ package com.opuscapita.peppol.outbound.controller.sender;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.outbound.util.OxalisUtils;
-import eu.peppol.identifier.ParticipantId;
-import eu.peppol.identifier.PeppolProcessTypeId;
-import eu.peppol.outbound.OxalisOutboundModule;
-import eu.peppol.outbound.transmission.*;
+import no.difi.oxalis.api.lang.OxalisContentException;
+import no.difi.oxalis.api.lang.OxalisTransmissionException;
+import no.difi.oxalis.api.outbound.TransmissionRequest;
+import no.difi.oxalis.api.outbound.TransmissionResponse;
+import no.difi.oxalis.api.outbound.Transmitter;
+import no.difi.oxalis.outbound.OxalisOutboundComponent;
+import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
+import no.difi.vefa.peppol.common.lang.PeppolParsingException;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,27 +33,27 @@ import java.io.InputStream;
 public class UblSender implements PeppolSender {
     private final static Logger logger = LoggerFactory.getLogger(UblSender.class);
 
-    final OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper;
+    final OxalisWrapper oxalisWrapper;
 
-    OxalisOutboundModule oxalisOutboundModule;
+    OxalisOutboundComponent oxalisOutboundModule;
 
     @Autowired
-    public UblSender(OxalisOutboundModuleWrapper oxalisOutboundModuleWrapper) {
-        this.oxalisOutboundModuleWrapper = oxalisOutboundModuleWrapper;
+    public UblSender(OxalisWrapper oxalisWrapper) {
+        this.oxalisWrapper = oxalisWrapper;
     }
 
     @PostConstruct
     public void initialize() {
-        oxalisOutboundModule = oxalisOutboundModuleWrapper.getOxalisOutboundModule();
+        oxalisOutboundModule = oxalisWrapper.getOxalisOutboundModule();
     }
 
     protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
-        return oxalisOutboundModuleWrapper.getTransmissionRequestBuilder(false);
+        return oxalisWrapper.getTransmissionRequestBuilder(false);
     }
 
     @SuppressWarnings("unused")
     @NotNull
-    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException, OxalisContentException, OxalisTransmissionException, PeppolParsingException {
         DocumentInfo document = cm.getDocumentInfo();
         if (document == null) {
             throw new IllegalArgumentException("There is no document in message");
@@ -59,15 +65,14 @@ public class UblSender implements PeppolSender {
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
-                    .processType(PeppolProcessTypeId.valueOf(document.getProfileId()))
-                    .sender(new ParticipantId(document.getSenderId()))
-                    .receiver(new ParticipantId(document.getRecipientId()))
-                    .trace(true)
+                    .processType(ProcessIdentifier.of(document.getProfileId()))
+                    .sender(ParticipantIdentifier.of(document.getSenderId()))
+                    .receiver(ParticipantIdentifier.of(document.getRecipientId()))
                     .payLoad(inputStream);
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
             logger.info("Thread " + Thread.currentThread().getName() + " is about to send " + cm.getFileName() + ", endpoint: " +
-                    transmissionRequest.getEndpointAddress().getCommonName().toString());
+                    transmissionRequest.getEndpoint());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
 
