@@ -1,4 +1,4 @@
-FROM d-l-tools.ocnet.local:443/oxalis:4.0.0-RC1
+FROM d-l-tools.ocnet.local:443/oxalis:4.0.1
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV INBOUND_HOME "/opt/local/services/peppol/inbound"

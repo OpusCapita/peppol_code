@@ -29,6 +29,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.2.RELEASE'
 
     compile project (':common')
+    compile group: 'no.difi.oxalis', name: 'oxalis-inbound', version: '4.0.1'
 
     compile fileTree(dir: '../common/libs', include: 'service-now-connector-all.jar')
     //compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api-4.0.0-SNAPSHOT.jar')
