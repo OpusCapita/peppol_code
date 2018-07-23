@@ -64,6 +64,7 @@ public class CommonMessageReceiver {
     }
 
     private void reportError(@NotNull Throwable e, @Nullable String message) {
+        logger.warn("Reporting error: " + message + ", exception message: " + e.getMessage());
         try {
             errorHandler.reportWithoutContainerMessage("n/a", e, "Failed to deserialize received message",
                     null, "n/a", "Deserialization failed for message: '" + message + "'");
