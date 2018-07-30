@@ -40,6 +40,7 @@ public class InboundReceiver implements PayloadPersister, ReceiptPersister {
         errorHandler = new InboundErrorHandler(properties);
         gson = new GsonBuilder().disableHtmlEscaping().create();
         storage = new StorageImpl().setShortTermDirectory(properties.getProperty(INBOUND_OUTPUT_DIR));
+        logger.info("OpusCapita custom inbound receiver initialized");
     }
 
     @SuppressWarnings("ConstantConditions")
