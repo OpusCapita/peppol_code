@@ -10,8 +10,7 @@ import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.commons.storage.StorageImpl;
 import no.difi.oxalis.api.inbound.InboundMetadata;
 import no.difi.oxalis.api.model.TransmissionIdentifier;
-import no.difi.oxalis.api.persist.PayloadPersister;
-import no.difi.oxalis.api.persist.ReceiptPersister;
+import no.difi.oxalis.api.persist.PersisterHandler;
 import no.difi.oxalis.api.util.Type;
 import no.difi.vefa.peppol.common.model.Header;
 import org.slf4j.Logger;
@@ -26,8 +25,8 @@ import java.nio.file.Paths;
 import static com.opuscapita.peppol.inbound.InboundProperties.*;
 
 @Singleton
-@Type("oc")
-public class InboundReceiver implements PayloadPersister, ReceiptPersister {
+@Type("opuscapita")
+public class InboundReceiver implements PersisterHandler {
     private final static Logger logger = LoggerFactory.getLogger(InboundReceiver.class);
 
     private final InboundProperties properties = new InboundProperties();
@@ -40,7 +39,7 @@ public class InboundReceiver implements PayloadPersister, ReceiptPersister {
         errorHandler = new InboundErrorHandler(properties);
         gson = new GsonBuilder().disableHtmlEscaping().create();
         storage = new StorageImpl().setShortTermDirectory(properties.getProperty(INBOUND_OUTPUT_DIR));
-        logger.info("OpusCapita custom inbound receiver initialized");
+        logger.info("OpusCapita inbound receiver initialized");
     }
 
     @SuppressWarnings("ConstantConditions")
