@@ -46,7 +46,7 @@ public class MessageHandler {
 
     @NotNull
     ContainerMessage process(TransmissionIdentifier transmissionIdentifier, Header header, InputStream inputStream) throws IOException {
-        String dataFile = storeTemporary(transmissionIdentifier, inputStream);
+        String dataFile = storeTemporary(header, inputStream);
         ContainerMessage cm = createContainerMessage(transmissionIdentifier, header, dataFile);
         messageSender.send(cm);
         return cm;
@@ -63,14 +63,15 @@ public class MessageHandler {
     }
 
     // this is the only method that allowed to throw an exception which will be propagated to the sending party
-    private String storeTemporary(TransmissionIdentifier transmissionIdentifier, InputStream inputStream) throws IOException {
+    private String storeTemporary(Header header, InputStream inputStream) throws IOException {
+        String transmissionId = header.getIdentifier().toString();
         try {
-            String result = storage.storeTemporary(inputStream, transmissionIdentifier + ".xml", copyDirectory);
+            String result = storage.storeTemporary(inputStream, transmissionId + ".xml", copyDirectory);
             logger.info("Received message stored as " + result);
             return result;
         } catch (Exception e) {
-            fail("Failed to store message " + transmissionIdentifier + ".xml", transmissionIdentifier.toString(), e);
-            throw new IOException("Failed to store message " + transmissionIdentifier + ".xml: " + e.getMessage(), e);
+            fail("Failed to store message " + transmissionId + ".xml", transmissionId, e);
+            throw new IOException("Failed to store message " + transmissionId + ".xml: " + e.getMessage(), e);
         }
     }
 

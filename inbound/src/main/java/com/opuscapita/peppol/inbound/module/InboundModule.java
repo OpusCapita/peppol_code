@@ -14,9 +14,9 @@ public class InboundModule extends OxalisModule implements Module {
 
     @Override
     protected void configure() {
-        bindTyped(PayloadPersister.class, MessageReceiver.class);
-        bindTyped(ReceiptPersister.class, MessageReceiver.class);
-        bindTyped(PersisterHandler.class, MessageReceiver.class);
+        bindTyped(PayloadPersister.class, OxalisHandler.class);
+        bindTyped(ReceiptPersister.class, OxalisHandler.class);
+        bindTyped(PersisterHandler.class, OxalisHandler.class);
     }
 
 }

@@ -23,13 +23,13 @@ import java.nio.file.Paths;
  */
 @Singleton
 @Type("opuscapita")
-public class MessageReceiver implements PersisterHandler {
-    private final static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
+public class OxalisHandler implements PersisterHandler {
+    private final static Logger logger = LoggerFactory.getLogger(OxalisHandler.class);
 
     private final MessageHandler messageHandler;
 
     @SuppressWarnings("ConstantConditions")
-    public MessageReceiver() {
+    public OxalisHandler() {
         messageHandler = InboundApp.getMessageHandler();
         logger.info("OpusCapita inbound receiver initialized");
     }
