@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Lazy;
 /**
  * @author Sergejs.Roze
  */
-@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.outbound", "eu.peppol.outbound.transmission"})
+@SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.outbound"})
 @EnableDiscoveryClient
 public class OutboundApp {
     @SuppressWarnings("unused")

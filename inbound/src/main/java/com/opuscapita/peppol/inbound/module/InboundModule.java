@@ -1,4 +1,4 @@
-package com.opuscapita.peppol.inbound;
+package com.opuscapita.peppol.inbound.module;
 
 import com.google.inject.Module;
 import no.difi.oxalis.api.persist.PayloadPersister;
@@ -6,14 +6,17 @@ import no.difi.oxalis.api.persist.PersisterHandler;
 import no.difi.oxalis.api.persist.ReceiptPersister;
 import no.difi.oxalis.commons.guice.OxalisModule;
 
+/**
+ * Custom Oxalis module that must replace their receiver.
+ */
 @SuppressWarnings("unused")
 public class InboundModule extends OxalisModule implements Module {
 
     @Override
     protected void configure() {
-        bindTyped(PayloadPersister.class, InboundReceiver.class);
-        bindTyped(ReceiptPersister.class, InboundReceiver.class);
-        bindTyped(PersisterHandler.class, InboundReceiver.class);
+        bindTyped(PayloadPersister.class, MessageReceiver.class);
+        bindTyped(ReceiptPersister.class, MessageReceiver.class);
+        bindTyped(PersisterHandler.class, MessageReceiver.class);
     }
 
 }

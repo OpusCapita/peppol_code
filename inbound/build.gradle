@@ -1,10 +1,19 @@
 
-plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
+buildscript {
+    ext {
+        springBootVersion = '1.4.2.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
-apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'inbound'
@@ -18,38 +27,17 @@ repositories {
     mavenCentral()
 }
 
-// probably this is an overkill and we don't need everything inside
-//jar {
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//}
-
-shadowJar {
-    baseName = 'inbound'
-    classifier = null
-    version = null
-}
-
-configurations {
-    all*.exclude group: 'org.bouncycastle'
-    all*.exclude group: 'org.springframework.**'
-}
-
 dependencies {
-//    compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.2.RELEASE'
-//    compile 'org.springframework.boot:spring-boot-starter-web:1.4.2.RELEASE'
-//    compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.2.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+    compile 'org.springframework.boot:spring-boot-starter-mail'
 
-    compile (project (':common')) {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-actuator'
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-amqp'
-    }
-    compile group: 'no.difi.oxalis', name: 'oxalis-inbound', version: '4.0.1'
-    compile group: 'no.difi.oxalis', name: 'oxalis-commons', version: '4.0.1'
-    compile group: 'no.difi.oxalis', name: 'oxalis-api', version: '4.0.1'
+    compile project (':common')
+
+    compile group: 'no.difi.oxalis', name: 'oxalis-as2', version: '4.0.1'
 
     compile fileTree(dir: '../common/libs', include: 'service-now-connector-all.jar')
-    //compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api-4.0.0-SNAPSHOT.jar')
-    //compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-commons-4.0.0-SNAPSHOT.jar')
 
     testCompile 'junit:junit:4.12'
 }
