@@ -1,5 +1,10 @@
 
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
 apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 jar {
     baseName = 'inbound'
@@ -14,22 +19,33 @@ repositories {
 }
 
 // probably this is an overkill and we don't need everything inside
-jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//jar {
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//}
+
+shadowJar {
+    baseName = 'inbound'
+    classifier = null
+    version = null
 }
 
 configurations {
     all*.exclude group: 'org.bouncycastle'
-    all*.exclude group: 'org.springframework'
+    all*.exclude group: 'org.springframework.**'
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.2.RELEASE'
-    compile 'org.springframework.boot:spring-boot-starter-web:1.4.2.RELEASE'
-    compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.2.RELEASE'
+//    compile 'org.springframework.boot:spring-boot-starter-actuator:1.4.2.RELEASE'
+//    compile 'org.springframework.boot:spring-boot-starter-web:1.4.2.RELEASE'
+//    compile 'org.springframework.boot:spring-boot-starter-amqp:1.4.2.RELEASE'
 
-    compile project (':common')
+    compile (project (':common')) {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-actuator'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-amqp'
+    }
     compile group: 'no.difi.oxalis', name: 'oxalis-inbound', version: '4.0.1'
+    compile group: 'no.difi.oxalis', name: 'oxalis-commons', version: '4.0.1'
+    compile group: 'no.difi.oxalis', name: 'oxalis-api', version: '4.0.1'
 
     compile fileTree(dir: '../common/libs', include: 'service-now-connector-all.jar')
     //compile fileTree(dir: '../common-oxalis/libs', include: 'oxalis-api-4.0.0-SNAPSHOT.jar')
