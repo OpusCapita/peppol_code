@@ -1,4 +1,4 @@
-FROM d-l-tools.ocnet.local:443/oxalis:4.0.1
+FROM d-l-tools.ocnet.local:443/openjdk:8u141-peppol
 LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV INBOUND_HOME "/opt/local/services/peppol/inbound"
@@ -7,8 +7,8 @@ ENV INBOUND_CONFIG "/peppol/config/inbound"
 USER root
 RUN set -x \
     && mkdir -p "${INBOUND_HOME}" "${INBOUND_CONFIG}" \
-    && ln -s "${INBOUND_CONFIG}/" "${INBOUND_HOME}/config" \
-    && ln -s "${INBOUND_CONFIG}/application.properties" "${INBOUND_HOME}/application.properties"
+    && ln -s "${INBOUND_CONFIG}/" "${INBOUND_HOME}/config" 
+    
 
 ADD ["docker-entrypoint.sh", "/docker-entrypoint.sh"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
@@ -28,12 +28,7 @@ RUN set -x \
     && chmod 500 "${INBOUND_HOME}/send-to-peppol.sh"
 
 USER peppol
-ENV JAVA_OPTS "\
-    -Dhttp.proxyHost=10.202.9.33 \
-    -Dhttp.proxyPort=8080 \
-    -Dhttps.proxyHost=10.202.9.33 \
-    -Dhttps.proxyPort=8080 \
-    -Dhttp.nonProxyHosts=\"*.local\" "
 
-CMD ["catalina.sh", "run"]
+CMD ["-jar", "inbound.jar"]
+EXPOSE 8080
 

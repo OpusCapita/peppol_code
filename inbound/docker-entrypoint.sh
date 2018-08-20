@@ -25,7 +25,7 @@ trap 'term_handler' SIGTERM
 trap 'int_handler' SIGINT
 
 # first parameter '-jar' indicates regular startup
-if [[ "$1" == "catalina.sh" ]]; then
+if [[ "$1" == "-jar" ]]; then
   # check services before startup
   while ! curl -fs ${CONFIGURATION_SERVER_HEALTH} > /dev/null; do
       echo "$(date) - still waiting on ${CONFIGURATION_SERVER_HEALTH}";
@@ -41,8 +41,14 @@ if [[ "$1" == "catalina.sh" ]]; then
       echo "$(date) - still waiting on ${RABBITMQ_HEALTH}";
       sleep 1;
   done
+  
+  # read JAVA_OPTS into arrays to avoid need for eval (and associated vulnerabilities)
+  java_opts_array=()
+  while IFS= read -r -d '' item; do
+    java_opts_array+=( "$item" )
+  done < <([[ $JAVA_OPTS ]] && xargs printf '%s\0' <<<"$JAVA_OPTS")
 
-  exec "$@"
+  exec java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 "${java_opts_array[@]}" "$@"
 fi
 
 # if there are params the user is likely trying to explore the image
