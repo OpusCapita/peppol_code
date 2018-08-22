@@ -2,7 +2,7 @@
 #set -x
 
 export CONFIGURATION_SERVER_HEALTH="http://configuration-server:8888/admin/health"
-export INBOUND_HEALTH="http://inbound:8080/peppol-ap-inbound/status"
+export INBOUND_HEALTH="http://inbound:8084/health"
 export RABBITMQ_HEALTH="http://rabbitmq.docker.local:15672"
 
 # change from default umask of 0022 to allow group writes
