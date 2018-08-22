@@ -30,5 +30,5 @@ RUN set -x \
 USER peppol
 
 CMD ["-jar", "inbound.jar"]
-EXPOSE 8080
+EXPOSE 8084
 
