@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import sun.security.x509.X509CertImpl;
 
 import java.io.IOException;
 import java.util.Date;
@@ -79,7 +80,7 @@ public class FakeSender implements PeppolSender {
 
             @Override
             public Endpoint getEndpoint() {
-                return null;
+                return Endpoint.of(TransportProfile.AS2_1_0, null, new X509CertImpl());
             }
         };
     }
