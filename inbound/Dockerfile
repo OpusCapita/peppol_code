@@ -3,6 +3,7 @@ LABEL author="Edgars Didrihsons <Edgars.Didrihsons@opuscapita.com>"
 
 ENV INBOUND_HOME "/opt/local/services/peppol/inbound"
 ENV INBOUND_CONFIG "/peppol/config/inbound"
+ENV OXALIS_HOME "/peppol/config/oxalis"
 
 USER root
 RUN set -x \
