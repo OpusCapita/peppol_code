@@ -22,7 +22,7 @@ configure(allprojects) {
 release {
     versionPropertyFile = 'gradle.properties'
     git {
-        requireBranch = 'master'
+        requireBranch = 'bugfix'
         pushToRemote = 'origin'
     }    
 }

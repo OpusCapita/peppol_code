@@ -59,7 +59,7 @@ try {
                 userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git']],
                 extensions: [
                     [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
-                    [$class: 'LocalBranch', localBranch: 'master']
+                    [$class: 'LocalBranch', localBranch: 'bugfix']
                 ]
             ])
             // get latest version of infrastructure
