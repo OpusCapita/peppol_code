@@ -13,7 +13,8 @@ public class OxalisUtilsTest {
         String customizationId = "urn:sfti:services:documentprocessing:BasicInvoice:1:0" +
                 "###urn:sfti:documents:StandardBusinessDocumentHeader::Invoice" +
                 "##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope";
-        String expected = "urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0";
+        String expected = "busdox-docid-qns::urn:sfti:documents:StandardBusinessDocumentHeader::Invoice" +
+                "##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope::1.0";
         DocumentInfo documentInfo = new DocumentInfo();
         documentInfo.setCustomizationId(customizationId);
         String result = OxalisUtils.getPeppolDocumentTypeId(documentInfo).toString();
