@@ -79,18 +79,33 @@ public class TestSender extends UblSender {
 
         logger.info("Sending message " + cm.getFileName() + " using test sender");
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
+
+//            X509Certificate certificate = null;
+//            try {
+//                CertificateFactory fact = CertificateFactory.getInstance("X.509");
+//                FileInputStream is = new FileInputStream("/home/rozeser1/.oxalis/some.crt");
+//                certificate = (X509Certificate) fact.generateCertificate(is);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
             TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
             requestBuilder.reset();
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
-                    .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
-                    .processType(ProcessIdentifier.parse(document.getProfileId()))
+                    .processType(ProcessIdentifier.of(document.getProfileId()))
+
+//                    .overrideAs2Endpoint(Endpoint.of(
+//                            TransportProfile.AS2_1_0,
+//                            URI.create("http://localhost:8089/as2"),
+//                            certificate))
+
                     .sender(ParticipantIdentifier.of(document.getSenderId()))
                     .receiver(ParticipantIdentifier.of(testRecipient))
                     .payLoad(getUpdatedFileContent(cm, testRecipient));
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
-            logger.info("Thread " + Thread.currentThread().getName() + " about to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: "
+            logger.info("About to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: "
                     + transmissionRequest.getEndpoint());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();

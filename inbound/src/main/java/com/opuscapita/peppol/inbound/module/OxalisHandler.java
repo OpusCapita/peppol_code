@@ -1,7 +1,6 @@
 package com.opuscapita.peppol.inbound.module;
 
 import com.google.gson.Gson;
-import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.inbound.InboundApp;
 import no.difi.oxalis.api.inbound.InboundMetadata;
 import no.difi.oxalis.api.model.TransmissionIdentifier;
@@ -30,6 +29,7 @@ public class OxalisHandler implements PersisterHandler {
 
     @SuppressWarnings("ConstantConditions")
     public OxalisHandler() {
+        // this is done to separate Spring dependency injection from Guice one (we're in Guice now, while messageHandler is in Spring)
         messageHandler = InboundApp.getMessageHandler();
         logger.info("OpusCapita inbound receiver initialized");
     }
@@ -37,12 +37,15 @@ public class OxalisHandler implements PersisterHandler {
     @SuppressWarnings("ConstantConditions")
     @Override
     public Path persist(TransmissionIdentifier transmissionIdentifier, Header header, InputStream inputStream) throws IOException {
-        ContainerMessage cm = messageHandler.process(transmissionIdentifier, header, inputStream);
-        return Paths.get(cm.getFileName());
+        String transmissionId = header.getIdentifier().toString();
+        String dataFile = messageHandler.preProcess(transmissionId, header, inputStream);
+        return Paths.get(dataFile);
     }
 
     @Override
     public void persist(InboundMetadata inboundMetadata, Path payloadPath) {
+        messageHandler.process(inboundMetadata, payloadPath);
+
         logger.info("Transmission receipt for " + payloadPath.toString() + ":\n" + new Gson().toJson(inboundMetadata));
     }
 }

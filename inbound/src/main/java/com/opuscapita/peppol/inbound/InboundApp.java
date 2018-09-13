@@ -2,6 +2,7 @@ package com.opuscapita.peppol.inbound;
 
 import com.opuscapita.peppol.inbound.module.MessageHandler;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -16,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class InboundApp {
     private static MessageHandler mh;
 
+    @Autowired
     public InboundApp(@NotNull MessageHandler messageHandler) {
         mh = messageHandler;
     }
