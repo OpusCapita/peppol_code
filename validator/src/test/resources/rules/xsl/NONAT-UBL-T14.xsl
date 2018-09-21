@@ -544,7 +544,7 @@
       <xsl:variable name="sumAllowance"
                     select="sum(cac:AllowanceCharge[child::cbc:ChargeIndicator='false']/cbc:Amount)"/>
       <xsl:variable name="baseQuantity"
-                    select="xs:decimal(if (cac:Price/cbc:BaseQuantity) then cac:Price/cbc:BaseQuantity else 1)"/>
+                    select="xs:decimal(if (cac:Price/cbc:BaseQuantity and xs:decimal(cac:Price/cbc:BaseQuantity) != 0) then cac:Price/cbc:BaseQuantity else 1)"/>
       <xsl:variable name="pricePerUnit"
                     select="xs:decimal(cac:Price/cbc:PriceAmount) div $baseQuantity"/>
       <xsl:variable name="quantity" select="xs:decimal(cbc:CreditedQuantity)"/>

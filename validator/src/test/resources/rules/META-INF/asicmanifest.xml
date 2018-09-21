@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ASiCManifest xmlns="http://uri.etsi.org/02918/v1.2.1#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#">
-    <SigReference URI="META-INF/signature-16bcd0a3-be2c-435c-96f2-d04ed84a3ac3.p7s" MimeType="application/x-pkcs7-signature"/>
+    <SigReference URI="META-INF/signature-e6788997-33f2-4c70-bf87-83237e92f76d.p7s" MimeType="application/x-pkcs7-signature"/>
     <DataObjectReference URI="xsl/BIIRULES-UBL-T14.xsl" MimeType="application/xml">
         <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
         <ns2:DigestValue>MVx4GQkVqSmyKSt5L8Qb1OLX6Q/1eG0VTLgRH9wyrvM=</ns2:DigestValue>
@@ -27,7 +27,7 @@
     </DataObjectReference>
     <DataObjectReference URI="xsl/BIIRULES-UBL-T16.xsl" MimeType="application/xml">
         <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-        <ns2:DigestValue>YXzUSQFdzJhcnC9jQUxfUtk/SR+pxUbw5PDrv7I187U=</ns2:DigestValue>
+        <ns2:DigestValue>sMcjLj0fZaAjX+ihDy9amkqxL0y6Bap1aKfYSNABobY=</ns2:DigestValue>
     </DataObjectReference>
     <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T16.xsl" MimeType="application/xml">
         <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
@@ -111,10 +111,10 @@
     </DataObjectReference>
     <DataObjectReference URI="xsl/OPENPEPPOL-UBL-T110.xsl" MimeType="application/xml">
         <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-        <ns2:DigestValue>Tv0Jn6wqT7UDm/XBU5bddnlQ7zTFG2ZkixSWGC8BIyQ=</ns2:DigestValue>
+        <ns2:DigestValue>OEs5DVRTX4kusv/607/wUfSdsnMjT0BHytTLdySBvAk=</ns2:DigestValue>
     </DataObjectReference>
-    <DataObjectReference URI="config-eu.peppol.postaward.ver20-e5085a49db8fcf702be9109bf932295f4e838275.xml" MimeType="application/xml">
+    <DataObjectReference URI="config-eu.peppol.postaward.ver20-909f1020e759b63c7e3046bb7a213c1acd36dfe0.xml" MimeType="application/xml">
         <ns2:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-        <ns2:DigestValue>Oi7Hlhe4l/saCmqsXRrh6T6daXtQcPXAtdirUns+twU=</ns2:DigestValue>
+        <ns2:DigestValue>hRU0feH2PWbIOvLdazlSlXlOOdgfiBu7fCtlcmf2aZQ=</ns2:DigestValue>
     </DataObjectReference>
 </ASiCManifest>

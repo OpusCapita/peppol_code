@@ -3,6 +3,7 @@ package com.opuscapita.peppol.preprocessing.controller;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,14 @@ public class PreprocessingControllerTest {
 
     private void processFile(String dir, String file) throws Exception {
         System.out.println("Testing file " + file);
-        ContainerMessage cm = new ContainerMessage("meatdata", new File(new File(files, dir), file).getAbsolutePath(), Endpoint.TEST);
+        Endpoint endpoint;
+        if (!file.contains("with-header")) {
+            endpoint = Endpoint.TEST;
+        } else {
+            endpoint = new Endpoint("test", ProcessType.OUT_PREPROCESS);
+        }
+
+        ContainerMessage cm = new ContainerMessage("test_metadata", new File(new File(files, dir), file).getAbsolutePath(), endpoint);
 
         cm = controller.process(cm);
 

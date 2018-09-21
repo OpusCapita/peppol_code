@@ -496,15 +496,17 @@
    </xsl:template>
 
 	  <!--RULE -->
-   <xsl:template match="//cac:Item" priority="1000" mode="M6">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="//cac:Item"/>
+   <xsl:template match="cac:Item/cac:StandardItemIdentification/cbc:ID"
+                 priority="1000"
+                 mode="M6">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                       context="cac:Item/cac:StandardItemIdentification/cbc:ID"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="(//cac:StandardItemIdentification/cbc:ID/@schemeID) or not(//cac:StandardItemIdentification)"/>
+         <xsl:when test="exists(@schemeID)"/>
          <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="(//cac:StandardItemIdentification/cbc:ID/@schemeID) or not(//cac:StandardItemIdentification)">
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="exists(@schemeID)">
                <xsl:attribute name="id">BII2-T16-R018</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">

@@ -600,6 +600,8 @@
                     select="xs:decimal(if (cbc:PayableRoundingAmount) then cbc:PayableRoundingAmount else 0)"/>
       <xsl:variable name="payableAmount"
                     select="xs:decimal(if (cbc:PayableAmount) then cbc:PayableAmount else 0)"/>
+      <xsl:variable name="prepaidAmount"
+                    select="xs:decimal(if (cbc:PrepaidAmount) then cbc:PrepaidAmount else 0)"/>
       <xsl:variable name="taxTotal"
                     select="xs:decimal(if (/ubl:OrderResponse/cac:TaxTotal/cbc:TaxAmount) then (/ubl:OrderResponse/cac:TaxTotal/cbc:TaxAmount) else 0)"/>
       <xsl:variable name="allowanceTotal"
@@ -722,16 +724,16 @@
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="not(cbc:PayableAmount) or $payableAmount = u:twodec($taxInclusiveAmount)"/>
+         <xsl:when test="not(cbc:PayableAmount) or $payableAmount = u:twodec($taxInclusiveAmount) - u:twodec($prepaidAmount)"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="not(cbc:PayableAmount) or $payableAmount = u:twodec($taxInclusiveAmount)">
+                                test="not(cbc:PayableAmount) or $payableAmount = u:twodec($taxInclusiveAmount) - u:twodec($prepaidAmount)">
                <xsl:attribute name="id">EUGEN-T110-R024</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>[EUGEN-T110-R024]-Total amount for payment MUST be equal to the tax inclusive amount.</svrl:text>
+               <svrl:text>[EUGEN-T110-R024]-Total amount for payment MUST be equal to the tax inclusive amount minus the prepaid amount.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
