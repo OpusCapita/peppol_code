@@ -68,7 +68,7 @@ public class PreprocessingController {
             endpoint = new Endpoint(componentName, ProcessType.OUT_PREPROCESS);
         }
 
-        document = documentLoader.load(cm.getFileName(), endpoint);
+        document = documentLoader.load(cm.getFileName(), cm.getProcessingInfo().getSource());
 
         String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
         logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);

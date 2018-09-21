@@ -1217,6 +1217,116 @@ peppol:
               - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
               mandatory: false
 
+          # BIS v3 CreditNote with header
+          - name: PEPPOL_BIS.CreditNote
+            root: "$SBD/CreditNote"
+            fields:
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:fdc:peppol\.eu:2017:poacc:billing:01:1\.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:3\.0
+            - id: sender_id
+              paths:
+              - "$SBDH/Sender/Identifier"
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$SBDH/Receiver/Identifier"
+              - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+              mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: true
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: sender_name
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+              mandatory: false
+            - id: sender_country_code
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+              mandatory: false
+            - id: recipient_country_code
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: svefaktura_id
+              paths:
+              - "$SBDH/DocumentIdentification/Standard"
+              mandatory: false
+              mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+
+          # BIS v3 CreditNote without header
+          - name: PEPPOL_BIS.CreditNote
+            root: CreditNote
+            fields:
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:fdc:peppol\.eu:2017:poacc:billing:01:1\.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:3\.0
+            - id: sender_id
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+              mandatory: true
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: true
+            # need to add this to DocumentInfo
+            - id: invoice_type_code
+              paths:
+              - "$ROOT/CreditNoteTypeCode"
+              mandatory: true
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: sender_name
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+              mandatory: false
+            - id: sender_country_code
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+              mandatory: false
+            - id: recipient_country_code
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+
           - name: PEPPOL_BIS.Invoice
             root: "$SBD/Invoice"
             fields:
@@ -1346,6 +1456,124 @@ peppol:
               paths:
               - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
               mandatory: true
+            - id: recipient_country_code
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+
+          # BIS v3 Invoice with header
+          - name: PEPPOL_BIS.Invoice
+            root: "$SBD/Invoice"
+            fields:
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:fdc:peppol\.eu:2017:poacc:billing:01:1\.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:3\.0
+            - id: sender_id
+              paths:
+              - "$SBDH/Sender/Identifier"
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$SBDH/Receiver/Identifier"
+              - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+              mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: true
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: due_date
+              paths:
+              - "$ROOT/DueDate"
+              mandatory: false
+            - id: sender_name
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+              mandatory: false
+            - id: sender_country_code
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+              mandatory: false
+            - id: recipient_country_code
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: svefaktura_id
+              paths:
+              - "$SBDH/DocumentIdentification/Standard"
+              mandatory: false
+              mask: "(?!.*urn:sfti:documents:BasicInvoice:1:0.*).*"
+
+          # BIS v3 Invoice without header
+          - name: PEPPOL_BIS.Invoice
+            root: Invoice
+            fields:
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:fdc:peppol\.eu:2017:poacc:billing:01:1\.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:3\.0
+            - id: sender_id
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+              mandatory: true
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: true
+            # need to add this to DocumentInfo
+            - id: invoice_type_code
+              paths:
+              - "$ROOT/InvoiceTypeCode"
+              mandatory: true
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: due_date
+              paths:
+              - "$ROOT/DueDate"
+              mandatory: false
+            - id: sender_name
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PartyName/Name"
+              mandatory: false
+            - id: sender_country_code
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PartyName/Name"
+              mandatory: false
             - id: recipient_country_code
               paths:
               - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
