@@ -56,7 +56,7 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: code_version]],
-                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git']],
+                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_code.git']],
                 extensions: [
                     [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
                     [$class: 'LocalBranch', localBranch: 'master']
@@ -66,7 +66,7 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: infra_version]],
-                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git']],
+                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_infrastructure.git']],
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'infra']]
             ])
 
