@@ -36,7 +36,7 @@ public class OutboundController {
 
     @Value("${peppol.outbound.sending.enabled:false}")
     private boolean sendingEnabled;
-    @Value("${peppol.outbound.test.recipient:''}")
+    @Value("${peppol.outbound.test.recipient:}")
     private String testRecipient;
     @Value("${peppol.component.name}")
     private String componentName;

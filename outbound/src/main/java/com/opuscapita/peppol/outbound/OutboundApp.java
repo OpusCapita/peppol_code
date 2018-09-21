@@ -21,11 +21,13 @@ import org.springframework.context.annotation.Lazy;
  */
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.outbound"})
 @EnableDiscoveryClient
+//@EnableScheduling
 public class OutboundApp {
     @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(OutboundApp.class);
 
     private final OutboundController controller;
+    // private final DocumentLoader documentLoader;
 
     @Value("${peppol.outbound.queue.in.name}")
     private String queueName;
@@ -39,6 +41,8 @@ public class OutboundApp {
     @Value("${peppol.outbound.consumers.timeout.ms:60000}")
     private int consumersTimeout;
 
+    private boolean was = false;
+
     @Autowired
     public OutboundApp(@NotNull @Lazy OutboundController controller) {
         this.controller = controller;
@@ -47,6 +51,30 @@ public class OutboundApp {
     public static void main(String[] args) {
         SpringApplication.run(OutboundApp.class, args);
     }
+
+//    @Scheduled(fixedDelay = 12_000)
+//    public void postConstruct() {
+//        if (was) {
+//            ContainerMessage cm = new ContainerMessage();
+//
+//            ProcessingInfo pi = new ProcessingInfo(Endpoint.TEST, "test_endpoint");
+//            cm.setProcessingInfo(pi);
+//
+//            cm.setFileName("/home/rozeser1/test/chernobyl.xml");
+//
+//            try {
+//                DocumentInfo documentInfo = documentLoader.load("/home/rozeser1/test/chernobyl.xml", Endpoint.TEST);
+//                cm.setDocumentInfo(documentInfo);
+//
+//                controller.send(cm);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            System.exit(0);
+//        }
+//        was = true;
+//    }
 
     @Bean
     MessageListenerAdapter listenerAdapter(@NotNull CommonMessageReceiver receiver) {
@@ -58,8 +86,6 @@ public class OutboundApp {
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        //container.setConcurrentConsumers(defaultConsumers > 0 ? defaultConsumers : 2);
-        //container.setMaxConcurrentConsumers(maxConsumers >= defaultConsumers ? maxConsumers : 4);
         container.setStopConsumerMinInterval(consumersTimeout);
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queueName);

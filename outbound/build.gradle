@@ -45,7 +45,7 @@ dependencies {
     compile 'org.springframework.retry:spring-retry'
     compile 'com.google.code.gson:gson:2.7'
 
-    compile (group: 'no.difi.oxalis', name: 'oxalis-outbound', version: '4.0.1') {
+    compile (group: 'no.difi.oxalis', name: 'oxalis-outbound', version: '4.0.2') {
         exclude group: 'com.google.guava'
     }
     compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'

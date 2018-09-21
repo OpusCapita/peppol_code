@@ -89,7 +89,7 @@ public class Svefaktura1SenderTest {
         sender.send(cm);
 
         System.out.println(documentTypeIdArgumentCaptor.getValue().toString());
-        assertEquals("urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0",
+        assertEquals("busdox-docid-qns::urn:sfti:documents:BasicInvoice:1:0::Invoice##urn:sfti:documents:BasicInvoice:1:0::1.0",
                 documentTypeIdArgumentCaptor.getValue().toString());
         System.out.println(peppolProcessTypeIdArgumentCaptor.getValue().toString());
         assertEquals("cenbii-procid-ubl::urn:sfti:services:documentprocessing:BasicInvoice:1:0",

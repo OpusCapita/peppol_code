@@ -41,6 +41,6 @@ public class OxalisUtils {
 
 
     private static DocumentTypeIdentifier toVefa(PeppolDocumentTypeId peppolDocumentTypeId) throws PeppolParsingException {
-        return DocumentTypeIdentifier.parse(peppolDocumentTypeId.toString());
+        return DocumentTypeIdentifier.of(peppolDocumentTypeId.toString());
     }
 }

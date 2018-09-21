@@ -23,7 +23,7 @@ import java.io.Serializable;
 public class ContainerMessage implements Serializable {
 
     @Since(1.0)
-    private double version = 1.1;
+    private double version = 1.2;
     @Since(1.0)
     private ProcessingInfo processingInfo;
     @Since(1.0)
