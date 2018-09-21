@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                 xmlns:saxon="http://saxon.sf.net/"
@@ -5,14 +6,7 @@
                 xmlns:schold="http://www.ascc.net/xml/schematron"
                 xmlns:iso="http://purl.oclc.org/dsdl/schematron"
                 xmlns:xhtml="http://www.w3.org/1999/xhtml"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                xmlns:ubl-application-response="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2"
-                xmlns:ubl-catalogue="urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2"
-                xmlns:ubl-despatch-advice="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2"
-                xmlns:ubl-order="urn:oasis:names:specification:ubl:schema:xsd:Order-2"
-                xmlns:ubl-order-response="urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2"
-                xmlns:u="utils"
+                xmlns:sbdh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
                 version="2.0"><!--Implementers: please note that overriding process-prolog or process-root is 
     the preferred method for meta-stylesheets to use where possible. -->
    <xsl:param name="archiveDirParameter"/>
@@ -37,28 +31,7 @@
 
 
    <!--KEYS AND FUNCTIONS-->
-   <function xmlns="http://www.w3.org/1999/XSL/Transform"
-             name="u:gln"
-             as="xs:boolean">
-      <param name="val"/>
-      <variable name="length" select="string-length($val) - 1"/>
-      <variable name="digits"
-                select="reverse(for $i in string-to-codepoints(substring($val, 0, $length + 1)) return $i - 48)"/>
-      <variable name="weightedSum"
-                select="sum(for $i in (0 to $length - 1) return $digits[$i + 1] * (1 + ((($i + 1) mod 2) * 2)))"/>
-      <value-of select="10 - ($weightedSum mod 10) = number(substring($val, $length + 1, 1))"/>
-  </function>
-   <function xmlns="http://www.w3.org/1999/XSL/Transform"
-             name="u:mod11"
-             as="xs:boolean">
-      <param name="val"/>
-      <variable name="length" select="string-length($val) - 1"/>
-      <variable name="digits"
-                select="reverse(for $i in string-to-codepoints(substring($val, 0, $length + 1)) return $i - 48)"/>
-      <variable name="weightedSum"
-                select="sum(for $i in (0 to $length - 1) return $digits[$i + 1] * (($i mod 6) + 2))"/>
-      <value-of select="number($val) &gt; 0 and (11 - ($weightedSum mod 11)) mod 11 = number(substring($val, $length + 1, 1))"/>
-  </function>
+
 
    <!--DEFAULT RULES-->
 
@@ -192,7 +165,7 @@
    <!--SCHEMA SETUP-->
    <xsl:template match="/">
       <svrl:schematron-output xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                              title="Common EHF rules for Post-Award"
+                              title="Rules for PEPPOL SBDH"
                               schemaVersion="iso">
          <xsl:comment>
             <xsl:value-of select="$archiveDirParameter"/>   
@@ -200,368 +173,360 @@
 		 <xsl:value-of select="$fileNameParameter"/>  
 		 <xsl:value-of select="$fileDirParameter"/>
          </xsl:comment>
-         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                                             prefix="cbc"/>
-         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                                             prefix="cac"/>
-         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2"
-                                             prefix="ubl-application-response"/>
-         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2"
-                                             prefix="ubl-catalogue"/>
-         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2"
-                                             prefix="ubl-despatch-advice"/>
-         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:Order-2"
-                                             prefix="ubl-order"/>
-         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2"
-                                             prefix="ubl-order-response"/>
-         <svrl:ns-prefix-in-attribute-values uri="utils" prefix="u"/>
+         <svrl:ns-prefix-in-attribute-values uri="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+                                             prefix="sbdh"/>
          <svrl:active-pattern>
             <xsl:attribute name="document">
                <xsl:value-of select="document-uri(/)"/>
             </xsl:attribute>
             <xsl:apply-templates/>
          </svrl:active-pattern>
-         <xsl:apply-templates select="/" mode="M11"/>
-         <svrl:active-pattern>
-            <xsl:attribute name="document">
-               <xsl:value-of select="document-uri(/)"/>
-            </xsl:attribute>
-            <xsl:apply-templates/>
-         </svrl:active-pattern>
-         <xsl:apply-templates select="/" mode="M12"/>
+         <xsl:apply-templates select="/" mode="M2"/>
       </svrl:schematron-output>
    </xsl:template>
 
    <!--SCHEMATRON PATTERNS-->
-   <svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">Common EHF rules for Post-Award</svrl:text>
+   <svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">Rules for PEPPOL SBDH</svrl:text>
 
    <!--PATTERN -->
 
 
 	  <!--RULE -->
-   <xsl:template match="cbc:*" priority="1001" mode="M11">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="cbc:*"/>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test=". != ''"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test=". != ''">
-               <xsl:attribute name="id">EHF-COMMON-R001</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>Document MUST not contain empty elements.</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M11"/>
-   </xsl:template>
-
-	  <!--RULE -->
-   <xsl:template match="cac:*" priority="1000" mode="M11">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="cac:*"/>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="count(*) != 0"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="count(*) != 0">
-               <xsl:attribute name="id">EHF-COMMON-R002</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>Document MUST not contain empty elements.</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M11"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M11"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M11">
-      <xsl:apply-templates select="@*|*" mode="M11"/>
-   </xsl:template>
-
-   <!--PATTERN -->
-
-
-	  <!--RULE -->
-   <xsl:template match="/*" priority="1010" mode="M12">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="/*"/>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="not(@*:schemaLocation)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="not(@*:schemaLocation)">
-               <xsl:attribute name="id">EHF-COMMON-R003</xsl:attribute>
-               <xsl:attribute name="flag">warning</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>Document SHOULD not contain schema location.</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="cbc:UBLVersionID"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="cbc:UBLVersionID">
-               <xsl:attribute name="id">EHF-COMMON-R004</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>Document MUST have a syntax identifier.</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
-   </xsl:template>
-
-	  <!--RULE -->
-   <xsl:template match="cbc:EndpointID[@schemeID = 'NO:ORGNR']"
-                 priority="1009"
-                 mode="M12">
+   <xsl:template match="sbdh:StandardBusinessDocument" priority="1008" mode="M2">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="cbc:EndpointID[@schemeID = 'NO:ORGNR']"/>
+                       context="sbdh:StandardBusinessDocument"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="matches(., '^[0-9]{9}$') and u:mod11(.)"/>
+         <xsl:when test="sbdh:StandardBusinessDocumentHeader"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="matches(., '^[0-9]{9}$') and u:mod11(.)">
-               <xsl:attribute name="id">EHF-COMMON-R010</xsl:attribute>
+                                test="sbdh:StandardBusinessDocumentHeader">
+               <xsl:attribute name="id">PEPPOL-SBDH-R001</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>MUST be a valid Norwegian organization number. Only numerical value allowed</svrl:text>
+               <svrl:text>A header is required.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
    </xsl:template>
 
 	  <!--RULE -->
-   <xsl:template match="cbc:EndpointID" priority="1008" mode="M12">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="cbc:EndpointID"/>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="false()"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="false()">
-               <xsl:attribute name="id">EHF-COMMON-R014</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>An endpoint identifier scheme MUST have the value 'NO:ORGNR'.</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
-   </xsl:template>
-
-	  <!--RULE -->
-   <xsl:template match="cac:PartyIdentification/cbc:ID[@schemeID = 'NO:ORGNR']"
+   <xsl:template match="sbdh:StandardBusinessDocumentHeader"
                  priority="1007"
-                 mode="M12">
+                 mode="M2">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="cac:PartyIdentification/cbc:ID[@schemeID = 'NO:ORGNR']"/>
+                       context="sbdh:StandardBusinessDocumentHeader"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="matches(., '^[0-9]{9}$') and u:mod11(.)"/>
+         <xsl:when test="sbdh:HeaderVersion = '1.0'"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="matches(., '^[0-9]{9}$') and u:mod11(.)">
-               <xsl:attribute name="id">EHF-COMMON-R011</xsl:attribute>
+                                test="sbdh:HeaderVersion = '1.0'">
+               <xsl:attribute name="id">PEPPOL-SBDH-R002</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>When scheme is NO:ORGNR, a valid Norwegian organization number must be used. Only numerical value allowed</svrl:text>
+               <svrl:text>A header must be version '1.0'.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
-   </xsl:template>
-
-	  <!--RULE -->
-   <xsl:template match="cbc:CompanyID[@schemeID = 'NO:VAT'] | cac:PartyTaxScheme/cbc:CompanyID[not(@schemeID)]"
-                 priority="1006"
-                 mode="M12">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="cbc:CompanyID[@schemeID = 'NO:VAT'] | cac:PartyTaxScheme/cbc:CompanyID[not(@schemeID)]"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="matches(., '^[0-9]{9}MVA$') and u:mod11(substring(., 1, 9))"/>
+         <xsl:when test="sbdh:BusinessScope"/>
          <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="matches(., '^[0-9]{9}MVA$') and u:mod11(substring(., 1, 9))">
-               <xsl:attribute name="id">EHF-COMMON-R012</xsl:attribute>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="sbdh:BusinessScope">
+               <xsl:attribute name="id">PEPPOL-SBDH-R003</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>A VAT number MUST be valid Norwegian organization number (nine numbers) followed by the letters MVA.</svrl:text>
+               <svrl:text>Business scope is required.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="not(sbdh:Manifest)"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="not(sbdh:Manifest)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R004</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>Manifest is not allowed.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
    </xsl:template>
 
 	  <!--RULE -->
-   <xsl:template match="cbc:CompanyID[@schemeID = 'NO:ORGNR'] | cac:PartyLegalEntity/cbc:CompanyID[not(@schemeID)]"
+   <xsl:template match="sbdh:Sender | sbdh:Receiver" priority="1006" mode="M2">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                       context="sbdh:Sender | sbdh:Receiver"/>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="not(sbdh:ContactInformation)"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                                test="not(sbdh:ContactInformation)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R012</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>Contact information element is not allowed.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
+   </xsl:template>
+
+	  <!--RULE -->
+   <xsl:template match="sbdh:Sender/sbdh:Identifier | sbdh:Receiver/sbdh:Identifier"
                  priority="1005"
-                 mode="M12">
+                 mode="M2">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="cbc:CompanyID[@schemeID = 'NO:ORGNR'] | cac:PartyLegalEntity/cbc:CompanyID[not(@schemeID)]"/>
+                       context="sbdh:Sender/sbdh:Identifier | sbdh:Receiver/sbdh:Identifier"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="matches(., '^[0-9]{9}$') and u:mod11(.)"/>
+         <xsl:when test="not(. = '')"/>
          <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="matches(., '^[0-9]{9}$') and u:mod11(.)">
-               <xsl:attribute name="id">EHF-COMMON-R013</xsl:attribute>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="not(. = '')">
+               <xsl:attribute name="id">PEPPOL-SBDH-R010</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>When scheme is NO:ORGNR, a valid Norwegian organization number must be used. Only numerical value allowed</svrl:text>
+               <svrl:text>Identifier can not be empty.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
-   </xsl:template>
-
-	  <!--RULE -->
-   <xsl:template match="cac:*[ends-with(name(), 'TaxCategory')]/cbc:ID"
-                 priority="1004"
-                 mode="M12">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="cac:*[ends-with(name(), 'TaxCategory')]/cbc:ID"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="some $code in tokenize('AA E H K R S Z AE G', '\s') satisfies $code = normalize-space(.)"/>
+         <xsl:when test="@Authority = 'iso6523-actorid-upis'"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="some $code in tokenize('AA E H K R S Z AE G', '\s') satisfies $code = normalize-space(.)">
-               <xsl:attribute name="id">EHF-COMMON-R020</xsl:attribute>
+                                test="@Authority = 'iso6523-actorid-upis'">
+               <xsl:attribute name="id">PEPPOL-SBDH-R011</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>Tax categories MUST be one of the follwoing codes:  AA E H K R S Z AE G</svrl:text>
+               <svrl:text>Identifier must have authority set to 'iso6523-actorid-upis'.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
    </xsl:template>
 
 	  <!--RULE -->
-   <xsl:template match="cbc:*[ends-with(name(), 'Date')]" priority="1003" mode="M12">
+   <xsl:template match="sbdh:DocumentIdentification" priority="1004" mode="M2">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="cbc:*[ends-with(name(), 'Date')]"/>
+                       context="sbdh:DocumentIdentification"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="(string(.) castable as xs:date) and (string-length(.) = 10)"/>
+         <xsl:when test="not(sbdh:MultipleType)"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="not(sbdh:MultipleType)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R020</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>Element 'MultipleType' not allowed.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
+   </xsl:template>
+
+	  <!--RULE -->
+   <xsl:template match="sbdh:BusinessScope" priority="1003" mode="M2">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="sbdh:BusinessScope"/>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="sbdh:Scope[sbdh:Type = 'DOCUMENTID']"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="(string(.) castable as xs:date) and (string-length(.) = 10)">
-               <xsl:attribute name="id">EHF-COMMON-R030</xsl:attribute>
+                                test="sbdh:Scope[sbdh:Type = 'DOCUMENTID']">
+               <xsl:attribute name="id">PEPPOL-SBDH-R030</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>A date must be formatted YYYY-MM-DD.</svrl:text>
+               <svrl:text>Scope 'DOCUMENTID' is required.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
-   </xsl:template>
-
-	  <!--RULE -->
-   <xsl:template match="cbc:ID[@schemeID = 'GLN']" priority="1002" mode="M12">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="cbc:ID[@schemeID = 'GLN']"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="matches(., '^[0-9]+$') and u:gln(.)"/>
+         <xsl:when test="sbdh:Scope[sbdh:Type = 'PROCESSID']"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="matches(., '^[0-9]+$') and u:gln(.)">
-               <xsl:attribute name="id">EHF-COMMON-R040</xsl:attribute>
-               <xsl:attribute name="flag">warning</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>Invalid GLN number provided.</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
-   </xsl:template>
-
-	  <!--RULE -->
-   <xsl:template match="cbc:Note[2]" priority="1001" mode="M12">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="cbc:Note[2]"/>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="false()"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="false()">
-               <xsl:attribute name="id">EHF-COMMON-R050</xsl:attribute>
+                                test="sbdh:Scope[sbdh:Type = 'PROCESSID']">
+               <xsl:attribute name="id">PEPPOL-SBDH-R031</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>Only one note element is allowed.</svrl:text>
+               <svrl:text>Scope 'PROCESSID' is required.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
    </xsl:template>
 
 	  <!--RULE -->
-   <xsl:template match="cbc:EmbeddedDocumentBinaryObject[@mimeCode]"
-                 priority="1000"
-                 mode="M12">
+   <xsl:template match="sbdh:BusinessScope/sbdh:Scope[sbdh:Type = 'DOCUMENTID']"
+                 priority="1002"
+                 mode="M2">
       <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="cbc:EmbeddedDocumentBinaryObject[@mimeCode]"/>
+                       context="sbdh:BusinessScope/sbdh:Scope[sbdh:Type = 'DOCUMENTID']"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="some $code in tokenize('application/pdf image/gif image/tiff image/jpeg image/png text/plain', '\s') satisfies $code = normalize-space(@mimeCode)"/>
+         <xsl:when test="not(sbdh:Identifier)"/>
          <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="some $code in tokenize('application/pdf image/gif image/tiff image/jpeg image/png text/plain', '\s') satisfies $code = normalize-space(@mimeCode)">
-               <xsl:attribute name="id">EHF-COMMON-R100</xsl:attribute>
-               <xsl:attribute name="flag">warning</xsl:attribute>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="not(sbdh:Identifier)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R040</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>Attachment is not a recommended MIMEType.</svrl:text>
+               <svrl:text>Identifier is not allowed for DOCUMENTID.</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="@*|*" mode="M12"/>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="not(sbdh:CorrelationInformation)"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                                test="not(sbdh:CorrelationInformation)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R041</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>CorrelationInformation is not allowed for DOCUMENTID.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="not(sbdh:BusinessService)"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                                test="not(sbdh:BusinessService)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R042</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>BusinessService is not allowed for DOCUMENTID.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
    </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M12"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M12">
-      <xsl:apply-templates select="@*|*" mode="M12"/>
+
+	  <!--RULE -->
+   <xsl:template match="sbdh:BusinessScope/sbdh:Scope[sbdh:Type = 'PROCESSID']"
+                 priority="1001"
+                 mode="M2">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                       context="sbdh:BusinessScope/sbdh:Scope[sbdh:Type = 'PROCESSID']"/>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="not(sbdh:Identifier)"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="not(sbdh:Identifier)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R050</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>Identifier is not allowed for PROCESSID.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="not(sbdh:CorrelationInformation)"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                                test="not(sbdh:CorrelationInformation)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R051</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>CorrelationInformation is not allowed for PROCESSID.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="not(sbdh:BusinessService)"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                                test="not(sbdh:BusinessService)">
+               <xsl:attribute name="id">PEPPOL-SBDH-R052</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>BusinessService is not allowed for PROCESSID.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
+   </xsl:template>
+
+	  <!--RULE -->
+   <xsl:template match="sbdh:BusinessScope/sbdh:Scope" priority="1000" mode="M2">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                       context="sbdh:BusinessScope/sbdh:Scope"/>
+
+		    <!--ASSERT -->
+      <xsl:choose>
+         <xsl:when test="index-of(tokenize('DOCUMENTID PROCESSID', '\s'), string(sbdh:Type))"/>
+         <xsl:otherwise>
+            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                                test="index-of(tokenize('DOCUMENTID PROCESSID', '\s'), string(sbdh:Type))">
+               <xsl:attribute name="id">PEPPOL-SBDH-R032</xsl:attribute>
+               <xsl:attribute name="flag">fatal</xsl:attribute>
+               <xsl:attribute name="location">
+                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
+               </xsl:attribute>
+               <svrl:text>Only allowed scopes 'DOCUMENTID' and 'PROCESSID' expected.</svrl:text>
+            </svrl:failed-assert>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
+   </xsl:template>
+   <xsl:template match="text()" priority="-1" mode="M2"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M2">
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M2"/>
    </xsl:template>
 </xsl:stylesheet>

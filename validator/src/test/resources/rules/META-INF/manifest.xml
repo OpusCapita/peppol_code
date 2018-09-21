@@ -29,5 +29,5 @@
     <ns1:file-entry ns1:full-path="xsl/OPENPEPPOLCORE-UBL-T76.xsl" ns1:media-type="application/xml"/>
     <ns1:file-entry ns1:full-path="xsl/BIIRULES-UBL-T110.xsl" ns1:media-type="application/xml"/>
     <ns1:file-entry ns1:full-path="xsl/OPENPEPPOL-UBL-T110.xsl" ns1:media-type="application/xml"/>
-    <ns1:file-entry ns1:full-path="config-eu.peppol.postaward.ver20-e5085a49db8fcf702be9109bf932295f4e838275.xml" ns1:media-type="application/xml"/>
+    <ns1:file-entry ns1:full-path="config-eu.peppol.postaward.ver20-909f1020e759b63c7e3046bb7a213c1acd36dfe0.xml" ns1:media-type="application/xml"/>
 </ns1:manifest>
