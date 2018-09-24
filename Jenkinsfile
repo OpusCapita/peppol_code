@@ -56,8 +56,10 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: code_version]],
-                credentialsId: '8ced7350-43c1-4d73-82a1-465ea3525594',
-                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_code.git']],
+                userRemoteConfigs: [[
+                   url: 'https://github.com/OpusCapita/peppol_code.git',
+                   credentialsId: '8ced7350-43c1-4d73-82a1-465ea3525594'
+                ]],
                 extensions: [
                     [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
                     [$class: 'LocalBranch', localBranch: 'master']
@@ -67,8 +69,10 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: infra_version]],
-                credentialsId: '8ced7350-43c1-4d73-82a1-465ea3525594',
-                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_infrastructure.git']],
+                userRemoteConfigs: [[
+                   url: 'https://github.com/OpusCapita/peppol_infrastructure.git',
+                   credentialsId: '8ced7350-43c1-4d73-82a1-465ea3525594'
+                ]],
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'infra']]
             ])
 
