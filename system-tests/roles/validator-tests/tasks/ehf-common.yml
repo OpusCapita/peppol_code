@@ -7,7 +7,7 @@
 - include: send_to_REST.yml
 - include: response_set.yml
 
-- set_fact: result_identifier="{{ result_warnings.0.validationError.identifier }}"
+- set_fact: result_identifier="{{ result_errors.0.validationError.identifier }}"
   when: result_validationError!=''
 - debug: var=result_identifier
 
