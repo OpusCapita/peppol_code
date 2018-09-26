@@ -5,7 +5,8 @@
 - include: preprocessing_assert.yml
 - include: internal-routing_assert.yml
 - include: validator_assert.yml
-- include: outbound_assert.yml
+#- include: outbound_assert.yml
+- set_fact: outbound_result="Disabled!"
 
 #report update START ---------------------
 - name: update test results
