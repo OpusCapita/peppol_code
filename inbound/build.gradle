@@ -35,9 +35,6 @@ dependencies {
 
     compile project (':common')
 
-    compile group: 'no.difi.oxalis', name: 'oxalis-as2', version: '4.0.2'
-    compile group: 'no.difi.oxalis', name: 'oxalis-statistics', version: '4.0.2'
-
     compile fileTree(dir: '../common/libs', include: 'service-now-connector-all.jar')
 
     testCompile 'junit:junit:4.12'
