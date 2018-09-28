@@ -37,7 +37,7 @@ public class DocumentSplitterTest {
         assertFalse(sbdh.contains("</Invoice>"));
         assertFalse(sbdh.contains("Attachment"));
 
-        System.out.println(body);
+//        System.out.println(body);
 
         assertTrue(body.length() > 0);
         assertTrue(body.startsWith("<Invoice"));

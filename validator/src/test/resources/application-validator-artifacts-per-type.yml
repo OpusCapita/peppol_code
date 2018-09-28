@@ -11,11 +11,20 @@ peppol:
           rules:
             - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
             - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
-        - profile: "urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope"
+        # SVE Catalogue with extension
+        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0"
           rules:
-            - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
-            - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
-            - "svefaktura1/maindoc/SFTI-ObjectEnvelope-1.0.xsd"
+            - "xsl/BIIRULES-UBL-T19.xsl"
+            - "xsl/OPENPEPPOL-UBL-T19.xsl"
+            - "maindoc/UBL-Catalogue-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+        # SVE Catalogue w/o extension
+        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0::2.1"
+          rules:
+            - "xsl/BIIRULES-UBL-T19.xsl"
+            - "xsl/OPENPEPPOL-UBL-T19.xsl"
+            - "maindoc/UBL-Catalogue-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
         # SimplerInvoicing
         - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1"
           rules:
@@ -65,6 +74,13 @@ peppol:
             - "xsl/BIIRULES-UBL-T10.xsl"
             - "maindoc/UBL-Invoice-2.1.xsd"
             - "xsl/OPENPEPPOLCORE-UBL-T10.xsl"
+        # PEPPOL BIS Invoice 3.0
+        - profile: "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0###urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"
+          rules:
+            - "xsl/CEN-EN16931-CII.xsl"
+            - "xsl/CEN-EN16931-UBL.xsl"
+            - "xsl/PEPPOL-EN16931-CII.xsl"
+            - "xsl/PEPPOL-EN16931-UBL.xsl"
         # PEPPOL BIS Despatch Advice 2.0 (Profile 30)
         - profile: "urn:www.cenbii.eu:profile:bii30:ver2.0###urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0"
           rules:
@@ -74,20 +90,6 @@ peppol:
             - "xsl/OPENPEPPOLCORE-UBL-T16.xsl"
         # PEPPOL BIS Catalogue 2.0 (Profile 01)
         - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0"
-          rules:
-            - "xsl/BIIRULES-UBL-T19.xsl"
-            - "xsl/OPENPEPPOL-UBL-T19.xsl"
-            - "maindoc/UBL-Catalogue-2.1.xsd"
-            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
-        # SVE Catalogue with extension
-        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0"
-          rules:
-            - "xsl/BIIRULES-UBL-T19.xsl"
-            - "xsl/OPENPEPPOL-UBL-T19.xsl"
-            - "maindoc/UBL-Catalogue-2.1.xsd"
-            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
-        # SVE Catalogue w/o extension
-        - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0::2.1"
           rules:
             - "xsl/BIIRULES-UBL-T19.xsl"
             - "xsl/OPENPEPPOL-UBL-T19.xsl"
