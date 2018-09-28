@@ -14,7 +14,7 @@ recipients = [:]
 recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
 recipients.devops = "Amit Tiwari <Amit.Tiwari@opuscapita.com>"
 recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
-recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>, Susanna Blomqvist <susanna.blomqvist@opuscapita.com>"
 
 
 import java.util.regex.*
@@ -35,7 +35,10 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: code_version]],
-                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git']],
+                userRemoteConfigs: [[
+                   url: 'https://github.com/OpusCapita/peppol_code.git',
+                   credentialsId: '8ced7350-43c1-4d73-82a1-465ea3525594'
+                ]],
                 extensions: [
                     [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
                     [$class: 'LocalBranch', localBranch: 'master']
@@ -45,7 +48,10 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: infra_version]],
-                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git']],
+                userRemoteConfigs: [[
+                   url: 'https://github.com/OpusCapita/peppol_infrastructure.git',
+                   credentialsId: '8ced7350-43c1-4d73-82a1-465ea3525594'
+                ]],
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'infra']]
             ])
  

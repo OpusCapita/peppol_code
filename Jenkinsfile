@@ -35,10 +35,10 @@ def test_modules = [
  * on how the groups are used in certain notifications.
  */
 recipients = [:]
-recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
+recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>, Ibrahim.Bilge@opuscapita.com"
 recipients.devops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
-recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
-recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+recipients.ops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
+recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>,Susanna.Blomqvist@opuscapita.com"
 
 
 import java.util.regex.*
