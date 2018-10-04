@@ -31,4 +31,5 @@
     - templates/svekatalog_small.xml
     - templates/bis_DespatchAdvice_peppol30a_ver1_DESADV.xml
     - templates/EHF_profile-bii05_invoice_with_custom_namespace.xml
+    - templates/peppol-bisv3.xml
 ...
