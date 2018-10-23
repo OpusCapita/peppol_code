@@ -53,7 +53,7 @@ public class PreprocessingControllerTest {
     private void processFile(String dir, String file) throws Exception {
         System.out.println("Testing file " + file);
         Endpoint endpoint;
-        if (!file.contains("with-header")) {
+        if (!file.contains("with-sbdh")) {
             endpoint = Endpoint.TEST;
         } else {
             endpoint = new Endpoint("test", ProcessType.OUT_PREPROCESS);
