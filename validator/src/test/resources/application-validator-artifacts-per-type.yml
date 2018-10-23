@@ -11,6 +11,12 @@ peppol:
           rules:
             - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
             - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
+        - profile: "urn:www.cenbii.eu:profile:bii28:ver2.0###urn:www.cenbii.eu:transaction:biicoretrdm001:ver1.0"
+          rules:
+            - "maindoc/UBL-Order-2.1.xsd"
+            - "xsl/BIIRULES-UBL-T19.xsl"
+            - "xsl/OPENPEPPOL-UBL-T19.xsl"
+            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
         # SVE Catalogue with extension
         - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0"
           rules:
