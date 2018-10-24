@@ -94,7 +94,7 @@ public class OutboundController {
             }
             logger.info("Message " + cm.getFileName() + " sent with transmission ID = " + transmissionResponse.getTransmissionIdentifier());
             cm.getProcessingInfo().setTransactionId(transmissionResponse.getTransmissionIdentifier().toString());
-            cm.getProcessingInfo().setCommonName(transmissionResponse.getEndpoint() != null ? transmissionResponse.getEndpoint().toString() : "N/A");
+            cm.getProcessingInfo().setCommonName(transmissionResponse.getHeader().getReceiver() != null ? extractCommonName(cm) : "N/A");
             cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol() != null ? transmissionResponse.getProtocol().toString() : "N/A");
         } catch (Exception e) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + e.getMessage());
@@ -153,6 +153,20 @@ public class OutboundController {
         logger.info("No (more) retries possible for " + cm.getFileName() + ", reporting IO error");
         cm.getProcessingInfo().setProcessingException(e.getMessage());
         throw e;
+    }
+
+    private String extractCommonName(ContainerMessage cm) {
+        String result = "";
+        if (StringUtils.isNotBlank(cm.getDocumentInfo().getRecipientId())) {
+            result += "CN=" + cm.getDocumentInfo().getRecipientId();
+        }
+        if (StringUtils.isNotBlank(cm.getDocumentInfo().getRecipientName())) {
+            result += ",O=" + cm.getDocumentInfo().getRecipientName();
+        }
+        if (StringUtils.isNotBlank(cm.getDocumentInfo().getRecipientCountryCode())) {
+            result += ",C=" + cm.getDocumentInfo().getRecipientCountryCode();
+        }
+        return result;
     }
 
     // for unit tests
