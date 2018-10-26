@@ -29,4 +29,5 @@
     - templates/svekatalog_small_invalid_tax_category.xml
     - templates/bis_DespatchAdvice_peppol30a_ver1_DESADV_invalid.xml
     - templates/peppol-bisv3-invoice_invalid_no_buyer_electronic_address.xml
+    - templates/sveorder_invalid.xml
 ...
