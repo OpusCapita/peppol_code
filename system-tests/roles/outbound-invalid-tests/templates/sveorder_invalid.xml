@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
                 Description:
-                This file contains a Sveorder BIS 28A 1.0. Sample from STFI web pages.
+                This file contains a Sveorder. Sample combined from an example from STFI web pages
+                and from a customer example. Made example invalid by changing the sums. 
 
                 Errors:
                 BII2-T01-R014
                 
                 Warnings:
-		        None
+                None
 
 -->
 <StandardBusinessDocument xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">
