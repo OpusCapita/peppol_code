@@ -21,7 +21,7 @@
 - name: Check if validation failed for uuid "{{ uuid }}" "{{ file }}"
   set_fact: validator_result="Validation Failed"
   when:
-    - log.stdout | search(".*Validation failed for.*{{ uuid }}")
+    - log.stdout | search(".*failed.*{{ uuid }}")
 
 #final validator result->
 - debug: var=validator_result
