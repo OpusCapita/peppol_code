@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
@@ -57,48 +58,24 @@ public class OutboundController {
 
     @SuppressWarnings("ConstantConditions")
     public void send(@NotNull ContainerMessage cm) throws Exception {
-        Endpoint endpoint = new Endpoint(componentName, ProcessType.OUT_OUTBOUND);
-
         logger.info("Sending message " + cm.getFileName());
-        TransmissionResponse transmissionResponse;
 
         try {
-            if (!sendingEnabled) {
-                if (fakeSender != null) {
-                    transmissionResponse = send(fakeSender, cm);
-                } else {
-                    logger.warn("Selected to send via fake sender but it isn't initialized");
-                    return;
-                }
-            } else {
-                if (StringUtils.isNotBlank(testRecipient)) {
-                    // real send via test sender
-                    if (testSender != null) {
-                        transmissionResponse = send(testSender, cm);
-                    } else {
-                        logger.warn("Selected to send via test sender but it isn't initialized");
-                        return;
-                    }
-                } else {
-                    // production sending takes place here
-                    switch (cm.getDocumentInfo().getArchetype()) {
-                        case INVALID:
-                            throw new IllegalArgumentException("Unable to send invalid documents");
-                        case SVEFAKTURA1:
-                            transmissionResponse = send(svefaktura1Sender, cm);
-                            break;
-                        default:
-                            transmissionResponse = send(ublSender, cm);
-                    }
-                }
+            PeppolSender sender = getPeppolSender(cm);
+            if (sender == null) {
+                logger.warn("PeppolSender is not initialized");
+                return;
             }
+
+            TransmissionResponse transmissionResponse = sender.send(cm);
             logger.info("Message " + cm.getFileName() + " sent with transmission ID = " + transmissionResponse.getTransmissionIdentifier());
+
             cm.getProcessingInfo().setTransactionId(transmissionResponse.getTransmissionIdentifier().toString());
-            cm.getProcessingInfo().setCommonName(transmissionResponse.getHeader().getReceiver() != null ? extractCommonName(cm) : "N/A");
+            cm.getProcessingInfo().setCommonName((transmissionResponse.getHeader() != null && transmissionResponse.getHeader().getReceiver() != null) ? extractCommonName(cm) : "N/A");
             cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol() != null ? transmissionResponse.getProtocol().toString() : "N/A");
         } catch (Exception e) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + e.getMessage());
-            whatAboutRetry(cm, messageQueue, e, endpoint);
+            whatAboutRetry(cm, messageQueue, e, new Endpoint(componentName, ProcessType.OUT_OUTBOUND));
         }
 
         if (StringUtils.isNotBlank(cm.getProcessingInfo().getTransactionId())) {
@@ -106,12 +83,27 @@ public class OutboundController {
             cm.setStatus(new Endpoint(componentName, ProcessType.OUT_OUTBOUND), "delivered");
             EventingMessageUtil.reportEvent(cm, "Delivered to Peppol network");
         }
-
     }
 
-    // separated to be able to implement additional logic on demand
-    private TransmissionResponse send(@NotNull PeppolSender sender, @NotNull ContainerMessage cm) throws Exception {
-        return sender.send(cm);
+    private PeppolSender getPeppolSender(ContainerMessage cm) {
+        if (!sendingEnabled) {
+            logger.info("Selected to send via FAKE sender");
+            return fakeSender;
+        }
+        if (StringUtils.isNotBlank(testRecipient)) {
+            logger.info("Selected to send via TEST sender");
+            return testSender;
+        }
+        if (Archetype.INVALID.equals(cm.getDocumentInfo().getArchetype())) {
+            throw new IllegalArgumentException("Unable to send invalid documents");
+        }
+        if (Archetype.SVEFAKTURA1.equals(cm.getDocumentInfo().getArchetype())) {
+            logger.info("Selected to send via SVEFAKTURA sender");
+            return svefaktura1Sender;
+        }
+
+        logger.info("Selected to send via UBL sender");
+        return ublSender;
     }
 
     // will try to re-send the message to the delayed queue only for I/O exceptions

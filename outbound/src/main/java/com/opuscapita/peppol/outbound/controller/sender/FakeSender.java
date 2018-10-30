@@ -50,7 +50,7 @@ public class FakeSender implements PeppolSender {
 
             @Override
             public Header getHeader() {
-                return null;
+                return Header.newInstance().receiver(ParticipantIdentifier.of("test"));
             }
 
             @Override

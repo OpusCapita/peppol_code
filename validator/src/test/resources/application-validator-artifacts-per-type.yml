@@ -25,7 +25,14 @@ peppol:
             - "xsl/OPENPEPPOL-UBL-T19.xsl"
             - "maindoc/UBL-Catalogue-2.1.xsd"
             - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
-        # SVE Order
+        # SVE Order (Profile 03)
+        - profile: "urn:www.cenbii.eu:profile:bii03:ver1.0###urn:www.cenbii.eu:transaction:biicoretrdm001:ver1.0"
+          rules:
+            - "maindoc/UBL-Order-2.1.xsd"
+            - "xsl/BIIRULES-UBL-T19.xsl"
+            - "xsl/OPENPEPPOL-UBL-T19.xsl"
+            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+        # SVE Order (Profile 28)
         - profile: "urn:www.cenbii.eu:profile:bii28:ver2.0###urn:www.cenbii.eu:transaction:biicoretrdm001:ver1.0"
           rules:
             - "maindoc/UBL-Order-2.1.xsd"
