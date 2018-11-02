@@ -29,16 +29,16 @@ peppol:
         - profile: "urn:www.cenbii.eu:profile:bii03:ver1.0###urn:www.cenbii.eu:transaction:biicoretrdm001:ver1.0"
           rules:
             - "maindoc/UBL-Order-2.1.xsd"
-            - "xsl/BIIRULES-UBL-T19.xsl"
-            - "xsl/OPENPEPPOL-UBL-T19.xsl"
-            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+            - "xsl/BIIRULES-UBL-T01.xsl"
+            - "xsl/OPENPEPPOL-UBL-T01.xsl"
+            - "xsl/OPENPEPPOLCORE-UBL-T01.xsl"
         # SVE Order (Profile 28)
         - profile: "urn:www.cenbii.eu:profile:bii28:ver2.0###urn:www.cenbii.eu:transaction:biicoretrdm001:ver1.0"
           rules:
             - "maindoc/UBL-Order-2.1.xsd"
-            - "xsl/BIIRULES-UBL-T19.xsl"
-            - "xsl/OPENPEPPOL-UBL-T19.xsl"
-            - "xsl/OPENPEPPOLCORE-UBL-T19.xsl"
+            - "xsl/BIIRULES-UBL-T01.xsl"
+            - "xsl/OPENPEPPOL-UBL-T01.xsl"
+            - "xsl/OPENPEPPOLCORE-UBL-T01.xsl"
         # SimplerInvoicing
         - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1"
           rules:
