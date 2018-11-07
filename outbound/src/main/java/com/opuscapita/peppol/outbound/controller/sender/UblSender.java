@@ -64,7 +64,13 @@ public class UblSender implements PeppolSender {
 
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
+                    .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
+                    .processType(ProcessIdentifier.of(document.getProfileId()))
+                    .sender(ParticipantIdentifier.of(document.getSenderId()))
+                    .receiver(ParticipantIdentifier.of(document.getRecipientId()))
                     .payLoad(inputStream);
+
+            requestBuilder.setTransmissionBuilderOverride(true);
 
             TransmissionRequest transmissionRequest = requestBuilder.build();
             logger.info("Thread " + Thread.currentThread().getName() + " is about to send " + cm.getFileName() + ", endpoint: " +
