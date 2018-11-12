@@ -24,7 +24,7 @@ import java.io.*;
 public class ApplicationController {
     private final static Logger logger = LoggerFactory.getLogger(ApplicationController.class);
 
-    @Value("${peppol.email-notificator.status:''}")
+    @Value("${peppol.email-notificator.status:/peppol/interop/email-notificator.json}")
     private String emailNotificatorStatusFile;
 
     @Autowired
@@ -80,6 +80,8 @@ public class ApplicationController {
                 } catch (Exception e) {
                     logger.error("Failed to read email-notificator status from " + emailNotificatorStatusFile, e);
                 }
+            } else {
+                logger.info("Email-notificator status file " + emailNotificatorStatusFile + " not found, skipping");
             }
         }
         return true;
