@@ -3,12 +3,12 @@
 <script type="text/javascript">
     document.getElementById("customer-list-message").innerHTML = customer_list_message;
 
-    // if (!customer_list_enabled) {
-    //     var buttons = document.getElementsByClassName("customer-edit-btn")
-    //     for (var i = 0; i < buttons.length; i++) {
-    //         buttons[i].style('display: none;');
-    //     }
-    // }
+    if (!customer_list_enabled) {
+        var buttons = document.getElementsByClassName("customer-edit-btn")
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].style('display: none;');
+        }
+    }
 </script>
 <div id="customer-list-message"></div>
 <div loading-container="tableParams.settings().$loading" id="customers-table">
