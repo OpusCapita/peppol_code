@@ -55,7 +55,7 @@
     document.getElementById("customer-list-message").innerHTML = "<h1>" + customer_list_message + "</h1>";
 
     if (!customer_list_enabled) {
-        var buttons = document.getElementsByClassName("customer-edit-btn")
+        var buttons = document.getElementsByClassName("customer-edit-btn");
         for (var i = 0; i < buttons.length; i++) {
             console.log(i);
             buttons[i].style('display: none;');
