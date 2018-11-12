@@ -1,15 +1,6 @@
 <div class="clearfix"></div>
 <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-<script type="text/javascript">
-    document.getElementById("customer-list-message").innerHTML = customer_list_message;
 
-    if (!customer_list_enabled) {
-        var buttons = document.getElementsByClassName("customer-edit-btn")
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].style('display: none;');
-        }
-    }
-</script>
 <div id="customer-list-message"></div>
 <div loading-container="tableParams.settings().$loading" id="customers-table">
     <table ng-table="tableParams" show-filter="true" class="table custom-table">
@@ -59,3 +50,15 @@
         </tr>
     </table>
 </div>
+
+<script type="text/javascript">
+    document.getElementById("customer-list-message").innerHTML = "<h1>" + customer_list_message + "</h1>";
+
+    if (!customer_list_enabled) {
+        var buttons = document.getElementsByClassName("customer-edit-btn")
+        for (var i = 0; i < buttons.length; i++) {
+            console.log(i);
+            buttons[i].style('display: none;');
+        }
+    }
+</script>
