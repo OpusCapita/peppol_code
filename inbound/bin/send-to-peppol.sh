@@ -16,7 +16,7 @@ URL="http://localhost:8080/peppol-ap-inbound/as2"
 METHOD="as2"
 
 # The AS2 destination system identifier has to be specified when using AS2 (X.509 common name of receiver)
-AS2SID="APP_1000000208"
+AS2SID="APP_1000000402"
 
 FILE=""
 DOC_TYPE_OPTION=""
