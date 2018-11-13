@@ -8,7 +8,6 @@ import com.opuscapita.peppol.support.ui.transport.TransportType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,15 +16,17 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 
 @SuppressWarnings("unused")
 @Controller
 public class ApplicationController {
     private final static Logger logger = LoggerFactory.getLogger(ApplicationController.class);
 
-    @Value("${peppol.email-notificator.status:''}")
-    private String emailNotificatorStatusFile;
+    // @Value("${peppol.email-notificator.status:/peppol/interop/email-notificator.json}")
+    private final static String emailNotificatorStatusFile = "/peppol/interop/email-notificator.json";
 
     @Autowired
     private CustomerService customerService;
@@ -80,6 +81,8 @@ public class ApplicationController {
                 } catch (Exception e) {
                     logger.error("Failed to read email-notificator status from " + emailNotificatorStatusFile, e);
                 }
+            } else {
+                logger.info("Email-notificator status file " + emailNotificatorStatusFile + " not found, skipping");
             }
         }
         return true;
