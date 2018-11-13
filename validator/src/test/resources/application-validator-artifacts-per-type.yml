@@ -95,6 +95,11 @@ peppol:
             - "xsl/CEN-EN16931-UBL.xsl"
             - "xsl/PEPPOL-EN16931-CII.xsl"
             - "xsl/PEPPOL-EN16931-UBL.xsl"
+        # PEPPOL BIS63A Invoice Response
+        - profile: "urn:www.peppol.eu:profile:bis63a:ver1.0###urn:www.peppol.eu:transaction:biitrns111:ver1.0"
+          rules:
+            - "xsl/BIIRULES-UBL-T111.xsl"
+            - "xsl/OPENPEPPOL-UBL-T111.xsl"
         # PEPPOL BIS Despatch Advice 2.0 (Profile 30)
         - profile: "urn:www.cenbii.eu:profile:bii30:ver2.0###urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0"
           rules:

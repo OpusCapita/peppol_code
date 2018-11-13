@@ -1703,6 +1703,105 @@ peppol:
               - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
               mandatory: false
 
+          - name: PEPPOL_BIS.InvoiceResponse
+            root: ApplicationResponse
+            fields:
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:www\.peppol\.eu:profile:bis63a:ver1\.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: urn:www\.peppol\.eu:transaction:biitrns111:ver1\.0
+            - id: sender_id
+              paths:
+              - "$ROOT/SenderParty/EndpointID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$ROOT/ReceiverParty/EndpointID"
+              mandatory: true
+            - id: version_id
+              paths:
+              - "$ROOT/UBLVersionID"
+              mandatory: true
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: false
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
+            - id: sender_name
+              paths:
+              - "$ROOT/SenderParty/PartyName/Name"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/ReceiverParty/PartyName/Name"
+              mandatory: false
+
+          - name: PEPPOL_BIS.InvoiceResponse
+            root: "$SBD/ApplicationResponse"
+            fields:
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:www\.peppol\.eu:profile:bis63a:ver1\.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: urn:www\.peppol\.eu:transaction:biitrns111:ver1\.0
+            - id: sender_id
+              paths:
+              - "$SBDH/Sender/Identifier"
+              - "$ROOT/SenderParty/EndpointID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$SBDH/Receiver/Identifier"
+              - "$ROOT/ReceiverParty/EndpointID"
+              mandatory: true
+            - id: version_id
+              paths:
+              - "$SBDH/DocumentIdentification/TypeVersion"
+              - "$ROOT/UBLVersionID"
+              mandatory: true
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: false
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
+            - id: sender_name
+              paths:
+              - "$ROOT/SenderParty/PartyName/Name"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/ReceiverParty/PartyName/Name"
+              mandatory: false
+
           - name: PEPPOL_BIS.Order
             root: "$SBD/Order"
             fields:

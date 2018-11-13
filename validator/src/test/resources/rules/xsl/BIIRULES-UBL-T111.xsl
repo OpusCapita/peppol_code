@@ -8,7 +8,7 @@
                 xmlns:xhtml="http://www.w3.org/1999/xhtml"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2"
+                xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2"
                 version="2.0"><!--Implementers: please note that overriding process-prolog or process-root is 
     the preferred method for meta-stylesheets to use where possible. -->
    <xsl:param name="archiveDirParameter"/>
@@ -167,8 +167,8 @@
    <!--SCHEMA SETUP-->
    <xsl:template match="/">
       <svrl:schematron-output xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                              title="BIIRULES  T58 bound to UBL"
-                              schemaVersion="">
+                              title="BIIRULES  T11 bound to UBL"
+                              schemaVersion="iso">
          <xsl:comment>
             <xsl:value-of select="$archiveDirParameter"/>
             <xsl:value-of select="$archiveNameParameter"/>
@@ -179,201 +179,50 @@
                                              prefix="cbc"/>
          <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                                              prefix="cac"/>
-         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2"
+         <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2"
                                              prefix="ubl"/>
          <svrl:ns-prefix-in-attribute-values uri="http://www.w3.org/2001/XMLSchema" prefix="xs"/>
          <svrl:active-pattern>
             <xsl:attribute name="document">
                <xsl:value-of select="document-uri(/)"/>
             </xsl:attribute>
-            <xsl:attribute name="id">UBL-T58</xsl:attribute>
-            <xsl:attribute name="name">UBL-T58</xsl:attribute>
+            <xsl:attribute name="id">business_rules</xsl:attribute>
+            <xsl:attribute name="name">business_rules</xsl:attribute>
             <xsl:apply-templates/>
          </svrl:active-pattern>
-         <xsl:apply-templates select="/" mode="M6"/>
+         <xsl:apply-templates select="/" mode="M5"/>
       </svrl:schematron-output>
    </xsl:template>
 
    <!--SCHEMATRON PATTERNS-->
-   <svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">BIIRULES  T58 bound to UBL</svrl:text>
+   <svrl:text xmlns:svrl="http://purl.oclc.org/dsdl/svrl">BIIRULES  T11 bound to UBL</svrl:text>
 
-   <!--PATTERN UBL-T58-->
+   <!--PATTERN business_rules-->
 
-
-	  <!--RULE -->
-   <xsl:template match="/ubl:ApplicationResponse" priority="1002" mode="M6">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                       context="/ubl:ApplicationResponse"/>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(cbc:ProfileID)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="(cbc:ProfileID)">
-               <xsl:attribute name="id">BII2-T58-R001</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R001]-A catalogue rejection MUST have a profile identifier</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(cbc:CustomizationID)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="(cbc:CustomizationID)">
-               <xsl:attribute name="id">BII2-T58-R002</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R002]-A catalogue rejection MUST have a customization identifier</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(cbc:IssueDate)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="(cbc:IssueDate)">
-               <xsl:attribute name="id">BII2-T58-R003</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R003]-A catalogue rejection MUST contain the date of issue</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(cbc:ID)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="(cbc:ID)">
-               <xsl:attribute name="id">BII2-T58-R004</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R004]-A catalogue rejection MUST contain the response identifier</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(cac:SenderParty)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="(cac:SenderParty)">
-               <xsl:attribute name="id">BII2-T58-R005</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R005]-The party sending the catalogue rejection MUST be specified</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(cac:ReceiverParty)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" test="(cac:ReceiverParty)">
-               <xsl:attribute name="id">BII2-T58-R006</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R006]-The party receiving the catalogue rejection MUST be specified</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(cac:DocumentResponse/cac:Response/cbc:ResponseCode)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="(cac:DocumentResponse/cac:Response/cbc:ResponseCode)">
-               <xsl:attribute name="id">BII2-T58-R009</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R009]-A catalogue rejection MUST contain a response decision</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(//cac:DocumentReference/cbc:ID)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="(//cac:DocumentReference/cbc:ID)">
-               <xsl:attribute name="id">BII2-T58-R010</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R010]-A catalogue rejection MUST contain a document reference</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M6"/>
-   </xsl:template>
 
 	  <!--RULE -->
-   <xsl:template match="//cac:ReceiverParty" priority="1001" mode="M6">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="//cac:ReceiverParty"/>
+   <xsl:template match="cbc:ProfileID" priority="1000" mode="M5">
+      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="cbc:ProfileID"/>
 
 		    <!--ASSERT -->
       <xsl:choose>
-         <xsl:when test="(cac:PartyName/cbc:Name) or (cac:PartyIdentification/cbc:ID)"/>
+         <xsl:when test="( normalize-space(.)='urn:www.peppol.eu:profile:bis63a:ver1.0' )"/>
          <xsl:otherwise>
             <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="(cac:PartyName/cbc:Name) or (cac:PartyIdentification/cbc:ID)">
-               <xsl:attribute name="id">BII2-T58-R008</xsl:attribute>
+                                test="( normalize-space(.)='urn:www.peppol.eu:profile:bis63a:ver1.0' )">
+               <xsl:attribute name="id">OP-T111-R001</xsl:attribute>
                <xsl:attribute name="flag">fatal</xsl:attribute>
                <xsl:attribute name="location">
                   <xsl:apply-templates select="." mode="schematron-select-full-path"/>
                </xsl:attribute>
-               <svrl:text>[BII2-T58-R008]-A catalogue rejection receiving party MUST contain the full name or an identifier</svrl:text>
+               <svrl:text>[OP-T111-R001]- An Invoice Response SHALL have the profile identifier "urn:www.peppol.eu:profile:bis63a:ver1.0".</svrl:text>
             </svrl:failed-assert>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M6"/>
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
-
-	  <!--RULE -->
-   <xsl:template match="//cac:SenderParty" priority="1000" mode="M6">
-      <svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="//cac:SenderParty"/>
-
-		    <!--ASSERT -->
-      <xsl:choose>
-         <xsl:when test="(cac:PartyName/cbc:Name) or (cac:PartyIdentification/cbc:ID)"/>
-         <xsl:otherwise>
-            <svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
-                                test="(cac:PartyName/cbc:Name) or (cac:PartyIdentification/cbc:ID)">
-               <xsl:attribute name="id">BII2-T58-R007</xsl:attribute>
-               <xsl:attribute name="flag">fatal</xsl:attribute>
-               <xsl:attribute name="location">
-                  <xsl:apply-templates select="." mode="schematron-select-full-path"/>
-               </xsl:attribute>
-               <svrl:text>[BII2-T58-R007]-A catalogue rejection sending party MUST contain the full name or an identifier</svrl:text>
-            </svrl:failed-assert>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M6"/>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1" mode="M6"/>
-   <xsl:template match="@*|node()" priority="-2" mode="M6">
-      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M6"/>
+   <xsl:template match="text()" priority="-1" mode="M5"/>
+   <xsl:template match="@*|node()" priority="-2" mode="M5">
+      <xsl:apply-templates select="*|comment()|processing-instruction()" mode="M5"/>
    </xsl:template>
 </xsl:stylesheet>
