@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:schold="http://www.ascc.net/xml/schematron"
                 xmlns:iso="http://purl.oclc.org/dsdl/schematron"
@@ -170,10 +171,10 @@
                               title="OPENPEPPOL CORE T14 bound to UBL"
                               schemaVersion="iso">
          <xsl:comment>
-            <xsl:value-of select="$archiveDirParameter"/>   
-		 <xsl:value-of select="$archiveNameParameter"/>  
-		 <xsl:value-of select="$fileNameParameter"/>  
-		 <xsl:value-of select="$fileDirParameter"/>
+            <xsl:value-of select="$archiveDirParameter"/>
+            <xsl:value-of select="$archiveNameParameter"/>
+            <xsl:value-of select="$fileNameParameter"/>
+            <xsl:value-of select="$fileDirParameter"/>
          </xsl:comment>
          <svrl:ns-prefix-in-attribute-values uri="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                                              prefix="cac"/>
