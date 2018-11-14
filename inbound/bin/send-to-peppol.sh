@@ -28,6 +28,9 @@ PROFILE="urn:www.cenbii.eu:profile:bii04:ver1.0"
 # Location of the executable program
 EXECUTABLE="${INBOUND_HOME}/oxalis-standalone.jar"
 
+# Workaround for https://github.com/difi/oxalis/issues/360
+ln -sf ${OXALIS_HOME} ${INBOUND_HOME}/conf
+
 function usage() {
     cat <<EOT
 
