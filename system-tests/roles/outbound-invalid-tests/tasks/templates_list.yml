@@ -27,4 +27,5 @@
     - templates/bis_DespatchAdvice_peppol30a_ver1_DESADV_invalid.xml
     - templates/peppol-bisv3-invoice_invalid_no_buyer_electronic_address.xml
     - templates/sveorder_invalid.xml
+    - templates/BIS63A_missing_party_name.xml
 ...
