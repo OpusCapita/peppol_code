@@ -13,7 +13,7 @@ TRACE=""
 URL="http://localhost:8080/peppol-ap-inbound/as2"
 
 # The AS2 destination system identifier has to be specified when using AS2 (X.509 common name of receiver)
-CERT="${OXALIS_HOME}/oxalis-keystore.jks"
+CERT="${OXALIS_HOME}/oxalis.cer"
 
 FILE=""
 DOC_TYPE_OPTION=""
@@ -96,6 +96,15 @@ if [ ! -r "$EXECUTABLE" ]; then
     exit 4
 fi
 
+# If the user specified a url of 'smp', we simply omit the -u option thus allowing the Java program to perform a
+# SMP lookup in order to find the URL of the destination access point
+if [ "$URL" == "smp" ]; then
+    URL_OPTION=""
+else
+    # Uses either the default values at the top of the script or whatever has been supplied on the command line
+    URL_OPTION="-u $URL" # Uses either the URL specified by the user or the default one
+fi
+
 # make sure we decode the AS2 System Identifier
 if [ -n "$CERT" ]; then
     CERT_OPTION="-cert $CERT"
@@ -111,6 +120,7 @@ cat <<EOT
     Sender: $SENDER
     Reciever: $RECEIVER
     Destination: $URL
+    Oxalis Home: ${OXALIS_HOME}
 ================================================================================
 EOT
 
