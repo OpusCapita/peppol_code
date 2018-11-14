@@ -33,4 +33,5 @@
     - templates/EHF_profile-bii05_invoice_with_custom_namespace.xml
     - templates/peppol-bisv3.xml
     - templates/sveorder.xml
+    - templates/BIS63A-invoice-response.xml
 ...
