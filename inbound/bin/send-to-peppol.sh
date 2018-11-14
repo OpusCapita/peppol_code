@@ -138,7 +138,8 @@ echo java -jar "$EXECUTABLE" \
     $TRACE
 
 # Executes the Oxalis outbound standalone Java program
-java -jar "$EXECUTABLE" \
+java -jar -Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880
+    "$EXECUTABLE" \
     -f "$FILE" \
     -r "$RECEIVER" \
     -s "$SENDER" \
