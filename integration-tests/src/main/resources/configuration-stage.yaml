@@ -148,50 +148,50 @@ tests:
                 action: download
                 link: http://support-ui:8080/rest/outbound/download/
                 expected value: true
-   validation:
-        producers:
-            - file producer:
-                source directory: /etc/resources/validation-xml-test
-                destination directory: /peppol/data/storage/integration-test
-            - mq producer:
-                mq connection: mq1
-                source directory: /peppol/data/storage/integration-test
-                destination queue: validator
-                container message:
-                  endpoint: validation-integration-test
-            - web ui producer:
-                source directory: /etc/resources/validation-xml-test
-                destination link: http://validator:8080/validator/
-                result directory: validation result folder
-            - rest producer:
-                source directory: /etc/resources/validation-xml-test
-                destination link: http://validator:8080/validator/validate
-                result directory: validation result folder
-                rest method: post
-        subscribers:
-            - mq subscriber:
-                source queue: validation-integration-test
-                timeout: 1500
-                consumers: 1
-            - file subscriber:
-                source file:  /etc/resources/validation-result/restResult
-                consumers: 3
-            - file subscriber:
-                source file:  /etc/resources/validation-result/webUiResult
-                consumers: 2
-        consumers:
-            - queue msg count check:
-                id: 1
-                expected value: 4
-                name: validation Mq check
-            - web ui check:
-                id: 2
-                expected value: 4
-                name: validation web ui check
-            - rest check:
-                id: 3
-                expected value: 4
-                name: validation rest check
+#   validation:
+#        producers:
+#            - file producer:
+#                source directory: /etc/resources/validation-xml-test
+#                destination directory: /peppol/data/storage/integration-test
+#            - mq producer:
+#                mq connection: mq1
+#                source directory: /peppol/data/storage/integration-test
+#                destination queue: validator
+#                container message:
+#                  endpoint: validation-integration-test
+#            - web ui producer:
+#                source directory: /etc/resources/validation-xml-test
+#                destination link: http://validator:8080/validator/
+#                result directory: validation result folder
+#            - rest producer:
+#                source directory: /etc/resources/validation-xml-test
+#                destination link: http://validator:8080/validator/validate
+#                result directory: validation result folder
+#                rest method: post
+#        subscribers:
+#            - mq subscriber:
+#                source queue: validation-integration-test
+#                timeout: 1500
+#                consumers: 1
+#            - file subscriber:
+#                source file:  /etc/resources/validation-result/restResult
+#                consumers: 3
+#            - file subscriber:
+#                source file:  /etc/resources/validation-result/webUiResult
+#                consumers: 2
+#        consumers:
+#            - queue msg count check:
+#                id: 1
+#                expected value: 4
+#                name: validation Mq check
+#            - web ui check:
+#                id: 2
+#                expected value: 4
+#                name: validation web ui check
+#            - rest check:
+#                id: 3
+#                expected value: 4
+#                name: validation rest check
    inbound:
         producers:
             - command producer:
@@ -235,30 +235,30 @@ tests:
                 id: 13
                 expected value: 1
                 name: internal-routing Mq check
-   outbound:
-        producers:
-            - file producer:
-                source directory: /etc/resources/outbound/outbound-integration-test-valid.xml
-                destination directory: /peppol/data/storage/outbound-integration-test-valid.xml
-            - mq producer:
-                mq connection: mq1
-                destination queue: outbound
-                source directory: /peppol/data/storage/outbound-integration-test-valid.xml
-                db connection: db1
-                DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
-                container message:
-                  endpoint: events-persistence-integration-test
-        subscribers:
-            - db subscriber:
-                db connection: db1
-                timeout: 5000
-                query: select count(*) from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
-                consumers: 14
-        consumers:
-            - DB test:
-                id: 14
-                name: Outbound transmission id persisted into DB positive test
-                expected value: 1
+#   outbound:
+#        producers:
+#            - file producer:
+#                source directory: /etc/resources/outbound/outbound-integration-test-valid.xml
+#                destination directory: /peppol/data/storage/outbound-integration-test-valid.xml
+#            - mq producer:
+#                mq connection: mq1
+#                destination queue: outbound
+#                source directory: /peppol/data/storage/outbound-integration-test-valid.xml
+#                db connection: db1
+#                DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+#                container message:
+#                  endpoint: events-persistence-integration-test
+#        subscribers:
+#            - db subscriber:
+#                db connection: db1
+#                timeout: 5000
+#                query: select count(*) from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+#                consumers: 14
+#        consumers:
+#            - DB test:
+#                id: 14
+#                name: Outbound transmission id persisted into DB positive test
+#                expected value: 1
    preprocessing:
         producers:
             - file producer:
