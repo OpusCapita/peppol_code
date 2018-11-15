@@ -56,17 +56,21 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: code_version]],
-                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_code.git']],
+                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_code.git',
+                credentialsId: '8ced7350-43c1-4d73-82a1-465ea3525594'
+                ]],
                 extensions: [
                     [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
-                    [$class: 'LocalBranch', localBranch: 'master']
+                    [$class: 'LocalBranch', localBranch: 'bugfix']
                 ]
             ])
             // get latest version of infrastructure
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: infra_version]],
-                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_infrastructure.git']],
+                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_infrastructure.git',
+                credentialsId: '8ced7350-43c1-4d73-82a1-465ea3525594'
+                ]],
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'infra']]
             ])
 
