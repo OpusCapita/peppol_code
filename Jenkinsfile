@@ -59,7 +59,7 @@ try {
                 userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_code.git']],
                 extensions: [
                     [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
-                    [$class: 'LocalBranch', localBranch: 'bugfix']
+                    [$class: 'LocalBranch', localBranch: 'master']
                 ]
             ])
             // get latest version of infrastructure
