@@ -24,10 +24,6 @@ release {
     git {
         requireBranch = 'bugfix'
         pushToRemote = 'origin'
-        credentials {
-            username = '$gitUser'
-            password = '$gitPassword'
-        }
     }    
 }
 
