@@ -35,10 +35,10 @@ def test_modules = [
  * on how the groups are used in certain notifications.
  */
 recipients = [:]
-recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
-recipients.devops = "Didrihsons Edgars <Edgars.Didrihsons@opuscapita.com>,Tiwari Amit <Amit.Tiwari@opuscapita.com>"
-recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
-recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+recipients.developers = "Bilge Ibrahim <Ibrahim.Bilge@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
+recipients.devops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
+recipients.ops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
+recipients.testers = "Blomqvist Susanna <Susanna.Blomqvist@opuscapita.com>"
 
 
 import java.util.regex.*
@@ -56,7 +56,7 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: code_version]],
-                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/peppol2.0.git']],
+                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_code.git']],
                 extensions: [
                     [$class: 'RelativeTargetDirectory', relativeTargetDir: 'src'],
                     [$class: 'LocalBranch', localBranch: 'bugfix']
@@ -66,7 +66,7 @@ try {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: infra_version]],
-                userRemoteConfigs: [[url: 'http://nocontrol.itella.net/gitbucket/git/Peppol/infrastructure.git']],
+                userRemoteConfigs: [[url: 'https://github.com/OpusCapita/peppol_infrastructure.git']],
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'infra']]
             ])
 
