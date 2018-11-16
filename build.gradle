@@ -21,6 +21,7 @@ configure(allprojects) {
 
 release {
     versionPropertyFile = 'gradle.properties'
+    failOnUpdateNeeded = false
     git {
         requireBranch = 'bugfix'
         pushToRemote = 'origin'
