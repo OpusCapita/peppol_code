@@ -28,6 +28,9 @@ PROFILE="urn:www.cenbii.eu:profile:bii04:ver1.0"
 # Location of the executable program
 EXECUTABLE="${INBOUND_HOME}/oxalis-standalone.jar"
 
+# Proxy settings
+PROXY=-Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880 -Dhttp.nonProxyHosts="localhost|127.0.0.1|inbound"
+
 # Workaround for https://github.com/difi/oxalis/issues/360
 ln -sf ${OXALIS_HOME} ${INBOUND_HOME}/conf
 
@@ -124,11 +127,12 @@ cat <<EOT
     Reciever: $RECEIVER
     Destination: $URL
     Oxalis Home: ${OXALIS_HOME}
+    Proxy Setting: ${PROXY}
 ================================================================================
 EOT
 
 echo "Executing ...."
-echo java -jar "$EXECUTABLE" \
+echo java ${PROXY} -jar "$EXECUTABLE" \
     -f "$FILE" \
     -r "$RECEIVER" \
     -s "$SENDER" \
@@ -138,7 +142,7 @@ echo java -jar "$EXECUTABLE" \
     $TRACE
 
 # Executes the Oxalis outbound standalone Java program
-java -jar "$EXECUTABLE" -Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880 \
+java ${PROXY} -jar "$EXECUTABLE" \
     -f "$FILE" \
     -r "$RECEIVER" \
     -s "$SENDER" \
