@@ -29,7 +29,7 @@ PROFILE="urn:www.cenbii.eu:profile:bii04:ver1.0"
 EXECUTABLE="${INBOUND_HOME}/oxalis-standalone.jar"
 
 # Proxy settings
-PROXY=-Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880 -Dhttp.nonProxyHosts="localhost|127.0.0.1|inbound"
+PROXY="-Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880 -Dhttp.nonProxyHosts=\"localhost|127.0.0.1|inbound\""
 
 # Workaround for https://github.com/difi/oxalis/issues/360
 ln -sf ${OXALIS_HOME} ${INBOUND_HOME}/conf
