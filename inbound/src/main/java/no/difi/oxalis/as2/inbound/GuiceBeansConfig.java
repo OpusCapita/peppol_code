@@ -38,7 +38,7 @@ public class GuiceBeansConfig {
     @Bean
     public ServletRegistrationBean as2ServletBean() {
         ServletRegistrationBean bean = new ServletRegistrationBean(
-                injector.getInstance(As2Servlet.class), "/as2");
+                injector.getInstance(As2Servlet.class), "/as2", "/peppol-ap-inbound/as2");
         bean.setLoadOnStartup(1);
         return bean;
     }

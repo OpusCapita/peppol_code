@@ -52,4 +52,24 @@ public class HomeServlet extends HttpServlet {
                 "    </body>\n" +
                 "</html>\n");
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html;charset=UTF-8");
+        resp.getWriter().println("<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "    <head>\n" +
+                "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+                "        <title>Oxalis PEPPOL server</title>\n" +
+                "    </head>\n" +
+                "    <body>\n" +
+                "        <h1>Welcome to the Oxalis PEPPOL post server</h1>\n" +
+                "        <p>The protocols for this Access Point are :</p>\n" +
+                "        <ul>\n" +
+                "            <li>The AS2 endpoint can be found <a href=\"as2\">here</a>.</li>\n" +
+                "        </ul>\n" +
+                "        <p>Some status information can be found at <a href=\"status\">status</a>.</p>\n" +
+                "    </body>\n" +
+                "</html>\n");
+    }
 }
