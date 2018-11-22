@@ -10,7 +10,7 @@
     <DocumentIdentification>
       <Standard>urn:oasis:names:specification:ubl:schema:xsd:Order-2</Standard>
       <TypeVersion>2.1</TypeVersion>
-      <InstanceIdentifier>9eea765f-9bf0-490f-aebe-9ee67747e3bb</InstanceIdentifier>
+      <InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
       <Type>Order</Type>
       <CreationDateAndTime>2017-10-25T13:55:59.5762265+02:00</CreationDateAndTime>
     </DocumentIdentification>
@@ -29,7 +29,7 @@
   <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
   <cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0:extended:urn:www.difi.no:ehf:unrec:ver1.0</cbc:CustomizationID>
   <cbc:ProfileID>urn:www.cenbii.eu:profile:bii28:ver2.0</cbc:ProfileID>
-  <cbc:ID>{{ document_id }}</cbc:ID>
+  <cbc:ID>{{ transmissionId }}</cbc:ID>
   <cbc:IssueDate>2017-10-25</cbc:IssueDate>
   <cbc:IssueTime>13:55:40.0000000+02:00</cbc:IssueTime>
   <cbc:Note>Testordre - ignorer</cbc:Note>

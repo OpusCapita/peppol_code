@@ -22,7 +22,7 @@
 		<DocumentIdentification>
 			<Standard>urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2</Standard>
 			<TypeVersion>2.1</TypeVersion>
-			<InstanceIdentifier>851d74d8-4b79-42c6-8440-daf059f624e5</InstanceIdentifier>
+			<InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
 			<Type>DespatchAdvice</Type>
 			<CreationDateAndTime>2018-04-26T15:50:02Z</CreationDateAndTime>
 		</DocumentIdentification>
@@ -41,7 +41,7 @@
 		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0</cbc:CustomizationID>
 		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii30:ver2.0</cbc:ProfileID>
-		<cbc:ID>{{ document_id }}</cbc:ID>
+		<cbc:ID>{{ transmissionId }}</cbc:ID>
 		<cbc:IssueDate>2018-04-16</cbc:IssueDate>
 		<cac:OrderReference>
 			<cbc:ID>DLL0864740</cbc:ID>
