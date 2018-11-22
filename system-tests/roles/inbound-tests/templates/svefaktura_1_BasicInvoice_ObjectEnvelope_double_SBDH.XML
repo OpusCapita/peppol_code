@@ -18,7 +18,7 @@
 		<DocumentIdentification>
 			<Standard>urn:sfti:documents:StandardBusinessDocumentHeader</Standard>
 			<TypeVersion>1.0</TypeVersion>
-			<InstanceIdentifier>e394fd44-4389-4925-a84e-69bc686638e8</InstanceIdentifier>
+			<InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
 			<Type>StandardBusinessDocument</Type>
 			<CreationDateAndTime>2018-04-12T11:55:17Z</CreationDateAndTime>
 		</DocumentIdentification>
@@ -52,7 +52,7 @@
 			</sh:DocumentIdentification>
 		</sh:StandardBusinessDocumentHeader>
 		<Invoice xmlns="urn:sfti:documents:BasicInvoice:1:0" xmlns:cac="urn:sfti:CommonAggregateComponents:1:0" xmlns:cbc="urn:oasis:names:tc:ubl:CommonBasicComponents:1:0">
-			<ID>{{ document_id }}</ID>
+			<ID>{{ transmissionId }}</ID>
 			<cbc:IssueDate>2018-04-12</cbc:IssueDate>
 			<InvoiceTypeCode>380</InvoiceTypeCode>
 			<cbc:Note>Some test notes</cbc:Note>

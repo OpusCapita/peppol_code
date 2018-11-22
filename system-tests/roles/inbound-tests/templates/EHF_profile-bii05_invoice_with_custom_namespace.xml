@@ -18,7 +18,7 @@
 		<DocumentIdentification>
 			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
 			<TypeVersion>2.1</TypeVersion>
-			<InstanceIdentifier>b48f6a0c-cc0a-4c54-af35-66721a521e10</InstanceIdentifier>
+			<InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
 			<Type>Invoice</Type>
 			<CreationDateAndTime>2018-06-06T17:06:13.111+02:00</CreationDateAndTime>
 		</DocumentIdentification>
@@ -37,7 +37,7 @@
 		<ubl1:UBLVersionID>2.1</ubl1:UBLVersionID>
 		<ubl1:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</ubl1:CustomizationID>
 		<ubl1:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</ubl1:ProfileID>
-		<ubl1:ID>{{ document_id }}</ubl1:ID>
+		<ubl1:ID>{{ transmissionId }}</ubl1:ID>
 		<ubl1:IssueDate>2018-05-24</ubl1:IssueDate>
 		<ubl1:InvoiceTypeCode listID="UNCL1001">380</ubl1:InvoiceTypeCode>
 		<ubl1:DocumentCurrencyCode listID="ISO4217">NOK</ubl1:DocumentCurrencyCode>

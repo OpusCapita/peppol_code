@@ -24,7 +24,7 @@
 		<DocumentIdentification>
 			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2</Standard>
 			<TypeVersion>2.1</TypeVersion>
-			<InstanceIdentifier>f7a369d8-caf1-41cb-845f-4591cdf72d3c</InstanceIdentifier>
+			<InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
 			<Type>Catalogue</Type>
 			<CreationDateAndTime>2018-05-15T10:13:44Z</CreationDateAndTime>
 		</DocumentIdentification>
@@ -43,7 +43,7 @@
 		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0</cbc:CustomizationID>
 		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0</cbc:ProfileID>
-		<cbc:ID>{{ document_id }}</cbc:ID>
+		<cbc:ID>{{ transmissionId }}</cbc:ID>
 		<cbc:ActionCode listID="ACTIONCODE:PEPPOL">Replace</cbc:ActionCode>
 		<cbc:Name>OpusCapita test</cbc:Name>
 		<cbc:IssueDate>2018-05-08</cbc:IssueDate>

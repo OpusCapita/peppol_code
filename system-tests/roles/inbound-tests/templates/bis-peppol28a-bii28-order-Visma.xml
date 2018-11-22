@@ -11,7 +11,7 @@
     <DocumentIdentification>
       <Standard></Standard>
       <TypeVersion>2.1</TypeVersion>
-      <InstanceIdentifier>4111a028-aa88-11e7-986e-5f2be1d5f062</InstanceIdentifier>
+      <InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
       <Type>Order</Type>
       <CreationDateAndTime>2017-10-06T14:19:44.202622+03:00</CreationDateAndTime>
     </DocumentIdentification>
@@ -30,7 +30,7 @@
 	<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 	<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0</cbc:CustomizationID>
 	<cbc:ProfileID>urn:www.cenbii.eu:profile:bii28:ver2.0</cbc:ProfileID>
-	<cbc:ID>PO10000544</cbc:ID>
+	<cbc:ID>{{ transmissionId }}</cbc:ID>
 	<cbc:IssueDate>2017-04-26</cbc:IssueDate>
 	<cbc:DocumentCurrencyCode listID="ISO4217">SEK</cbc:DocumentCurrencyCode>
 	<cbc:AccountingCost>5870</cbc:AccountingCost>

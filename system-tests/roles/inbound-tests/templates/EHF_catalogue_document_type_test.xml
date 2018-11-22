@@ -11,7 +11,7 @@
 		<DocumentIdentification>
 			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2</Standard>
 			<TypeVersion>2.1</TypeVersion>
-			<InstanceIdentifier>42f5d1052a5b11e7c5b400000161c88e</InstanceIdentifier>
+			<InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
 			<Type>Catalogue</Type>
 			<CreationDateAndTime>2017-04-26T08:35:10Z</CreationDateAndTime>
 		</DocumentIdentification>
@@ -30,7 +30,7 @@
 		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.peppol.eu:bis:peppol1a:ver2.0:extended:urn:www.difi.no:ehf:katalog:ver1.0</cbc:CustomizationID>
 		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii01:ver2.0</cbc:ProfileID>
-		<cbc:ID>{{ document_id }}</cbc:ID>
+		<cbc:ID>{{ transmissionId }}</cbc:ID>
 		<cbc:ActionCode listID="ACTIONCODE:PEPPOL">Update</cbc:ActionCode>
 		<cbc:Name languageID="no">OpusCapita test</cbc:Name>
 		<cbc:IssueDate>2017-04-26</cbc:IssueDate>

@@ -11,7 +11,7 @@
 		<DocumentIdentification>
 			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
 			<TypeVersion>2.1</TypeVersion>
-			<InstanceIdentifier>dc0f2ce4-557e-11e7-8725-b7339a61f42d</InstanceIdentifier>
+			<InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
 			<Type>Invoice</Type>
 			<CreationDateAndTime>2017-06-20T09:08:20.429741+03:00</CreationDateAndTime>
 		</DocumentIdentification>
@@ -30,7 +30,7 @@
 		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2</cbc:CustomizationID>
 		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</cbc:ProfileID>
-		<cbc:ID>{{ document_id }}</cbc:ID>
+		<cbc:ID>{{ transmissionId }}</cbc:ID>
 		<cbc:IssueDate>2009-12-15</cbc:IssueDate>
 		<cbc:InvoiceTypeCode listID="UNCL1001" listAgencyID="6">380</cbc:InvoiceTypeCode>
 		<cbc:Note languageID="en">Ordered in our booth at the convention.</cbc:Note>
