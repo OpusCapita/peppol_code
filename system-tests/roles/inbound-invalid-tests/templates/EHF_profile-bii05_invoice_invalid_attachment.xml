@@ -22,7 +22,7 @@
 		<DocumentIdentification>
 			<Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
 			<TypeVersion>2.1</TypeVersion>
-			<InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
+			<InstanceIdentifier>{{ document_id }}</InstanceIdentifier>
 			<Type>Invoice</Type>
 			<CreationDateAndTime>2018-03-12T21:12:25Z</CreationDateAndTime>
 		</DocumentIdentification>
@@ -43,7 +43,7 @@
 		<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 		<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</cbc:CustomizationID>
 		<cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
-		<cbc:ID>{{ transmissionId }}</cbc:ID>
+		<cbc:ID>{{ document_id }}</cbc:ID>
 		<cbc:IssueDate>2018-03-12</cbc:IssueDate>
 		<cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
 		<cbc:DocumentCurrencyCode listID="ISO4217">NOK</cbc:DocumentCurrencyCode>

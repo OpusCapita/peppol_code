@@ -3,7 +3,7 @@
 	<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 	<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0</cbc:CustomizationID>
 	<cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
-	<cbc:ID>{{ transmissionId }}</cbc:ID>
+	<cbc:ID>{{ document_id }}</cbc:ID>
 	<cbc:IssueDate>2016-06-30</cbc:IssueDate>
 	<cbc:InvoiceTypeCode listAgencyID="6" listID="UNCL1001">380</cbc:InvoiceTypeCode>
 	<cbc:DocumentCurrencyCode listAgencyID="6" listID="ISO4217">NOK</cbc:DocumentCurrencyCode>

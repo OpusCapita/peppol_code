@@ -30,7 +30,7 @@
     <DocumentIdentification>
       <Standard>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2</Standard>
       <TypeVersion>2.1</TypeVersion>
-      <InstanceIdentifier>{{ transmissionId }}</InstanceIdentifier>
+      <InstanceIdentifier>{{ document_id }}</InstanceIdentifier>
       <Type>Invoice</Type>
       <CreationDateAndTime>2013-02-19T05:10:10Z</CreationDateAndTime>
     </DocumentIdentification>
@@ -51,7 +51,7 @@
     <CustomizationID schemeID="PEPPOL">urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0
     </CustomizationID>
     <ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</ProfileID>
-    <ID>{{ transmissionId }}</ID>
+    <ID>{{ document_id }}</ID>
     <IssueDate>2011-08-22Z</IssueDate>
     <InvoiceTypeCode>380</InvoiceTypeCode>
     <DocumentCurrencyCode languageID="de" name="Euro">EUR</DocumentCurrencyCode>
