@@ -55,7 +55,7 @@
     seconds: 10
 
 - name: get transmissionResult for "{{file}}"
-  shell: echo "{{inbound_output.stdout_lines[-10:]}}" | grep '.Oxalis@.*' | awk -F" transmission " '{print $1}'
+  shell: echo "{{inbound_output.stdout_lines[-8:]}}" | grep '.Oxalis@.*' | awk -F" transmission " '{print $1}'
   register: transmissionResult
 - set_fact: transmissionResult="{{transmissionResult.stdout}}"
 - debug: var=transmissionResult
