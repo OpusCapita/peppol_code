@@ -11,7 +11,7 @@
 - set_fact: sender_company_id_vat=987987987MVA
 - set_fact: sender_company_id_orgnr=987987987
 - set_fact: sender_name="{{ 999999999 | random }}"
-- set_fact: transmissionId=ff3bb2dc-3ff4-11e6-9605-97ed9690fe22
+- set_fact: transmissionId="{{ 999999999 | random | to_uuid }}"
 
 - debug: var=receiver_id
 - debug: var=receiver_endpoint_id
@@ -57,8 +57,8 @@
 - name: get transmissionResult for "{{file}}"
   shell: echo "{{inbound_output.stdout_lines[-10:]}}" | grep '.Oxalis@.*' | awk -F" transmission " '{print $1}'
   register: transmissionResult
-- set_fact: transmissionResult="{{ transmissionResult.stdout}}"
-  debug: var=transmissionResult
+- set_fact: transmissionResult="{{transmissionResult.stdout}}"
+- debug: var=transmissionResult
 
 - name: ensure that transmissionResult is not empty
   ignore_errors: yes
