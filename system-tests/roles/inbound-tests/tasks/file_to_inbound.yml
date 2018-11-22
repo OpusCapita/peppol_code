@@ -50,7 +50,7 @@
   register: inbound_output
 - set_fact: file="{{file}}"
 - name: file that was sent to inbound
-- debug: var=file
+  debug: var=file
 
 - pause:
     seconds: 10
@@ -60,7 +60,7 @@
   register: transmissionResult
 - set_fact: transmissionResult="{{transmissionResult.stdout}}"
 - name: find file in inbound log
-- debug: var=transmissionResult
+  debug: var=transmissionResult
 
 - name: ensure that transmissionResult is not empty
   ignore_errors: yes

@@ -74,6 +74,7 @@
   when: file == "/test-materials/validation_test_suite/invalid/image_example.jpg.xml"
 
 - set_fact: inbound_result="{{result.msg}}"
+  when: result.msg is defined
 - debug: var=inbound_result
 
 #report START ------:
