@@ -55,7 +55,7 @@
     seconds: 10
 
 - name: find transmissionId
-  shell: echo "{{inbound_output.stdout_lines[-7:]}}" |grep -oh 'transmissionId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
+  shell: echo "{{inbound_output.stdout_lines[-7:]}}" | grep '.Oxalis@.*' | awk -F" transmission " '{print $1}' | sed 's#.Oxalis@#-#g' | sed 's#\.#-#g'
   register: transmissionId
 
 - set_fact: transmissionId="{{ transmissionId.stdout}}"
