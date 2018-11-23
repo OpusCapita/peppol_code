@@ -37,7 +37,8 @@ public class OxalisHandler implements PersisterHandler {
     @SuppressWarnings("ConstantConditions")
     @Override
     public Path persist(TransmissionIdentifier transmissionIdentifier, Header header, InputStream inputStream) throws IOException {
-        String dataFile = messageHandler.preProcess(transmissionIdentifier.getIdentifier(), header, inputStream);
+        String transmissionId = header.getIdentifier().getIdentifier();
+        String dataFile = messageHandler.preProcess(transmissionId, header, inputStream);
         return Paths.get(dataFile);
     }
 
