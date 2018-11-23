@@ -32,6 +32,7 @@ EXECUTABLE="${INBOUND_HOME}/oxalis-standalone.jar"
 # PROXY="-Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880 -Dhttp.nonProxyHosts=localhost|127.0.0.1|inbound"
 
 # Workaround for https://github.com/difi/oxalis/issues/360
+ln -sf ${OXALIS_HOME} ${OXALIS_HOME}/conf
 ln -sf ${OXALIS_HOME} ${INBOUND_HOME}/conf
 
 function usage() {
