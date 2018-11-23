@@ -142,7 +142,7 @@ echo java -jar "$EXECUTABLE" \
     $TRACE
 
 # Executes the Oxalis outbound standalone Java program
-java -jar "$EXECUTABLE" \
+java -jar -Ddebug "$EXECUTABLE" \
     -f "$FILE" \
     -r "$RECEIVER" \
     -s "$SENDER" \
