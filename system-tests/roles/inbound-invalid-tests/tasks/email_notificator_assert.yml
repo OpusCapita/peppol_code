@@ -36,7 +36,7 @@
 - name: check if no transmissionId "{{ transmissionId }}" was found for "{{ file }}" in inbound
   set_fact: email_notificator_result="No transmissionId was set for this file in inbound"
   when: transmissionId ==""
-- debug: var=email_notificator_resulti
+- debug: var=email_notificator_result
 
 - name: get validator result, in (Validation technical failure Validation rule not found for document type) case handle like this->
   set_fact: email_notificator_result="Passed- error reported to SNC through validator"
