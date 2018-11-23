@@ -37,8 +37,7 @@ public class OxalisHandler implements PersisterHandler {
     @SuppressWarnings("ConstantConditions")
     @Override
     public Path persist(TransmissionIdentifier transmissionIdentifier, Header header, InputStream inputStream) throws IOException {
-        String transmissionId = convertTransmissionId(transmissionIdentifier);
-        String dataFile = messageHandler.preProcess(transmissionId, header, inputStream);
+        String dataFile = messageHandler.preProcess(transmissionIdentifier.getIdentifier(), header, inputStream);
         return Paths.get(dataFile);
     }
 
@@ -47,13 +46,5 @@ public class OxalisHandler implements PersisterHandler {
         messageHandler.process(inboundMetadata, payloadPath);
 
         logger.info("Transmission receipt for " + payloadPath.toString() + ":\n" + new Gson().toJson(inboundMetadata));
-    }
-
-    /**
-     * Oxalis 4.x returns transmission id as something like '1542969941569.1.1600533955.Oxalis@908d429c9a97'
-     * This will convert it a uuid-like structure something like '1542969941569-1-1600533955-908d429c9a97'
-     */
-    private String convertTransmissionId(TransmissionIdentifier transmissionIdentifier) {
-        return transmissionIdentifier.getIdentifier().replace(".Oxalis@", "-").replace(".", "-");
     }
 }
