@@ -73,7 +73,7 @@
 - set_fact: inbound_result="{{result.msg}}"
 - debug: var=inbound_result
 
-- set_fact: transmissionId="{{document_id.stdout}}"
+- set_fact: transmissionId="{{document_id}}"
 #  when: file.stdout.find('nosbdh') == -1
 - debug: var=transmissionId
 
