@@ -19,7 +19,7 @@ public class InboundModule extends OxalisModule implements Module {
         bindTyped(PayloadPersister.class, OxalisHandler.class);
         bindTyped(ReceiptPersister.class, OxalisHandler.class);
         bindTyped(PersisterHandler.class, OxalisHandler.class);
-        bindTyped(MessageIdGenerator.class, OcMessageIdGenerator.class);
+//        bindTyped(MessageIdGenerator.class, OcMessageIdGenerator.class);
 
         bind(InboundService.class).to(OcInboundService.class);
     }
