@@ -75,7 +75,7 @@
 
 - set_fact: transmissionId="{{document_id.stdout}}"
 #  when: file.stdout.find('nosbdh') == -1
-  debug: var=transmissionId
+- debug: var=transmissionId
 
 
 #report START ------:
