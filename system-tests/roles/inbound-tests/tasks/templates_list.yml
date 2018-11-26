@@ -9,7 +9,6 @@
     - templates/EHF_profile-bii05_invoice_OC.xml
     - templates/EHF_profile-bii05_invoice.xml
     - templates/EHF_profile-bii05_creditnote.xml
-    - templates/EHF_profile-bii05_invoice.xml
     - templates/peppol-bis.xml
     - templates/SFTI_svefaktura_BasicInvoice-1.0_Invoice.xml
     - templates/EHF_catalogue_document_type_test.xml

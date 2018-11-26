@@ -5,7 +5,6 @@ import no.difi.oxalis.api.inbound.InboundService;
 import no.difi.oxalis.api.persist.PayloadPersister;
 import no.difi.oxalis.api.persist.PersisterHandler;
 import no.difi.oxalis.api.persist.ReceiptPersister;
-import no.difi.oxalis.as2.api.MessageIdGenerator;
 import no.difi.oxalis.as2.inbound.OcInboundService;
 import no.difi.oxalis.commons.guice.OxalisModule;
 

@@ -55,7 +55,7 @@
     seconds: 10
 
 - name: find transmissionId
-  shell: echo "{{inbound_output.stdout_lines[-7:]}}" | grep -oh 'transmissionId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
+  shell: echo "{{inbound_output.stdout_lines[-7:]}}" | grep -oh 'messageId.*'|awk '{print $2}'| awk  -F"'" '{print $1}'
   register: transmissionId
 
 - set_fact: transmissionId="{{ transmissionId.stdout}}"
@@ -77,6 +77,9 @@
 - set_fact: inbound_result="{{transmissionIdIsEmpty.msg}}"
   when: transmissionIdIsEmpty.msg is defined
 - debug: var=inbound_result
+
+- set_fact: transmissionId="{{document_id.stdout}}"
+  when: file.stdout.find('nosbdh') == -1
 
 #report START ------:
 - set_fact: counter="{{counter| int +1 }}"
