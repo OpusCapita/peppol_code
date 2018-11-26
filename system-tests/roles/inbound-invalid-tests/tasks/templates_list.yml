@@ -9,7 +9,7 @@
     - templates/EHF_profile-bii05_invoice_invalid.xml
     - templates/Svefaktura2_profile-bii05_invoice.xml
     - templates/EHF_profile-bii05_invoice_invalid_2.0.9.xml
-    - templates/EHF_profile-bii05_invoice_nosbdh_invalid.xml
+#    - templates/EHF_profile-bii05_invoice_nosbdh_invalid.xml
     - templates/EHF_profile-bii05_invoice_OC_zero_values_structural-error.xml 
 #removed empty.xml until it is known how exactly it has to be handled
 #    - templates/empty.xml

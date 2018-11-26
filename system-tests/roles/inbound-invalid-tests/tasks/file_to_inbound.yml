@@ -79,7 +79,8 @@
 - debug: var=inbound_result
 
 - set_fact: transmissionId="{{document_id.stdout}}"
-  when: file.stdout.find('nosbdh') == -1
+#  when: file.stdout.find('nosbdh') == -1
+  debug: var=transmissionId
 
 #report START ------:
 - set_fact: counter="{{counter| int +1 }}"
