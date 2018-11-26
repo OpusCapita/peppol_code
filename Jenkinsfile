@@ -276,12 +276,7 @@ def release(release_version, next_version, code_version, code_hash, infra_versio
     description += "${changes}"
     currentBuild.description = description
 
-    def git_credentials = [[
-       $class: 'SSHUserPrivateKeyBinding',
-       credentialsId: '04b0363e-4e04-4882-8b51-511cd3f3ac21'
-    ]]
-
-    withCredentials(git_credentials) {
+    sshagent (credentials: ['04b0363e-4e04-4882-8b51-511cd3f3ac21']) {
         sh "bash gradlew release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${release_version} -Prelease.newVersion=${next_version}"
     }
 }
