@@ -30,7 +30,7 @@ public class GuiceBeansConfig {
     @Bean
     public ServletRegistrationBean statusServletBean() {
         ServletRegistrationBean bean = new ServletRegistrationBean(
-                injector.getInstance(StatusServlet.class), "/status");
+                injector.getInstance(StatusServlet.class), "/status", "/peppol-ap-inbound/status");
         bean.setLoadOnStartup(1);
         return bean;
     }
