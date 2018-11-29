@@ -132,7 +132,7 @@ cat <<EOT
 EOT
 
 echo "Executing ...."
-echo java -Ddebug -jar "$EXECUTABLE" \
+echo java -jar "$EXECUTABLE" \
     -f "$FILE" \
     -r "$RECEIVER" \
     -s "$SENDER" \
