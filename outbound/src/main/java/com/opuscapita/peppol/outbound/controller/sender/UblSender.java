@@ -13,6 +13,7 @@ import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
 import no.difi.vefa.peppol.common.lang.PeppolParsingException;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
+import no.difi.vefa.peppol.common.model.Scheme;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,10 @@ public class UblSender implements PeppolSender {
         return oxalisWrapper.getTransmissionRequestBuilder(false);
     }
 
+    protected Scheme getProcessIdentifierScheme() {
+        return ProcessIdentifier.DEFAULT_SCHEME;
+    }
+
     @SuppressWarnings("unused")
     @NotNull
     public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException, OxalisContentException, OxalisTransmissionException, PeppolParsingException {
@@ -65,7 +70,7 @@ public class UblSender implements PeppolSender {
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             TransmissionRequestBuilder localRequestBuilder = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
-                    .processType(ProcessIdentifier.of(document.getProfileId()))
+                    .processType(ProcessIdentifier.of(document.getProfileId(), getProcessIdentifierScheme()))
                     .sender(ParticipantIdentifier.of(document.getSenderId()))
                     .receiver(ParticipantIdentifier.of(document.getRecipientId()))
                     .payLoad(inputStream);

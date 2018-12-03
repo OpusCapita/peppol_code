@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.outbound.controller.sender;
 
 import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
+import no.difi.vefa.peppol.common.model.Scheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import javax.annotation.PostConstruct;
 @Component
 @Scope("prototype")
 public class Svefaktura1Sender extends UblSender {
+
     @Autowired
     public Svefaktura1Sender(OxalisWrapper oxalisWrapper) {
         super(oxalisWrapper);
@@ -28,5 +30,10 @@ public class Svefaktura1Sender extends UblSender {
     @Override
     protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
         return oxalisWrapper.getTransmissionRequestBuilder(true);
+    }
+
+    @Override
+    protected Scheme getProcessIdentifierScheme() {
+        return Scheme.of("sfti-procid");
     }
 }
