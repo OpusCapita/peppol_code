@@ -231,7 +231,7 @@ public class DocumentParserHandler extends DefaultHandler {
             logger.warn("Invalid sender id[" + result.getSenderId() + "] in file: " + fileName);
         }
 
-        if (sbdhMandatoryFields.get("recipient_id") && !no.difi.oxalis.sniffer.identifier.ParticipantId.isValidParticipantIdentifierPattern(result.getSenderId())) {
+        if (sbdhMandatoryFields.get("recipient_id") && !no.difi.oxalis.sniffer.identifier.ParticipantId.isValidParticipantIdentifierPattern(result.getRecipientId())) {
             result.getErrors().add(new DocumentError(endpoint, "Invalid recipient id[" + result.getRecipientId() + "] in file: " + fileName));
             logger.warn("Invalid recipient id[" + result.getRecipientId() + "] in file: " + fileName);
         }

@@ -32,11 +32,12 @@ import java.io.InputStream;
 @Component
 @Scope("prototype")
 public class UblSender implements PeppolSender {
-    private final static Logger logger = LoggerFactory.getLogger(UblSender.class);
 
-    final OxalisWrapper oxalisWrapper;
+    final private static Logger logger = LoggerFactory.getLogger(UblSender.class);
 
-    OxalisOutboundComponent oxalisOutboundModule;
+    final private OxalisWrapper oxalisWrapper;
+
+    private OxalisOutboundComponent oxalisOutboundModule;
 
     @Autowired
     public UblSender(OxalisWrapper oxalisWrapper) {
@@ -48,8 +49,12 @@ public class UblSender implements PeppolSender {
         oxalisOutboundModule = oxalisWrapper.getOxalisOutboundModule();
     }
 
+    protected OxalisOutboundComponent getOxalisOutboundModule() {
+        return oxalisOutboundModule;
+    }
+
     protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
-        return oxalisWrapper.getTransmissionRequestBuilder(false);
+        return oxalisWrapper.getTransmissionRequestBuilder(true);
     }
 
     protected Scheme getProcessIdentifierScheme() {
@@ -58,31 +63,26 @@ public class UblSender implements PeppolSender {
 
     @SuppressWarnings("unused")
     @NotNull
-    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException, OxalisContentException, OxalisTransmissionException, PeppolParsingException {
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException, OxalisContentException, OxalisTransmissionException {
         DocumentInfo document = cm.getDocumentInfo();
         if (document == null) {
             throw new IllegalArgumentException("There is no document in message");
         }
 
-        // request builder is not reusable
         TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
 
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
-            TransmissionRequestBuilder localRequestBuilder = requestBuilder
+            TransmissionRequest transmissionRequest = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
                     .processType(ProcessIdentifier.of(document.getProfileId(), getProcessIdentifierScheme()))
                     .sender(ParticipantIdentifier.of(document.getSenderId()))
                     .receiver(ParticipantIdentifier.of(document.getRecipientId()))
-                    .payLoad(inputStream);
+                    .payLoad(inputStream)
+                    .build();
 
-            requestBuilder.setTransmissionBuilderOverride(true);
-
-            TransmissionRequest transmissionRequest = requestBuilder.build();
-            logger.info("Thread " + Thread.currentThread().getName() + " is about to send " + cm.getFileName() + ", endpoint: " +
-                    transmissionRequest.getEndpoint());
+            logger.info("Thread " + Thread.currentThread().getName() + " is about to send " + cm.getFileName() + " to endpoint: " + transmissionRequest.getEndpoint());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
-
             return transmitter.transmit(transmissionRequest);
         }
     }

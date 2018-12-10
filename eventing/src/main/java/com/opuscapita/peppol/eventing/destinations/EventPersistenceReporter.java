@@ -128,7 +128,8 @@ public class EventPersistenceReporter {
         try {
             JsonObject rawMetadata = gson.fromJson(containerMessage.getProcessingInfo().getSourceMetadata(), JsonObject.class);
             PeppolMessageMetadata messageMetadata = gson.fromJson(rawMetadata.get("PeppolMessageMetaData"), PeppolMessageMetadata.class);
-            result = containerMessage.isInbound() ? messageMetadata.getSendingAccessPointPrincipal() : messageMetadata.getReceivingAccessPoint();
+
+            result = containerMessage.isInbound() ? messageMetadata.getSendingAccessPoint() : messageMetadata.getReceivingAccessPoint();
             logger.info("Extracted Access Point Common Name [" + result + "] for file: " + containerMessage.getFileName());
         } catch (Exception e) {
             logger.warn("Failed to extract common name from metadata[" + containerMessage.getProcessingInfo().getSourceMetadata() + "] for file: " + containerMessage.getFileName());

@@ -10,7 +10,6 @@ import no.difi.oxalis.api.outbound.TransmissionRequest;
 import no.difi.oxalis.api.outbound.TransmissionResponse;
 import no.difi.oxalis.api.outbound.Transmitter;
 import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
-import no.difi.vefa.peppol.common.lang.PeppolParsingException;
 import no.difi.vefa.peppol.common.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +22,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +36,7 @@ import java.util.List;
 @Scope("prototype")
 @Lazy
 public class TestSender extends UblSender {
+
     private static final Logger logger = LoggerFactory.getLogger(TestSender.class);
 
     private final FakeSender fakeSender;
@@ -51,22 +50,10 @@ public class TestSender extends UblSender {
         this.fakeSender = fakeSender;
     }
 
-    @PostConstruct
-    @Autowired
-    @Override
-    public void initialize() {
-        oxalisOutboundModule = oxalisWrapper.getOxalisOutboundModule();
-    }
-
-    @Override
-    protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
-        return oxalisWrapper.getTransmissionRequestBuilder(true);
-    }
-
     @SuppressWarnings("unused")
     @Override
     @NotNull
-    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException, OxalisContentException, OxalisTransmissionException, PeppolParsingException {
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException, OxalisContentException, OxalisTransmissionException {
         if (StringUtils.isBlank(testRecipient)) {
             logger.warn("Test sender selected but property 'peppol.outbound.test.recipient' is empty, using FakeSender instead");
             return fakeSender.send(cm);
@@ -77,21 +64,20 @@ public class TestSender extends UblSender {
             throw new IllegalArgumentException("There is no document in message");
         }
 
-        logger.info("Sending message " + cm.getFileName() + " using test sender");
+        TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
+
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
 
 //            X509Certificate certificate = null;
 //            try {
 //                CertificateFactory fact = CertificateFactory.getInstance("X.509");
-//                FileInputStream is = new FileInputStream("/home/rozeser1/.oxalis/some.crt");
+//                FileInputStream is = new FileInputStream("C:\\Users\\ibilge\\.oxalis\\oxalis.cer");
 //                certificate = (X509Certificate) fact.generateCertificate(is);
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
 
-            TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
-            requestBuilder.reset();
-            TransmissionRequestBuilder localRequestBuilder = requestBuilder
+            TransmissionRequest transmissionRequest = requestBuilder
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
                     .processType(ProcessIdentifier.of(document.getProfileId()))
 
@@ -102,22 +88,17 @@ public class TestSender extends UblSender {
 
                     .sender(ParticipantIdentifier.of(document.getSenderId()))
                     .receiver(ParticipantIdentifier.of(testRecipient))
-                    .payLoad(getUpdatedFileContent(cm, testRecipient));
+                    .payLoad(getUpdatedFileContent(cm, testRecipient))
+                    .build();
 
-            TransmissionRequest transmissionRequest = requestBuilder.build();
-            logger.info("About to send " + cm.getFileName() + " using " + this.getClass().getSimpleName() + "and endpoint: "
-                    + transmissionRequest.getEndpoint());
+            logger.info("About to send " + cm.getFileName() + " to receiver: " + testRecipient + " using " + this.getClass().getSimpleName() + " to endpoint: " + transmissionRequest.getEndpoint());
 
-            Transmitter transmitter = oxalisOutboundModule.getTransmitter();
-
-            logger.info("Sending message " + cm.getFileName() + " to " + testRecipient);
             if (cm.getFileName().contains("-fail-me-io-")) {
                 throw new IllegalStateException("This sending expected to fail I/O in test mode");
             }
             if (cm.getFileName().contains("-fail-me-")) {
                 throw new IllegalStateException("This sending expected to fail in test mode");
             }
-
             if (cm.getFileName().contains("-integration-test-")) {
                 TransmissionResponse fakeResult = new TransmissionResponse() {
                     @Override
@@ -165,10 +146,8 @@ public class TestSender extends UblSender {
                 return fakeResult;
             }
 
-            TransmissionResponse result = transmitter.transmit(transmissionRequest);
-            logger.info("Delivered message " + cm.getFileName() + " to URL " + result.getEndpoint() + " with transmission ID: " +
-                    result.getTransmissionIdentifier());
-            return result;
+            Transmitter transmitter = getOxalisOutboundModule().getTransmitter();
+            return transmitter.transmit(transmissionRequest);
         }
     }
 
