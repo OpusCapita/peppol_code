@@ -5,13 +5,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: KACENAR1
- * Date: 13.25.11
- * Time: 15:37
- * To change this template use File | Settings | File Templates.
- */
 @Entity
 @DynamicUpdate
 @Table(name = "senders")
@@ -24,6 +17,10 @@ public class Customer {
 
     @Column(name = "customer_id")
     private String identifier;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "access_point_id")
+    private AccessPoint accessPoint;
 
     @Column(name = "customer_name", nullable = false)
     private String name = "n/a";
@@ -57,6 +54,14 @@ public class Customer {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public AccessPoint getAccessPoint() {
+        return accessPoint;
+    }
+
+    public void setAccessPoint(AccessPoint accessPoint) {
+        this.accessPoint = accessPoint;
     }
 
     public String getName() {

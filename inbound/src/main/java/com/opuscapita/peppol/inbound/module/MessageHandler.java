@@ -2,7 +2,6 @@ package com.opuscapita.peppol.inbound.module;
 
 import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
-import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
@@ -11,7 +10,6 @@ import com.opuscapita.peppol.commons.storage.Storage;
 import no.difi.oxalis.api.inbound.InboundMetadata;
 import no.difi.oxalis.commons.util.OxalisVersion;
 import no.difi.vefa.peppol.common.model.Header;
-import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.security.auth.x500.X500Principal;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.security.cert.X509Certificate;
 import java.util.Date;
@@ -46,44 +42,19 @@ public class MessageHandler {
     private final Storage storage;
     private final ErrorHandler errorHandler;
     private final MessageSender messageSender;
-    private final ContainerMessageSerializer containerMessageSerializer;
     private final Gson gson;
 
     @Autowired
-    public MessageHandler(@NotNull Storage storage, @NotNull ErrorHandler errorHandler, @NotNull MessageSender messageSender,
-                          @NotNull ContainerMessageSerializer containerMessageSerializer, @NotNull Gson gson) {
+    public MessageHandler(@NotNull Storage storage, @NotNull ErrorHandler errorHandler, @NotNull MessageSender messageSender, @NotNull Gson gson) {
         this.storage = storage;
         this.errorHandler = errorHandler;
         this.messageSender = messageSender;
-        this.containerMessageSerializer = containerMessageSerializer;
         this.gson = gson;
     }
 
     @NotNull
-    String preProcess(String transmissionId, Header header, InputStream inputStream) throws IOException {
-        String dataFile = storeTemporary(transmissionId, inputStream);
-        // no unhandled exceptions after this line
-
-        try {
-            ContainerMessage cm = createContainerMessage(transmissionId, header, dataFile);
-            String json = containerMessageSerializer.toJson(cm);
-            FileUtils.write(new File(dataFile + ".cm"), json, Charset.forName("UTF-8"));
-            logger.info("Container message prepared and stored as " + dataFile + ".cm");
-        } catch (Exception e) {
-            fail("Failed to store container message " + dataFile + ".cm", transmissionId, e);
-        }
-
-        return dataFile;
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private ContainerMessage createContainerMessage(String transmissionId, Header header, String dataFile) {
-        Endpoint endpoint = new Endpoint(componentName, ProcessType.IN_INBOUND);
-        ContainerMessage cm = new ContainerMessage(gson.toJson(header), dataFile, endpoint);
-        cm.getProcessingInfo().setTransactionId(transmissionId);
-        cm.setStatus(cm.getProcessingInfo().getSource(), "received");
-        EventingMessageUtil.reportEvent(cm, "received file");
-        return cm;
+    String preProcess(String transmissionId, InputStream inputStream) throws IOException {
+        return storeTemporary(transmissionId, inputStream);
     }
 
     // this is the only method that allowed to throw an exception which will be propagated to the sending party
@@ -114,6 +85,16 @@ public class MessageHandler {
         cm.getProcessingInfo().setSourceMetadata(metadataToJson(header, inboundMetadata));
 
         messageSender.send(cm);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private ContainerMessage createContainerMessage(String transmissionId, Header header, String dataFile) {
+        Endpoint endpoint = new Endpoint(componentName, ProcessType.IN_INBOUND);
+        ContainerMessage cm = new ContainerMessage(gson.toJson(header), dataFile, endpoint);
+        cm.getProcessingInfo().setTransactionId(transmissionId);
+        cm.setStatus(cm.getProcessingInfo().getSource(), "received");
+        EventingMessageUtil.reportEvent(cm, "received file");
+        return cm;
     }
 
     private String metadataToJson(Header header, InboundMetadata inboundMetadata) {

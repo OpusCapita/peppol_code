@@ -1,7 +1,8 @@
 <div class="clearfix"></div>
 <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 
-<div id="customer-list-message"></div>
+<!-- Customer message --> <div id="customer-list-message" style="display: none"></div>
+
 <div loading-container="tableParams.settings().$loading" id="customers-table">
     <table ng-table="tableParams" show-filter="true" class="table custom-table">
         <tr ng-repeat="customer in $data">
@@ -53,10 +54,8 @@
 
 <script type="text/javascript">
     document.getElementById("customer-list-message").innerHTML = "<h1>" + customer_list_message + "</h1>";
-    console.log(customer_list_enabled);
 
     var buttons = document.getElementsByClassName("customer-edit-btn");
-    console.log(buttons);
     if (!customer_list_enabled) {
         for (var i = 0; i < buttons.length; i++) {
             console.log(i);

@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
@@ -8,16 +9,10 @@ import java.sql.Date;
 import java.util.Set;
 import java.util.SortedSet;
 
-/**
- * Created with IntelliJ IDEA.
- * User: KACENAR1
- * Date: 13.25.11
- * Time: 15:37
- * To change this template use File | Settings | File Templates.
- */
 @Entity
 @Table(name = "messages")
 public class Message {
+
     @Id
     @Column(name = "id")
     @GeneratedValue
@@ -54,9 +49,11 @@ public class Message {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private MessageStatus status;
+
     @Column(name = "direction")
     @Enumerated(EnumType.STRING)
     private Direction direction;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     @Sort(type = SortType.NATURAL)
     private SortedSet<FileInfo> files;
@@ -66,7 +63,9 @@ public class Message {
     }
 
     public void setOriginalSource(String originalSource) {
-        this.originalSource = originalSource;
+        if (StringUtils.isNotBlank(originalSource)) {
+            this.originalSource = originalSource;
+        }
     }
 
     public Integer getId() {
