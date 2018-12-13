@@ -12,7 +12,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 @Configuration
 @PropertySource("classpath:/application-document_types.yml")
-@ComponentScan(basePackages = {/*"com.opuscapita.peppol", */"com.opuscapita.peppol.commons.container.xml"}, excludeFilters = @ComponentScan.Filter(value = {UblSender.class, OutboundController.class, OutboundApp.class}, type = FilterType.ASSIGNABLE_TYPE))
+@ComponentScan(basePackages = {/*"com.opuscapita.peppol", */"com.opuscapita.peppol.commons.container.xml"}, excludeFilters = @ComponentScan.Filter(value = {RealSender.class, OutboundController.class, OutboundApp.class}, type = FilterType.ASSIGNABLE_TYPE))
 public class TestConfig {
     @Bean
     public static PropertySourcesPlaceholderConfigurer properties() {

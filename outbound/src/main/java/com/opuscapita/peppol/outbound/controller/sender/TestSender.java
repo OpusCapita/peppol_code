@@ -35,7 +35,7 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @Lazy
-public class TestSender extends UblSender {
+public class TestSender extends RealSender {
 
     private static final Logger logger = LoggerFactory.getLogger(TestSender.class);
 

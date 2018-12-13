@@ -2,13 +2,17 @@ package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
-import com.opuscapita.peppol.outbound.controller.sender.*;
+import com.opuscapita.peppol.outbound.controller.sender.FakeSender;
+import com.opuscapita.peppol.outbound.controller.sender.PeppolSender;
+import com.opuscapita.peppol.outbound.controller.sender.RealSender;
 import no.difi.oxalis.api.outbound.TransmissionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -26,13 +30,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class OutboundController {
+
     private final static Logger logger = LoggerFactory.getLogger(OutboundController.class);
 
-    private final UblSender ublSender;
-    private final Svefaktura1Sender svefaktura1Sender;
+    private final RealSender realSender;
     private final FakeSender fakeSender;
+    private final RealSender testSender;
+
+    private final ErrorHandler errorHandler;
     private final MessageQueue messageQueue;
-    private final TestSender testSender;
+    private final StatusReporter eventReporter;
     private final OxalisErrorRecognizer oxalisErrorRecognizer;
 
     @Value("${peppol.outbound.sending.enabled:false}")
@@ -45,14 +52,15 @@ public class OutboundController {
     private String emailNotificatorQueue;
 
     @Autowired
-    public OutboundController(@NotNull MessageQueue messageQueue,
-                              @NotNull UblSender ublSender, @Nullable FakeSender fakeSender, @NotNull Svefaktura1Sender svefaktura1Sender,
-                              @Nullable TestSender testSender, @NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
-        this.ublSender = ublSender;
+    public OutboundController(@NotNull RealSender realSender, @Nullable FakeSender fakeSender, @Nullable RealSender testSender,
+                              @NotNull MessageQueue messageQueue, @NotNull ErrorHandler errorHandler,
+                              @Nullable StatusReporter eventReporter, @NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
+        this.realSender = realSender;
         this.fakeSender = fakeSender;
-        this.svefaktura1Sender = svefaktura1Sender;
-        this.messageQueue = messageQueue;
         this.testSender = testSender;
+        this.errorHandler = errorHandler;
+        this.messageQueue = messageQueue;
+        this.eventReporter = eventReporter;
         this.oxalisErrorRecognizer = oxalisErrorRecognizer;
     }
 
@@ -75,7 +83,7 @@ public class OutboundController {
             cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol() != null ? transmissionResponse.getProtocol().toString() : "N/A");
         } catch (Exception e) {
             logger.warn("Sending of the message " + cm.getFileName() + " failed with I/O error: " + e.getMessage());
-            whatAboutRetry(cm, messageQueue, e, new Endpoint(componentName, ProcessType.OUT_OUTBOUND));
+            handleException(cm, e);
         }
 
         if (StringUtils.isNotBlank(cm.getProcessingInfo().getTransactionId())) {
@@ -97,54 +105,40 @@ public class OutboundController {
         if (Archetype.INVALID.equals(cm.getDocumentInfo().getArchetype())) {
             throw new IllegalArgumentException("Unable to send invalid documents");
         }
-        if (Archetype.SVEFAKTURA1.equals(cm.getDocumentInfo().getArchetype())) {
-            logger.info("Selected to send via SVEFAKTURA sender");
-            return svefaktura1Sender;
-        }
 
-        logger.info("Selected to send via UBL sender");
-        return ublSender;
+        logger.info("Selected to send via REAL sender");
+        return realSender;
     }
 
-    // will try to re-send the message to the delayed queue only for I/O exceptions
-    @SuppressWarnings("ConstantConditions")
-    private void whatAboutRetry(@NotNull ContainerMessage cm, @NotNull MessageQueue messageQueue,
-                                @NotNull Exception e, @NotNull Endpoint endpoint) throws Exception {
+    private void handleException(@NotNull ContainerMessage cm, @NotNull Exception e) throws Exception {
+        Endpoint endpoint = new Endpoint(componentName, ProcessType.OUT_OUTBOUND);
         cm.setStatus(endpoint, "message delivery failure");
 
         SendingErrors errorType = oxalisErrorRecognizer.recognize(e);
-        if (!errorType.isTemporary()) {
-            logger.info("Exception of type " + errorType + " registered as non-retriable, rejecting message " + cm.getFileName());
-            cm.getProcessingInfo().setProcessingException(e.getMessage());
 
-            // some issues should be solved by e-mail sending - to be removed later
-            if (errorType == SendingErrors.DATA_ERROR) {
-                logger.info("Sending an e-mail to customer about invalid data");
-                messageQueue.convertAndSend(emailNotificatorQueue, cm);
-                return;
-            }
-            if (errorType == SendingErrors.UNKNOWN_RECIPIENT || errorType == SendingErrors.UNSUPPORTED_DATA_FORMAT) {
-                logger.info("Sending an e-mail to customer about unknown recipient or unsupported data format");
-                messageQueue.convertAndSend(emailNotificatorQueue, cm);
-                return;
+        if (errorType.isRetryable()) {
+            String retry = cm.popRoute();
+            if (StringUtils.isBlank(retry)) {
+                logger.info("No (more) retries possible for " + cm.getFileName() + ", reporting IO error");
+                cm.getProcessingInfo().setProcessingException(e.getMessage());
+                throw e;
             }
 
-            throw e;
+            cm.setStatus(new Endpoint(retry, ProcessType.OUT_PEPPOL_RETRY), "RETRY: " + retry);
+            messageQueue.convertAndSend(retry, cm);
+            logger.info("Message " + cm.getFileName() + " queued for retry to the queue " + retry);
+            return;
         }
 
-        if (cm.getProcessingInfo().getRoute() != null) {
-            String next = cm.popRoute();
-            if (StringUtils.isNotBlank(next)) {
-                cm.setStatus(new Endpoint(next, ProcessType.OUT_PEPPOL_RETRY), "RETRY: " + next);
-                messageQueue.convertAndSend(next, cm);
-                logger.info("Message " + cm.getFileName() + " queued for retry to the queue " + next);
-                return;
-            }
-        }
-
-        logger.info("No (more) retries possible for " + cm.getFileName() + ", reporting IO error");
+        logger.info("Exception of type " + errorType + " registered as non-retriable, rejecting message " + cm.getFileName());
         cm.getProcessingInfo().setProcessingException(e.getMessage());
-        throw e;
+        createEventReport(cm, e);
+
+        if (errorType.isTicketable()) {
+            createSNCTicket(cm, e);
+        } else {
+            sendEmailNotification(cm);
+        }
     }
 
     private String extractCommonName(ContainerMessage cm) {
@@ -159,6 +153,32 @@ public class OutboundController {
             result += ",C=" + cm.getDocumentInfo().getRecipientCountryCode();
         }
         return result;
+    }
+
+    private void sendEmailNotification(@NotNull ContainerMessage cm) {
+        try {
+            messageQueue.convertAndSend(emailNotificatorQueue, cm);
+        } catch (Exception weird) {
+            logger.error("Reporting to email-notificator threw exception: ", weird);
+        }
+    }
+
+    private void createSNCTicket(@NotNull ContainerMessage cm, @NotNull Exception e) {
+        try {
+            errorHandler.reportWithContainerMessage(cm, e, e.getMessage() == null ? "null" : e.getMessage());
+        } catch (Exception weird) {
+            logger.error("Reporting to ServiceNow threw exception: ", weird);
+        }
+    }
+
+    private void createEventReport(@NotNull ContainerMessage cm, @NotNull Exception e) {
+        try {
+            if (eventReporter != null) {
+                eventReporter.reportError(cm, e);
+            }
+        } catch (Exception weird) {
+            logger.error("Failed to report event using event status reporter", weird);
+        }
     }
 
     // for unit tests

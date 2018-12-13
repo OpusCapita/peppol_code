@@ -9,30 +9,46 @@ public enum SendingErrors {
 
     /** Error with the document itself, e.g. empty file */
     DOCUMENT_ERROR(false),
-    /** Error inside the document */
+
+    /** Data error inside the document, no-retry */
     DATA_ERROR(false),
+
     /** Failed to connect for some reason */
     CONNECTION_ERROR(true),
-    /** Receiving AP returned code other than 200 */
+
+    /** Receiving AP doesn't return 200, possibly retry */
     RECEIVING_AP_ERROR(true),
-    /** Unknown recipient or unsupported data format, currently not distinguishable */
+
+    /** Recipient is not registered in SMP, no-retry */
     UNKNOWN_RECIPIENT(false),
+
+    /** Doc format for the recipient is not registered in SMP */
     UNSUPPORTED_DATA_FORMAT(false),
+
     /** Security issue - expired, invalid, or unknown certificates */
     SECURITY_ERROR(false),
+
     /** Issue with file validation, used in MLR reporter and shouldn't be used elsewhere */
     VALIDATION_ERROR(false),
+
     /** All other errors */
     OTHER_ERROR(false);
 
-    private boolean temporary;
+    private boolean isRetryable;
 
-    SendingErrors(boolean temporary) {
-        this.temporary = temporary;
+    SendingErrors(boolean isRetryable) {
+        this.isRetryable = isRetryable;
     }
 
-    public boolean isTemporary() {
-        return temporary;
+    public boolean isRetryable() {
+        return isRetryable;
+    }
+
+    public boolean isTicketable() {
+        return !(SendingErrors.DATA_ERROR.equals(this) ||
+                SendingErrors.DOCUMENT_ERROR.equals(this) ||
+                SendingErrors.UNKNOWN_RECIPIENT.equals(this) ||
+                SendingErrors.UNSUPPORTED_DATA_FORMAT.equals(this));
     }
 
 }
