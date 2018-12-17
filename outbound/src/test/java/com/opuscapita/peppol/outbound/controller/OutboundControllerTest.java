@@ -99,7 +99,7 @@ public class OutboundControllerTest {
         verifyZeroInteractions(testSender);
         verifyZeroInteractions(errorHandler);
         verify(eventReporter).reportError(cm, e);
-        verify(messageQueue).convertAndSend(eq("email_notificator"), cm);
+        verify(messageQueue).convertAndSend(eq("email_notificator"), any());
     }
 
     private ContainerMessage createContainerMessage() {
