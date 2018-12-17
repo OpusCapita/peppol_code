@@ -29,24 +29,10 @@ public class ErrorHandler {
         this.serviceNowRest = serviceNowRest;
     }
 
-    /**
-     *
-     * @param cm container message
-     * @param e Exception
-     * @param shortDescription short description
-     */
     public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Throwable e, @NotNull String shortDescription) {
         reportWithContainerMessage(cm, e, shortDescription, null);
     }
 
-    /**
-     *
-     * @param cm container message
-     * @param e Exception
-     * @param shortDescription short description
-     * @param additionalDetails additional details
-     */
-    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Throwable e, @NotNull String shortDescription,
                                            @Nullable String additionalDetails) {
         createTicketFromContainerMessage(cm, e, shortDescription, additionalDetails);
@@ -55,7 +41,6 @@ public class ErrorHandler {
     public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Throwable e, @NotNull String shortDescription,
                                               @Nullable String correlationId, @Nullable String fileName) {
         reportWithoutContainerMessage(customerId, e, shortDescription, correlationId, fileName, null);
-
     }
 
     public void reportWithoutContainerMessage(@Nullable String customerId, @Nullable Throwable e, @NotNull String shortDescription,
@@ -90,7 +75,6 @@ public class ErrorHandler {
         createTicket(shortDescription, detailedDescription, correlationId, customerId, fileName);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Throwable e,
                                                   @NotNull String shortDescription, @Nullable String additionalDetails) {
         String detailedDescription = ErrorFormatter.getErrorDescription(cm, e, additionalDetails);

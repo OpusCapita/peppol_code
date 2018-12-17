@@ -34,6 +34,7 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(classes = ValidationControllerTestConfig.class)
 @EnableConfigurationProperties
 public class ValidationControllerTest {
+
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private ValidationController controller;
@@ -70,7 +71,28 @@ public class ValidationControllerTest {
         processFile(new File("/home/redis/work/peppol2.0/validator/out/test/resources/test-materials/peppol-bis/catalogue/svekatalog_small.xml"));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @Test
+    @Ignore("sometimes we get mass amount of files from SD guys to be validated manually")
+    public void goThroughMassFolder() throws Exception {
+        File dir = new File(ValidationControllerTest.class.getResource("/test-materials/mass").getFile());
+        assertNotNull(dir.list());
+        String[] list = dir.list();
+
+        for (String fileName : list) {
+            File file = new File(dir, fileName);
+            ContainerMessage cm = loadDocument(file.getAbsolutePath());
+            cm = controller.validate(cm, Endpoint.TEST);
+
+            if (cm.getDocumentInfo().getErrors().size() > 0) {
+                System.out.println("FAILED: " + file.getName() + " [" + cm.getDocumentInfo().getErrors().size() + " error(s)]");
+                for (DocumentError e : cm.getDocumentInfo().getErrors()) {
+                    System.out.println("     error = [" + e.getValidationError().getText() + "], location= [" + e.getValidationError().getLocation() + "]");
+                }
+            }
+        }
+
+    }
+
     private void processFile(@NotNull File file) throws Exception {
         List<String> expected = getExpected(file);
 

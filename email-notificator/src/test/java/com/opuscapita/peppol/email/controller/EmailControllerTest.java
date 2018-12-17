@@ -29,7 +29,7 @@ public class EmailControllerTest {
     public void testOnlyOneTicketCreatedOnError() {
         EmailCreator emailCreator = new EmailCreator(errorHandler, new Gson());
         CustomerEmailCreator customerEmailCreator = new CustomerEmailCreator(customerRepository, emailCreator, oxalisErrorRecognizer);
-        AccessPointEmailCreator accessPointEmailCreator = new AccessPointEmailCreator(emailCreator, accessPointRepository);
+        AccessPointEmailCreator accessPointEmailCreator = new AccessPointEmailCreator(emailCreator, customerRepository, accessPointRepository);
 
         EmailController controller = new EmailController(customerEmailCreator, accessPointEmailCreator);
         controller.setOutboundActions(EmailActions.EMAIL_AP);
