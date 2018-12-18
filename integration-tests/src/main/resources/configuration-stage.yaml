@@ -31,7 +31,7 @@ tests:
             - DB test:
                 id: 4
                 name: Message persisted into DB positive test
-                expected value: 1
+                expected value: null
    eventing:
         producers:
             - file producer:
@@ -99,7 +99,7 @@ tests:
                 source directory: /peppol/data/snc-stub
                 consumers: 5
             - directory subscriber:
-                consumers: 6 21
+                consumers: 6
                 source directory: /peppol/data/mlr-reporter/a2a/mlr
             - directory subscriber:
                 consumers: 7 9
