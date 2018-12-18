@@ -1,9 +1,12 @@
 package com.opuscapita.peppol.commons.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@DynamicUpdate
 @Table(name = "senders")
 public class Customer {
 
