@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.commons.revised_model;
 
-import com.opuscapita.peppol.commons.model.AccessPoint;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
