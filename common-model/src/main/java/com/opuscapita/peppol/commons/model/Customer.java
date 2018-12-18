@@ -1,12 +1,9 @@
 package com.opuscapita.peppol.commons.model;
 
-import org.hibernate.annotations.DynamicUpdate;
-
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@DynamicUpdate
 @Table(name = "senders")
 public class Customer {
 
@@ -18,7 +15,7 @@ public class Customer {
     @Column(name = "customer_id")
     private String identifier;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AccessPoint.class)
     @JoinColumn(name = "access_point_id")
     private AccessPoint accessPoint;
 

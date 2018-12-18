@@ -90,7 +90,7 @@ tests:
                 destination queue: eventing
                 source directory: /etc/resources/mlr-reporter/mlr-reporter_valid_reprocess.xml
                 container message:
-                  source endpoint: integration-test-xib
+                  source endpoint: integration-test-a2a
                   endpoint type: outbound
                   source type: outbound reprocess
                   endpoint: integration-test-endpoint
@@ -99,7 +99,7 @@ tests:
                 source directory: /peppol/data/snc-stub
                 consumers: 5
             - directory subscriber:
-                consumers: 6
+                consumers: 6 21
                 source directory: /peppol/data/mlr-reporter/a2a/mlr
             - directory subscriber:
                 consumers: 7 9
