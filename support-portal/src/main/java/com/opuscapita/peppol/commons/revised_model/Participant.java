@@ -12,6 +12,7 @@ import javax.persistence.*;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
+@DynamicUpdate
 @Table(name = "senders")
 public class Participant {
 

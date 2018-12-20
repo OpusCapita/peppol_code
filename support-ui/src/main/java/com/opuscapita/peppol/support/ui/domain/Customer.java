@@ -16,6 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Cacheable
+@DynamicUpdate
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Table(name = "senders")
 public class Customer {
@@ -30,10 +31,6 @@ public class Customer {
 
     @Column(name = "customer_name")
     private String name;
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AccessPoint.class)
-    @JoinColumn(name = "access_point_id")
-    private AccessPoint accessPoint;
 
     @Column(name = "outbound_emails")
     private String outboundEmails;
@@ -73,14 +70,6 @@ public class Customer {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public AccessPoint getAccessPoint() {
-        return accessPoint;
-    }
-
-    public void setAccessPoint(AccessPoint accessPoint) {
-        this.accessPoint = accessPoint;
     }
 
     public String getOutboundEmails() {

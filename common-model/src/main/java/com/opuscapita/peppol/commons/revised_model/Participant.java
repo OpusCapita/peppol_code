@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.commons.revised_model;
 
-import com.opuscapita.peppol.commons.model.AccessPoint;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -27,10 +26,6 @@ public class Participant {
 
     @Column(name = "customer_name", nullable = false)
     private String name = "n/a";
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AccessPoint.class)
-    @JoinColumn(name = "access_point_id")
-    private AccessPoint accessPoint;
 
     @Column(name = "outbound_emails")
     private String outboundEmails;
@@ -68,14 +63,6 @@ public class Participant {
         if (name != null) {
             this.name = name;
         }
-    }
-
-    public AccessPoint getAccessPoint() {
-        return accessPoint;
-    }
-
-    public void setAccessPoint(AccessPoint accessPoint) {
-        this.accessPoint = accessPoint;
     }
 
     public String getOutboundEmails() {
