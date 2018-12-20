@@ -1,5 +1,7 @@
 package com.opuscapita.peppol.commons.container.document;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Created by bambr on 17.12.7.
  */
@@ -26,13 +28,13 @@ public class ApInfo {
                 String[] keyValue = part.split("=");
                 switch (keyValue[0]) {
                     case "CN":
-                        id = keyValue[1];
+                        id = getKeyValue(keyValue);
                         break;
                     case "O":
-                        name = keyValue[1];
+                        name = getKeyValue(keyValue);
                         break;
                     case "C":
-                        country = keyValue[1];
+                        country = getKeyValue(keyValue);
                         break;
                 }
 
@@ -40,6 +42,13 @@ public class ApInfo {
         }
 
         return new ApInfo(id, name, country);
+    }
+
+    private static String getKeyValue(String[] keyValue) {
+        if (keyValue.length > 1 && StringUtils.isNotBlank(keyValue[1])) {
+            return keyValue[1];
+        }
+        return "";
     }
 
     public String getId() {
