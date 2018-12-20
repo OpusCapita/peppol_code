@@ -15,7 +15,6 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@DynamicUpdate
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Table(name = "senders")

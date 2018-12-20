@@ -12,7 +12,6 @@ import javax.persistence.*;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@DynamicUpdate
 @Table(name = "senders")
 public class Participant {
 
@@ -26,10 +25,6 @@ public class Participant {
 
     @Column(name = "customer_name", nullable = false)
     private String name = "n/a";
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = com.opuscapita.peppol.commons.model.AccessPoint.class)
-    @JoinColumn(name = "access_point_id")
-    private com.opuscapita.peppol.commons.model.AccessPoint accessPoint;
 
     @Column(name = "outbound_emails")
     private String outboundEmails;
@@ -67,14 +62,6 @@ public class Participant {
         if (name != null) {
             this.name = name;
         }
-    }
-
-    public com.opuscapita.peppol.commons.model.AccessPoint getAccessPoint() {
-        return accessPoint;
-    }
-
-    public void setAccessPoint(com.opuscapita.peppol.commons.model.AccessPoint accessPoint) {
-        this.accessPoint = accessPoint;
     }
 
     public String getOutboundEmails() {
