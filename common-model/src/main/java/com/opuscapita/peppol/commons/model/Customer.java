@@ -18,7 +18,7 @@ public class Customer {
     @Column(name = "customer_id")
     private String identifier;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AccessPoint.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = AccessPoint.class)
     @JoinColumn(name = "access_point_id")
     private AccessPoint accessPoint;
 
