@@ -148,6 +148,10 @@ public class PersistenceController {
             customer.setAccessPoint(accessPoint);
             customer = customerRepository.save(customer);
             logger.info("New customer info persisted: " + peppolEvent.getSenderId());
+        } else {
+            customer.setAccessPoint(accessPoint);
+            customer = customerRepository.save(customer);
+            logger.info("Setting AP to: " + accessPoint.getAccessPointId() + " for the customer: " + peppolEvent.getSenderId());
         }
         return customer;
     }
