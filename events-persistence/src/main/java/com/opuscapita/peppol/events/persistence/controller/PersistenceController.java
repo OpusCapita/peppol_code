@@ -138,8 +138,12 @@ public class PersistenceController {
         return accessPoint;
     }
 
-    @NotNull
     private Customer getCustomer(@NotNull PeppolEvent peppolEvent, AccessPoint accessPoint) {
+        if (StringUtils.isBlank(peppolEvent.getSenderId())) {
+            logger.warn("No senderId found in the file: " + peppolEvent.getFileName());
+            return null;
+        }
+
         Customer customer = customerRepository.findByIdentifier(peppolEvent.getSenderId());
         if (customer == null) {
             customer = new Customer();
@@ -148,7 +152,7 @@ public class PersistenceController {
             customer.setAccessPoint(accessPoint);
             customer = customerRepository.save(customer);
             logger.info("New customer info persisted: " + peppolEvent.getSenderId());
-        } else {
+        } else if (accessPoint != null) {
             customer.setAccessPoint(accessPoint);
             customer = customerRepository.save(customer);
             logger.info("Setting AP to: " + accessPoint.getAccessPointId() + " for the customer: " + peppolEvent.getSenderId());
@@ -156,11 +160,13 @@ public class PersistenceController {
         return customer;
     }
 
-    @NotNull
-    private Message getMessage(@NotNull PeppolEvent peppolEvent, @NotNull Customer customer) {
-        Message message = messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId());
-        if (message != null) {
-            return message;
+    private Message getMessage(PeppolEvent peppolEvent, Customer customer) {
+        Message message;
+        if (StringUtils.isNotBlank(peppolEvent.getInvoiceId()) && customer != null) {
+            message = messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId());
+            if (message != null) {
+                return message;
+            }
         }
 
         message = new Message();
