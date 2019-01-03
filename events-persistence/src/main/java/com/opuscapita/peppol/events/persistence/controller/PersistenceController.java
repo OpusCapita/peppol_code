@@ -139,11 +139,6 @@ public class PersistenceController {
     }
 
     private Customer getCustomer(@NotNull PeppolEvent peppolEvent, AccessPoint accessPoint) {
-        if (StringUtils.isBlank(peppolEvent.getSenderId())) {
-            logger.warn("No senderId found in the file: " + peppolEvent.getFileName());
-            return null;
-        }
-
         Customer customer = customerRepository.findByIdentifier(peppolEvent.getSenderId());
         if (customer == null) {
             customer = new Customer();
