@@ -138,6 +138,7 @@ public class PersistenceController {
         return accessPoint;
     }
 
+    @NotNull
     private Customer getCustomer(@NotNull PeppolEvent peppolEvent, AccessPoint accessPoint) {
         Customer customer = customerRepository.findByIdentifier(peppolEvent.getSenderId());
         if (customer == null) {
@@ -155,13 +156,11 @@ public class PersistenceController {
         return customer;
     }
 
-    private Message getMessage(PeppolEvent peppolEvent, Customer customer) {
-        Message message;
-        if (StringUtils.isNotBlank(peppolEvent.getInvoiceId()) && customer != null) {
-            message = messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId());
-            if (message != null) {
-                return message;
-            }
+    @NotNull
+    private Message getMessage(@NotNull PeppolEvent peppolEvent, @NotNull Customer customer) {
+        Message message = messageRepository.findBySenderAndInvoiceNumber(customer, peppolEvent.getInvoiceId());
+        if (message != null) {
+            return message;
         }
 
         message = new Message();
