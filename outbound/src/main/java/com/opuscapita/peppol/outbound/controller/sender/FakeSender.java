@@ -16,21 +16,29 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Faked sender for testing without sending real data. Does nothing, just returns fake TransmissionResponse.
- *
- * @author Sergejs.Roze
- */
 @Component
 @Scope("prototype")
 @Lazy
 public class FakeSender implements PeppolSender {
+
     private static final Logger logger = LoggerFactory.getLogger(FakeSender.class);
 
-    @SuppressWarnings("unused")
-    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
-        logger.info("Thread " + Thread.currentThread().getName() + " about to emulate sending " + cm.getFileName() + " using " + this.getClass().getSimpleName());
-
+    /**
+     * Throws specific type of exception when filename includes specific keyword for testing purposes
+     */
+    private boolean throwExceptionIfExpectedInFilename(@NotNull ContainerMessage cm) throws IOException {
+        if (cm.getFileName().contains("-fail-me-unknown-recipient-")) {
+            logger.info("Rejecting message with LookupException as requested by the file name");
+            throw new RuntimeException("This sending expected to fail with LookupException: Identifier 9908:919779446 is not registered in SML test mode");
+        }
+        if (cm.getFileName().contains("-fail-me-unsupported-data-format-")) {
+            logger.info("Rejecting message with LookupException as requested by the file name");
+            throw new RuntimeException("This sending expected to fail with LookupException: Combination of receiver 9908:919779446 and document type identifier peppol-bis-v3 is not supported test mode");
+        }
+        if (cm.getFileName().contains("-fail-me-receiving-ap-error-")) {
+            logger.info("Rejecting message as requested by the file name");
+            throw new RuntimeException("This sending expected to fail with exception: Receiving server does not seem to be running test mode");
+        }
         if (cm.getFileName().contains("-fail-me-io-")) {
             logger.info("Rejecting message with I/O error as requested by the file name");
             throw new IOException("This sending expected to fail I/O in test mode");
@@ -39,7 +47,12 @@ public class FakeSender implements PeppolSender {
             logger.info("Rejecting message as requested by the file name");
             throw new IllegalStateException("This sending expected to fail in test mode");
         }
+        return true;
+    }
 
+    public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException {
+        logger.info("Thread " + Thread.currentThread().getName() + " about to emulate sending " + cm.getFileName() + " using " + this.getClass().getSimpleName());
+        throwExceptionIfExpectedInFilename(cm);
         logger.info("Returning fake transmission result, to enable real sending set 'peppol.outbound.sending.enabled' to true");
 
         return new TransmissionResponse() {
