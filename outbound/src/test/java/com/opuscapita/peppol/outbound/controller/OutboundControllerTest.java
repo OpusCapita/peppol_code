@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -30,15 +31,12 @@ public class OutboundControllerTest {
     private RealSender realSender = mock(RealSender.class);
     private FakeSender fakeSender = mock(FakeSender.class);
     private TestSender testSender = mock(TestSender.class);
-    private ErrorHandler errorHandler = mock(ErrorHandler.class);
     private MessageQueue messageQueue = mock(MessageQueue.class);
-    private StatusReporter eventReporter = mock(StatusReporter.class);
     private OxalisErrorRecognizer oxalisErrorRecognizer = mock(OxalisErrorRecognizer.class);
 
     @Test
     public void testRetries() throws Exception {
-        OutboundController controller = new OutboundController(realSender, fakeSender, testSender, messageQueue,
-                errorHandler, eventReporter, oxalisErrorRecognizer);
+        OutboundController controller = new OutboundController(realSender, fakeSender, testSender, messageQueue, oxalisErrorRecognizer);
         controller.setEmailNotificatorQueue("email_notificator");
         controller.setComponentName("component_name");
 
@@ -51,15 +49,12 @@ public class OutboundControllerTest {
         assertEquals(ProcessType.OUT_PEPPOL_RETRY, cm.getProcessingInfo().getCurrentEndpoint().getType());
         verifyZeroInteractions(realSender);
         verifyZeroInteractions(testSender);
-        verifyZeroInteractions(errorHandler);
-        verifyZeroInteractions(eventReporter);
         verify(messageQueue).convertAndSend("next", cm);
     }
 
     @Test
     public void testNotRetriableError() throws Exception {
-        OutboundController controller = new OutboundController(realSender, fakeSender, testSender, messageQueue,
-                errorHandler, eventReporter, oxalisErrorRecognizer);
+        OutboundController controller = new OutboundController(realSender, fakeSender, testSender, messageQueue, oxalisErrorRecognizer);
         controller.setEmailNotificatorQueue("email_notificator");
         controller.setComponentName("component_name");
 
@@ -68,21 +63,23 @@ public class OutboundControllerTest {
         when(oxalisErrorRecognizer.recognize(any(Exception.class))).thenReturn(SendingErrors.SECURITY_ERROR);
 
         ContainerMessage cm = createContainerMessage();
-        controller.send(cm);
+        try {
+            controller.send(cm);
+            fail("This method must throw an exception");
+        } catch (Exception exception) {
+            assertEquals(ProcessType.OUT_OUTBOUND, cm.getProcessingInfo().getCurrentEndpoint().getType());
+            assertEquals(e.getMessage(), exception.getMessage());
+            assertEquals(e.getMessage(), cm.getProcessingInfo().getProcessingException());
+        }
 
-        assertEquals(ProcessType.OUT_OUTBOUND, cm.getProcessingInfo().getCurrentEndpoint().getType());
-        assertEquals(e.getMessage(), cm.getProcessingInfo().getProcessingException());
         verifyZeroInteractions(realSender);
         verifyZeroInteractions(testSender);
         verifyZeroInteractions(messageQueue);
-        verify(eventReporter).reportError(cm, e);
-        verify(errorHandler).reportWithContainerMessage(cm, e, e.getMessage());
     }
 
     @Test
-    public void testEmailWithoutTicket() throws Exception {
-        OutboundController controller = new OutboundController(realSender, fakeSender, testSender, messageQueue,
-                errorHandler, eventReporter, oxalisErrorRecognizer);
+    public void testEmailNotifierError() throws Exception {
+        OutboundController controller = new OutboundController(realSender, fakeSender, testSender, messageQueue, oxalisErrorRecognizer);
         controller.setEmailNotificatorQueue("email_notificator");
         controller.setComponentName("component_name");
 
@@ -91,14 +88,17 @@ public class OutboundControllerTest {
         when(oxalisErrorRecognizer.recognize(any(Throwable.class))).thenReturn(SendingErrors.UNKNOWN_RECIPIENT);
 
         ContainerMessage cm = createContainerMessage();
-        controller.send(cm);
+        try {
+            controller.send(cm);
+            fail("This method must throw an exception");
+        } catch (Exception exception) {
+            assertEquals(ProcessType.OUT_OUTBOUND, cm.getProcessingInfo().getCurrentEndpoint().getType());
+            assertEquals(e.getMessage(), exception.getMessage());
+            assertEquals(e.getMessage(), cm.getProcessingInfo().getProcessingException());
+        }
 
-        assertEquals(ProcessType.OUT_OUTBOUND, cm.getProcessingInfo().getCurrentEndpoint().getType());
-        assertEquals(e.getMessage(), cm.getProcessingInfo().getProcessingException());
         verifyZeroInteractions(realSender);
         verifyZeroInteractions(testSender);
-        verifyZeroInteractions(errorHandler);
-        verify(eventReporter).reportError(cm, e);
         verify(messageQueue).convertAndSend(eq("email_notificator"), any());
     }
 
