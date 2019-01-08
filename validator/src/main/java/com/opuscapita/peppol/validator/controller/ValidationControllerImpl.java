@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Sergejs.Roze
@@ -35,6 +34,7 @@ import java.util.stream.Collectors;
 @Lazy
 @ConditionalOnProperty(name = "peppol.validator.difi.enabled", havingValue = "false")
 public class ValidationControllerImpl implements com.opuscapita.peppol.validator.ValidationController {
+
     private static final Logger logger = LoggerFactory.getLogger(ValidationControllerImpl.class);
 
     private final DocumentSplitter splitter;
@@ -64,9 +64,8 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
         checkForDocumentRoot(cm);
         DocumentSplitterResult parts = splitter.split(cm);
 
-
         cm = headerValidator.validate(parts.getSbdh(), cm);
-        System.out.println("SBDH validation errors(" + cm.getDocumentInfo().getErrors().size() + "): " + cm.getDocumentInfo().getErrors().stream().map(documentError -> "\t" + documentError.toString()).collect(Collectors.joining("\n")));
+
         //Svefaktura1 ObjectEnvelope parsing for the case when double SBDH wrap is applied
         if (cm.getDocumentInfo().getDocumentType().equals("InvoiceWithObjectEnvelope")) {
             Map<String, DocumentError> knownErrorsToBeParoled = new HashMap<String, DocumentError>() {
@@ -76,10 +75,10 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
                     put("Cannot find the declaration of element 'ObjectEnvelope'", null);
                 }
             };
+
             cm = validateForDocumentRoot(cm, endpoint, "Invoice");
-            System.out.println("SBDH and Invoice validation errors(" + cm.getDocumentInfo().getErrors().size() + "): " + cm.getDocumentInfo().getErrors().stream().map(documentError -> "\t" + documentError.toString()).collect(Collectors.joining("\n")));
             cm = validateForDocumentRoot(cm, endpoint, "ObjectEnvelope");
-            System.out.println("SBDH and Invoice and ObjectEnvelope validation errors(" + cm.getDocumentInfo().getErrors().size() + "): " + cm.getDocumentInfo().getErrors().stream().map(documentError -> "\t" + documentError.toString()).collect(Collectors.joining("\n")));
+
             Iterator<DocumentError> documentErrorIterator = cm.getDocumentInfo().getErrors().iterator();
             while (documentErrorIterator.hasNext()) {
                 DocumentError error = documentErrorIterator.next();
@@ -102,7 +101,8 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
     }
 
     @NotNull
-    protected ContainerMessage validateForDocumentRoot(@NotNull ContainerMessage cm, @NotNull Endpoint endpoint, String rootName) throws IOException, XMLStreamException, ParserConfigurationException, SAXException, TransformerException {
+    private ContainerMessage validateForDocumentRoot(@NotNull ContainerMessage cm, @NotNull Endpoint endpoint, String rootName)
+            throws IOException, XMLStreamException, ParserConfigurationException, SAXException, TransformerException {
         DocumentSplitterResult parts;
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             parts = splitter.split(inputStream, rootName);
@@ -111,7 +111,7 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
         return cm;
     }
 
-    protected void checkForDocumentRoot(@NotNull ContainerMessage cm) {
+    private void checkForDocumentRoot(@NotNull ContainerMessage cm) {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("No document info provided");
         }

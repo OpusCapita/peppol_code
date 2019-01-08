@@ -91,7 +91,7 @@ public class TestSender extends RealSender {
                     .payLoad(getUpdatedFileContent(cm, testRecipient))
                     .build();
 
-            logger.info("About to send " + cm.getFileName() + " to receiver: " + testRecipient + " using " + this.getClass().getSimpleName() + " to endpoint: " + transmissionRequest.getEndpoint());
+            logger.info("About to send message: " + cm.toLog() + " to receiver: " + testRecipient + " using test sender to endpoint: " + transmissionRequest.getEndpoint());
 
             if (cm.getFileName().contains("-fail-me-io-")) {
                 throw new IllegalStateException("This sending expected to fail I/O in test mode");
@@ -142,7 +142,7 @@ public class TestSender extends RealSender {
                     }
 
                 };
-                logger.info("created fake TransmissionResponse for integration test with transmission id: " + fakeResult.getTransmissionIdentifier());
+                logger.info("Created fake TransmissionResponse for integration test with transmission id: " + fakeResult.getTransmissionIdentifier());
                 return fakeResult;
             }
 

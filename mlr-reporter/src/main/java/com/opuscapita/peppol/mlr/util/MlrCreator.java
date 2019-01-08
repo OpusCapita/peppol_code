@@ -107,7 +107,7 @@ public class MlrCreator {
                 try {
                     issue_time = replace(issue_time, "issue_time", MessageLevelResponseUtils.convertTimeToXml(di.getIssueTime()));
                 } catch (Exception e) {
-                    logger.info("Failed to parse issue time: '" + di.getIssueTime() + "'");
+                    logger.info("Failed to parse issue time: '" + di.getIssueTime() + "' for message: " + cm.toLog());
                     if (di.getErrors().isEmpty()) {
                         cm.addError("Unable to parse issue time: '" + di.getIssueTime() + "'");
                     }

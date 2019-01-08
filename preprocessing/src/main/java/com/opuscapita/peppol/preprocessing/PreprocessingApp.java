@@ -25,7 +25,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
-import java.io.File;
 import java.util.stream.Collectors;
 
 @SpringBootApplication(scanBasePackages = {"com.opuscapita.peppol.commons", "com.opuscapita.peppol.preprocessing"})
@@ -81,40 +80,36 @@ public class PreprocessingApp {
     }
 
     private void consume(@NotNull ContainerMessage cm) throws Exception {
-        logger.info("Message received, file id: " + cm.getFileName());
+        logger.info("Preprocessing received the message: " + cm.toLog());
         cm = controller.process(cm);
 
         if (cm.getProcessingInfo() == null) {
-            throw new IllegalStateException("Processing info is missing from ContainerMessage for: " + cm.getFileName());
+            throw new IllegalStateException("Processing info is missing from ContainerMessage for: " + cm.toLog());
         }
 
         if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED) {
-            String fileName = logFileErrors(cm);
-            errorHandler.reportWithContainerMessage(cm, null, "Document not recognized by the parser in: " + fileName);
+            logFileErrors(cm);
+            errorHandler.reportWithContainerMessage(cm, null, "Document not recognized by the parser for: " + cm.toLog());
             cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file, document type unrecognized");
 
         } else if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
-            if(cm.getDocumentInfo() != null) {
+            if (cm.getDocumentInfo() != null) {
                 logFileErrors(cm);
             }
             cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file");
             EventingMessageUtil.reportEvent(cm, "Invalid file");
             messageQueue.convertAndSend(errorQueue, cm);
-            logger.info("Invalid message sent to " + errorQueue + " queue");
+            logger.info("Invalid message sent to " + errorQueue + " queue, for the message: " + cm.toLog());
         } else {
             EventingMessageUtil.reportEvent(cm, "Preprocessing complete, sent to: " + queueOut);
             EventingMessageUtil.updateEventingInformation(cm);
             messageQueue.convertAndSend(queueOut, cm);
-            logger.info("Successfully processed and delivered to " + queueOut + " queue");
+            logger.info("The message: " + cm.toLog() + " successfully processed and delivered to " + queueOut + " queue");
         }
     }
 
-    @NotNull
-    private String logFileErrors(@NotNull ContainerMessage cm) {
-        String fileName = new File(cm.getFileName()).getName();
-        String errorsSoFar = cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining("\n\r"));
-        logger.warn("Document type recognition for " + fileName + " failed with following errors: " + errorsSoFar);
-        return fileName;
+    private void logFileErrors(@NotNull ContainerMessage cm) {
+        String errors = cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining("\n\r"));
+        logger.warn("Document type recognition for " + cm.toLog() + " failed with following errors: " + errors);
     }
-
 }

@@ -63,7 +63,7 @@ public class MlrController {
     public void process(@NotNull ContainerMessage cm) throws ParseException, DatatypeConfigurationException, IOException {
         // nothing to do if there is no info about the file
         if (cm.getDocumentInfo() == null) {
-            logger.info("No document in received message, ignoring message");
+            logger.info("No document in received message, ignoring message: " + cm.toLog());
             return;
         }
 
@@ -73,7 +73,7 @@ public class MlrController {
 
         // ignoring inbound
         if (cm.isInbound()) {
-            logger.info("Inbound, ignoring message");
+            logger.info("Message is in Inbound flow, ignoring message: " + cm.toLog());
             return;
         }
 
@@ -82,28 +82,28 @@ public class MlrController {
 
         // report invalid files
         if (di.getArchetype() == Archetype.INVALID || di.getArchetype() == Archetype.UNRECOGNIZED) {
-            logger.info("Creating MLR (re) for: invalid message: " + cm.getFileName());
+            logger.info("Creating MLR (re) for: invalid message: " + cm.toLog());
             storeResponse(creator.reportError(cm), cm, "re");
             return;
         }
 
         // processing exception
         if (pi != null && pi.getProcessingException() != null) {
-            logger.info("Creating MLR (er) for: message in error because of processing exception: " + cm.getFileName());
+            logger.info("Creating MLR (er) for: message in error because of processing exception: " + cm.toLog());
             storeResponse(creator.reportError(cm), cm, "er");
             return;
         }
 
         // errors reported in file
         if (!di.getErrors().isEmpty()) {
-            logger.info("Creating MLR (re) for: message with errors: " + cm.getFileName());
+            logger.info("Creating MLR (re) for: message with errors: " + cm.toLog());
             storeResponse(creator.reportError(cm), cm, "re");
             return;
         }
 
         // report retries in outbound
         if (pi != null && pi.getCurrentEndpoint().getType() == ProcessType.OUT_PEPPOL_RETRY) {
-            logger.info("Creating MLR (ab) for: message queued for retry: " + cm.getFileName());
+            logger.info("Creating MLR (ab) for: message queued for retry: " + cm.toLog());
             storeResponse(creator.reportRetry(cm), cm, "ab");
             return;
         }
@@ -111,10 +111,10 @@ public class MlrController {
         // report successfull end of the flow
         if (pi != null && pi.getCurrentEndpoint().getType() == ProcessType.OUT_OUTBOUND) {
             if (StringUtils.isNotBlank(pi.getTransactionId())) {
-                logger.info("Creating MLR (ap) for: successfully sent message: " + cm.getFileName());
+                logger.info("Creating MLR (ap) for: successfully sent message: " + cm.toLog());
                 storeResponse(creator.reportSuccess(cm), cm, "ap");
             } else {
-                logger.error("Message " + cm.getFileName() + " reported as successfully sent out but there is no transmission ID");
+                logger.error("Message: " + cm.toLog() + " reported as successfully sent out but there is no transmission ID");
             }
         }
     }
@@ -124,30 +124,28 @@ public class MlrController {
         boolean created = false;
         String originalSource = cm.getProcessingInfo().getOriginalSource();
         if (isReprocess(cm)) {
-            logger.info("Creating MLR for reprocessed message");
+            logger.info("Creating MLR for reprocessed message: " + cm.toLog());
             originalSource = fetchOriginalSourceFromDb(cm);
         }
 
         if (StringUtils.containsIgnoreCase(originalSource, "a2a")) {
-            storeResponse(art, destinationA2A + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
-                    "-" + result + "-mlr.xml");
+            storeResponse(art, destinationA2A + File.separator + FilenameUtils.getBaseName(cm.getFileName()) + "-" + result + "-mlr.xml");
             created = true;
         }
         if (StringUtils.containsIgnoreCase(originalSource, "xib")) {
-            storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) +
-                    "-" + result + "-mlr.xml");
+            storeResponse(art, destinationXiB + File.separator + FilenameUtils.getBaseName(cm.getFileName()) + "-" + result + "-mlr.xml");
             created = true;
         }
         if (!created) {
-            logger.error("Failed to define where to send MLR for " + cm.getFileName() + ", original source = " + originalSource);
+            logger.error("Failed to define where to send MLR for " + cm.toLog() + ", original source = " + originalSource);
         }
 
         if (backupEnabled) {
             try {
                 String backupMlr = storeBackup(art, cm, result);
-                logger.info("Backup MLR stored as " + backupMlr);
+                logger.info("Backup MLR stored as " + backupMlr + " for the message: " + cm.toLog());
             } catch (Exception e) {
-                logger.error("Failed to create MLR backup file: " + e.getMessage());
+                logger.error("Failed to create MLR backup for the file: " + cm.toLog() + ", exception: " + e.getMessage());
             }
         }
     }
@@ -156,13 +154,12 @@ public class MlrController {
     private String fetchOriginalSourceFromDb(ContainerMessage cm) {
         Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
         if (customer == null) {
-            logger.warn("Unable to create standard MLR. Could not fetch customer for file: " + cm.getFileName()
-                    + " and customer id: " + cm.getDocumentInfo().getSenderId());
+            logger.warn("Unable to create standard MLR. Could not fetch customer for file: " + cm.toLog());
             return null;
         }
         Message message = messageRepository.findBySenderAndInvoiceNumber(customer, cm.getDocumentInfo().getDocumentId());
         if (message == null) {
-            logger.warn("Unable to create standard MLR. Could not fetch original event message for file: " + cm.getFileName());
+            logger.warn("Unable to create standard MLR. Could not fetch original event message for file: " + cm.toLog());
             return null;
         }
         return message.getOriginalSource();

@@ -43,8 +43,7 @@ public class ReportingManager {
     public void process(ContainerMessage cm, @Nullable ErrorHandler errorHandler) {
         Map<String, Exception> processingExceptions = new HashMap<>();
         try {
-            logger.info("Received message about " + cm.getFileName() + ", current endpoint: " +
-                    cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
+            logger.info("Received message: " + cm.toLog());
         } catch (Exception ignored) {
         }
 

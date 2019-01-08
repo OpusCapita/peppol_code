@@ -44,11 +44,11 @@ public enum SendingErrors {
         return isRetryable;
     }
 
-    public boolean isTicketable() {
-        return !(SendingErrors.DATA_ERROR.equals(this) ||
-                SendingErrors.DOCUMENT_ERROR.equals(this) ||
-                SendingErrors.UNKNOWN_RECIPIENT.equals(this) ||
-                SendingErrors.UNSUPPORTED_DATA_FORMAT.equals(this));
+    public boolean requiresNotification() {
+        return SendingErrors.DATA_ERROR.equals(this) ||
+               SendingErrors.DOCUMENT_ERROR.equals(this) ||
+               SendingErrors.UNKNOWN_RECIPIENT.equals(this) ||
+               SendingErrors.UNSUPPORTED_DATA_FORMAT.equals(this);
     }
 
 }

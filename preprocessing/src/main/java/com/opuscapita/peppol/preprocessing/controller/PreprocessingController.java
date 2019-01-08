@@ -53,7 +53,7 @@ public class PreprocessingController {
             throw new IllegalArgumentException("File name is empty in received message");
         }
 
-        logger.info("Processing file: " + cm.getFileName());
+        logger.info("PreprocessingController started to process file: " + cm.toLog());
         DocumentInfo document;
         Endpoint endpoint;
         if (cm.isInbound()) {
@@ -71,7 +71,7 @@ public class PreprocessingController {
         document = documentLoader.load(cm.getFileName(), cm.getProcessingInfo().getSource());
 
         String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
-        logger.info("Input file " + cm.getFileName() + " moved to " + longTerm);
+        logger.info("Preprocessed input file " + cm.toLog() + " moved to " + longTerm);
         cm.setDocumentInfo(document).setFileName(longTerm);
         cm.setStatus(endpoint, "parsed");
         return cm;

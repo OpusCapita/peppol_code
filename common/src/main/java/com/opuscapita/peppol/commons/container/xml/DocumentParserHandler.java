@@ -317,7 +317,7 @@ public class DocumentParserHandler extends DefaultHandler {
     private DocumentInfo oneResult(Template template) {
         DocumentInfo result = new DocumentInfo();
         //TODO: provide more information on recognized document
-        logger.info("Document recognized as " + template.originalRoot);
+        logger.info("Document " + fileName + ", recognized as " + template.originalRoot);
         result.setRootNodeName(template.originalRoot);
         result.setRootNameSpace(template.rootNameSpace);
         String[] parts = template.name.split("\\.", 2);

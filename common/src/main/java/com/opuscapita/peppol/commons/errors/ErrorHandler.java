@@ -104,4 +104,20 @@ public class ErrorHandler {
         return Hex.encodeHexString(MessageDigest.getInstance("SHA-1").digest(correlationId.getBytes()));
     }
 
+    public static String getShortDescription(@NotNull ContainerMessage cm, @NotNull Throwable e) {
+        String shortDescription = "Incident";
+        if (StringUtils.isNotBlank(cm.getFileName())) {
+            shortDescription += ", file: " + cm.getFileName();
+        }
+        if (StringUtils.isNotBlank(cm.getCustomerId())) {
+            shortDescription += ", customer: " + cm.getCustomerId();
+        }
+        if (StringUtils.isNotBlank(e.getMessage())) {
+            shortDescription += ", reason: " + e.getMessage();
+        } else {
+            shortDescription += ", reason: unknown";
+        }
+        return shortDescription;
+    }
+
 }

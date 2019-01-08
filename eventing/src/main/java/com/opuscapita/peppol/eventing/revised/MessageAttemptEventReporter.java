@@ -23,23 +23,23 @@ public class MessageAttemptEventReporter {
         this.messagesRepository = messagesRepository;
     }
 
-    public void process(ContainerMessage containerMessage) {
+    public void process(ContainerMessage cm) {
         if(!storingEnabled) {
             return;
         }
-        com.opuscapita.peppol.commons.events.Message internalMessage = containerMessage.getProcessingInfo().getEventingMessage();
+        com.opuscapita.peppol.commons.events.Message internalMessage = cm.getProcessingInfo().getEventingMessage();
 
         boolean isNull = internalMessage == null;
         if (isNull) {
-            logger.info("File with null eventing message: " + containerMessage.getFileName());
-            logger.info("Source: " + containerMessage.getProcessingInfo().getSource());
+            logger.info("File with null eventing message: " + cm.toLog());
+            logger.info("Source: " + cm.getProcessingInfo().getSource());
         }
 
         Message message = DTOTransformer.fromEventingMessage(internalMessage);
         //TODO: check if inversion of sender/recipient is needed based on direction in/out
-        message.setRecipient(containerMessage.getDocumentInfo().getRecipientId());
-        message.setSender(containerMessage.getDocumentInfo().getSenderId());
-        message.setInbound(containerMessage.isInbound());
+        message.setRecipient(cm.getDocumentInfo().getRecipientId());
+        message.setSender(cm.getDocumentInfo().getSenderId());
+        message.setInbound(cm.isInbound());
         messagesRepository.save(message);
         logger.info("Saved message: " + message);
     }

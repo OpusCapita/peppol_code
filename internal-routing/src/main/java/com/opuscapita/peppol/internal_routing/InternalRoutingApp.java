@@ -52,7 +52,7 @@ public class InternalRoutingApp {
                     reporter.reportError(cm, null);
                     return;
                 }
-                logger.info("Route set to " + cm.getProcessingInfo().getRoute());
+                logger.info("Route set to " + cm.getProcessingInfo().getRoute() + " for message: " + cm.toLog());
 
                 String queueOut = cm.popRoute();
                 cm.setStatus(endpoint, "route set");

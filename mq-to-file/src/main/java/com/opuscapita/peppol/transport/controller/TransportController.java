@@ -38,7 +38,7 @@ public class TransportController extends ValuesChecker {
 
         copyFile(input, output);
 
-        logger.info("File " + cm.getFileName() + " copied to " + output);
+        logger.info("File " + cm.toLog() + " copied to " + output);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

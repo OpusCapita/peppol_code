@@ -41,7 +41,7 @@ public class MessageSender {
 
             messageQueue.convertAndSend(queueName, cm);
 
-            logger.info("Message about file " + cm.getFileName() + " sent to " + queueName);
+            logger.info("Message sent to " + queueName + ", about file " + cm.toLog());
         } catch (Exception e) {
             logger.error("Failed to report received file " + cm.getFileName() + " to queue " + queueName, e);
             logger.error("Container message dump: " + cm.convertToJson());

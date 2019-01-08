@@ -76,17 +76,17 @@ public class EmailController {
         }
 
         if (actions.contains(EmailActions.NOTHING)) {
-            logger.info("Skipping " + cm.getFileName() + " as action 'nothing' is set for it");
+            logger.info("Skipping message: " + cm.toLog() + " as action 'nothing' is set for it");
             return;
         }
 
         boolean createTicket = actions.contains(EmailActions.SNC_TICKET);
         if (actions.contains(EmailActions.EMAIL_AP)) {
-            logger.info("Preparing access point e-mail for " + cm.getFileName());
+            logger.info("Preparing access point e-mail for " + cm.toLog());
             accessPointEmailCreator.create(cm, createTicket);
         }
         if (actions.contains(EmailActions.EMAIL_CUSTOMER)) {
-            logger.info("Preparing customer e-mail for " + cm.getFileName());
+            logger.info("Preparing customer e-mail for " + cm.toLog());
             customerEmailCreator.create(cm, createTicket);
         }
     }

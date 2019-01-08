@@ -57,7 +57,7 @@ public class EventPersistenceReporter {
             e.printStackTrace();
         }
 
-        logger.info("Peppol event about " + cm.getFileName() + " successfully sent to " + queueOut + " queue");
+        logger.info("Peppol event sent to " + queueOut + " queue, about the message: " + cm.toLog());
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -123,16 +123,16 @@ public class EventPersistenceReporter {
 
 
     @SuppressWarnings("ConstantConditions")
-    private String extractCommonNameFromMetadata(ContainerMessage containerMessage) {
+    private String extractCommonNameFromMetadata(ContainerMessage cm) {
         String result = null;
         try {
-            JsonObject rawMetadata = gson.fromJson(containerMessage.getProcessingInfo().getSourceMetadata(), JsonObject.class);
+            JsonObject rawMetadata = gson.fromJson(cm.getProcessingInfo().getSourceMetadata(), JsonObject.class);
             PeppolMessageMetadata messageMetadata = gson.fromJson(rawMetadata.get("PeppolMessageMetaData"), PeppolMessageMetadata.class);
 
-            result = containerMessage.isInbound() ? messageMetadata.getSendingAccessPoint() : messageMetadata.getReceivingAccessPoint();
-            logger.info("Extracted Access Point Common Name [" + result + "] for file: " + containerMessage.getFileName());
+            result = cm.isInbound() ? messageMetadata.getSendingAccessPoint() : messageMetadata.getReceivingAccessPoint();
+            logger.info("Extracted Access Point Common Name [" + result + "] from message: " + cm.toLog());
         } catch (Exception e) {
-            logger.warn("Failed to extract common name from metadata[" + containerMessage.getProcessingInfo().getSourceMetadata() + "] for file: " + containerMessage.getFileName());
+            logger.warn("Failed to extract common name from metadata[" + cm.getProcessingInfo().getSourceMetadata() + "] for message: " + cm.toLog());
             e.printStackTrace();
         }
         return result;

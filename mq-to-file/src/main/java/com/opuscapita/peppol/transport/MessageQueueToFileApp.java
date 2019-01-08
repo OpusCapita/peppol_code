@@ -61,7 +61,7 @@ public class MessageQueueToFileApp {
         return new AbstractQueueListener(errorHandler, reporter, serializer) {
             @Override
             protected void processMessage(@NotNull ContainerMessage cm) throws Exception {
-                logger.info("Processing incoming message: " + cm.getFileName());
+                logger.info("Processing incoming message: " + cm.toLog());
                 controller.storeMessage(cm);
                 cm.setStatus(new Endpoint(componentName, ProcessType.IN_MQ_TO_FILE), "delivered");
                 EventingMessageUtil.reportEvent(cm, "File "+cm.getFileName()+ " delivered by " + componentName);

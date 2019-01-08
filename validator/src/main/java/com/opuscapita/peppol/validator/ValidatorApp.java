@@ -58,7 +58,7 @@ public class ValidatorApp {
     @SuppressWarnings("ConstantConditions")
     private void consume(@NotNull ContainerMessage cm) throws Exception {
         Endpoint endpoint = new Endpoint(componentName, cm.isInbound() ? ProcessType.IN_VALIDATION : ProcessType.OUT_VALIDATION);
-        logger.info("Validating message " + cm.getFileName());
+        logger.info("Validating message " + cm.toLog());
 
         cm.getProcessingInfo().setCurrentStatus(endpoint, "performing validation");
         EventingMessageUtil.reportEvent(cm, "Performing validation");
@@ -68,13 +68,13 @@ public class ValidatorApp {
             cm.getProcessingInfo().setCurrentStatus(endpoint, "validation failed");
             EventingMessageUtil.reportEvent(cm, "Validation failed");
             messageQueue.convertAndSend(errorQueue, cm);
-            logger.info("Validation failed for " + cm.getFileName() + ", message sent to " + errorQueue + " queue");
+            logger.info("Validation failed for " + cm.toLog() + ", message sent to " + errorQueue + " queue");
         } else {
             String queueOut = cm.popRoute();
             cm.setStatus(endpoint, "validation passed");
             EventingMessageUtil.reportEvent(cm, "Validation passed, sent to: " + queueOut);
             messageQueue.convertAndSend(queueOut, cm);
-            logger.info("Validation passed for " + cm.getFileName() + ", message sent to " + queueOut + " queue");
+            logger.info("Validation passed for " + cm.toLog() + ", message sent to " + queueOut + " queue");
         }
     }
 

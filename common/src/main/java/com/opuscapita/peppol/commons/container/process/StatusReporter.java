@@ -40,7 +40,7 @@ public class StatusReporter {
         try {
             rabbitTemplate.convertAndSend(reportDestination, cm);
         } catch (Exception e) {
-            failedToProcess(cm, e, "Failed to report service status");
+            failedToProcess(cm, e, "Failed to report service status.");
         }
     }
 
@@ -53,22 +53,18 @@ public class StatusReporter {
         cm.getProcessingInfo().setProcessingException(e.getMessage());
         try {
             rabbitTemplate.convertAndSend(reportDestination, cm);
-            logger.info("Error message about " + cm.getFileName() + " send to " + reportDestination +
-                    ", endpoint: " + cm.getProcessingInfo().getCurrentEndpoint() + ", status: " + cm.getProcessingInfo().getCurrentStatus());
+            logger.info("Error message send to " + reportDestination + " about message: " + cm.toLog());
         } catch (Exception exception) {
             logger.error("Failed to report error: " + exception.getMessage(), exception);
-            failedToProcess(cm, e, "Failed to report service error");
+            failedToProcess(cm, e, "Failed to report service error.");
         }
     }
 
     private void failedToProcess(ContainerMessage cm, Throwable e, String shortDescription) {
-        logger.warn("Reporting an issue to ServiceNow: " + e.getMessage());
+        shortDescription = shortDescription + " " + ErrorHandler.getShortDescription(cm, e);
+        logger.warn("Reporting an issue to ServiceNow: " + shortDescription);
         try {
-            if (cm == null) {
-                errorHandler.reportWithoutContainerMessage("n/a", e, shortDescription, null, null);
-            } else {
-                errorHandler.reportWithContainerMessage(cm, e, e.getMessage());
-            }
+            errorHandler.reportWithContainerMessage(cm, e, shortDescription);
         } catch (Exception exception) {
             logger.error("Failed to report issue to ServiceNow: ", exception);
         }

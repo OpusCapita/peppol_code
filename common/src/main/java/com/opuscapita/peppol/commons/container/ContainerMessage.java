@@ -139,6 +139,22 @@ public class ContainerMessage implements Serializable {
         return result;
     }
 
+    public String toLog() {
+        String result = "[file: {filename}, customer: {customer}, status: {status}, endpoint: {endpoint}]";
+        result = result.replace("{filename}", "{" + fileName + "}");
+
+        String customerId = getCustomerId();
+        result = result.replace("{customer}", "{" + (StringUtils.isBlank(customerId) ? "unknown" : customerId) + "}");
+
+        String status = processingInfo == null ? "unknown" : processingInfo.getCurrentStatus();
+        result = result.replace("{status}", "{" + (StringUtils.isBlank(status) ? "unknown" : status) + "}");
+
+        Endpoint endpoint = processingInfo == null ? null : processingInfo.getCurrentEndpoint();
+        result = result.replace("{endpoint}", "{" + (endpoint == null ? "unknown" : endpoint.toShortString()) + "}");
+
+        return result;
+    }
+
     public void setStatus(@NotNull Endpoint endpoint, @NotNull String status) {
         processingInfo.setCurrentStatus(endpoint, status);
     }

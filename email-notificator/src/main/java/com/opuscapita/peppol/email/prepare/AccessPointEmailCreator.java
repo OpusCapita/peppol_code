@@ -44,17 +44,17 @@ public class AccessPointEmailCreator {
 
     public void create(@NotNull ContainerMessage cm, boolean createTicket) throws IOException {
         if (!cm.hasErrors()) {
-            emailCreator.fail(cm, "Document has no errors: " + cm.getFileName() + ", nothing to report", null);
+            emailCreator.fail(cm, "No error found to report in the document: " + cm.toLog(), null);
             return;
         }
         if (cm.getProcessingInfo() == null) {
-            emailCreator.fail(cm, "No processing info in document: " + cm.getFileName(), null);
+            emailCreator.fail(cm, "No processing info found in the document: " + cm.toLog(), null);
             return;
         }
 
         AccessPoint accessPoint = findAccessPointInfo(cm);
         if (accessPoint == null) {
-            emailCreator.fail(cm, "Failed to determine access point by CN='" + cm.getProcessingInfo().getCommonName() + "' for " + cm.getFileName(), null);
+            emailCreator.fail(cm, "Failed to determine access point by CN='" + cm.getProcessingInfo().getCommonName() + "' for " + cm.toLog(), null);
             return;
         }
 
@@ -62,7 +62,7 @@ public class AccessPointEmailCreator {
         if (StringUtils.isBlank(addresses)) {
             emailCreator.fail(cm, "E-mail address not set for the AP " + accessPoint.getAccessPointId() + " " + accessPoint.getAccessPointName(),
                     "Please update the e-mail for the Access Point (AP): " + accessPoint.getAccessPointId() + ", name: " + accessPoint.getAccessPointName() +
-                            "\nAfterwards reprocess the data file " + cm.getFileName() + " from the UI to send the e-mail notifications to this AP automatically");
+                            "\nAfterwards reprocess the data for " + cm.toLog() + " from the UI to send the e-mail notifications to this AP automatically");
             return;
         }
 
@@ -74,7 +74,7 @@ public class AccessPointEmailCreator {
         if (StringUtils.isNotBlank(cm.getProcessingInfo().getCommonName())) {
             String accessPointId = ApInfo.parseFromCommonName(cm.getProcessingInfo().getCommonName()).getId();
             AccessPoint accessPoint = accessPointRepository.findByAccessPointId(accessPointId);
-            logger.info("Found access point info from common name: '" + cm.getProcessingInfo().getCommonName() + "' for " + cm.getFileName());
+            logger.info("Found access point info from common name: '" + cm.getProcessingInfo().getCommonName() + "' for " + cm.toLog());
             return accessPoint;
         }
 
@@ -82,7 +82,7 @@ public class AccessPointEmailCreator {
             Customer customer = customerRepository.findByIdentifier(cm.getCustomerId());
             if (customer != null && customer.getAccessPoint() != null) {
                 AccessPoint accessPoint = customer.getAccessPoint();
-                logger.info("Found access point info from db: '" + accessPoint + "' for " + cm.getFileName());
+                logger.info("Found access point info from db: '" + accessPoint + "' for " + cm.toLog());
                 return accessPoint;
             }
         }

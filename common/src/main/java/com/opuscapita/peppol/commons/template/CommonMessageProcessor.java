@@ -40,7 +40,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
 
     public void process(@NotNull ContainerMessage cm) {
         try {
-            logger.info("Processing message " + cm.getFileName());
+            logger.info("Processing message: " + cm.toLog());
             containerMessageConsumer.consume(cm);
         } catch (Exception e) {
             logger.warn("Message " + cm.getFileName() + " processing failed: " + e.getMessage());
@@ -68,12 +68,11 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
     }
 
     static void reportError(@NotNull ContainerMessage cm, @NotNull Throwable e,
-                                   @NotNull ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
+                            @NotNull ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
         try {
-            errorHandler.reportWithContainerMessage(cm, e, e.getMessage() == null ? "null" : e.getMessage());
-            String customerId = cm.getCustomerId() == null ? "n/a" : cm.getCustomerId();
-            logger.warn("Message processing failed. File id: " + cm.getFileName() + ", customer ID = " + customerId +
-                    ", reason: " + e.getMessage());
+            String shortDescription = ErrorHandler.getShortDescription(cm, e);
+            errorHandler.reportWithContainerMessage(cm, e, shortDescription);
+            logger.warn("Message processing failed. " + shortDescription);
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }

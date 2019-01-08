@@ -44,7 +44,7 @@ public class AsyncMessageProcessor implements ContainerMessageProcessor {
     @Async
     public void process(@NotNull ContainerMessage cm) {
         try {
-            logger.info("Processing message " + cm.getFileName());
+            logger.info("Processing message: " + cm.toLog());
             containerMessageConsumer.consume(cm);
         } catch (Exception e) {
             logger.warn("Message processing failed: " + e.getMessage());

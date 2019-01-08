@@ -107,4 +107,21 @@ public class AccessFilterProperties {
     public void setProhibitedMasksNetworkOverrides(String prohibitedMasksNetworkOverride) {
         this.prohibitedMasksNetworkOverrides = prohibitedMasksNetworkOverride == null ? Collections.emptyList() : Arrays.asList(prohibitedMasksNetworkOverride.split(",")).stream().map(raw -> raw.trim()).collect(Collectors.toList());
     }
+
+    @Override
+    public String toString() {
+        return "AccessFilterProperties: { \n" +
+                "\tallowFrom: " + convertListToString(allowFrom) + ", \n" +
+                "\tdenyFrom: " + convertListToString(denyFrom) + ", \n" +
+                "\tservicesToBypass: " + convertListToString(servicesToBypass) + ", \n" +
+                "\tprohibitedMasks: " + convertListToString(prohibitedMasks) + " \n" +
+                "}";
+    }
+
+    private String convertListToString(List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return "none";
+        }
+        return list.stream().collect(Collectors.joining(","));
+    }
 }

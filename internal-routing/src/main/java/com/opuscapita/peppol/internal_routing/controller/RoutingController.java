@@ -43,7 +43,7 @@ public class RoutingController {
     @SuppressWarnings("ConstantConditions")
     @NotNull
     public ContainerMessage loadRoute(@NotNull ContainerMessage cm) throws IOException {
-        logger.info("Processing message " + cm.getFileName());
+        logger.info("Processing message: " + cm.toLog());
         String source = cm.getProcessingInfo().getSource().getName();
         DocumentInfo documentInfo = cm.getDocumentInfo();
 

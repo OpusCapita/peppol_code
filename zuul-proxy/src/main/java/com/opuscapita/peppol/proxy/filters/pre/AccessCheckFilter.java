@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * Created by bambr on 16.28.12.
  */
 public class AccessCheckFilter extends ZuulFilter {
+
     private final static Logger logger = LoggerFactory.getLogger(AccessCheckFilter.class);
     private static final String HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
     private final AccessFilterProperties accessFilterProperties;
@@ -26,6 +27,9 @@ public class AccessCheckFilter extends ZuulFilter {
     public AccessCheckFilter(AccessFilterProperties accessFilterProperties, String zuulServletPath) {
         this.accessFilterProperties = accessFilterProperties;
         this.zuulServletPath = zuulServletPath;
+
+        logger.info("ZuulServletPath: " + zuulServletPath);
+        logger.info(accessFilterProperties.toString());
     }
 
     @Override
@@ -44,7 +48,7 @@ public class AccessCheckFilter extends ZuulFilter {
         HttpServletRequest request = requestContext.getRequest();
         String requestedService = RequestUtils.extractRequestedService(request, zuulServletPath);
         boolean result = !accessFilterProperties.getServicesToBypass().contains(requestedService);
-        logger.debug("Should filter for service [" + requestedService + "]: " + result);
+        logger.info("Should filter for service [" + requestedService + "]: " + result);
         return result;
     }
 
@@ -53,7 +57,6 @@ public class AccessCheckFilter extends ZuulFilter {
         try {
             RequestContext requestContext = RequestContext.getCurrentContext();
             HttpServletRequest request = requestContext.getRequest();
-            logger.debug(request.getRemoteAddr());
             if (isNotAllowed(request)) {
                 reject(requestContext);
             }
@@ -76,13 +79,13 @@ public class AccessCheckFilter extends ZuulFilter {
 
     boolean isNotAllowed(HttpServletRequest request) {
         String requestedService = RequestUtils.extractRequestedService(request, zuulServletPath);
-        final String finalRemoteAddr = extractRemoteAddress(request, requestedService);
-
-
+        String finalRemoteAddr = extractRemoteAddress(request);
         if (requestedService.isEmpty()) {
             requestedService = "/";
         }
+
         boolean result = true;
+        logger.info("Running proxy for service: " + requestedService + " requested from: " + finalRemoteAddr);
 
         if (containsProhibitedMasks(request, accessFilterProperties.getProhibitedMasks())
                 &&
@@ -93,18 +96,26 @@ public class AccessCheckFilter extends ZuulFilter {
         //Deny global settings
         if (accessFilterProperties.getDenyFrom() != null && accessFilterProperties.getDenyFrom().contains("*")) {
             result = true;
+            logger.info("Not allowing request since accessFilterProperties.denyFrom set to * ");
         } else {
             if (accessFilterProperties.getDenyFrom() != null) {
                 result = accessFilterProperties.getDenyFrom().stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
+                if (result) {
+                    logger.info("Not allowing request since accessFilterProperties.denyFrom includes " + finalRemoteAddr);
+                }
             }
         }
 
         //Allow global settings
         if (accessFilterProperties.getAllowFrom() != null && accessFilterProperties.getAllowFrom().contains("*")) {
             result = false;
+            logger.info("Allowing request since accessFilterProperties.allowFrom set to * ");
         } else {
             if (accessFilterProperties.getAllowFrom() != null) {
                 result = !accessFilterProperties.getAllowFrom().stream().map(entry -> new SubnetUtils(entry)).anyMatch(subnet -> subnet.getInfo().isInRange(finalRemoteAddr));
+                if (!result) {
+                    logger.info("Allowing request since accessFilterProperties.allowFrom includes " + finalRemoteAddr);
+                }
             }
         }
 
@@ -139,7 +150,7 @@ public class AccessCheckFilter extends ZuulFilter {
         return result;
     }
 
-    private String extractRemoteAddress(HttpServletRequest request, String requestedService) {
+    private String extractRemoteAddress(HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
         logger.debug("remoteAddr: " + remoteAddr);
 
@@ -154,7 +165,6 @@ public class AccessCheckFilter extends ZuulFilter {
         if (!forwardedFor.isEmpty()) {
             remoteAddr = forwardedFor;
         }
-        logger.debug("Checking against address: " + remoteAddr + " and service: " + requestedService);
         return remoteAddr;
     }
 

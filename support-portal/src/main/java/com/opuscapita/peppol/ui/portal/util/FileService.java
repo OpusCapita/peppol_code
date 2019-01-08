@@ -71,7 +71,7 @@ public class FileService {
             cm.setStatus(source, "reprocessing");
             cm.setOriginalFileName(fileToReprocess.getAbsolutePath());
             messageQueue.convertAndSend(queue, cm);
-            logger.info("File " + cm.getFileName() + " sent to " + queue + " queue");
+            logger.info("File " + cm.toLog() + " sent to " + queue + " queue");
             /*File result = new File(attempt.getMessage().isInbound() ? reprocessInboundDir : reprocessOutboundDir, fileToReprocess.getName());
             IOUtils.copy(new FileInputStream(fileToReprocess), new FileOutputStream(result));
             logger.info("Reprocessing, file moved from: " + fileToReprocess.getAbsolutePath() + " to: " + result.getAbsolutePath());*/

@@ -46,13 +46,13 @@ public abstract class AbstractQueueListener {
             }
             eventReported = true;
         } catch (Exception e) {
-            handleError(cm.getCustomerId() == null ? "n/a" : cm.getCustomerId(), e, cm);
+            handleError(cm, e);
         }
         if(!eventReported) {
             try {
                 reportEvent(cm);
             } catch (Exception e) {
-                handleError(cm.getCustomerId(), e, cm);
+                handleError(cm, e);
             }
         }
     }
@@ -67,7 +67,7 @@ public abstract class AbstractQueueListener {
         } catch (Exception e) {
             success = false;
             logger.error("Failed to deserialize received message: " + e.getMessage());
-            handleError("n/a", e, null);
+            handleError(null, e);
         }
         if(success && cm != null) {
             receiveMessage(cm);
@@ -77,7 +77,7 @@ public abstract class AbstractQueueListener {
 
     private void reportEvent(ContainerMessage cm) {
         if (cm != null && cm.getProcessingInfo() != null) {
-            logger.info("Reporting event: " + cm.getProcessingInfo().getEventingMessage());
+            logger.info("Reporting event: " + cm.getProcessingInfo().getEventingMessage() + " for message: " + cm.toLog());
             EventingMessageUtil.reportEvent(cm, cm.getProcessingInfo().getCurrentStatus());
         }
     }
@@ -90,25 +90,24 @@ public abstract class AbstractQueueListener {
 
     protected abstract void processMessage(@NotNull ContainerMessage cm) throws Exception;
 
-    private void handleError(@NotNull String customerId, @NotNull Exception e, @Nullable ContainerMessage cm) {
+    private void handleError(@Nullable ContainerMessage cm, @NotNull Exception e) {
         try {
             if (errorHandler != null) {
                 if (cm == null) {
-                    errorHandler.reportWithoutContainerMessage(customerId, e, e.getMessage(), null, null);
+                    errorHandler.reportWithoutContainerMessage("n/a", e, e.getMessage(), null, null);
                 } else {
                     errorHandler.reportWithContainerMessage(cm, e, e.getMessage());
                 }
             }
-            String fileName = (cm == null ? "n/a" : cm.getFileName());
 
-            logger.warn("Message processing failed. File id: " + fileName + ", " + (StringUtils.isBlank(customerId) ? "" : customerId));
+            logger.warn("Message processing failed. Message: " + (cm == null ? "null" : cm.toLog()));
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
 
         if (reporter != null) {
             if (cm != null) {
-                logger.info("Reporting error about " + cm.getFileName() + " to the eventing");
+                logger.info("Reporting error about " + cm.toLog() + " to the eventing");
                 reporter.reportError(cm, e);
             } else {
                 logger.warn("No container message present, cannot report to eventing");

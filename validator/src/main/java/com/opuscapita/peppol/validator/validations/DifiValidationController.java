@@ -29,7 +29,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 @Lazy
 @ConditionalOnProperty(name = "peppol.validator.difi.enabled", havingValue = "true", matchIfMissing = true)
 public class DifiValidationController implements ValidationController {
-    public static final String URN_WWW_CENBII_EU_TRANSACTION_BIICORETRDM010_VER1_0_URN_WWW_PEPPOL_EU_BIS_PEPPOL4A_VER1_0 = "urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0";
 
     private final static Logger logger = LoggerFactory.getLogger(DifiValidationController.class);
 

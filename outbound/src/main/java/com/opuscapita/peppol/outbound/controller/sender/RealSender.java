@@ -83,7 +83,7 @@ public class RealSender implements PeppolSender {
                     .payLoad(inputStream)
                     .build();
 
-            logger.info("Thread " + Thread.currentThread().getName() + " is about to send " + cm.getFileName() + " to endpoint: " + transmissionRequest.getEndpoint());
+            logger.info("Thread " + Thread.currentThread().getName() + " is about to send message: " + cm.toLog() + " to endpoint: " + transmissionRequest.getEndpoint());
 
             Transmitter transmitter = oxalisOutboundModule.getTransmitter();
             return transmitter.transmit(transmissionRequest);

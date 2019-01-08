@@ -63,4 +63,8 @@ public class Endpoint implements Serializable {
     public String toString() {
         return "Service " + name + " (type:" + type + ")";
     }
+
+    public String toShortString() {
+        return name + "/" + type;
+    }
 }
