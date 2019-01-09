@@ -89,8 +89,8 @@ public class PreprocessingApp {
 
         if (cm.getDocumentInfo() != null && cm.getDocumentInfo().getArchetype() == Archetype.UNRECOGNIZED) {
             logFileErrors(cm);
-            errorHandler.reportWithContainerMessage(cm, null, "Document not recognized by the parser for: " + cm.toLog());
             cm.setStatus(cm.getProcessingInfo().getCurrentEndpoint(), "invalid file, document type unrecognized");
+            errorHandler.reportWithContainerMessage(cm, null, "Document not recognized by the parser for: " + cm.toLog());
 
         } else if (cm.getDocumentInfo() == null || cm.getDocumentInfo().getArchetype() == Archetype.INVALID) {
             if (cm.getDocumentInfo() != null) {

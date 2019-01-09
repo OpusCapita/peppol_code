@@ -43,7 +43,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
             logger.info("Processing message: " + cm.toLog());
             containerMessageConsumer.consume(cm);
         } catch (Exception e) {
-            logger.warn("Message " + cm.getFileName() + " processing failed: " + e.getMessage());
+            logger.warn("Message processing failed for " + cm.toLog() + " with error: " + e.getMessage());
             reportError(cm, e, errorHandler, statusReporter);
             throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
         }

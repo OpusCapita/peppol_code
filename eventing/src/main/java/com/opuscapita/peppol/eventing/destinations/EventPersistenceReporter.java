@@ -73,7 +73,7 @@ public class EventPersistenceReporter {
         try {
             result.setFileSize(Files.size(Paths.get(cm.getFileName())));
         } catch (IOException e) {
-            logger.warn("Failed to determine size for " + cm.getFileName());
+            logger.warn("Failed to determine size for " + cm.toLog());
         }
         result.setProcessType(endpoint.getType());
 

@@ -150,7 +150,7 @@ public class ContainerMessage implements Serializable {
         result = result.replace("{status}", "{" + (StringUtils.isBlank(status) ? "unknown" : status) + "}");
 
         Endpoint endpoint = processingInfo == null ? null : processingInfo.getCurrentEndpoint();
-        result = result.replace("{endpoint}", "{" + (endpoint == null ? "unknown" : endpoint.toShortString()) + "}");
+        result = result.replace("{endpoint}", "{" + (endpoint == null ? "unknown" : endpoint.getType()) + "}");
 
         return result;
     }

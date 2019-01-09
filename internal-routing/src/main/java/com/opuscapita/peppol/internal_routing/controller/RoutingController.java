@@ -71,7 +71,7 @@ public class RoutingController {
                 }
             }
         }
-        logger.warn("Cannot define route for " + cm.getFileName() + " originated from " + cm.getProcessingInfo().getSource());
+        logger.warn("Cannot define route for " + cm.toLog() + " originated from " + cm.getProcessingInfo().getSource());
         cm.getProcessingInfo().setRoute(null);
         return cm;
     }

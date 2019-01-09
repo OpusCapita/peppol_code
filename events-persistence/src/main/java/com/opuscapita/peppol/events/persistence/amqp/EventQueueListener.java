@@ -24,28 +24,27 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Component
 public class EventQueueListener implements ChannelAwareMessageListener {
-    private static final int CONNECTION_FAILURES_THRESHOLD = 5;
-    private final AtomicInteger recentConnectionFailures = new AtomicInteger(0);
+
     private static final Logger logger = LoggerFactory.getLogger(EventQueueListener.class);
 
-    private final PersistenceController persistenceController;
-    private final ErrorHandler errorHandler;
+    private static final int CONNECTION_FAILURES_THRESHOLD = 5;
+    private final AtomicInteger recentConnectionFailures = new AtomicInteger(0);
+
     private final Gson gson;
-    // private final RetryTemplate retryTemplate;
+    private final ErrorHandler errorHandler;
+    private final PersistenceController persistenceController;
 
     @Autowired
-    public EventQueueListener(PersistenceController persistenceController, ErrorHandler errorHandler, Gson gson) {
-        this.persistenceController = persistenceController;
-        this.errorHandler = errorHandler;
+    public EventQueueListener(Gson gson, ErrorHandler errorHandler, PersistenceController persistenceController) {
         this.gson = gson;
-        // this.retryTemplate = retryTemplate;
+        this.errorHandler = errorHandler;
+        this.persistenceController = persistenceController;
     }
 
-    @SuppressWarnings("WeakerAccess")
     public synchronized void receiveMessage(String data) throws Exception {
-
         long start = System.currentTimeMillis();
         String customerId = "n/a";
+
         try {
             PeppolEvent peppolEvent = deserializePeppolEvent(data);
             if (peppolEvent.getFileName() != null && !peppolEvent.getFileName().toLowerCase().endsWith("xml")) {
@@ -53,10 +52,7 @@ public class EventQueueListener implements ChannelAwareMessageListener {
                 return;
             }
             customerId = peppolEvent.getProcessType().name().startsWith("IN") ? peppolEvent.getRecipientId() : peppolEvent.getSenderId();
-//            retryTemplate.execute(new RetryCallback<Void, ConnectException>() {
-//                @Override
-//                public Void doWithRetry(RetryContext context) throws ConnectException {
-//                    logger.info("Trying to store PEPPOL event, try " + context.getRetryCount() + ".");
+
             try {
                 persistenceController.storePeppolEvent(peppolEvent);
             } catch (DataIntegrityViolationException e) {
@@ -66,9 +62,7 @@ public class EventQueueListener implements ChannelAwareMessageListener {
                 logger.warn("Retry succeeded");
             }
             logger.info("Message about file: " + peppolEvent.getFileName() + " stored");
-//                    return null;
-//                }
-//            });
+
             Statistics.updateLastSuccessful(start);
             recentConnectionFailures.set(0);
         } catch (Exception e) {
@@ -79,15 +73,9 @@ public class EventQueueListener implements ChannelAwareMessageListener {
                 handleError(data, customerId, e);
             }
         }
-
     }
 
-    @SuppressWarnings("unused")
-    public synchronized void receiveMessage(byte[] data) throws Exception {
-        receiveMessage(new String(data));
-    }
-
-    protected PeppolEvent deserializePeppolEvent(String message) {
+    PeppolEvent deserializePeppolEvent(String message) {
         message = message.replace("\"urn\"", "urn"); //Sort of hack
         message = message.replaceAll("\\\\u003d", "=");  //Workaround for escaped = sign.
         message = message.replace("transportType", "processType");
@@ -101,7 +89,8 @@ public class EventQueueListener implements ChannelAwareMessageListener {
                 logger.warn("Ignored event for non-data file: " + fileName);
                 return;
             }
-            errorHandler.reportWithoutContainerMessage(customerId, e, "Failed to persist event", fileName, fileName, message);
+            String shortDescription = "Failed to persist event for file: " + fileName;
+            errorHandler.reportWithoutContainerMessage(customerId, e, shortDescription, fileName, fileName, message);
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
         }
@@ -127,15 +116,20 @@ public class EventQueueListener implements ChannelAwareMessageListener {
             logger.error(e.getClass().getCanonicalName());
             logger.warn("Failed to process message: " + data, e);
             boolean shouldRequeue = e instanceof CannotCreateTransactionException;
-            if(shouldRequeue) {
+            if (shouldRequeue) {
                 int connectionFailuresInRow = recentConnectionFailures.incrementAndGet();
-                logger.info("There has been " + connectionFailuresInRow +" connection failure(s) in row");
-                if(connectionFailuresInRow >= CONNECTION_FAILURES_THRESHOLD) {
+                logger.info("There has been " + connectionFailuresInRow + " connection failure(s) in row");
+                if (connectionFailuresInRow >= CONNECTION_FAILURES_THRESHOLD) {
                     logger.info("Sleeping for 30 seconds due to connection failures threshold exceeded");
                     Thread.sleep(30000);
                 }
             }
             channel.basicReject(message.getMessageProperties().getDeliveryTag(), shouldRequeue);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public synchronized void receiveMessage(byte[] data) throws Exception {
+        receiveMessage(new String(data));
     }
 }

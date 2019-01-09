@@ -98,7 +98,7 @@ public class EventingMessageUtil {
                 result = true;
             }
         } catch (NullPointerException e) {
-            logger.warn("No current endpoint set for: " + containerMessage);
+            logger.warn("No current endpoint set for: " + containerMessage.toLog());
         }
 
 

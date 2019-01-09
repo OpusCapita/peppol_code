@@ -120,7 +120,7 @@ public class IncomingChecker extends ValuesChecker {
                 try {
                     send(file);
                 } catch (Exception e) {
-                    String shortDescription = e.getMessage() == null ? "Failed to process input file" : e.getMessage();
+                    String shortDescription = "Failed to process input file, reason: " + (e.getMessage() == null ? "unknown" : e.getMessage());
                     errorHandler.reportWithoutContainerMessage(null, e, shortDescription, null, file.getAbsolutePath());
                     if (e instanceof EmptyFileException) {
                         sendEmptyFileReport(file.getAbsolutePath());
