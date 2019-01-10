@@ -190,9 +190,8 @@
             <cac:Item>
                 <cbc:Name>PO 4503331710, Nettverk 9021260-0060</cbc:Name>
                 <cac:ClassifiedTaxCategory>
-                    <cbc:ID schemeID="UNCL5305">E</cbc:ID>
-                    <cbc:Percent>0.00</cbc:Percent>
-                    <cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
+                    <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+                    <cbc:Percent>25.00</cbc:Percent>
                     <cac:TaxScheme>
                         <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
                     </cac:TaxScheme>
@@ -237,9 +236,8 @@
             <cac:Item>
                 <cbc:Name>3. parts verifikasjon av engineering, vurdering av sveiseprosedyre og</cbc:Name>
                 <cac:ClassifiedTaxCategory>
-                    <cbc:ID schemeID="UNCL5305">E</cbc:ID>
-                    <cbc:Percent>0.00</cbc:Percent>
-                    <cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
+                    <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+                    <cbc:Percent>25.00</cbc:Percent>
                     <cac:TaxScheme>
                         <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
                     </cac:TaxScheme>
@@ -259,9 +257,8 @@
             <cac:Item>
                 <cbc:Name>verifikasjon av trykktester samt reisekost.</cbc:Name>
                 <cac:ClassifiedTaxCategory>
-                    <cbc:ID schemeID="UNCL5305">E</cbc:ID>
-                    <cbc:Percent>0.00</cbc:Percent>
-                    <cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
+                    <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+                    <cbc:Percent>25.00</cbc:Percent>
                     <cac:TaxScheme>
                         <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
                     </cac:TaxScheme>
@@ -281,9 +278,8 @@
             <cac:Item>
                 <cbc:Name>Faktura inkl. 5 % påslag iht kontrakt vedlegg B punkt 3.4.1 generelt.</cbc:Name>
                 <cac:ClassifiedTaxCategory>
-                    <cbc:ID schemeID="UNCL5305">E</cbc:ID>
-                    <cbc:Percent>0.00</cbc:Percent>
-                    <cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
+                    <cbc:ID schemeID="UNCL5305">S</cbc:ID>
+                    <cbc:Percent>25.00</cbc:Percent>
                     <cac:TaxScheme>
                         <cbc:ID schemeID="UN/ECE 5153">VAT</cbc:ID>
                     </cac:TaxScheme>
