@@ -43,8 +43,8 @@ recipients.testers = "Ibrahim.Bilge@opuscapita.com,Susanna.Blomqvist@opuscapita.
 
 import java.util.regex.*
 
-def code_version = params.CODE_BRANCH ?: 'develop'
-def infra_version = params.INFRA_BRANCH ?: 'develop'
+def code_version = params.CODE_BRANCH ?: 'master'
+def infra_version = params.INFRA_BRANCH ?: 'master'
 def release_type = params.RELEASE_TYPE ?: 'development'
 def release_version, next_version, code_hash, infra_hash
 
