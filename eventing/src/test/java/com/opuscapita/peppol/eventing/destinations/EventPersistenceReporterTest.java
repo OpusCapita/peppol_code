@@ -32,7 +32,6 @@ public class EventPersistenceReporterTest {
             "    \"userAgentVersion\": null,\n" +
             "    \"sendersTimeStamp\": null,\n" +
             "    \"receivedTimeStamp\": \"Fri Jun 30 09:08:14 UTC 2017\",\n" +
-            "    \"sendingAccessPointPrincipal\": \"CN=APP_1000000208,O=OpusCapita,C=FI\",\n" +
             "    \"transmissionId\": \"35163afa-8b49-416a-8766-1d2dd1a740ac\",\n" +
             "    \"buildUser\": \"redis\",\n" +
             "    \"buildDescription\": \"4.0.0-BETA1-24-g2bd3584\",\n" +

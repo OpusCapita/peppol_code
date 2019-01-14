@@ -46,6 +46,24 @@ public class OxalisHandler implements PersisterHandler {
     public void persist(InboundMetadata inboundMetadata, Path payloadPath) {
         messageHandler.process(inboundMetadata, payloadPath);
 
-        logger.info("Transmission receipt for " + payloadPath.toString() + ":\n" + new Gson().toJson(inboundMetadata));
+        logger.info("Transmission receipt for " + payloadPath.toString() + ":\n" + inboundMetadataToString(inboundMetadata));
+    }
+
+    private String inboundMetadataToString(InboundMetadata metadata) {
+        return "{" +
+                "transmissionIdentifier=" + metadata.getTransmissionIdentifier().getIdentifier() +
+                ", header={" +
+                "   sender=" + metadata.getHeader().getSender().getIdentifier() +
+                ",  receiver=" + metadata.getHeader().getReceiver().getIdentifier() +
+                ",  process=" + metadata.getHeader().getProcess().getIdentifier() +
+                ",  documentType=" + metadata.getHeader().getDocumentType().getIdentifier() +
+                ",  identifier=" + metadata.getHeader().getIdentifier().getIdentifier() +
+                ",  instanceType=" + metadata.getHeader().getInstanceType().toString() +
+                ",  creationTimestamp=" + metadata.getHeader().getCreationTimestamp() +
+                "}" +
+                ", timestamp=" + metadata.getTimestamp().toString() +
+                ", transportProtocol=" + metadata.getTransportProtocol().getIdentifier() +
+                ", tag='" + metadata.getTag().getIdentifier() +
+                '}';
     }
 }

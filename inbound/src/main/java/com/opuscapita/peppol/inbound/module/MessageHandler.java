@@ -109,12 +109,11 @@ public class MessageHandler {
                 createJsonPair("senderSchemeId", header.getSender().getScheme()) +
                 createJsonPair("documentTypeIdentifier", header.getDocumentType().getIdentifier()) +
                 createJsonPair("profileTypeIdentifier", header.getProcess().getIdentifier()) +
-                createJsonPair("sendingAccessPoint", principal == null ? null : principal.getName()) +
+                createJsonPair("sendingAccessPoint", principal.getName()) +
                 createJsonPair("receivingAccessPoint", "Opuscapita AP") +
                 createJsonPair("protocol", inboundMetadata.getProtocol().getIdentifier()) +
                 createJsonPair("sendersTimeStamp", inboundMetadata.getTimestamp()) +
                 createJsonPair("receivedTimeStamp", new Date()) +
-                createJsonPair("sendingAccessPointPrincipal", principal) +
                 createJsonPair("transmissionId", header.getIdentifier()) +
                 createJsonPair("buildUser", OxalisVersion.getUser()) +
                 createJsonPair("buildDescription", OxalisVersion.getBuildDescription()) +
@@ -129,7 +128,7 @@ public class MessageHandler {
         if (value == null) {
             sb.append("null,\n");
         } else {
-            sb.append("\"").append(value.toString()).append("\",\n");
+            sb.append("\"").append(value.toString().replace("\\ ", "")).append("\",\n");
         }
 
         return sb.toString();

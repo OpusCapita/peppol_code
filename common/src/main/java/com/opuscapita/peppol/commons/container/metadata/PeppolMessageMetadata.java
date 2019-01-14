@@ -25,8 +25,6 @@ public class PeppolMessageMetadata {
     private String sendersTimeStamp;
     private String receivedTimeStamp;
 
-    private String sendingAccessPointPrincipal;
-
     private String transmissionId;
 
     public String getMessageId() {
@@ -123,14 +121,6 @@ public class PeppolMessageMetadata {
 
     public void setReceivedTimeStamp(String receivedTimeStamp) {
         this.receivedTimeStamp = receivedTimeStamp;
-    }
-
-    public String getSendingAccessPointPrincipal() {
-        return sendingAccessPointPrincipal;
-    }
-
-    public void setSendingAccessPointPrincipal(String sendingAccessPointPrincipal) {
-        this.sendingAccessPointPrincipal = sendingAccessPointPrincipal;
     }
 
     public String getTransmissionId() {
