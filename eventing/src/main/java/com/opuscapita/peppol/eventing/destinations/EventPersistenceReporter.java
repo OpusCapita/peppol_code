@@ -1,12 +1,13 @@
 package com.opuscapita.peppol.eventing.destinations;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadataContainer;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -102,8 +104,8 @@ public class EventPersistenceReporter {
         result.setErrorMessage(
                 cm.getDocumentInfo().getErrors().stream().map(DocumentError::toString).collect(Collectors.joining(", ")));
 
-        if(cm.getProcessingInfo().getProcessingException() != null) {
-            String oldError = result.getErrorMessage() == null? "" : result.getErrorMessage();
+        if (cm.getProcessingInfo().getProcessingException() != null) {
+            String oldError = result.getErrorMessage() == null ? "" : result.getErrorMessage();
             result.setErrorMessage(oldError + cm.getProcessingInfo().getProcessingException());
         }
 
@@ -125,9 +127,13 @@ public class EventPersistenceReporter {
     @SuppressWarnings("ConstantConditions")
     private String extractCommonNameFromMetadata(ContainerMessage cm) {
         String result = null;
+
         try {
-            JsonObject rawMetadata = gson.fromJson(cm.getProcessingInfo().getSourceMetadata(), JsonObject.class);
-            PeppolMessageMetadata messageMetadata = gson.fromJson(rawMetadata.get("PeppolMessageMetaData"), PeppolMessageMetadata.class);
+            String rawMetadata = cm.getProcessingInfo().getSourceMetadata();
+            JsonReader reader = new JsonReader(new StringReader(rawMetadata));
+            reader.setLenient(true);
+            PeppolMessageMetadataContainer container = gson.fromJson(reader, PeppolMessageMetadataContainer.class);
+            PeppolMessageMetadata messageMetadata = container.getPeppolMessageMetaData();
 
             result = cm.isInbound() ? messageMetadata.getSendingAccessPoint() : messageMetadata.getReceivingAccessPoint();
             logger.info("Extracted Access Point Common Name [" + result + "] from message: " + cm.toLog());
