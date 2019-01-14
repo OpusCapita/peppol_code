@@ -361,6 +361,12 @@ public class PersistenceController {
             sentFileInfo.setApCompanyName(apInfo.getName());
             sentFileInfo.setApId(apInfo.getId());
         }
-        sentFileInfoRepository.save(sentFileInfo);
+        try {
+            sentFileInfoRepository.save(sentFileInfo);
+        } catch (Exception e) {
+            logger.warn("Could not save the sent file info: " + sentFileInfo.toString());
+            e.printStackTrace();
+        }
+
     }
 }

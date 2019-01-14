@@ -62,7 +62,7 @@ public class AccessCheckFilter extends ZuulFilter {
             }
             return null;
         } catch (Exception e) {
-            logger.error("Filter threw an exception: " + e.getMessage(), e);
+//            logger.error("Filter threw an exception: " + e.getMessage(), e);
             reject(RequestContext.getCurrentContext());
             return null;
         }

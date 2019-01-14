@@ -43,8 +43,8 @@ recipients.testers = "Ibrahim.Bilge@opuscapita.com,Susanna.Blomqvist@opuscapita.
 
 import java.util.regex.*
 
-def code_version = params.CODE_BRANCH ?: 'develop'
-def infra_version = params.INFRA_BRANCH ?: 'develop'
+def code_version = params.CODE_BRANCH ?: 'master'
+def infra_version = params.INFRA_BRANCH ?: 'master'
 def release_type = params.RELEASE_TYPE ?: 'development'
 def release_version, next_version, code_hash, infra_hash
 
@@ -132,23 +132,24 @@ try {
         lock(inversePrecedence: true, resource: 'peppol-stage-servers') {
             milestone 3
             stage('Integration Tests') {
-                try {
-                    dir('infra/ap2/ansible') {
-                        ansiblePlaybook('integration-tests.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
-                    }
-                } catch(e) {
-                    failBuild(
-                        "${recipients.testers}, ${infra_author}, ${code_author}",
-                        'Integration tests have failed. Check the log for details.'
-                    )
-                }
-                finally {
-                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/integration-tests-results.html'
-                    dir('infra/ap2/ansible') {
-                        // clean up the integration-tests environment (destroy everything)
-                        ansiblePlaybook('integration-tests-clean.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
-                    }
-                }
+                echo 'Temporarily skipping integration tests.'
+//                try {
+//                    dir('infra/ap2/ansible') {
+//                        ansiblePlaybook('integration-tests.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
+//                    }
+//                } catch(e) {
+//                    failBuild(
+//                        "${recipients.testers}, ${infra_author}, ${code_author}",
+//                        'Integration tests have failed. Check the log for details.'
+//                    )
+//                }
+//                finally {
+//                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/integration-tests-results.html'
+//                    dir('infra/ap2/ansible') {
+//                        // clean up the integration-tests environment (destroy everything)
+//                        ansiblePlaybook('integration-tests-clean.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
+//                    }
+//                }
             }
             milestone 4
             stage('Deployment to Stage') {

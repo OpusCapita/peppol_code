@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.preprocessing.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
@@ -16,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.io.StringReader;
 
 /**
  * Parses input document and moves file from temporary to long-term storage.
@@ -81,7 +84,10 @@ public class PreprocessingController {
         PeppolMessageMetadata result = null;
         if (rawMetadata != null) {
             try {
-                result = gson.fromJson(rawMetadata, PeppolMessageMetadataContainer.class).getPeppolMessageMetaData();
+                JsonReader reader = new JsonReader(new StringReader(rawMetadata));
+                reader.setLenient(true);
+                PeppolMessageMetadataContainer container = gson.fromJson(reader, PeppolMessageMetadataContainer.class);
+                result = container.getPeppolMessageMetaData();
             } catch (Exception e) {
                 logger.warn("Failed to parse raw metadata: " + rawMetadata, e);
             }
