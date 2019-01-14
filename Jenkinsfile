@@ -132,7 +132,7 @@ try {
         lock(inversePrecedence: true, resource: 'peppol-stage-servers') {
             milestone 3
             stage('Integration Tests') {
-                sh 'Temporarily skipping integration tests.'
+                echo 'Temporarily skipping integration tests.'
 //                try {
 //                    dir('infra/ap2/ansible') {
 //                        ansiblePlaybook('integration-tests.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
