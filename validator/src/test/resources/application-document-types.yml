@@ -1357,7 +1357,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:3\.0
+              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:(3.0|3.0::2.1)
             - id: sender_id
               paths:
               - "$SBDH/Sender/Identifier"
@@ -1415,7 +1415,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:3\.0
+              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:(3.0|3.0::2.1)
             - id: sender_id
               paths:
               - "$ROOT/AccountingSupplierParty/Party/EndpointID"
@@ -1601,7 +1601,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:3\.0
+              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:(3.0|3.0::2.1)
             - id: sender_id
               paths:
               - "$SBDH/Sender/Identifier"
@@ -1663,7 +1663,7 @@ peppol:
               paths:
               - "$ROOT/CustomizationID"
               mandatory: true
-              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:3\.0
+              mask: urn:cen\.eu:en16931:2017#compliant#urn:fdc:peppol\.eu:2017:poacc:billing:(3.0|3.0::2.1)
             - id: sender_id
               paths:
               - "$ROOT/AccountingSupplierParty/Party/EndpointID"

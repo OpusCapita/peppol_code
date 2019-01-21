@@ -2,6 +2,7 @@ package com.opuscapita.peppol.validator.controller.body;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.validation.ValidationError;
 import com.opuscapita.peppol.validator.controller.cache.XsdRepository;
 import com.opuscapita.peppol.validator.controller.cache.XslRepository;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -21,6 +23,7 @@ import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerException;
 import javax.xml.validation.Schema;
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Validates document using set of XSL rules.
@@ -29,6 +32,7 @@ import java.io.IOException;
  */
 @Component
 public class ValidationRuleExecutor {
+
     private final static Logger logger = LoggerFactory.getLogger(ValidationRuleExecutor.class);
 
     private final ValidationRules config;
@@ -37,28 +41,37 @@ public class ValidationRuleExecutor {
     private final ResultParser resultParser;
     private final XsdValidator xsdValidator;
     private final XsdRepository xsdRepository;
+    private final MessageQueue messageQueue;
+
+    @Value("${peppol.email-notificator.queue.in.name}")
+    private String emailNotificatorQueue;
 
     @Autowired
     public ValidationRuleExecutor(@NotNull ValidationRules validationRules, @NotNull XslRepository xslRepository, @NotNull XslValidator xslValidator,
-                                  @NotNull ResultParser resultParser, @NotNull XsdValidator xsdValidator, @NotNull XsdRepository xsdRepository) {
+                                  @NotNull ResultParser resultParser, @NotNull XsdValidator xsdValidator, @NotNull XsdRepository xsdRepository,
+                                  @NotNull MessageQueue messageQueue) {
         this.config = validationRules;
         this.xslRepository = xslRepository;
         this.xslValidator = xslValidator;
         this.resultParser = resultParser;
         this.xsdValidator = xsdValidator;
         this.xsdRepository = xsdRepository;
+        this.messageQueue = messageQueue;
     }
 
     @SuppressWarnings("ConstantConditions")
     @NotNull
     public ContainerMessage validate(@NotNull byte[] body, @NotNull ContainerMessage cm, @NotNull Endpoint endpoint)
-            throws TransformerException, IOException, SAXException, ParserConfigurationException {
+            throws TransformerException, IOException, SAXException, ParserConfigurationException, TimeoutException {
 
         String documentType = cm.getDocumentInfo().getProfileId() + "###" + cm.getDocumentInfo().getCustomizationId();
 
         ValidationRule rule = config.getByDocumentType(documentType);
         if (rule == null) {
-            throw new IllegalArgumentException("Validation rule not found for document type: " + documentType + ", of " + cm.getFileName());
+            String message = "Validation rule not found for document type: " + documentType + ", of " + cm.getFileName();
+            cm.getProcessingInfo().setProcessingException(message);
+            messageQueue.convertAndSend(emailNotificatorQueue, cm);
+            throw new IllegalArgumentException(message);
         }
 
         for (String file : rule.getRules()) {

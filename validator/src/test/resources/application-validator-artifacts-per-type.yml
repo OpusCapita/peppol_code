@@ -95,6 +95,12 @@ peppol:
             - "xsl/CEN-EN16931-UBL.xsl"
             - "xsl/PEPPOL-EN16931-CII.xsl"
             - "xsl/PEPPOL-EN16931-UBL.xsl"
+        - profile: "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0###urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1"
+          rules:
+            - "xsl/CEN-EN16931-CII.xsl"
+            - "xsl/CEN-EN16931-UBL.xsl"
+            - "xsl/PEPPOL-EN16931-CII.xsl"
+            - "xsl/PEPPOL-EN16931-UBL.xsl"
         # PEPPOL BIS63A Invoice Response
         - profile: "urn:www.peppol.eu:profile:bis63a:ver1.0###urn:www.peppol.eu:transaction:biitrns111:ver1.0"
           rules:

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author Sergejs.Roze
@@ -52,7 +53,7 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
 
     @NotNull
     public ContainerMessage validate(@NotNull ContainerMessage cm, @NotNull Endpoint endpoint)
-            throws IOException, XMLStreamException, TransformerException, SAXException, ParserConfigurationException {
+            throws IOException, XMLStreamException, TransformerException, SAXException, ParserConfigurationException, TimeoutException {
         if (cm.getDocumentInfo() == null) {
             throw new IllegalArgumentException("Document info is missing from message " + cm.getFileName());
         }
@@ -102,7 +103,7 @@ public class ValidationControllerImpl implements com.opuscapita.peppol.validator
 
     @NotNull
     private ContainerMessage validateForDocumentRoot(@NotNull ContainerMessage cm, @NotNull Endpoint endpoint, String rootName)
-            throws IOException, XMLStreamException, ParserConfigurationException, SAXException, TransformerException {
+            throws IOException, XMLStreamException, ParserConfigurationException, SAXException, TransformerException, TimeoutException {
         DocumentSplitterResult parts;
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             parts = splitter.split(inputStream, rootName);

@@ -61,7 +61,7 @@ public class StatusReporter {
     }
 
     private void failedToProcess(ContainerMessage cm, Throwable e, String shortDescription) {
-        shortDescription = shortDescription + " " + ErrorHandler.getShortDescription(cm, e);
+//        shortDescription = shortDescription + " " + ErrorHandler.getShortDescription(cm, e);
         logger.warn("Reporting an issue to ServiceNow: " + shortDescription);
         try {
             errorHandler.reportWithContainerMessage(cm, e, shortDescription);

@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Validates document body using either XSLT or XSD depending on the document type.
@@ -28,7 +29,7 @@ public class BodyValidator {
     @SuppressWarnings("ConstantConditions")
     @NotNull
     public ContainerMessage validate(@NotNull byte[] documentBody, @NotNull ContainerMessage cm, @NotNull Endpoint endpoint)
-            throws IOException, ParserConfigurationException, SAXException, TransformerException {
+            throws IOException, ParserConfigurationException, SAXException, TransformerException, TimeoutException {
         return validationRuleExecutor.validate(documentBody, cm, endpoint);
     }
 

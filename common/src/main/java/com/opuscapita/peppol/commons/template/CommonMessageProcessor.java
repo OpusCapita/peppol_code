@@ -71,7 +71,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
                             @NotNull ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
         try {
             String shortDescription = ErrorHandler.getShortDescription(cm, e);
-            errorHandler.reportWithContainerMessage(cm, e, shortDescription);
+            errorHandler.reportWithContainerMessage(cm, e, e.getMessage());
             logger.warn("Message processing failed. " + shortDescription);
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);
