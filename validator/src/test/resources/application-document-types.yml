@@ -2663,6 +2663,135 @@ peppol:
               - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
               mandatory: false
 
+          # PEPPOL_SI UBL 2.0 Invoice with header
+          - name: PEPPOL_SI.Invoice
+            root: "$SBD/Invoice"
+            fields:
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:fdc:peppol.eu:2017:poacc:billing:01:1.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0
+            - id: sender_id
+              paths:
+              - "$SBDH/Sender/Identifier"
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$SBDH/Receiver/Identifier"
+              - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
+              mandatory: true
+            - id: version_id
+              paths:
+              - "$SBDH/DocumentIdentification/TypeVersion"
+              - "$ROOT/UBLVersionID"
+              mandatory: false
+            - id: document_business_identifier
+              paths:
+              - "$SBDH/DocumentIdentification/InstanceIdentifier"
+              mandatory: false
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: true
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
+            - id: due_date
+              paths:
+              - "$ROOT/DueDate"
+              mandatory: false
+            - id: sender_name
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/RegistrationName"
+              mandatory: true
+            - id: sender_country_code
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/RegistrationName"
+              mandatory: true
+            - id: recipient_country_code
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+
+          # PEPPOL_SI UBL 2.0 Invoice without header
+          - name: PEPPOL_SI.Invoice
+            root: Invoice
+            fields:
+            - id: profile_id
+              paths:
+              - "$ROOT/ProfileID"
+              mandatory: true
+              mask: urn:fdc:peppol.eu:2017:poacc:billing:01:1.0
+            - id: customization_id
+              paths:
+              - "$ROOT/CustomizationID"
+              mandatory: true
+              mask: urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0
+            - id: sender_id
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/EndpointID"
+              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/CompanyID"
+              mandatory: true
+            - id: recipient_id
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/EndpointID"
+              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/CompanyID"
+              mandatory: true
+            - id: version_id
+              paths:
+              - "$ROOT/UBLVersionID"
+              mandatory: false
+            - id: document_id
+              paths:
+              - "$ROOT/ID"
+              mandatory: true
+            - id: issue_date
+              paths:
+              - "$ROOT/IssueDate"
+              mandatory: true
+            - id: issue_time
+              paths:
+              - "$ROOT/IssueTime"
+              mandatory: false
+            - id: due_date
+              paths:
+              - "$ROOT/DueDate"
+              mandatory: false
+            - id: sender_name
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PartyLegalEntity/RegistrationName"
+              mandatory: true
+            - id: sender_country_code
+              paths:
+              - "$ROOT/AccountingSupplierParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+            - id: recipient_name
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PartyLegalEntity/RegistrationName"
+              mandatory: true
+            - id: recipient_country_code
+              paths:
+              - "$ROOT/AccountingCustomerParty/Party/PostalAddress/Country/IdentificationCode"
+              mandatory: false
+
           - name: PEPPOL_SI.Order
             root: "$SBD/Order"
             fields:

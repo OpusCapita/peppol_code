@@ -165,6 +165,7 @@ public class ValidationControllerTest {
                 expected.remove(line);
             } else {
                 System.err.println("Unexpected warning: " + line + " in file " + cm.getFileName());
+                System.err.println("\t" + dw.getMessage());
                 passed = false;
             }
         }

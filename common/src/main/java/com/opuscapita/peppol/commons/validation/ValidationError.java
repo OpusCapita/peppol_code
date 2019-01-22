@@ -4,9 +4,12 @@ import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Daniil on 03.05.2016.
@@ -49,6 +52,7 @@ public class ValidationError implements Serializable {
 
     public ValidationError withIdentifier(String identifier) {
         this.identifier = identifier;
+        this.identifier = extractIdentifierFromText();
         return this;
     }
 
@@ -76,6 +80,7 @@ public class ValidationError implements Serializable {
 
     public ValidationError withText(String text) {
         this.text = text;
+        this.identifier = extractIdentifierFromText();
         return this;
     }
 
@@ -86,6 +91,21 @@ public class ValidationError implements Serializable {
     public ValidationError withTest(String test) {
         this.test = test;
         return this;
+    }
+
+    private String extractIdentifierFromText() {
+        if (StringUtils.isNotBlank(this.identifier) && !this.identifier.equals("N/A")) {
+            return this.identifier;
+        }
+
+        if (StringUtils.isNotBlank(this.text)) {
+            Matcher m = Pattern.compile("\\[([^)]+)\\]").matcher(this.text);
+            if (m.find()) {
+                return m.group(1);
+            }
+        }
+
+        return this.identifier;
     }
 
     public String getTest() {

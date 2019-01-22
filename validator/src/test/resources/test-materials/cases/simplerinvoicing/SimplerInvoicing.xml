@@ -1,9 +1,7 @@
 <!--
     Warnings:
-        N/A
-        N/A
-        N/A
-        N/A
+        SI-V12-INV-R208
+        SI-V12-INV-R208
 -->
 
 <!--suppress ALL -->
@@ -652,9 +650,6 @@ dGFydHhyZWYKMjgzOTUKJSVFT0YK
    <cac:PartyName>
     <cbc:Name>Rijksvastgoedbedrijf</cbc:Name>
    </cac:PartyName>
-   <cac:Language>
-    <cbc:ID>NL</cbc:ID>
-   </cac:Language>
    <cac:PostalAddress>
     <cbc:Postbox>20952</cbc:Postbox>
     <cbc:CityName>DEN HAAG</cbc:CityName>
@@ -690,7 +685,6 @@ dGFydHhyZWYKMjgzOTUKJSVFT0YK
   </cac:Party>
  </cac:BuyerCustomerParty>
  <cac:Delivery>
-  <cbc:ID>CIF</cbc:ID>
   <cbc:ActualDeliveryDate>2018-03-31</cbc:ActualDeliveryDate>
   <cac:DeliveryLocation>
    <cbc:Name>Rijksvastgoedbedrijf</cbc:Name>

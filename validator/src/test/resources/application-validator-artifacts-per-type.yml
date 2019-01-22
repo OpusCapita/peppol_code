@@ -11,6 +11,11 @@ peppol:
           rules:
             - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
             - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
+        - profile: "urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope"
+          rules:
+            - "svefaktura1/rules_svefaktura_2016-09-01.xsl"
+            - "svefaktura1/maindoc/SFTI-BasicInvoice-1.0.xsd"
+            - "svefaktura1/maindoc/SFTI-ObjectEnvelope-1.0.xsd"
         # SVE Catalogue with extension
         - profile: "urn:www.cenbii.eu:profile:bii01:ver2.0#urn:www.sfti.se:svekatalog:ver2.0###urn:www.cenbii.eu:transaction:biitrns019:ver2.0:extended:urn:www.sfti.se:svekatalog:ver2.0"
           rules:
@@ -39,19 +44,37 @@ peppol:
             - "xsl/BIIRULES-UBL-T01.xsl"
             - "xsl/OPENPEPPOL-UBL-T01.xsl"
             - "xsl/OPENPEPPOLCORE-UBL-T01.xsl"
-        # SimplerInvoicing
+        # SimplerInvoicing UBL-1.1
         - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1"
           rules:
-            - "simplerinvoicing_artifact/SI-UBL-INV-1.1.xsl"
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.1_2.xsl"
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1"
+          rules:
+          - "simplerinvoicing_artifact/SI-UBL-INV-1.1_2.xsl"
         - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1.x"
           rules:
-            - "simplerinvoicing_artifact/SI-UBL-INV-1.1.xsl"
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.1_2.xsl"
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.1.x"
+          rules:
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.1_2.xsl"
+        # SimplerInvoicing UBL-1.2
         - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2"
+          rules:
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.2.xsl"
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2"
           rules:
             - "simplerinvoicing_artifact/SI-UBL-INV-1.2.xsl"
         - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2.x"
           rules:
             - "simplerinvoicing_artifact/SI-UBL-INV-1.2.xsl"
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0:extended:urn:www.simplerinvoicing.org:si:si-ubl:ver1.2.x"
+          rules:
+            - "simplerinvoicing_artifact/SI-UBL-INV-1.2.xsl"
+        # SimplerInvoicing UBL-2.0
+        - profile: "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0###urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0"
+          rules:
+            - "simplerinvoicing_artifact/SI-UBL-2.0-RC1.xsl"
+
         # CEN BII Creditnote 1.0 (Profile 05)
         - profile: "urn:www.cenbii.eu:profile:bii05:ver1.0###urn:www.cenbii.eu:transaction:biicoretrdm014:ver1.0"
           rules:
