@@ -38,7 +38,7 @@ recipients = [:]
 recipients.developers = "Ibrahim.Bilge@opuscapita.com"
 recipients.devops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
 recipients.ops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
-recipients.testers = "Ibrahim.Bilge@opuscapita.com,Susanna.Blomqvist@opuscapita.com"
+recipients.testers = "Ibrahim.Bilge@opuscapita.com"
 
 
 import java.util.regex.*
