@@ -119,7 +119,7 @@ tests:
                 name: MLR reprocessing test
                 id: 21
                 expected value: mlr-reporter_valid_reprocess-ap-mlr.xml
-                timeout: 16000
+                timeout: 20000
             - mlr test:
                 name: IO exception in mlr test
                 id: 9
@@ -200,7 +200,7 @@ tests:
         subscribers:
             - mq subscriber:
                 source queue: preprocessing-integration-test
-                timeout: 1500
+                timeout: 3000
                 consumers: 12
             - directory subscriber:
                 consumers: 15
@@ -214,7 +214,7 @@ tests:
                 id: 15
                 expected value: 1
                 name: inbound stored files check
-                timeout: 16000
+                timeout: 18000
    internal-routing:
         producers:
             - mq producer:
@@ -235,30 +235,30 @@ tests:
                 id: 13
                 expected value: 1
                 name: internal-routing Mq check
-   outbound:
-        producers:
-            - file producer:
-                source directory: /etc/resources/outbound/outbound-integration-test-valid.xml
-                destination directory: /peppol/data/storage/outbound-integration-test-valid.xml
-            - mq producer:
-                mq connection: mq1
-                destination queue: outbound
-                source directory: /peppol/data/storage/outbound-integration-test-valid.xml
-                db connection: db1
-                DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
-                container message:
-                  endpoint: events-persistence-integration-test
-        subscribers:
-            - db subscriber:
-                db connection: db1
-                timeout: 5000
-                query: select count(*) from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
-                consumers: 14
-        consumers:
-            - DB test:
-                id: 14
-                name: Outbound transmission id persisted into DB positive test
-                expected value: 1
+#   outbound:
+#        producers:
+#            - file producer:
+#                source directory: /etc/resources/outbound/outbound-integration-test-valid.xml
+#                destination directory: /peppol/data/storage/outbound-integration-test-valid.xml
+#            - mq producer:
+#                mq connection: mq1
+#                destination queue: outbound
+#                source directory: /peppol/data/storage/outbound-integration-test-valid.xml
+#                db connection: db1
+#                DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+#                container message:
+#                  endpoint: events-persistence-integration-test
+#        subscribers:
+#            - db subscriber:
+#                db connection: db1
+#                timeout: 5000
+#                query: select count(*) from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+#                consumers: 14
+#        consumers:
+#            - DB test:
+#                id: 14
+#                name: Outbound transmission id persisted into DB positive test
+#                expected value: 1
    preprocessing:
         producers:
             - file producer:
