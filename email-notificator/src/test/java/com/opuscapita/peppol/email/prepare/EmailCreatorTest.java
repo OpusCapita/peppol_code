@@ -36,7 +36,7 @@ public class EmailCreatorTest {
         EmailCreator emailCreator = new EmailCreator(errorHandler, new Gson());
         emailCreator.setDirectory(temp.getAbsolutePath());
 
-        ContainerMessage cm = new ContainerMessage("metadata", "filename", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("filename", Endpoint.TEST);
         cm.setDocumentInfo(new DocumentInfo());
         cm.getDocumentInfo().setRecipientId("customer_id");
         cm.getDocumentInfo().setSenderId("customer_id");

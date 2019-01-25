@@ -29,7 +29,7 @@ public class ContainerMessageCreator {
 
     public ContainerMessage createContainerMessage(File file) throws Exception {
         Endpoint source = new Endpoint(getSourceEndPoint(), getSourceEndPointType());
-        ContainerMessage cm = new ContainerMessage("integration-tests", file.getAbsolutePath(), source);
+        ContainerMessage cm = new ContainerMessage(file.getAbsolutePath(), source);
         //loading document info
         if (loadFile()) {
             cm.setDocumentInfo(documentLoader.load(file, getLoaderEndpoint()));
@@ -44,7 +44,6 @@ public class ContainerMessageCreator {
 
         if (!file.getName().contains("invalid")) {
             List<String> endpoints = Collections.singletonList(getRouteEndpoint()); //new queue for integration tests
-            cm.getProcessingInfo().setTransactionId(file.getName());
             Route route = new Route();
             route.setEndpoints(endpoints);
             cm.getProcessingInfo().setRoute(route);

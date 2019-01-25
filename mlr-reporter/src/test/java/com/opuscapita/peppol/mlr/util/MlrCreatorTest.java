@@ -82,8 +82,8 @@ public class MlrCreatorTest {
         String metadata = "Empty file " + fileName + " received by test_component";
         Endpoint endpoint = Endpoint.TEST;
 
-        ContainerMessage cm = new ContainerMessage(metadata, fileName, endpoint);
-        ProcessingInfo pi = new ProcessingInfo(endpoint, metadata);
+        ContainerMessage cm = new ContainerMessage(fileName, endpoint);
+        ProcessingInfo pi = new ProcessingInfo(endpoint);
         pi.setProcessingException(metadata);
         cm.setProcessingInfo(pi);
 
@@ -106,7 +106,7 @@ public class MlrCreatorTest {
     }
 
     private ContainerMessage prepareContainerMessage() {
-        ContainerMessage cm = new ContainerMessage("meatdata", "test.xml", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("test.xml", Endpoint.TEST);
 
         DocumentInfo di = new DocumentInfo();
         di.setDocumentId("doc_id");

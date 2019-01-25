@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.errors;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.SncEntity;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -23,10 +24,12 @@ public class ErrorHandler {
     private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
     private final ServiceNow serviceNowRest;
+    private final ContainerMessageSerializer serializer;
 
     @Autowired
-    public ErrorHandler(@NotNull ServiceNow serviceNowRest) {
+    public ErrorHandler(@NotNull ServiceNow serviceNowRest, @NotNull ContainerMessageSerializer serializer) {
         this.serviceNowRest = serviceNowRest;
+        this.serializer = serializer;
     }
 
     public void reportWithContainerMessage(@NotNull ContainerMessage cm, @Nullable Throwable e, @NotNull String shortDescription) {
@@ -77,7 +80,7 @@ public class ErrorHandler {
 
     private void createTicketFromContainerMessage(@NotNull ContainerMessage cm, @Nullable Throwable e,
                                                   @NotNull String shortDescription, @Nullable String additionalDetails) {
-        String detailedDescription = ErrorFormatter.getErrorDescription(cm, e, additionalDetails);
+        String detailedDescription = ErrorFormatter.getErrorDescription(cm, e, additionalDetails, serializer);
 
         createTicket(shortDescription, detailedDescription, cm.getCorrelationId() + cm.getProcessingInfo().getCurrentStatus(),
                 cm.getCustomerId(), cm.getFileName());

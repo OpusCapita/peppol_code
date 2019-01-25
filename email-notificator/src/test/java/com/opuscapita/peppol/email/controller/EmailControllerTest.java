@@ -34,7 +34,7 @@ public class EmailControllerTest {
         EmailController controller = new EmailController(customerEmailCreator, accessPointEmailCreator);
         controller.setOutboundActions(EmailActions.EMAIL_AP);
 
-        ContainerMessage cm = new ContainerMessage("meatdata", "file_name", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("file_name", Endpoint.TEST);
 
         try {
             controller.processMessage(cm);

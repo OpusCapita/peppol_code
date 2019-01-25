@@ -1,9 +1,10 @@
 package com.opuscapita.peppol.transport.checker;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
+import com.opuscapita.peppol.commons.container.document.DocumentLoader;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
@@ -14,6 +15,7 @@ import com.opuscapita.peppol.commons.storage.EmptyFileException;
 import com.opuscapita.peppol.commons.storage.Storage;
 import com.opuscapita.peppol.commons.template.bean.FileMustExist;
 import com.opuscapita.peppol.commons.template.bean.ValuesChecker;
+import no.difi.vefa.peppol.common.model.Header;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
@@ -47,6 +49,7 @@ public class IncomingChecker extends ValuesChecker {
     private final Storage storage;
     private final StatusReporter statusReporter;
     private final ErrorHandler errorHandler;
+    private final DocumentLoader documentLoader;
 
     @Value("${peppol.component.name}")
     private String componentName;
@@ -72,11 +75,12 @@ public class IncomingChecker extends ValuesChecker {
 
     @Autowired
     public IncomingChecker(@NotNull MessageQueue messageQueue, @NotNull Storage storage, @Nullable StatusReporter statusReporter,
-                           @NotNull ErrorHandler errorHandler) {
+                           @NotNull ErrorHandler errorHandler, @NotNull DocumentLoader documentLoader) {
         this.messageQueue = messageQueue;
         this.storage = storage;
         this.statusReporter = statusReporter;
         this.errorHandler = errorHandler;
+        this.documentLoader = documentLoader;
     }
 
     // check directory once per minute for new input files
@@ -137,9 +141,9 @@ public class IncomingChecker extends ValuesChecker {
         Endpoint endpoint = new Endpoint(componentName, getProcessType());
         String metadata = "Empty file " + fileName + " received by " + componentName;
 
-        ContainerMessage cm = new ContainerMessage(metadata, fileName, endpoint);
+        ContainerMessage cm = new ContainerMessage(fileName, endpoint);
 
-        ProcessingInfo pi = new ProcessingInfo(endpoint, metadata);
+        ProcessingInfo pi = new ProcessingInfo(endpoint);
         pi.setProcessingException(metadata);
         cm.setProcessingInfo(pi);
 
@@ -166,15 +170,23 @@ public class IncomingChecker extends ValuesChecker {
         logger.info("File moved to: " + fileName);
         Endpoint source = new Endpoint(componentName, getProcessType());
 
-        ContainerMessage cm = new ContainerMessage("Received by " + componentName + " as " + file.getAbsolutePath(),
-                fileName, source);
+        ContainerMessage cm = new ContainerMessage(fileName, source);
         cm.setStatus(source, "received");
         cm.setOriginalFileName(file.getAbsolutePath());
-        EventingMessageUtil.reportEvent(cm, "Picked up file by transport");
 
-        logger.info("Sending message: " + new Gson().toJson(cm));
+        Header header = documentLoader.parseHeader(fileName);
+        TransportIncomingFileMetadata transmissionResult = new TransportIncomingFileMetadata(header);
+        cm.getProcessingInfo().setPeppolMessageMetadata(PeppolMessageMetadata.create(transmissionResult));
+
+        if (cm.isInbound()) {
+            cm.getProcessingInfo().getPeppolMessageMetadata().setSendingAccessPoint(null);
+        } else {
+            cm.getProcessingInfo().getPeppolMessageMetadata().setReceivingAccessPoint(null);
+        }
+
+        EventingMessageUtil.reportEvent(cm, "Picked up file by transport");
         messageQueue.convertAndSend(queue, cm);
-        logger.info("File " + cm.getFileName() + " processed and sent to " + queue + " queue");
+        logger.info("File " + cm.toLog() + " processed and sent to " + queue + " queue");
 
         if (statusReporter != null) {
             statusReporter.report(cm);

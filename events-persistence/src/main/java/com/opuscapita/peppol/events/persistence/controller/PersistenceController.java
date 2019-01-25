@@ -121,19 +121,19 @@ public class PersistenceController {
     }
 
     private AccessPoint getAccessPoint(PeppolEvent peppolEvent) {
-        if (peppolEvent.getCommonName() == null) {
-            logger.warn("No access point info found using common name: " + peppolEvent.getCommonName());
+        ApInfo apInfo = ApInfo.parseFromCommonName(peppolEvent.getCommonName());
+        if (apInfo == null) {
+            logger.warn("No access point info found for file: " + peppolEvent.getFileName());
             return null;
         }
 
-        ApInfo apInfo = ApInfo.parseFromCommonName(peppolEvent.getCommonName());
         AccessPoint accessPoint = accessPointRepository.findByAccessPointId(apInfo.getId());
         if (accessPoint == null) {
             accessPoint = new AccessPoint();
             accessPoint.setAccessPointId(apInfo.getId());
             accessPoint.setAccessPointName(apInfo.getName());
             accessPoint = accessPointRepository.save(accessPoint);
-            logger.info("New access point info persisted: " + peppolEvent.getCommonName());
+            logger.info("New access point info persisted: [" + peppolEvent.getCommonName() + "] for file: " + peppolEvent.getFileName());
         }
         return accessPoint;
     }
@@ -356,10 +356,10 @@ public class PersistenceController {
             sentFileInfo.setTransmissionId(prefix + peppolEvent.getTransactionId());
         }
         sentFileInfo.setApProtocol(peppolEvent.getSendingProtocol());
-        if (peppolEvent.getCommonName() != null) {
-            ApInfo apInfo = ApInfo.parseFromCommonName(peppolEvent.getCommonName());
-            sentFileInfo.setApCompanyName(apInfo.getName());
+        ApInfo apInfo = ApInfo.parseFromCommonName(peppolEvent.getCommonName());
+        if (apInfo != null) {
             sentFileInfo.setApId(apInfo.getId());
+            sentFileInfo.setApCompanyName(apInfo.getName());
         }
         try {
             sentFileInfoRepository.save(sentFileInfo);

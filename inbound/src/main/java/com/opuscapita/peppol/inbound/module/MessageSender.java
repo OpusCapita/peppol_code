@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.inbound.module;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import org.jetbrains.annotations.NotNull;
@@ -26,11 +27,14 @@ public class MessageSender {
 
     private final MessageQueue messageQueue;
     private final ErrorHandler errorHandler;
+    private final ContainerMessageSerializer serializer;
 
     @Autowired
-    public MessageSender(@NotNull MessageQueue messageQueue, @NotNull ErrorHandler errorHandler, @NotNull ApplicationContext ctx) {
+    public MessageSender(@NotNull MessageQueue messageQueue, @NotNull ErrorHandler errorHandler,
+                         @NotNull ContainerMessageSerializer serializer, @NotNull ApplicationContext ctx) {
         this.messageQueue = messageQueue;
         this.errorHandler = errorHandler;
+        this.serializer = serializer;
     }
 
     // no exception must be thrown by this method
@@ -44,7 +48,7 @@ public class MessageSender {
             logger.info("Message sent to " + queueName + ", about file " + cm.toLog());
         } catch (Exception e) {
             logger.error("Failed to report received file " + cm.getFileName() + " to queue " + queueName, e);
-            logger.error("Container message dump: " + cm.convertToJson());
+            logger.error("Container message dump: " + serializer.toJson(cm));
             errorHandler.reportWithContainerMessage(cm, e, "Failed to report received file " + cm.getFileName() + " to queue " + queueName);
             return;
         }

@@ -54,7 +54,7 @@ public class AccessPointEmailCreator {
 
         AccessPoint accessPoint = findAccessPointInfo(cm);
         if (accessPoint == null) {
-            emailCreator.fail(cm, "Failed to determine access point by CN='" + cm.getProcessingInfo().getCommonName() + "' for " + cm.toLog(), null);
+            emailCreator.fail(cm, "Failed to determine access point by CN='" + cm.getProcessingInfo().getApInfo() + "' for " + cm.toLog(), null);
             return;
         }
 
@@ -71,10 +71,10 @@ public class AccessPointEmailCreator {
     }
 
     private AccessPoint findAccessPointInfo(@NotNull ContainerMessage cm) {
-        if (StringUtils.isNotBlank(cm.getProcessingInfo().getCommonName())) {
-            String accessPointId = ApInfo.parseFromCommonName(cm.getProcessingInfo().getCommonName()).getId();
-            AccessPoint accessPoint = accessPointRepository.findByAccessPointId(accessPointId);
-            logger.info("Found access point info from common name: '" + cm.getProcessingInfo().getCommonName() + "' for " + cm.toLog());
+        ApInfo apInfo = cm.getProcessingInfo().getApInfo();
+        if (apInfo != null) {
+            AccessPoint accessPoint = accessPointRepository.findByAccessPointId(apInfo.getId());
+            logger.info("Found access point info from common name: [" + apInfo + "] for " + cm.toLog());
             return accessPoint;
         }
 

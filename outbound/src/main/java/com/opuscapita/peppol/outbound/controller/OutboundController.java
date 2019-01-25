@@ -2,6 +2,7 @@ package com.opuscapita.peppol.outbound.controller;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
@@ -71,10 +72,8 @@ public class OutboundController {
 
             TransmissionResponse transmissionResponse = sender.send(cm);
             logger.info("Message " + cm.toLog() + " sent with transmission ID = " + transmissionResponse.getTransmissionIdentifier());
+            cm.getProcessingInfo().setPeppolMessageMetadata(PeppolMessageMetadata.create(transmissionResponse));
 
-            cm.getProcessingInfo().setTransactionId(transmissionResponse.getTransmissionIdentifier().toString());
-            cm.getProcessingInfo().setCommonName((transmissionResponse.getHeader() != null && transmissionResponse.getHeader().getReceiver() != null) ? extractCommonName(cm) : "N/A");
-            cm.getProcessingInfo().setSendingProtocol(transmissionResponse.getProtocol() != null ? transmissionResponse.getProtocol().toString() : "N/A");
         } catch (Exception e) {
             logger.warn("Sending of the message " + cm.toLog() + " failed with I/O error: " + e.getMessage());
             handleException(cm, e);
@@ -132,20 +131,6 @@ public class OutboundController {
         }
 
         throw e;
-    }
-
-    private String extractCommonName(ContainerMessage cm) {
-        String result = "";
-        if (StringUtils.isNotBlank(cm.getDocumentInfo().getRecipientId())) {
-            result += "CN=" + cm.getDocumentInfo().getRecipientId();
-        }
-        if (StringUtils.isNotBlank(cm.getDocumentInfo().getRecipientName())) {
-            result += ",O=" + cm.getDocumentInfo().getRecipientName();
-        }
-        if (StringUtils.isNotBlank(cm.getDocumentInfo().getRecipientCountryCode())) {
-            result += ",C=" + cm.getDocumentInfo().getRecipientCountryCode();
-        }
-        return result;
     }
 
     private void sendEmailNotification(@NotNull ContainerMessage cm, @NotNull SendingErrors errorType) {

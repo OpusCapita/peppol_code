@@ -13,9 +13,9 @@ peppol:
     component:
         name: email-notificator
     email-notificator:
-        directory: /tmp
+        directory: c://artifacts//tmp
         failed:
-            directory: /tmp
+            directory: c://artifacts//tmp
         in:
             invalid:
                 subject: 'Peppol PROD: Invalid incoming invoices report'
@@ -29,7 +29,7 @@ peppol:
                 name: email-notificator
         sender: peppol@opuscapita.com
         sent:
-            directory: /tmp/trash
+            directory: c://artifacts//tmp/trash
         wait:
             seconds: 120
     eventing:
@@ -37,8 +37,8 @@ peppol:
             in:
                 name: eventing
     storage:
-        long: /tmp
-        short: /tmp
+        long: c://artifacts//tmp
+        short: c://artifacts//tmp
 snc:
     bsc: test
     businessGroup: test

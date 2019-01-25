@@ -59,7 +59,7 @@ public class PreprocessingControllerTest {
             endpoint = new Endpoint("test", ProcessType.OUT_PREPROCESS);
         }
 
-        ContainerMessage cm = new ContainerMessage("test_metadata", new File(new File(files, dir), file).getAbsolutePath(), endpoint);
+        ContainerMessage cm = new ContainerMessage(new File(new File(files, dir), file).getAbsolutePath(), endpoint);
 
         cm = controller.process(cm);
 

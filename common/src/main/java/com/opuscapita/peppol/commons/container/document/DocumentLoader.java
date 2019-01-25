@@ -3,6 +3,8 @@ package com.opuscapita.peppol.commons.container.document;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.xml.DocumentParser;
+import no.difi.vefa.peppol.common.model.Header;
+import no.difi.vefa.peppol.sbdh.SbdReader;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +23,12 @@ import java.io.InputStream;
 public class DocumentLoader {
     private static final Logger logger = LoggerFactory.getLogger(DocumentLoader.class);
 
-    private final DocumentParser parser;
+    private final DocumentParser documentParser;
     private final boolean shouldFailOnInconsistency;
 
     @Autowired
-    public DocumentLoader(@NotNull DocumentParser parser, @Value("${peppol.common.consistency_check_enabled}") boolean shouldFailOnInconsistency) {
-        this.parser = parser;
+    public DocumentLoader(@NotNull DocumentParser documentParser, @Value("${peppol.common.consistency_check_enabled}") boolean shouldFailOnInconsistency) {
+        this.documentParser = documentParser;
         this.shouldFailOnInconsistency = shouldFailOnInconsistency;
     }
 
@@ -46,7 +48,18 @@ public class DocumentLoader {
     public DocumentInfo load(@NotNull InputStream inputStream, @NotNull String fileName, @NotNull Endpoint endpoint) throws Exception {
         logger.info("Start parsing file: " + fileName);
         String shortFileName = new File(fileName).getName();
-        return parser.parse(inputStream, shortFileName, endpoint, shouldFailOnInconsistency);
+        return documentParser.parse(inputStream, shortFileName, endpoint, shouldFailOnInconsistency);
     }
 
+    public Header parseHeader(@NotNull String fileName) {
+        try {
+            InputStream inputStream = new FileInputStream(new File(fileName));
+            SbdReader sbdReader = SbdReader.newInstance(inputStream);
+            return sbdReader.getHeader();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Couldn't extract header from file: " + fileName);
+        }
+        return null;
+    }
 }

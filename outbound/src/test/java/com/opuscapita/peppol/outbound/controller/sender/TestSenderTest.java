@@ -34,7 +34,7 @@ public class TestSenderTest {
             checkOccurrences(is, expected);
         }
 
-        ContainerMessage cm = new ContainerMessage("test", tempFile.getAbsolutePath(), Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage(tempFile.getAbsolutePath(), Endpoint.TEST);
         DocumentInfo di = new DocumentInfo();
         di.setSenderId("9908:985853304");
         di.setRecipientId("9908:929120825");

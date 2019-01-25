@@ -35,7 +35,7 @@ public class HeaderValidatorTest {
         XsdValidator xsdValidator = new XsdValidator();
         validator = new HeaderValidator(xsdValidator, xsdRepository);
 
-        ContainerMessage cm = new ContainerMessage("meatdata", "test.xml", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("test.xml", Endpoint.TEST);
         cm.setDocumentInfo(new DocumentInfo());
 
         checkNoErrors("/test_data/difi_files/Valids-OC-test-file.xml", cm, "Invoice"); // no header

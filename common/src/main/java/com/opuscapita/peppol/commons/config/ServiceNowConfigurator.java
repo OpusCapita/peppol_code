@@ -3,6 +3,7 @@ package com.opuscapita.peppol.commons.config;
 import com.opuscapita.commons.servicenow.ServiceNow;
 import com.opuscapita.commons.servicenow.ServiceNowConfiguration;
 import com.opuscapita.commons.servicenow.ServiceNowREST;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,8 +20,8 @@ public class ServiceNowConfigurator {
     @Bean @Lazy
     @ConditionalOnMissingBean
     @NotNull
-    public ErrorHandler errorHandler(@NotNull ServiceNow serviceNowRest) {
-        return new ErrorHandler(serviceNowRest);
+    public ErrorHandler errorHandler(@NotNull ServiceNow serviceNowRest, @NotNull ContainerMessageSerializer serializer) {
+        return new ErrorHandler(serviceNowRest, serializer);
     }
 
     @Bean @Lazy

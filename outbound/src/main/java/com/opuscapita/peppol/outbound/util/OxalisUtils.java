@@ -2,6 +2,7 @@ package com.opuscapita.peppol.outbound.util;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import no.difi.oxalis.sniffer.identifier.CustomizationIdentifier;
 import no.difi.oxalis.sniffer.identifier.PeppolDocumentTypeId;
 import no.difi.vefa.peppol.common.model.DocumentTypeIdentifier;
@@ -17,47 +18,46 @@ import org.jetbrains.annotations.NotNull;
 public class OxalisUtils {
 
     public static DocumentTypeIdentifier getPeppolDocumentTypeId(@NotNull ContainerMessage cm) {
-        PeppolDocumentTypeId peppolDocumentTypeId = createPeppolDocumentTypeId(cm.getDocumentInfo());
-        if (StringUtils.isBlank(cm.getProcessingInfo().getSendingProtocol())) {
-            return toVefa(peppolDocumentTypeId);
+        PeppolMessageMetadata metadata = cm.getProcessingInfo().getPeppolMessageMetadata();
+        if (metadata != null) {
+            if (StringUtils.isNotBlank(metadata.getDocumentTypeIdentifier())) {
+                if (StringUtils.isNotBlank(metadata.getProtocol())) {
+                    return DocumentTypeIdentifier.of(metadata.getDocumentTypeIdentifier(), Scheme.of(metadata.getProtocol()));
+                }
+                return DocumentTypeIdentifier.of(metadata.getDocumentTypeIdentifier());
+            }
+
+            String documentTypeIdentifier = createDocumentTypeIdentifierFromPayload(cm.getDocumentInfo());
+            if (StringUtils.isNotBlank(metadata.getProtocol())) {
+                return DocumentTypeIdentifier.of(documentTypeIdentifier, Scheme.of(metadata.getProtocol()));
+            }
+            return DocumentTypeIdentifier.of(documentTypeIdentifier);
         }
-        return toVefa(peppolDocumentTypeId, cm.getProcessingInfo().getSendingProtocol());
+        return getPeppolDocumentTypeId(cm.getDocumentInfo());
     }
 
     public static DocumentTypeIdentifier getPeppolDocumentTypeId(@NotNull DocumentInfo document) {
-        PeppolDocumentTypeId peppolDocumentTypeId = createPeppolDocumentTypeId(document);
-        return toVefa(peppolDocumentTypeId);
+        String documentTypeIdentifier = createDocumentTypeIdentifierFromPayload(document);
+        return DocumentTypeIdentifier.of(documentTypeIdentifier);
     }
 
-    private static PeppolDocumentTypeId createPeppolDocumentTypeId(@NotNull DocumentInfo document) {
-        PeppolDocumentTypeId peppolDocumentTypeId;
+    private static String createDocumentTypeIdentifierFromPayload(@NotNull DocumentInfo document) {
         if (isSvefakturaObjectEnvelope(document.getCustomizationId())) {
-            peppolDocumentTypeId = new PeppolDocumentTypeId(
+            return new PeppolDocumentTypeId(
                     "urn:sfti:documents:StandardBusinessDocumentHeader",
                     "Invoice",
                     CustomizationIdentifier.valueOf("urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope"),
-                    "1.0");
-        } else {
-            peppolDocumentTypeId = new PeppolDocumentTypeId(
-                    document.getRootNameSpace(),
-                    document.getRootNodeName(),
-                    CustomizationIdentifier.valueOf(document.getCustomizationId()),
-                    document.getVersionId()
-            );
+                    "1.0").toString();
         }
-        return peppolDocumentTypeId;
+        return new PeppolDocumentTypeId(
+                document.getRootNameSpace(),
+                document.getRootNodeName(),
+                CustomizationIdentifier.valueOf(document.getCustomizationId()),
+                document.getVersionId()).toString();
     }
 
     private static boolean isSvefakturaObjectEnvelope(String customizationId) {
         return customizationId.contains("urn:sfti:services:documentprocessing:BasicInvoice:1:0###" +
                 "urn:sfti:documents:StandardBusinessDocumentHeader::Invoice##urn:sfti:documents:BasicInvoice:1:0:#BasicInvoice_ObjectEnvelope");
-    }
-
-    private static DocumentTypeIdentifier toVefa(PeppolDocumentTypeId peppolDocumentTypeId) {
-        return DocumentTypeIdentifier.of(peppolDocumentTypeId.toString());
-    }
-
-    private static DocumentTypeIdentifier toVefa(PeppolDocumentTypeId peppolDocumentTypeId, String scheme) {
-        return DocumentTypeIdentifier.of(peppolDocumentTypeId.toString(), Scheme.of(scheme));
     }
 }

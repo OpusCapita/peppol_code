@@ -23,8 +23,7 @@ public class SerializationTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testSerialization() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "filename1", new Endpoint("test", ProcessType.OUT_FILE_TO_MQ));
-        cm.getProcessingInfo().setTransactionId("666");
+        ContainerMessage cm = new ContainerMessage("filename1", new Endpoint("test", ProcessType.OUT_FILE_TO_MQ));
         cm.setStatus(Endpoint.TEST, "result");
 
         Route route = new Route();
@@ -45,7 +44,6 @@ public class SerializationTest {
 
         assertEquals("test", result.getProcessingInfo().getCurrentEndpoint().getName());
         assertEquals("result", result.getProcessingInfo().getCurrentStatus());
-        assertEquals("metadata", result.getProcessingInfo().getSourceMetadata());
         assertEquals("filename1", result.getFileName());
         assertEquals(new Endpoint("test", ProcessType.OUT_FILE_TO_MQ), result.getProcessingInfo().getSource());
         assertEquals("a", result.getProcessingInfo().getRoute().pop());

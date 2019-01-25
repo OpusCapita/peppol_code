@@ -11,8 +11,8 @@ peppol:
       in:
         name: email-notificator
   storage:
-    short: /tmp
-    long: /tmp
+    short: c://artifacts//tmp
+    long: c://artifacts//tmp
   internal-routing:
     queue:
       in:

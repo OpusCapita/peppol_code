@@ -1,13 +1,11 @@
 package com.opuscapita.peppol.eventing.destinations;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
+import com.opuscapita.peppol.commons.container.document.ApInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
-import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
-import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadataContainer;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.PeppolEvent;
@@ -21,7 +19,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -93,10 +90,7 @@ public class EventPersistenceReporter {
         result.setSenderId(cm.getDocumentInfo().getSenderId());
         result.setRecipientName(cm.getDocumentInfo().getRecipientName());
         result.setSenderName(cm.getDocumentInfo().getSenderName());
-        if (shouldExtractCommonNameFromMetadata(cm)) {
-            cm.getProcessingInfo().setCommonName(extractCommonNameFromMetadata(cm));
-        }
-        result.setCommonName(cm.getProcessingInfo().getCommonName());
+        result.setCommonName(extractCommonNameFromMetadata(cm));
         result.setSenderCountryCode(cm.getDocumentInfo().getSenderCountryCode());
         result.setRecipientCountryCode(cm.getDocumentInfo().getRecipientCountryCode());
         result.setTransactionId(ps == null ? UUID.randomUUID().toString() : ps.getTransactionId());
@@ -117,36 +111,12 @@ public class EventPersistenceReporter {
         return cm.getProcessingInfo().getSource().getType() != ProcessType.OUT_REPROCESS && cm.getProcessingInfo().getSource().getType() != ProcessType.IN_REPROCESS;
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private boolean shouldExtractCommonNameFromMetadata(@NotNull ContainerMessage cm) {
-        return (cm.getProcessingInfo().getCommonName() == null || !cm.getProcessingInfo().getCommonName().contains(","))
-                && hasCommonNameInMetadata(cm);
-    }
-
-
-    @SuppressWarnings("ConstantConditions")
     private String extractCommonNameFromMetadata(ContainerMessage cm) {
-        String result = null;
-
-        try {
-            String rawMetadata = cm.getProcessingInfo().getSourceMetadata();
-            JsonReader reader = new JsonReader(new StringReader(rawMetadata));
-            reader.setLenient(true);
-            PeppolMessageMetadataContainer container = gson.fromJson(reader, PeppolMessageMetadataContainer.class);
-            PeppolMessageMetadata messageMetadata = container.getPeppolMessageMetaData();
-
-            result = cm.isInbound() ? messageMetadata.getSendingAccessPoint() : messageMetadata.getReceivingAccessPoint();
-            logger.info("Extracted Access Point Common Name [" + result + "] from message: " + cm.toLog());
-        } catch (Exception e) {
-            logger.warn("Failed to extract common name from metadata[" + cm.getProcessingInfo().getSourceMetadata() + "] for message: " + cm.toLog());
-            e.printStackTrace();
+        if (cm.getProcessingInfo() == null || cm.getProcessingInfo().getApInfo() == null) {
+            return null;
         }
-        return result;
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private boolean hasCommonNameInMetadata(ContainerMessage containerMessage) {
-        return (containerMessage.isInbound() && containerMessage.getProcessingInfo().getSourceMetadata().contains("sendingAccessPoint"))
-                || (!containerMessage.isInbound() && containerMessage.getProcessingInfo().getSourceMetadata().contains("receivingAccessPoint"));
+        ApInfo apInfo = cm.getProcessingInfo().getApInfo();
+        logger.info("Extracted Access Point Common Name [" + apInfo + "] from message: " + cm.toLog());
+        return apInfo.toString();
     }
 }

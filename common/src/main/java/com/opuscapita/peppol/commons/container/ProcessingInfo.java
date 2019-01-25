@@ -1,6 +1,8 @@
 package com.opuscapita.peppol.commons.container;
 
 import com.google.gson.annotations.Since;
+import com.opuscapita.peppol.commons.container.document.ApInfo;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.Route;
 import com.opuscapita.peppol.commons.events.Message;
@@ -15,46 +17,28 @@ import java.io.Serializable;
  *
  * @author Sergejs.Roze
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class ProcessingInfo implements Serializable {
     private static final long serialVersionUID = -556566093311452295L;
 
     @Since(1.0)
     private final Endpoint source;
     @Since(1.0)
-    private String sourceMetadata;
-    @Since(1.0)
     private Route route;
-    @Since(1.0)
-    private String transactionId;
-    @Since(1.0)
-    private String correlationId;
     @Since(1.0)
     private Endpoint currentEndpoint;
     @Since(1.0)
     private String currentStatus;
     @Since(1.0)
-    private String processingException; // this is actually an exception message but called exception for historical reasons
-    @Since(1.0)
-    private String commonName;
-    @Since(1.0)
-    private String sendingProtocol;
+    private String processingException;
     @Since(1.2)
     private String originalSource;
     @Since(1.2)
-    private String messageId;
-    @Since(1.2)
-    private long attemptId;
-    @Since(1.2)
     private Message eventingMessage;
+    @Since(1.5)
+    private PeppolMessageMetadata peppolMessageMetadata;
 
-    /**
-     * @param source         the initial endpoint
-     * @param sourceMetadata any voluntary data provided by the original endpoint
-     */
-    public ProcessingInfo(@NotNull Endpoint source, @NotNull String sourceMetadata) {
+    public ProcessingInfo(@NotNull Endpoint source) {
         this.source = source;
-        this.sourceMetadata = sourceMetadata;
     }
 
     @Nullable
@@ -73,14 +57,6 @@ public class ProcessingInfo implements Serializable {
 
     public Endpoint getSource() {
         return source;
-    }
-
-    public String getCorrelationId() {
-        return correlationId;
-    }
-
-    public void setCorrelationId(String correlationId) {
-        this.correlationId = correlationId;
     }
 
     public String getCurrentStatus() {
@@ -104,43 +80,26 @@ public class ProcessingInfo implements Serializable {
     }
 
     public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(@NotNull String transactionId) {
-        this.transactionId = transactionId;
-        if (this.correlationId == null) {
-            setCorrelationId(transactionId);
+        PeppolMessageMetadata metadata = getPeppolMessageMetadata();
+        if (metadata == null) {
+            return null;
         }
-    }
-
-    @NotNull
-    public String getSourceMetadata() {
-        return sourceMetadata;
-    }
-
-    public void setSourceMetadata(@NotNull String sourceMetadata) {
-        this.sourceMetadata = sourceMetadata;
+        return metadata.getTransmissionId();
     }
 
     public Endpoint getCurrentEndpoint() {
         return currentEndpoint == null ? source : currentEndpoint;
     }
 
-    public String getCommonName() {
-        return commonName;
-    }
-
-    public void setCommonName(String commonName) {
-        this.commonName = commonName;
-    }
-
-    public String getSendingProtocol() {
-        return sendingProtocol;
-    }
-
-    public void setSendingProtocol(String sendingProtocol) {
-        this.sendingProtocol = sendingProtocol;
+    /**
+     * returns sending AP info for inbound and receiving AP info for outbound
+     */
+    public ApInfo getApInfo() {
+        PeppolMessageMetadata metadata = getPeppolMessageMetadata();
+        if (metadata == null) {
+            return null;
+        }
+        return ApInfo.parseFromCommonName(isInbound() ? metadata.getSendingAccessPoint() : metadata.getReceivingAccessPoint());
     }
 
     @NotNull
@@ -155,27 +114,20 @@ public class ProcessingInfo implements Serializable {
         this.originalSource = originalSource;
     }
 
-    public String getMessageId() {
-        return messageId;
-    }
-
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
-    }
-
-    public long getAttemptId() {
-        return attemptId;
-    }
-
-    public void setAttemptId(long attemptId) {
-        this.attemptId = attemptId;
-    }
-
     public Message getEventingMessage() {
         return eventingMessage;
     }
 
     public void setEventingMessage(Message eventingMessage) {
         this.eventingMessage = eventingMessage;
+    }
+
+
+    public PeppolMessageMetadata getPeppolMessageMetadata() {
+        return peppolMessageMetadata;
+    }
+
+    public void setPeppolMessageMetadata(PeppolMessageMetadata peppolMessageMetadata) {
+        this.peppolMessageMetadata = peppolMessageMetadata;
     }
 }

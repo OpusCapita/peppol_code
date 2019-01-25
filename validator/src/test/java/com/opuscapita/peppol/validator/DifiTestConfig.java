@@ -2,6 +2,7 @@ package com.opuscapita.peppol.validator;
 
 import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.mq.MessageQueue;
 import com.opuscapita.peppol.commons.template.AbstractQueueListener;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.mock;
 })
 @EnableConfigurationProperties
 public class DifiTestConfig {
+
     public DifiTestConfig() throws URISyntaxException {
         System.setProperty("peppol.validator.sbdh.xsd", getAbsolutePathToResource("sbdh_artifacts/StandardBusinessDocumentHeader.xsd"));
     }
@@ -59,8 +61,13 @@ public class DifiTestConfig {
     }
 
     @Bean
+    public ContainerMessageSerializer serializer() {
+        return mock(ContainerMessageSerializer.class);
+    }
+
+    @Bean
     public ErrorHandler errorHandler() {
-        return new ErrorHandler(serviceNowRest());
+        return new ErrorHandler(serviceNowRest(), serializer());
     }
 
     @Bean

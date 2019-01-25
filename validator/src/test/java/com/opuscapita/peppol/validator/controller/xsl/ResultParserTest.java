@@ -29,7 +29,7 @@ public class ResultParserTest {
         resultParser.setCombineThreshold(2);
         cm = new ContainerMessage();
         cm.setDocumentInfo(new DocumentInfo());
-        cm.setProcessingInfo(new ProcessingInfo(new Endpoint("test", ProcessType.TEST), "meatdata"));
+        cm.setProcessingInfo(new ProcessingInfo(new Endpoint("test", ProcessType.TEST)));
         cm.getProcessingInfo().setCurrentStatus(new Endpoint("test", ProcessType.TEST), "test");
     }
 

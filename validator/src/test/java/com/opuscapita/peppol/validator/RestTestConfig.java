@@ -2,18 +2,16 @@ package com.opuscapita.peppol.validator;
 
 import com.google.gson.Gson;
 import com.opuscapita.commons.servicenow.ServiceNow;
-import com.opuscapita.commons.servicenow.SncEntity;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.validator.validations.difi.DifiValidatorConfig;
 import com.opuscapita.peppol.validator.validations.svefaktura1.Svefaktura1ValidatorConfig;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by bambr on 16.17.10.
@@ -21,6 +19,7 @@ import java.nio.file.Paths;
 /*@Configuration
 @ComponentScan(basePackages = {"com.opuscapita.peppol"})*/
 public class RestTestConfig {
+
     public RestTestConfig() throws URISyntaxException {
         System.setProperty("peppol.component.name", "validator");
         System.setProperty("server.port", "0");
@@ -34,8 +33,6 @@ public class RestTestConfig {
         System.setProperty("peppol.validation.consume-queue", "validator");
         System.setProperty("peppol.email-notificator.queue.in.name", "email");
         System.setProperty("spring.cloud.config.discovery.enabled", "false");
-
-
     }
 
     private String getAbsolutePathToResource(String relativePathToResource) throws URISyntaxException {
@@ -52,7 +49,6 @@ public class RestTestConfig {
         return new DifiValidatorConfig(getAbsolutePathToResource("difi_artifacts/"));
     }
 
-
     @Bean
     public Gson gson() {
         return new Gson();
@@ -60,16 +56,16 @@ public class RestTestConfig {
 
     @Bean
     public ServiceNow serviceNowRest() {
-        return new ServiceNow() {
-            @Override
-            public void insert(SncEntity sncEntity) throws IOException {
-                System.out.println("Inserted incident: " + sncEntity);
-            }
-        };
+        return sncEntity -> System.out.println("Inserted incident: " + sncEntity);
+    }
+
+    @Bean
+    public ContainerMessageSerializer serializer() {
+        return mock(ContainerMessageSerializer.class);
     }
 
     @Bean
     public ErrorHandler errorHandler() {
-        return new ErrorHandler(serviceNowRest());
+        return new ErrorHandler(serviceNowRest(), serializer());
     }
 }

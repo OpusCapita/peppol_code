@@ -1,15 +1,13 @@
 package com.opuscapita.peppol.inbound.module;
 
-import com.google.gson.Gson;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
 import com.opuscapita.peppol.commons.storage.Storage;
 import no.difi.oxalis.api.inbound.InboundMetadata;
-import no.difi.oxalis.commons.util.OxalisVersion;
-import no.difi.vefa.peppol.common.model.Header;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.security.cert.X509Certificate;
-import java.util.Date;
 
 /**
  * Handles incoming message.
@@ -42,14 +37,12 @@ public class MessageHandler {
     private final Storage storage;
     private final ErrorHandler errorHandler;
     private final MessageSender messageSender;
-    private final Gson gson;
 
     @Autowired
-    public MessageHandler(@NotNull Storage storage, @NotNull ErrorHandler errorHandler, @NotNull MessageSender messageSender, @NotNull Gson gson) {
+    public MessageHandler(@NotNull Storage storage, @NotNull ErrorHandler errorHandler, @NotNull MessageSender messageSender) {
         this.storage = storage;
         this.errorHandler = errorHandler;
         this.messageSender = messageSender;
-        this.gson = gson;
     }
 
     @NotNull
@@ -78,59 +71,17 @@ public class MessageHandler {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     void process(InboundMetadata inboundMetadata, Path payloadPath) {
-        Header header = inboundMetadata.getHeader();
-        ContainerMessage cm = createContainerMessage(header.getIdentifier().toString(), header, payloadPath.toString());
-        cm.getProcessingInfo().setSourceMetadata(metadataToJson(header, inboundMetadata));
-
+        ContainerMessage cm = createContainerMessage(payloadPath.toString());
+        cm.getProcessingInfo().setPeppolMessageMetadata(PeppolMessageMetadata.create(inboundMetadata));
         messageSender.send(cm);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private ContainerMessage createContainerMessage(String transmissionId, Header header, String dataFile) {
+    private ContainerMessage createContainerMessage(String dataFile) {
         Endpoint endpoint = new Endpoint(componentName, ProcessType.IN_INBOUND);
-        ContainerMessage cm = new ContainerMessage(gson.toJson(header), dataFile, endpoint);
-        cm.getProcessingInfo().setTransactionId(transmissionId);
+        ContainerMessage cm = new ContainerMessage(dataFile, endpoint);
         cm.setStatus(cm.getProcessingInfo().getSource(), "received");
         EventingMessageUtil.reportEvent(cm, "received file");
         return cm;
-    }
-
-    private String metadataToJson(Header header, InboundMetadata inboundMetadata) {
-        X509Certificate certificate = inboundMetadata.getCertificate();
-        X500Principal principal = certificate.getSubjectX500Principal();
-
-        return "{ \"PeppolMessageMetaData\" :\n  {\n" +
-                createJsonPair("messageId", header.getIdentifier()) +
-                createJsonPair("recipientId", header.getReceiver().getIdentifier()) +
-                createJsonPair("recipientSchemeId", header.getReceiver().getScheme()) +
-                createJsonPair("senderId", header.getSender().getIdentifier()) +
-                createJsonPair("senderSchemeId", header.getSender().getScheme()) +
-                createJsonPair("documentTypeIdentifier", header.getDocumentType().getIdentifier()) +
-                createJsonPair("profileTypeIdentifier", header.getProcess().getIdentifier()) +
-                createJsonPair("sendingAccessPoint", principal.getName()) +
-                createJsonPair("receivingAccessPoint", "Opuscapita AP") +
-                createJsonPair("protocol", inboundMetadata.getProtocol().getIdentifier()) +
-                createJsonPair("sendersTimeStamp", inboundMetadata.getTimestamp()) +
-                createJsonPair("receivedTimeStamp", new Date()) +
-                createJsonPair("transmissionId", header.getIdentifier()) +
-                createJsonPair("buildUser", OxalisVersion.getUser()) +
-                createJsonPair("buildDescription", OxalisVersion.getBuildDescription()) +
-                createJsonPair("buildTimeStamp", OxalisVersion.getBuildTimeStamp()) +
-                "    \"oxalis\" : \"" + OxalisVersion.getVersion() + "\"\n" +
-                "  }\n}\n";
-    }
-
-    private static String createJsonPair(String key, Object value) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("    \"").append(key).append("\" : ");
-        if (value == null) {
-            sb.append("null,\n");
-        } else {
-            sb.append("\"").append(value.toString().replace("\\ ", "")).append("\",\n");
-        }
-
-        return sb.toString();
     }
 }

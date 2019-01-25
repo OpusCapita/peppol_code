@@ -20,7 +20,7 @@ public class MultiPartHelper {
         String tempFilePath = storage.storeTemporary(file.getInputStream(), UUID.randomUUID().toString());
         logger.info("Validating file received via " + origin + " call and stored as " + tempFilePath);
 
-        containerMessage = new ContainerMessage(origin + " /validate", tempFilePath, endpoint);
+        containerMessage = new ContainerMessage(tempFilePath, endpoint);
         containerMessage.setDocumentInfo(documentLoader.load(tempFilePath, endpoint));
         containerMessage.getProcessingInfo().setCurrentStatus(endpoint, origin + " validation");
         return containerMessage;

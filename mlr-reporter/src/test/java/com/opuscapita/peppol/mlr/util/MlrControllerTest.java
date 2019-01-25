@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.model.Customer;
@@ -35,10 +36,10 @@ public class MlrControllerTest {
     @Test
     public void testIgnoreInbound() throws Exception {
         Endpoint ep = new Endpoint("in", ProcessType.IN_INBOUND);
-        ContainerMessage cm = new ContainerMessage("metadata", "test.txt", ep);
+        ContainerMessage cm = new ContainerMessage("test.txt", ep);
         cm.setDocumentInfo(new DocumentInfo());
         cm.getDocumentInfo().setArchetype(Archetype.EHF);
-        ProcessingInfo pi = new ProcessingInfo(ep, "metadata").setCurrentStatus(ep, "ERROR");
+        ProcessingInfo pi = new ProcessingInfo(ep).setCurrentStatus(ep, "ERROR");
         cm.setProcessingInfo(pi);
 
         MlrCreator creator = mock(MlrCreator.class);
@@ -53,10 +54,10 @@ public class MlrControllerTest {
     @Test
     public void testProcessError() throws Exception {
         Endpoint ep = new Endpoint("xxx", ProcessType.OUT_PEPPOL);
-        ContainerMessage cm = new ContainerMessage("metadata", "test.txt", ep);
+        ContainerMessage cm = new ContainerMessage("test.txt", ep);
         cm.setDocumentInfo(new DocumentInfo());
         cm.getDocumentInfo().setArchetype(Archetype.INVALID);
-        ProcessingInfo pi = new ProcessingInfo(ep, "metadata").setCurrentStatus(ep, "ERROR");
+        ProcessingInfo pi = new ProcessingInfo(ep).setCurrentStatus(ep, "ERROR");
         cm.setProcessingInfo(pi);
 
         MlrCreator creator = mock(MlrCreator.class);
@@ -71,12 +72,12 @@ public class MlrControllerTest {
     @Test
     public void testProcessSuccess() throws Exception {
         Endpoint ep = new Endpoint("xxx", ProcessType.OUT_OUTBOUND);
-        ContainerMessage cm = new ContainerMessage("metadata", "test.txt", ep);
+        ContainerMessage cm = new ContainerMessage("test.txt", ep);
         cm.setDocumentInfo(new DocumentInfo());
         cm.getDocumentInfo().setArchetype(Archetype.EHF);
-        ProcessingInfo pi = new ProcessingInfo(ep, "metadata").setCurrentStatus(ep, "ERROR");
+        ProcessingInfo pi = new ProcessingInfo(ep).setCurrentStatus(ep, "ERROR");
+        pi.setPeppolMessageMetadata(PeppolMessageMetadata.createDummy());
         cm.setProcessingInfo(pi);
-        pi.setTransactionId("transaction id");
 
         MlrCreator creator = mock(MlrCreator.class);
         when(creator.reportSuccess(any())).thenReturn("");
@@ -90,10 +91,10 @@ public class MlrControllerTest {
     @Test
     public void testProcessInTheMiddle() throws Exception {
         Endpoint ep = new Endpoint("xxx", ProcessType.OUT_PEPPOL);
-        ContainerMessage cm = new ContainerMessage("metadata", "test.txt", ep);
+        ContainerMessage cm = new ContainerMessage("test.txt", ep);
         cm.setDocumentInfo(new DocumentInfo());
         cm.getDocumentInfo().setArchetype(Archetype.EHF);
-        ProcessingInfo pi = new ProcessingInfo(ep, "metadata").setCurrentStatus(ep, "ERROR");
+        ProcessingInfo pi = new ProcessingInfo(ep).setCurrentStatus(ep, "ERROR");
         cm.setProcessingInfo(pi);
 
         MlrCreator creator = mock(MlrCreator.class);
@@ -107,7 +108,7 @@ public class MlrControllerTest {
     @Test
     public void testProcessBadFormed() throws Exception {
         Endpoint ep = new Endpoint("xxx", ProcessType.OUT_PEPPOL_FINAL);
-        ContainerMessage cm = new ContainerMessage("metadata", "test.txt", ep);
+        ContainerMessage cm = new ContainerMessage("test.txt", ep);
         MlrCreator creator = mock(MlrCreator.class);
 
         MlrController reporter = new MlrController(creator, storage, customerRepository, messageRepository);

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class TemplateToolsTest {
     @Test
     public void templateToPath() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("/tmp/test.xml", Endpoint.TEST);
 
         DocumentInfo di = new DocumentInfo();
         di.setSenderId("SENDER_ID");

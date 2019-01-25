@@ -1,12 +1,8 @@
 package com.opuscapita.peppol.preprocessing.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
-import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
-import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadataContainer;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.storage.Storage;
@@ -18,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.StringReader;
-
 /**
  * Parses input document and moves file from temporary to long-term storage.
  *
@@ -30,16 +24,14 @@ public class PreprocessingController {
     private static final Logger logger = LoggerFactory.getLogger(PreprocessingController.class);
     private final DocumentLoader documentLoader;
     private final Storage storage;
-    private final Gson gson;
 
     @Value("${peppol.component.name}")
     private String componentName;
 
     @Autowired
-    public PreprocessingController(@NotNull DocumentLoader documentLoader, @NotNull Storage storage, @NotNull Gson gson) {
+    public PreprocessingController(@NotNull DocumentLoader documentLoader, @NotNull Storage storage) {
         this.documentLoader = documentLoader;
         this.storage = storage;
-        this.gson = gson;
     }
 
     /**
@@ -57,43 +49,14 @@ public class PreprocessingController {
         }
 
         logger.info("PreprocessingController started to process file: " + cm.toLog());
-        DocumentInfo document;
-        Endpoint endpoint;
-        if (cm.isInbound()) {
-            endpoint = new Endpoint(componentName, ProcessType.IN_PREPROCESS);
-            PeppolMessageMetadata inboundMetaData = getInboundMetadata(cm.getProcessingInfo().getSourceMetadata());
-            if (inboundMetaData != null) {
-                cm.getProcessingInfo().setCommonName(inboundMetaData.getSendingAccessPoint());
-                cm.getProcessingInfo().setTransactionId(inboundMetaData.getTransmissionId());
-                cm.getProcessingInfo().setSendingProtocol(inboundMetaData.getProtocol());
-            }
-        } else {
-            endpoint = new Endpoint(componentName, ProcessType.OUT_PREPROCESS);
-        }
 
-        document = documentLoader.load(cm.getFileName(), cm.getProcessingInfo().getSource());
+        Endpoint endpoint = new Endpoint(componentName, (cm.isInbound() ? ProcessType.IN_PREPROCESS : ProcessType.OUT_PREPROCESS));
+        DocumentInfo document = documentLoader.load(cm.getFileName(), cm.getProcessingInfo().getSource());
 
         String longTerm = storage.moveToLongTerm(document.getSenderId(), document.getRecipientId(), cm.getFileName());
-        logger.info("Preprocessed input file " + cm.toLog() + " moved to " + longTerm);
         cm.setDocumentInfo(document).setFileName(longTerm);
         cm.setStatus(endpoint, "parsed");
+        logger.info("Preprocessed input file " + cm.toLog() + " moved to " + longTerm);
         return cm;
     }
-
-    private PeppolMessageMetadata getInboundMetadata(String rawMetadata) {
-        PeppolMessageMetadata result = null;
-        if (rawMetadata != null) {
-            try {
-                JsonReader reader = new JsonReader(new StringReader(rawMetadata));
-                reader.setLenient(true);
-                PeppolMessageMetadataContainer container = gson.fromJson(reader, PeppolMessageMetadataContainer.class);
-                result = container.getPeppolMessageMetaData();
-            } catch (Exception e) {
-                logger.warn("Failed to parse raw metadata: " + rawMetadata, e);
-            }
-        }
-        return result;
-
-    }
-
 }

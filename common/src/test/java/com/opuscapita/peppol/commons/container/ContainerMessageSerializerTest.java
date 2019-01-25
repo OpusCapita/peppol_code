@@ -17,7 +17,7 @@ public class ContainerMessageSerializerTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testBothDirections() throws Exception {
-        ContainerMessage cm = new ContainerMessage("metadata", "fileName", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("fileName", Endpoint.TEST);
 
         DocumentInfo di = new DocumentInfo();
         di.setArchetype(Archetype.INVALID);
@@ -38,7 +38,6 @@ public class ContainerMessageSerializerTest {
 
         ProcessingInfo pi = cm.getProcessingInfo();
         assertNotNull(pi);
-        pi.setTransactionId("transaction_id");
         pi.setOriginalSource("original_source");
         pi.setRoute(route);
 
@@ -65,8 +64,6 @@ public class ContainerMessageSerializerTest {
         assertTrue(cm2.getProcessingInfo().getRoute().getEndpoints().contains("endpoint_a"));
         assertTrue(cm2.getProcessingInfo().getRoute().getEndpoints().contains("endpoint_b"));
         assertEquals("original_source", cm2.getProcessingInfo().getOriginalSource());
-
-        assertEquals("transaction_id", cm2.getProcessingInfo().getTransactionId());
     }
 
 

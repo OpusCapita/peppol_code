@@ -26,8 +26,8 @@ public class TicketsCreatorTest {
 
         CombinedEmail combinedEmail = new CombinedEmail(true, recipient);
 
-        ContainerMessage cm1 = new ContainerMessage("meatdata", "file_name_1", Endpoint.TEST);
-        ContainerMessage cm2 = new ContainerMessage("meatdata", "file_name_2", Endpoint.TEST);
+        ContainerMessage cm1 = new ContainerMessage("file_name_1", Endpoint.TEST);
+        ContainerMessage cm2 = new ContainerMessage("file_name_2", Endpoint.TEST);
 
         SingleEmail se1 = new SingleEmail(cm1, "subject_1", "body_1");
         SingleEmail se2 = new SingleEmail(cm2, "subject_2", "body_2");

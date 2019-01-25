@@ -26,7 +26,7 @@ public class TransportControllerTest {
         if(System.getProperty("os.name").toLowerCase().contains("windows")) {
             return;
         }
-        ContainerMessage cm = new ContainerMessage("metadata", "/tmp/test.xml", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("/tmp/test.xml", Endpoint.TEST);
 
         DocumentInfo doc = mock(DocumentInfo.class);
         when(doc.getArchetype()).thenReturn(Archetype.PEPPOL_BIS);

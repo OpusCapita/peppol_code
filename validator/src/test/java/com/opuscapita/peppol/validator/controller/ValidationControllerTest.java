@@ -179,7 +179,7 @@ public class ValidationControllerTest {
     private ContainerMessage loadDocument(String file) throws Exception {
         DocumentInfo info = documentLoader.load(file, Endpoint.TEST);
         System.out.println("Document " + file + " recognized as " + info.getArchetype());
-        return new ContainerMessage("meatdata", file, Endpoint.TEST).setDocumentInfo(info);
+        return new ContainerMessage(file, Endpoint.TEST).setDocumentInfo(info);
     }
 
 }

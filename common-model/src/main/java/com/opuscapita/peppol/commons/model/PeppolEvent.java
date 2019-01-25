@@ -34,9 +34,7 @@ public class PeppolEvent {
     // Sending specific parameters
     private String commonName;
     private String sendingProtocol;
-
     private String originalSource;
-
 
     public ProcessType getProcessType() {
         return processType;

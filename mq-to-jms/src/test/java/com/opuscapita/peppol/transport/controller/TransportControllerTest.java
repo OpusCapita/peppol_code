@@ -35,10 +35,9 @@ public class TransportControllerTest {
 
         URI resource = TransportController.class.getResource("/valid/ehf.xml").toURI();
         File resourceFile = new File(resource);
-        String metadata = "metadata";
         String fileName = resourceFile.getAbsolutePath();
         Endpoint source = new Endpoint("unit test", ProcessType.TEST);
-        ContainerMessage containerMessage = new ContainerMessage(metadata, fileName, source);
+        ContainerMessage containerMessage = new ContainerMessage(fileName, source);
         containerMessage.getProcessingInfo().setEventingMessage(new Message("id", System.currentTimeMillis(), true, null));
         String jsonEncodedPayloadObject = transportController.createJsonEncodedPayloadObject(containerMessage);
         Gson gson = new Gson();

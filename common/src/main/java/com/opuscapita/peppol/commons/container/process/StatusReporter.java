@@ -47,8 +47,7 @@ public class StatusReporter {
     @SuppressWarnings("ConstantConditions")
     public void reportError(@NotNull ContainerMessage cm, @Nullable Throwable e) {
         if (cm.getProcessingInfo() == null) {
-            cm.setProcessingInfo(new ProcessingInfo(
-                    new Endpoint("status_reporter", ProcessType.UNKNOWN), "Process info missing in Container Message"));
+            cm.setProcessingInfo(new ProcessingInfo(new Endpoint("status_reporter", ProcessType.UNKNOWN)));
         }
         cm.getProcessingInfo().setProcessingException(e.getMessage());
         try {

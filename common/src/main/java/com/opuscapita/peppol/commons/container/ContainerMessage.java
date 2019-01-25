@@ -1,6 +1,5 @@
 package com.opuscapita.peppol.commons.container;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.Since;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
@@ -33,18 +32,18 @@ public class ContainerMessage implements Serializable {
     @Since(1.0)
     private DocumentInfo documentInfo;
 
-    public ContainerMessage() {}
+    public ContainerMessage() {
+    }
 
     /**
      * Instantiates new container of the message.
      *
-     * @param metadata some voluntary data provided by the originator of the message
      * @param fileName the file name to be used for the document
-     * @param source the originator of the message
+     * @param source   the originator of the message
      */
-    public ContainerMessage(@NotNull String metadata, @NotNull String fileName, @NotNull Endpoint source) {
-        this.processingInfo = new ProcessingInfo(source, metadata);
+    public ContainerMessage(@NotNull String fileName, @NotNull Endpoint source) {
         this.fileName = fileName;
+        this.processingInfo = new ProcessingInfo(source);
     }
 
     @NotNull
@@ -88,6 +87,10 @@ public class ContainerMessage implements Serializable {
         return processingInfo.isInbound();
     }
 
+    public boolean isOutbound() {
+        return !this.isInbound();
+    }
+
     /**
      * Returns customer ID depending on the direction of the message, either sender or recipient ID.
      */
@@ -100,59 +103,12 @@ public class ContainerMessage implements Serializable {
         return isInbound() ? getDocumentInfo().getRecipientId() : getDocumentInfo().getSenderId();
     }
 
-    /**
-     * Serializes object to JSON.
-     *
-     * @return the JSON serialized version of this object
-     */
-    public String convertToJson() {
-        return new Gson().toJson(this);
-    }
-
-    /**
-     * Returns correlation ID if any or file name as correlation ID. Data is being read from processing status object.
-     *
-     * @return Returns correlation ID if any or file name as correlation ID
-     */
     @NotNull
     public String getCorrelationId() {
-        if (StringUtils.isNotBlank(processingInfo.getCorrelationId())) {
-            return processingInfo.getCorrelationId();
+        if (processingInfo == null || StringUtils.isBlank(processingInfo.getTransactionId())) {
+            return fileName;
         }
-        return fileName;
-    }
-
-    @Override
-    @NotNull
-    public String toString() {
-        String result = fileName;
-        if (processingInfo != null) {
-            result += " from " + processingInfo.getSource();
-        }
-        if (documentInfo != null) {
-            result += " [" + documentInfo.getClass().getName() + "]";
-        }
-        if (processingInfo != null && processingInfo.getRoute() != null) {
-            result += ": " + processingInfo.getRoute();
-        }
-
-        return result;
-    }
-
-    public String toLog() {
-        String result = "[file: {filename}, customer: {customer}, status: {status}, endpoint: {endpoint}]";
-        result = result.replace("{filename}", "{" + fileName + "}");
-
-        String customerId = getCustomerId();
-        result = result.replace("{customer}", "{" + (StringUtils.isBlank(customerId) ? "unknown" : customerId) + "}");
-
-        String status = processingInfo == null ? "unknown" : processingInfo.getCurrentStatus();
-        result = result.replace("{status}", "{" + (StringUtils.isBlank(status) ? "unknown" : status) + "}");
-
-        Endpoint endpoint = processingInfo == null ? null : processingInfo.getCurrentEndpoint();
-        result = result.replace("{endpoint}", "{" + (endpoint == null ? "unknown" : endpoint.getType()) + "}");
-
-        return result;
+        return processingInfo.getTransactionId();
     }
 
     public void setStatus(@NotNull Endpoint endpoint, @NotNull String status) {
@@ -201,5 +157,38 @@ public class ContainerMessage implements Serializable {
             return true;
         }
         return (processingInfo != null && processingInfo.getProcessingException() != null);
+    }
+
+    @Override
+    @NotNull
+    public String toString() {
+        String result = fileName;
+        if (processingInfo != null) {
+            result += " from " + processingInfo.getSource();
+        }
+        if (documentInfo != null) {
+            result += " [" + documentInfo.getClass().getName() + "]";
+        }
+        if (processingInfo != null && processingInfo.getRoute() != null) {
+            result += ": " + processingInfo.getRoute();
+        }
+
+        return result;
+    }
+
+    public String toLog() {
+        String result = "[file: {filename}, customer: {customer}, status: {status}, endpoint: {endpoint}]";
+        result = result.replace("{filename}", "{" + fileName + "}");
+
+        String customerId = getCustomerId();
+        result = result.replace("{customer}", "{" + (StringUtils.isBlank(customerId) ? "unknown" : customerId) + "}");
+
+        String status = processingInfo == null ? "unknown" : processingInfo.getCurrentStatus();
+        result = result.replace("{status}", "{" + (StringUtils.isBlank(status) ? "unknown" : status) + "}");
+
+        Endpoint endpoint = processingInfo == null ? null : processingInfo.getCurrentEndpoint();
+        result = result.replace("{endpoint}", "{" + (endpoint == null ? "unknown" : endpoint.getType()) + "}");
+
+        return result;
     }
 }

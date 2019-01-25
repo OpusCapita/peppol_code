@@ -103,7 +103,7 @@ public class OutboundControllerTest {
     }
 
     private ContainerMessage createContainerMessage() {
-        ContainerMessage cm = new ContainerMessage("metadata", "filename", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("filename", Endpoint.TEST);
         DocumentInfo di = new DocumentInfo();
         cm.setDocumentInfo(di);
 

@@ -43,7 +43,7 @@ public class OutboundAppTest {
 
     @SuppressWarnings("ConstantConditions")
     private void doIt(String s) throws Exception {
-        ContainerMessage cm = new ContainerMessage("meatdata", "file_name", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("file_name", Endpoint.TEST);
         try (InputStream inputStream = OutboundAppTest.class.getResourceAsStream(s)) {
             DocumentInfo di = documentLoader.load(inputStream, "fileName", Endpoint.TEST);
             assertEquals(Archetype.SVEFAKTURA1, di.getArchetype());
@@ -76,7 +76,7 @@ public class OutboundAppTest {
     }
 
     private ContainerMessage createContainerMessage() {
-        ContainerMessage cm = new ContainerMessage("meatdata", "file.xml", Endpoint.TEST);
+        ContainerMessage cm = new ContainerMessage("file.xml", Endpoint.TEST);
         DocumentInfo di = new DocumentInfo();
         cm.setDocumentInfo(di);
         return cm;

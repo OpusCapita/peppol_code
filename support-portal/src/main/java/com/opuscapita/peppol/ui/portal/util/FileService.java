@@ -66,8 +66,7 @@ public class FileService {
         try {
             File fileToReprocess = new File(attempt.getFilename());
             Endpoint source = new Endpoint(componentName, getProcessType(attempt));
-            ContainerMessage cm = new ContainerMessage("Sending to reprocess " + componentName + " as " + fileToReprocess.getAbsolutePath(),
-                    fileToReprocess.getName(), source);
+            ContainerMessage cm = new ContainerMessage(fileToReprocess.getName(), source);
             cm.setStatus(source, "reprocessing");
             cm.setOriginalFileName(fileToReprocess.getAbsolutePath());
             messageQueue.convertAndSend(queue, cm);

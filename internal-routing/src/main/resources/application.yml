@@ -15,8 +15,8 @@
 #      in:
 #        name: internal-routing
 #  storage:
-#    short: /tmp
-#    long: /tmp
+#    short: c://artifacts//tmp
+#    long: c://artifacts//tmp
 #
 #    routing:
 #      routes:

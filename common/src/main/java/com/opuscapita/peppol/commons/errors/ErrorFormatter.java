@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.errors;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
+import com.opuscapita.peppol.commons.container.ContainerMessageSerializer;
 import com.opuscapita.peppol.commons.container.ProcessingInfo;
 import com.opuscapita.peppol.commons.container.document.DocumentError;
 import com.opuscapita.peppol.commons.container.document.DocumentWarning;
@@ -23,7 +24,8 @@ public class ErrorFormatter {
 
     @SuppressWarnings({"RegExpRedundantEscape", "RegExpSingleCharAlternation"})
     @NotNull
-    public static String getErrorDescription(@NotNull ContainerMessage cm, @Nullable Throwable e, @Nullable String additionalDetails) {
+    public static String getErrorDescription(@NotNull ContainerMessage cm, @Nullable Throwable e,
+                                             @Nullable String additionalDetails, @NotNull ContainerMessageSerializer serializer) {
         String detailedDescription = "Failed to process message";
 
         detailedDescription += "\nFile name: " + cm.getFileName();
@@ -50,8 +52,7 @@ public class ErrorFormatter {
         }
 
         if (cm.getProcessingInfo() == null) {
-            cm.setProcessingInfo(new ProcessingInfo(new Endpoint("error_handler", ProcessType.UNKNOWN),
-                    "Processing info missing in Container Message"));
+            cm.setProcessingInfo(new ProcessingInfo(new Endpoint("error_handler", ProcessType.UNKNOWN)));
         } else {
             detailedDescription += "\nLast processing status: " + cm.getProcessingInfo().getCurrentStatus();
         }
@@ -69,7 +70,7 @@ public class ErrorFormatter {
             detailedDescription += "\nPlatform exception message: " + exceptionMessage;
         }
 
-        String json = cm.convertToJson().replaceAll("\\{|\\}|\\\"|\\'", "");
+        String json = serializer.toJson(cm).replaceAll("\\{|\\}|\\\"|\\'", "");
         detailedDescription += "\nMessage content: \n" + json + "\n";
 
         if (e != null) {
