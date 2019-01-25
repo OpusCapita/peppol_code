@@ -44,8 +44,8 @@ peppol:
 
 # storage paths
   storage:
-    short: c://artifacts//tmp//storage//short
-    long: c://artifacts//tmp//storage//long
+    short: /tmp/storage/short
+    long: /tmp/storage/long
 
 # queues
   eventing.queue.in.name: eventing
@@ -65,7 +65,7 @@ peppol:
         xsd: "C:/Users/Daniil Kalnin/IdeaProjects/peppol2.0/validator/src/test/resources/sbdh_artifacts/StandardBusinessDocumentHeader.xsd"
         xsdplus: "xsd//StandardBusinessDocumentHeader.xsd"
     rules:
-          directory: "c://artifacts//tmp//rules"
+          directory: "/tmp/rules"
           map:
               # Svefaktura1
               - profile: "urn:sfti:services:documentprocessing:BasicInvoice:1:0###urn:sfti:documents:BasicInvoice:1:0"

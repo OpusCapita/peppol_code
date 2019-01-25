@@ -10,8 +10,8 @@ peppol:
       in:
         name: ignore
   storage:
-    short: c://artifacts//tmp
-    long: c://artifacts//tmp
+    short: /tmp
+    long: /tmp
   validation:
     artifacts:
       difi.path: src/test/resources/difi_artifacts

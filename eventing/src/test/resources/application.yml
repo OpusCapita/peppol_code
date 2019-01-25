@@ -6,8 +6,8 @@ peppol:
       out:
         name: persistence
   storage:
-    short: c://artifacts//tmp
-    long: c://artifacts//tmp
+    short: /tmp
+    long: /tmp
 
 snc:
   enabled: true

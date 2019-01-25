@@ -5,8 +5,8 @@ peppol:
       in:
         name: ignore
   storage:
-    short: c://artifacts//tmp
-    long: c://artifacts//tmp
+    short: /tmp
+    long: /tmp
   common:
     consistency_check_enabled: true
     errors:

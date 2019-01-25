@@ -27,8 +27,8 @@ peppol:
             in:
                 name: eventing
     storage:
-        long: c://artifacts//tmp
-        short: c://artifacts//tmp
+        long: /tmp
+        short: /tmp
 snc:
     bsc: BSC
     businessGroup: HEAVEN

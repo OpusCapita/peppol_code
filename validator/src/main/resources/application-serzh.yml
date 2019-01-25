@@ -41,8 +41,8 @@ peppol:
 
 # storage paths
   storage:
-    short: c://artifacts//tmp/storage/short
-    long: c://artifacts//tmp/storage/long
+    short: /tmp/storage/short
+    long: /tmp/storage/long
 
 # queues
   eventing.queue.in.name: eventing
