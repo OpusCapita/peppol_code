@@ -2,10 +2,15 @@ package com.opuscapita.peppol.test.tools.integration.consumers.subtypes;
 
 import com.opuscapita.peppol.test.tools.integration.consumers.Consumer;
 import com.opuscapita.peppol.test.tools.integration.test.TestResult;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.AgeFileFilter;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Created by gamanse1 on 2016.11.24..
@@ -36,6 +41,7 @@ public class FileConsumer extends Consumer {
         }
         if(!file.exists()) {
             logger.warn("FileConsumer: no files to consume in " + file.getAbsolutePath() + " retry in: " + delay);
+            listFoundFiles();
             waitFixedDelay();
         }
         if(file.exists()) {
@@ -43,6 +49,17 @@ public class FileConsumer extends Consumer {
             return new TestResult(name, true, "Found expected file " + file.getAbsolutePath());
         }
         return result;
+    }
+
+    // list whatever there for debugging purposes
+    private void listFoundFiles() {
+        Date earlier = DateUtils.addSeconds(new Date(), -1200);
+        AgeFileFilter ageFileFilter = new AgeFileFilter(earlier);
+        Iterator<File> files = FileUtils.iterateFiles(currentDirectory, ageFileFilter, null);
+        while (files.hasNext()) {
+            File file = files.next();
+            logger.info("Instead found this file: " + file.getAbsolutePath());
+        }
     }
 
     protected void initCurrentDirectory(Object consumable) {

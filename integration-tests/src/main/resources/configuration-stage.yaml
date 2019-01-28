@@ -119,7 +119,7 @@ tests:
                 name: MLR reprocessing test
                 id: 21
                 expected value: mlr-reporter_valid_reprocess-ap-mlr.xml
-                timeout: 30000
+                timeout: 16000
             - mlr test:
                 name: IO exception in mlr test
                 id: 9
@@ -195,7 +195,7 @@ tests:
    inbound:
         producers:
             - command producer:
-                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/inbound_valid_test_ehf.xml -u http://inbound:8080/peppol-ap-inbound/as2
+                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/inbound_valid_test_ehf.xml -u http://inbound:8080/peppol-ap-inbound/as2 -c /etc/resources/inbound-test/oxalis.cer
                 preprocessing cleanup dir: /peppol/data/tmp/
         subscribers:
             - mq subscriber:
