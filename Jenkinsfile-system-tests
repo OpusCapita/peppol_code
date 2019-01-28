@@ -11,10 +11,10 @@
  * on how the groups are used in certain notifications.
  */
 recipients = [:]
-recipients.developers = "Ibrahim Bilge <ibrahim.bilge@opuscapita.com>"
-recipients.devops = "Amit Tiwari <Amit.Tiwari@opuscapita.com>"
-recipients.ops = ""
-recipients.testers = ""
+recipients.developers = "Ibrahim.Bilge@opuscapita.com"
+recipients.devops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
+recipients.ops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
+recipients.testers = "Ibrahim.Bilge@opuscapita.com"
 
 
 import java.util.regex.*
