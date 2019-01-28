@@ -53,6 +53,7 @@ public class FileConsumer extends Consumer {
 
     // list whatever there for debugging purposes
     private void listFoundFiles() {
+        logger.info("Listing the files in the directory...");
         Date earlier = DateUtils.addSeconds(new Date(), -1200);
         AgeFileFilter ageFileFilter = new AgeFileFilter(earlier);
         Iterator<File> files = FileUtils.iterateFiles(currentDirectory, ageFileFilter, null);
