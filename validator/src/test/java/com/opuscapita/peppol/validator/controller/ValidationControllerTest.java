@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class ValidationControllerTest {
     private DocumentLoader documentLoader;
 
     @Test
+    @Ignore
     public void goThroughTestMaterials() throws Exception {
         File testFiles = new File(ValidationControllerTest.class.getResource("/test-materials").getFile());
         processDirectory(testFiles);
@@ -66,9 +68,30 @@ public class ValidationControllerTest {
     }
 
     @Test
-    @Ignore("Debug only")
+//    @Ignore("Debug only")
     public void testSingleFile() throws Exception {
-        processFile(new File("/home/redis/work/peppol2.0/validator/out/test/resources/test-materials/peppol-bis/catalogue/svekatalog_small.xml"));
+        File file = new File("C:\\Users\\ibilge\\IdeaProjects\\peppol_code\\validator\\src\\test\\resources\\test-materials\\cases\\eventing_valid.xml");
+        Assert.notNull(file);
+
+        System.out.println("TESTING: " + file.getAbsolutePath());
+        ContainerMessage cm = loadDocument(file.getAbsolutePath());
+        cm = controller.validate(cm, Endpoint.TEST);
+
+        List<DocumentError> errors = cm.getDocumentInfo().getErrors();
+        List<DocumentWarning> warnings = cm.getDocumentInfo().getWarnings();
+        if (errors.isEmpty()) {
+            System.out.println("PASSED: " + file.getAbsolutePath() + " [" + errors.size() + " error(s), " + warnings.size() + " warning(s)]");
+        } else {
+            System.out.println("FAILED: " + file.getAbsolutePath() + " [" + errors.size() + " error(s), " + warnings.size() + " warning(s)]");
+        }
+
+        System.out.println("------------------------------------------");
+        for (DocumentError de : errors) {
+            System.out.println("E: " + (de.getValidationError() == null ? "null" : de.getValidationError().getIdentifier()));
+        }
+        for (DocumentError dw : warnings) {
+            System.out.println("W: " + (dw.getValidationError() == null ? "null" : dw.getValidationError().getIdentifier()));
+        }
     }
 
     @Test

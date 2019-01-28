@@ -109,28 +109,28 @@ tests:
                 name: MLR a2a accepted creation test
                 id: 6
                 expected value: eventing_valid-ap-mlr.xml
-                timeout: 16000
+                timeout: 20000
             - file test:
                 name: MLR xib rejected creation test
                 id: 7
                 expected value: eventing_rejected-re-mlr.xml
-                timeout: 16000
+                timeout: 20000
             - file test:
                 name: MLR reprocessing test
                 id: 21
                 expected value: mlr-reporter_valid_reprocess-ap-mlr.xml
-                timeout: 16000
+                timeout: 20000
             - mlr test:
                 name: IO exception in mlr test
                 id: 9
                 expected value: '<cbc:Description>OTHER_ERROR: This sending expected to fail I/O in test mode</cbc:Description>'
                 expected file: eventing_invalid-er-mlr.xml
-                timeout: 16000
+                timeout: 20000
             - snc test:
                 name: SNC ticket creation test
                 id: 5
                 expected value: 9908:937270067
-                timeout: 16000
+                timeout: 20000
    support-ui:
         producers:
             - file producer:
