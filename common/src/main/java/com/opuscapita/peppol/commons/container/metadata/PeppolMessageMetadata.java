@@ -242,6 +242,12 @@ public class PeppolMessageMetadata {
         return metadata;
     }
 
+    public static PeppolMessageMetadata create(@NotNull String transmissionId) {
+        PeppolMessageMetadata metadata = new PeppolMessageMetadata();
+        metadata.setTransmissionId(transmissionId);
+        return metadata;
+    }
+
     // testing purposes
     public static PeppolMessageMetadata createDummy() {
         PeppolMessageMetadata metadata = new PeppolMessageMetadata();

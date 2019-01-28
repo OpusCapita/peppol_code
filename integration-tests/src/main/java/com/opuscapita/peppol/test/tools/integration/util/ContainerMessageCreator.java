@@ -3,6 +3,7 @@ package com.opuscapita.peppol.test.tools.integration.util;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.document.DocumentLoader;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
 import com.opuscapita.peppol.commons.container.process.route.Route;
@@ -47,6 +48,7 @@ public class ContainerMessageCreator {
             Route route = new Route();
             route.setEndpoints(endpoints);
             cm.getProcessingInfo().setRoute(route);
+            cm.getProcessingInfo().setPeppolMessageMetadata(PeppolMessageMetadata.create(file.getName()));
         }
 
         if (properties.containsKey("archetype")) {
