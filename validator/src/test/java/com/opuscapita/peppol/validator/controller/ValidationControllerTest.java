@@ -44,7 +44,6 @@ public class ValidationControllerTest {
     private DocumentLoader documentLoader;
 
     @Test
-    @Ignore
     public void goThroughTestMaterials() throws Exception {
         File testFiles = new File(ValidationControllerTest.class.getResource("/test-materials").getFile());
         processDirectory(testFiles);
@@ -68,7 +67,7 @@ public class ValidationControllerTest {
     }
 
     @Test
-//    @Ignore("Debug only")
+    @Ignore("Debug only")
     public void testSingleFile() throws Exception {
         File file = new File("C:\\Users\\ibilge\\IdeaProjects\\peppol_code\\validator\\src\\test\\resources\\test-materials\\cases\\eventing_valid.xml");
         Assert.notNull(file);
