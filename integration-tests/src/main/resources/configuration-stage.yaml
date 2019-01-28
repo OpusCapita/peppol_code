@@ -99,7 +99,7 @@ tests:
                 source directory: /peppol/data/snc-stub
                 consumers: 5
             - directory subscriber:
-                consumers: 6, 21
+                consumers: 6
                 source directory: /peppol/data/mlr-reporter/a2a/mlr
             - directory subscriber:
                 consumers: 7 9
@@ -192,29 +192,29 @@ tests:
                 id: 3
                 expected value: 4
                 name: validation rest check
-   inbound:
-        producers:
-            - command producer:
-                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/inbound_valid_test_ehf.xml -u http://inbound:8080/peppol-ap-inbound/as2 -c /etc/resources/inbound-test/oxalis.cer
-                preprocessing cleanup dir: /peppol/data/tmp/
-        subscribers:
+#   inbound:
+#        producers:
+#            - command producer:
+#                command: ./send-to-peppol.sh -f /etc/resources/inbound-test/inbound_valid_test_ehf.xml -u http://inbound:8080/peppol-ap-inbound/as2 -c /etc/resources/inbound-test/oxalis.cer
+#                preprocessing cleanup dir: /peppol/data/tmp/
+#        subscribers:
 #            - mq subscriber:
 #                source queue: preprocessing-integration-test
 #                timeout: 3000
 #                consumers: 12
-            - directory subscriber:
-                consumers: 15
-                source directory: '/peppol/data/tmp/$date/'
-        consumers:
+#            - directory subscriber:
+#                consumers: 15
+#                source directory: /peppol/data/tmp/
+#        consumers:
 #            - queue msg count check:
 #                id: 12
 #                expected value: 1
 #                name: inbound Mq check
-            - inbound message check:
-                id: 15
-                expected value: 1
-                name: inbound stored files check
-                timeout: 18000
+#            - inbound message check:
+#                id: 15
+#                expected value: 1
+#                name: inbound stored files check
+#                timeout: 18000
    internal-routing:
         producers:
             - mq producer:
@@ -316,8 +316,7 @@ tests:
                 name: preprocessing error queue check
             - queue msg count check:
                 id: 17
-                #one for commented-out inbound test
-                expected value: 2
+                expected value: 1
                 name: preprocessing out queue check
             - preprocessing check:
                 id: 18
