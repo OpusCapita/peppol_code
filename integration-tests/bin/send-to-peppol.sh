@@ -12,11 +12,8 @@ TRACE=""
 # The default is to send the sample document to our own access point running on our own machine.
 URL="http://localhost:8080/peppol-ap-inbound/as2"
 
-# The URL and the METHOD must correspond
-METHOD="as2"
-
 # The AS2 destination system identifier has to be specified when using AS2 (X.509 common name of receiver)
-AS2SID="APP_1000000208"
+CERT="${OXALIS_HOME}/oxalis.cer"
 
 FILE=""
 DOC_TYPE_OPTION=""
@@ -30,6 +27,13 @@ PROFILE="urn:www.cenbii.eu:profile:bii04:ver1.0"
 
 # Location of the executable program
 EXECUTABLE="${INTEGRATION_TESTS_HOME}/oxalis-standalone.jar"
+
+# Proxy settings
+# PROXY="-Dhttp.proxyHost=haikara.elma.fi -Dhttp.proxyPort=880 -Dhttp.nonProxyHosts=localhost|127.0.0.1|inbound"
+
+# Workaround for https://github.com/difi/oxalis/issues/360
+ln -sf ${OXALIS_HOME} ${OXALIS_HOME}/conf
+ln -sf ${OXALIS_HOME} ${INTEGRATION_TESTS_HOME}/conf
 
 function usage() {
     cat <<EOT
@@ -48,9 +52,7 @@ function usage() {
 
     -s sender optional PEPPOL Participan ID of sender, default is $SENDER (Difi)
 
-    -m method of transmission, either 'start' or 'as2'. Required if you specify a url different from 'smp'
-
-    -i as2 destination system identifier (X.509 common name of receiver when using as2 protocol)
+    -c part of the certificate file of receiving AP
 
     -u url indicates the URL of the access point. Specifying 'smp' causes the URL of the end point to be looked up
        in the SMP. Default URL is our own local host: $URL
@@ -69,12 +71,6 @@ do
             ;;
         f)  FILE="$OPTARG"
             ;;
-        m)  METHOD="$OPTARG"
-            if [[ "$METHOD" != "as2" ]]; then
-                echo "Only 'as2' are valid protocols"
-                exit 4
-            fi
-            ;;
 	    r)  RECEIVER="$OPTARG"
 	        ;;
         s)  SENDER="$OPTARG"
@@ -85,7 +81,7 @@ do
 			    exit 4
             fi
 			;;
-	    i)  AS2SID="$OPTARG"
+	    c)  CERT="$OPTARG"
 	        ;;
         *)  echo "Sorry, unknown option $opt"
             usage
@@ -111,18 +107,16 @@ fi
 # SMP lookup in order to find the URL of the destination access point
 if [ "$URL" == "smp" ]; then
     URL_OPTION=""
-    METHOD_OPTION=""    # Uses the default from the SMP
 else
     # Uses either the default values at the top of the script or whatever has been supplied on the command line
     URL_OPTION="-u $URL" # Uses either the URL specified by the user or the default one
-    METHOD_OPTION="-m $METHOD"
 fi
 
 # make sure we decode the AS2 System Identifier
-if [ -n "$AS2SID" ]; then
-    AS2SID_OPTION="-id $AS2SID"
+if [ -n "$CERT" ]; then
+    CERT_OPTION="-cert $CERT"
 else
-    AS2SID_OPTION=""
+    CERT_OPTION=""
 fi
 
 
@@ -133,7 +127,7 @@ cat <<EOT
     Sender: $SENDER
     Reciever: $RECEIVER
     Destination: $URL
-    Method (protocol): $METHOD
+    Oxalis Home: ${OXALIS_HOME}
 ================================================================================
 EOT
 
@@ -144,8 +138,7 @@ echo java -jar "$EXECUTABLE" \
     -s "$SENDER" \
     $DOC_TYPE_OPTION \
     $URL_OPTION \
-    $METHOD_OPTION \
-    $AS2SID_OPTION \
+    $CERT_OPTION \
     $TRACE
 
 # Executes the Oxalis outbound standalone Java program
@@ -155,8 +148,7 @@ java -jar "$EXECUTABLE" \
     -s "$SENDER" \
     $DOC_TYPE_OPTION \
     $URL_OPTION \
-    $METHOD_OPTION \
-    $AS2SID_OPTION \
+    $CERT_OPTION \
     $TRACE
 
 # Other usefull PPIDs:
