@@ -173,16 +173,7 @@ public class IncomingChecker extends ValuesChecker {
         ContainerMessage cm = new ContainerMessage(fileName, source);
         cm.setStatus(source, "received");
         cm.setOriginalFileName(file.getAbsolutePath());
-
-        Header header = documentLoader.parseHeader(fileName);
-        TransportIncomingFileMetadata transmissionResult = new TransportIncomingFileMetadata(header);
-        cm.getProcessingInfo().setPeppolMessageMetadata(PeppolMessageMetadata.create(transmissionResult));
-
-        if (cm.isInbound()) {
-            cm.getProcessingInfo().getPeppolMessageMetadata().setSendingAccessPoint(null);
-        } else {
-            cm.getProcessingInfo().getPeppolMessageMetadata().setReceivingAccessPoint(null);
-        }
+        setMetadataOfTheContainerMessage(cm);
 
         EventingMessageUtil.reportEvent(cm, "Picked up file by transport");
         messageQueue.convertAndSend(queue, cm);
@@ -190,6 +181,22 @@ public class IncomingChecker extends ValuesChecker {
 
         if (statusReporter != null) {
             statusReporter.report(cm);
+        }
+    }
+
+    private void setMetadataOfTheContainerMessage(ContainerMessage cm) {
+        Header header = documentLoader.parseHeader(cm.getFileName());
+        if (header != null) {
+            TransportIncomingFileMetadata transmissionResult = new TransportIncomingFileMetadata(header);
+            cm.getProcessingInfo().setPeppolMessageMetadata(PeppolMessageMetadata.create(transmissionResult));
+        } else {
+            cm.getProcessingInfo().setPeppolMessageMetadata(new PeppolMessageMetadata());
+        }
+
+        if (cm.isInbound()) {
+            cm.getProcessingInfo().getPeppolMessageMetadata().setSendingAccessPoint(null);
+        } else {
+            cm.getProcessingInfo().getPeppolMessageMetadata().setReceivingAccessPoint(null);
         }
     }
 
