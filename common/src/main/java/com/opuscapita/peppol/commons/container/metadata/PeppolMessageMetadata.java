@@ -1,5 +1,6 @@
 package com.opuscapita.peppol.commons.container.metadata;
 
+import com.google.gson.annotations.Since;
 import no.difi.oxalis.api.inbound.InboundMetadata;
 import no.difi.oxalis.api.outbound.TransmissionResponse;
 import no.difi.oxalis.api.transmission.TransmissionResult;
@@ -7,39 +8,43 @@ import no.difi.vefa.peppol.common.model.Header;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.x500.X500Principal;
+import java.io.Serializable;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
 /**
  * Simple POJO representation of eu.peppol.PeppolMessageMetaData for JSON conversion.
  */
-public class PeppolMessageMetadata {
+public class PeppolMessageMetadata implements Serializable {
+
+    private static final long serialVersionUID = 2688223858360763842L;
 
     private static final String OC_AP_COMMON_NAME = "C=FI, O=OpusCapita Solutions Oy, OU=PEPPOL PRODUCTION AP, CN=PNO000104";
+
     /**
      * The PEPPOL Message Identifier, supplied in the SBDH when using AS2
      */
-    private String messageId;
+    @Since(1.5) private String messageId;
 
-    private String transmissionId;
+    @Since(1.5) private String transmissionId;
 
-    private String senderId;
-    private String recipientId;
-    private Date sendersTimeStamp;
-    private Date receivedTimeStamp;
-    private String sendingAccessPoint;
-    private String receivingAccessPoint;
+    @Since(1.5) private String senderId;
+    @Since(1.5) private String recipientId;
+    @Since(1.5) private Date sendersTimeStamp;
+    @Since(1.5) private Date receivedTimeStamp;
+    @Since(1.5) private String sendingAccessPoint;
+    @Since(1.5) private String receivingAccessPoint;
 
-    private String documentTypeIdentifier;
-    private String profileTypeIdentifier;
+    @Since(1.5) private String documentTypeIdentifier;
+    @Since(1.5) private String profileTypeIdentifier;
 
-    private String instanceType;
-    private String instanceTypeVersion;
-    private String instanceTypeStandard;
+    @Since(1.5) private String instanceType;
+    @Since(1.5) private String instanceTypeVersion;
+    @Since(1.5) private String instanceTypeStandard;
 
-    private String protocol;
-    private String userAgent;
-    private String userAgentVersion;
+    @Since(1.5) private String protocol;
+    @Since(1.5) private String userAgent;
+    @Since(1.5) private String userAgentVersion;
 
     public String getMessageId() {
         return messageId;
