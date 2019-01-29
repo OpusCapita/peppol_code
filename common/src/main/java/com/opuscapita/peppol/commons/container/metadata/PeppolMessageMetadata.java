@@ -14,6 +14,9 @@ import java.util.Date;
 
 /**
  * Simple POJO representation of eu.peppol.PeppolMessageMetaData for JSON conversion.
+ *
+ * Populated from the request Header for inbound files
+ * Populated from the SBD Header extracted from the payload for outbound files
  */
 public class PeppolMessageMetadata implements Serializable {
 
@@ -174,7 +177,7 @@ public class PeppolMessageMetadata implements Serializable {
         this.transmissionId = transmissionId;
     }
 
-    // File coming from business platforms to our transport service
+    // Outbound Flow: file coming from business platforms to our transport service (or reprocess)
     public static PeppolMessageMetadata create(TransmissionResult transmissionResult) {
         Header header = transmissionResult.getHeader();
 
@@ -197,7 +200,7 @@ public class PeppolMessageMetadata implements Serializable {
         return metadata;
     }
 
-    // File coming from network to our inbound..
+    // Inbound Flow: file coming from network to our inbound..
     public static PeppolMessageMetadata create(InboundMetadata inboundMetadata) {
         Header header = inboundMetadata.getHeader();
         X509Certificate certificate = inboundMetadata.getCertificate();
@@ -222,7 +225,7 @@ public class PeppolMessageMetadata implements Serializable {
         return metadata;
     }
 
-    // Setting metadata after sending the file from outbound..
+    // Outbound: file delivered to network, metadata update
     public static PeppolMessageMetadata create(@NotNull TransmissionResponse response) {
         Header header = response.getHeader();
         X509Certificate certificate = response.getEndpoint().getCertificate();
