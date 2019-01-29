@@ -1,6 +1,7 @@
 package com.opuscapita.peppol.commons.container;
 
 import com.opuscapita.peppol.commons.container.document.Archetype;
+import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.Route;
 import org.junit.Test;
@@ -40,6 +41,7 @@ public class ContainerMessageSerializerTest {
         assertNotNull(pi);
         pi.setOriginalSource("original_source");
         pi.setRoute(route);
+        pi.setPeppolMessageMetadata(PeppolMessageMetadata.create("fileName"));
 
         ContainerMessageSerializer cms = new ContainerMessageSerializer();
 
@@ -64,6 +66,7 @@ public class ContainerMessageSerializerTest {
         assertTrue(cm2.getProcessingInfo().getRoute().getEndpoints().contains("endpoint_a"));
         assertTrue(cm2.getProcessingInfo().getRoute().getEndpoints().contains("endpoint_b"));
         assertEquals("original_source", cm2.getProcessingInfo().getOriginalSource());
+        assertNotNull(cm2.getProcessingInfo().getTransactionId());
     }
 
 
