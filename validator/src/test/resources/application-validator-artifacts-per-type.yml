@@ -98,6 +98,12 @@ peppol:
             - "xsl/BIIRULES-UBL-T10.xsl"
             - "maindoc/UBL-Invoice-2.1.xsd"
         # PEPPOL BIS Invoice 2.0 (Profile 04)
+        - profile: "urn:www.cenbii.eu:profile:bii04:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0"
+          rules:
+            - "xsl/OPENPEPPOL-UBL-T10.xsl"
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T10.xsl"
         - profile: "urn:www.cenbii.eu:profile:bii04:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0"
           rules:
             - "xsl/OPENPEPPOL-UBL-T10.xsl"
@@ -105,6 +111,12 @@ peppol:
             - "maindoc/UBL-Invoice-2.1.xsd"
             - "xsl/OPENPEPPOLCORE-UBL-T10.xsl"
         # PEPPOL BIS Invoice 2.0 (Profile 05)
+        - profile: "urn:www.cenbii.eu:profile:bii05:ver1.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0"
+          rules:
+            - "xsl/OPENPEPPOL-UBL-T10.xsl"
+            - "xsl/BIIRULES-UBL-T10.xsl"
+            - "maindoc/UBL-Invoice-2.1.xsd"
+            - "xsl/OPENPEPPOLCORE-UBL-T10.xsl"
         - profile: "urn:www.cenbii.eu:profile:bii05:ver2.0###urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0"
           rules:
             - "xsl/OPENPEPPOL-UBL-T10.xsl"
