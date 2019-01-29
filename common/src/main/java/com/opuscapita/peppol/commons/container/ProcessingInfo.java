@@ -14,28 +14,19 @@ import java.io.Serializable;
 
 /**
  * Holds data related to the processing excluding the document data.
- *
- * @author Sergejs.Roze
  */
 public class ProcessingInfo implements Serializable {
+
     private static final long serialVersionUID = -556566093311452295L;
 
-    @Since(1.0)
-    private final Endpoint source;
-    @Since(1.0)
-    private Route route;
-    @Since(1.0)
-    private Endpoint currentEndpoint;
-    @Since(1.0)
-    private String currentStatus;
-    @Since(1.0)
-    private String processingException;
-    @Since(1.2)
-    private String originalSource;
-    @Since(1.2)
-    private Message eventingMessage;
-    @Since(1.5)
-    private PeppolMessageMetadata peppolMessageMetadata;
+    @Since(1.0) private Endpoint source;
+    @Since(1.0) private Route route;
+    @Since(1.0) private Endpoint currentEndpoint;
+    @Since(1.0) private String currentStatus;
+    @Since(1.0) private String processingException;
+    @Since(1.2) private String originalSource;
+    @Since(1.2) private Message eventingMessage;
+    @Since(1.5) private PeppolMessageMetadata peppolMessageMetadata;
 
     public ProcessingInfo(@NotNull Endpoint source) {
         this.source = source;

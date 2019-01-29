@@ -18,19 +18,14 @@ import java.io.Serializable;
  *
  * @author Sergejs.Roze
  */
-@SuppressWarnings("FieldCanBeLocal")
 public class ContainerMessage implements Serializable {
 
-    @Since(1.0)
-    private double version = 1.2;
-    @Since(1.0)
-    private ProcessingInfo processingInfo;
-    @Since(1.0)
-    private String fileName;
-    @Since(1.0)
-    private String originalFileName = "";
-    @Since(1.0)
-    private DocumentInfo documentInfo;
+    private static final long serialVersionUID = -5450780856722626102L;
+
+    @Since(1.0) private String fileName;
+    @Since(1.0) private String originalFileName = "";
+    @Since(1.0) private DocumentInfo documentInfo;
+    @Since(1.0) private ProcessingInfo processingInfo;
 
     public ContainerMessage() {
     }
@@ -55,6 +50,18 @@ public class ContainerMessage implements Serializable {
     public ContainerMessage setFileName(@NotNull String fileName) {
         this.fileName = fileName;
         return this;
+    }
+
+    @NotNull
+    public String getOriginalFileName() {
+        if (StringUtils.isBlank(originalFileName)) {
+            return FilenameUtils.getBaseName(fileName);
+        }
+        return originalFileName;
+    }
+
+    public void setOriginalFileName(@NotNull String originalFileName) {
+        this.originalFileName = FilenameUtils.getBaseName(originalFileName);
     }
 
     @Nullable
@@ -94,7 +101,6 @@ public class ContainerMessage implements Serializable {
     /**
      * Returns customer ID depending on the direction of the message, either sender or recipient ID.
      */
-    @SuppressWarnings("ConstantConditions")
     @Nullable
     public String getCustomerId() {
         if (getDocumentInfo() == null) {
@@ -133,22 +139,6 @@ public class ContainerMessage implements Serializable {
 
     public void addError(@NotNull String message) {
         addError(new DocumentError(processingInfo.getCurrentEndpoint(), message));
-    }
-
-    public double getVersion() {
-        return version;
-    }
-
-    @NotNull
-    public String getOriginalFileName() {
-        if (StringUtils.isBlank(originalFileName)) {
-            return FilenameUtils.getBaseName(fileName);
-        }
-        return originalFileName;
-    }
-
-    public void setOriginalFileName(@NotNull String originalFileName) {
-        this.originalFileName = FilenameUtils.getBaseName(originalFileName);
     }
 
     @SuppressWarnings("SimplifiableIfStatement")
