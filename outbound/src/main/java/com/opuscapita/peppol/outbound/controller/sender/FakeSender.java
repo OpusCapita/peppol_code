@@ -56,6 +56,7 @@ public class FakeSender implements PeppolSender {
         logger.info("Returning fake transmission result, to enable real sending set 'peppol.outbound.sending.enabled' to true");
 
         return new TransmissionResponse() {
+
             @Override
             public TransmissionIdentifier getTransmissionIdentifier() {
                 return TransmissionIdentifier.generateUUID();
@@ -63,7 +64,14 @@ public class FakeSender implements PeppolSender {
 
             @Override
             public Header getHeader() {
-                return Header.newInstance().receiver(ParticipantIdentifier.of("test"));
+                Header header = Header.newInstance();
+                header.identifier(InstanceIdentifier.generateUUID());
+                header.sender(ParticipantIdentifier.of("test"));
+                header.receiver(ParticipantIdentifier.of("test"));
+                header.process(ProcessIdentifier.NO_PROCESS);
+                header.documentType(DocumentTypeIdentifier.of("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.difi.no:ehf:faktura:ver2.0::2.1"));
+                header.instanceType(InstanceType.of("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2", "Invoice", "2.1"));
+                return header;
             }
 
             @Override

@@ -184,6 +184,12 @@ public class IncomingChecker extends ValuesChecker {
         }
     }
 
+    /**
+     * Sets the metadata information of the container message
+     * First tries to extract the header from the document
+     *  - If SBDH exists, uses it
+     *  - If SBDH doesn't exist, extract information from payload
+     **/
     private void setMetadataOfTheContainerMessage(ContainerMessage cm) {
         Header header = documentLoader.parseHeader(cm.getFileName());
         if (header != null) {

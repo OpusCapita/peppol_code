@@ -58,7 +58,7 @@ public class DocumentLoader {
             return sbdReader.getHeader();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Couldn't extract header from file: " + fileName);
+            logger.warn("Couldn't extract header from file: " + fileName);
         }
         return null;
     }

@@ -245,14 +245,14 @@ tests:
 #                destination queue: outbound
 #                source directory: /peppol/data/storage/outbound-integration-test-valid.xml
 #                db connection: db1
-#                DB preprocess querry: delete from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+#                DB preprocess querry: delete from messages where invoice_number="62796072" and status="sent" and sender_id = (select id from senders where customer_id="0088:7381034999991" limit 1)
 #                container message:
 #                  endpoint: events-persistence-integration-test
 #        subscribers:
 #            - db subscriber:
 #                db connection: db1
-#                timeout: 5000
-#                query: select count(*) from sent where transmission_id = "OUToutbound-integration-test-valid.xml"
+#                timeout: 6000
+#                query: select count(*) from messages where invoice_number="62796072" and status="sent" and sender_id = (select id from senders where customer_id="0088:7381034999991" limit 1)
 #                consumers: 14
 #        consumers:
 #            - DB test:
