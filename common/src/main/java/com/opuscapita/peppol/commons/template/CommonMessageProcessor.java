@@ -4,6 +4,7 @@ import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class CommonMessageProcessor implements ContainerMessageProcessor {
                             @NotNull ErrorHandler errorHandler, @Nullable StatusReporter statusReporter) {
         try {
             String shortDescription = ErrorHandler.getShortDescription(cm, e);
-            errorHandler.reportWithContainerMessage(cm, e, e.getMessage());
+            errorHandler.reportWithContainerMessage(cm, e, StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : "Incident, UnknownError");
             logger.warn("Message processing failed. " + shortDescription);
         } catch (Exception weird) {
             logger.error("Reporting to ServiceNow threw exception: ", weird);

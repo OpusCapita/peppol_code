@@ -51,4 +51,11 @@ public enum SendingErrors {
                SendingErrors.UNSUPPORTED_DATA_FORMAT.equals(this);
     }
 
+    public boolean requiresTicketCreation() {
+        return SendingErrors.OTHER_ERROR.equals(this) ||
+               SendingErrors.SECURITY_ERROR.equals(this) ||
+               SendingErrors.CONNECTION_ERROR.equals(this) ||
+               SendingErrors.RECEIVING_AP_ERROR.equals(this);
+    }
+
 }

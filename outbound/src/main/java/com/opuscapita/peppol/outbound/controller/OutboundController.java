@@ -3,8 +3,10 @@ package com.opuscapita.peppol.outbound.controller;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.commons.container.metadata.PeppolMessageMetadata;
+import com.opuscapita.peppol.commons.container.process.StatusReporter;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
 import com.opuscapita.peppol.commons.container.process.route.ProcessType;
+import com.opuscapita.peppol.commons.errors.ErrorHandler;
 import com.opuscapita.peppol.commons.errors.oxalis.OxalisErrorRecognizer;
 import com.opuscapita.peppol.commons.errors.oxalis.SendingErrors;
 import com.opuscapita.peppol.commons.events.EventingMessageUtil;
@@ -38,6 +40,8 @@ public class OutboundController {
     private final TestSender testSender;
 
     private final MessageQueue messageQueue;
+    private final ErrorHandler errorHandler;
+    private final StatusReporter statusReporter;
     private final OxalisErrorRecognizer oxalisErrorRecognizer;
 
     @Value("${peppol.outbound.sending.enabled:false}")
@@ -51,11 +55,14 @@ public class OutboundController {
 
     @Autowired
     public OutboundController(@NotNull RealSender realSender, @Nullable FakeSender fakeSender, @Nullable TestSender testSender,
-                              @NotNull MessageQueue messageQueue, @NotNull OxalisErrorRecognizer oxalisErrorRecognizer) {
+                              @NotNull MessageQueue messageQueue, @NotNull OxalisErrorRecognizer oxalisErrorRecognizer,
+                              @Nullable StatusReporter statusReporter, @NotNull ErrorHandler errorHandler) {
         this.realSender = realSender;
         this.fakeSender = fakeSender;
         this.testSender = testSender;
         this.messageQueue = messageQueue;
+        this.errorHandler = errorHandler;
+        this.statusReporter = statusReporter;
         this.oxalisErrorRecognizer = oxalisErrorRecognizer;
     }
 
@@ -103,6 +110,7 @@ public class OutboundController {
         return realSender;
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void handleException(@NotNull ContainerMessage cm, @NotNull Exception e) throws Exception {
         Endpoint endpoint = new Endpoint(componentName, ProcessType.OUT_OUTBOUND);
         cm.setStatus(endpoint, "message delivery failure");
@@ -111,26 +119,26 @@ public class OutboundController {
 
         if (errorType.isRetryable()) {
             String retry = cm.popRoute();
-            if (StringUtils.isBlank(retry)) {
-                logger.info("No (more) retries possible for " + cm.toLog() + ", reporting IO error");
-                cm.getProcessingInfo().setProcessingException(e.getMessage());
-                throw e;
+            if (StringUtils.isNotBlank(retry)) {
+                cm.setStatus(new Endpoint(retry, ProcessType.OUT_PEPPOL_RETRY), "RETRY: " + retry);
+                messageQueue.convertAndSend(retry, cm);
+                logger.info("Message " + cm.toLog() + " queued for retry to the queue " + retry);
+                return;
             }
-
-            cm.setStatus(new Endpoint(retry, ProcessType.OUT_PEPPOL_RETRY), "RETRY: " + retry);
-            messageQueue.convertAndSend(retry, cm);
-            logger.info("Message " + cm.toLog() + " queued for retry to the queue " + retry);
-            return;
+            logger.info("No (more) retries possible for " + cm.toLog() + ", reporting IO error");
+        } else {
+            logger.info("Exception of type " + errorType + " registered as non-retriable, rejecting message " + cm.toLog());
         }
 
-        logger.info("Exception of type " + errorType + " registered as non-retriable, rejecting message " + cm.toLog());
         cm.getProcessingInfo().setProcessingException(e.getMessage());
 
         if (errorType.requiresNotification()) {
             sendEmailNotification(cm, errorType);
         }
-
-        throw e;
+        if (errorType.requiresTicketCreation()) {
+            createSNCTicket(cm, e);
+        }
+        reportException(cm, e);
     }
 
     private void sendEmailNotification(@NotNull ContainerMessage cm, @NotNull SendingErrors errorType) {
@@ -139,6 +147,24 @@ public class OutboundController {
             messageQueue.convertAndSend(emailNotificatorQueue, cm);
         } catch (Exception weird) {
             logger.error("Reporting to email-notificator threw exception: ", weird);
+        }
+    }
+
+    private void createSNCTicket(@NotNull ContainerMessage cm, @NotNull Exception e) {
+        try {
+            errorHandler.reportWithContainerMessage(cm, e, StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : "Incident, UnknownError");
+        } catch (Exception weird) {
+            logger.error("Reporting to ServiceNow threw exception: ", weird);
+        }
+    }
+
+    private void reportException(@NotNull ContainerMessage cm, @NotNull Exception e) {
+        try {
+            if (statusReporter != null) {
+                statusReporter.reportError(cm, e);
+            }
+        } catch (Exception weird) {
+            logger.error("Failed to report status using status reporter", weird);
         }
     }
 
