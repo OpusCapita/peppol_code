@@ -177,7 +177,11 @@ try {
         }
     }
 }
-//disabling step where Parallel flow is tunred back on as it is a risk that outbound might be configured to send material out.
+catch(e) {
+    echo e.toString()
+    throw e
+}
+//disabling step where Parallel flow is turned back on as it is a risk that outbound might be configured to send material out.
 //finally {
 //    stage('Turn parallel flow on') {    
 //        build job: 'peppol2.0/support/parallel-flow', parameters: [booleanParam(name: 'FROM_PEPPOL', value: true), booleanParam(name: 'FROM_A2A', value: true), booleanParam(name: 'FROM_XIB', value: true)]
