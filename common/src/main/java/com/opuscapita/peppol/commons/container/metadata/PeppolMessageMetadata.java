@@ -183,8 +183,8 @@ public class PeppolMessageMetadata implements Serializable {
 
         PeppolMessageMetadata metadata = new PeppolMessageMetadata();
         metadata.setMessageId(header.getIdentifier().getIdentifier());
-        metadata.setRecipientId(header.getReceiver().getIdentifier());
-        metadata.setSenderId(header.getSender().getIdentifier());
+        metadata.setRecipientId(header.getReceiver() != null ? header.getReceiver().getIdentifier() : null);
+        metadata.setSenderId(header.getSender() != null ? header.getSender().getIdentifier() : null);
         metadata.setDocumentTypeIdentifier(header.getDocumentType().getIdentifier());
         metadata.setProfileTypeIdentifier(header.getProcess().getIdentifier());
         metadata.setSendingAccessPoint(OC_AP_COMMON_NAME);

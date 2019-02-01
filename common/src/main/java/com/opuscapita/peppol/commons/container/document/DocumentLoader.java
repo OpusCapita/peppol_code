@@ -2,10 +2,13 @@ package com.opuscapita.peppol.commons.container.document;
 
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.process.route.Endpoint;
+import com.opuscapita.peppol.commons.container.xml.DocumentHeaderParser;
 import com.opuscapita.peppol.commons.container.xml.DocumentParser;
 import no.difi.vefa.peppol.common.model.Header;
 import no.difi.vefa.peppol.sbdh.SbdReader;
+import no.difi.vefa.peppol.sbdh.lang.SbdhException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +27,13 @@ public class DocumentLoader {
     private static final Logger logger = LoggerFactory.getLogger(DocumentLoader.class);
 
     private final DocumentParser documentParser;
+    private final DocumentHeaderParser headerParser;
     private final boolean shouldFailOnInconsistency;
 
     @Autowired
-    public DocumentLoader(@NotNull DocumentParser documentParser, @Value("${peppol.common.consistency_check_enabled}") boolean shouldFailOnInconsistency) {
+    public DocumentLoader(@NotNull DocumentParser documentParser, @Nullable DocumentHeaderParser headerParser,
+                          @Value("${peppol.common.consistency_check_enabled}") boolean shouldFailOnInconsistency) {
+        this.headerParser = headerParser;
         this.documentParser = documentParser;
         this.shouldFailOnInconsistency = shouldFailOnInconsistency;
     }
@@ -52,14 +58,34 @@ public class DocumentLoader {
     }
 
     public Header parseHeader(@NotNull String fileName) {
+        return parseSBDHeader(fileName);
+    }
+
+    private Header parseSBDHeader(@NotNull String fileName) {
         try {
             InputStream inputStream = new FileInputStream(new File(fileName));
             SbdReader sbdReader = SbdReader.newInstance(inputStream);
             return sbdReader.getHeader();
+
+        } catch (Exception e) {
+            if (e instanceof SbdhException) {
+                return extractHeader(fileName);
+            }
+            e.printStackTrace();
+        }
+        logger.warn("Couldn't extract header from file: " + fileName);
+        return null;
+    }
+
+    private Header extractHeader(@NotNull String fileName) {
+        try {
+            InputStream inputStream = new FileInputStream(new File(fileName));
+            return headerParser.parse(inputStream);
+
         } catch (Exception e) {
             e.printStackTrace();
-            logger.warn("Couldn't extract header from file: " + fileName);
         }
+        logger.warn("Couldn't extract header from file: " + fileName);
         return null;
     }
 }
