@@ -12,15 +12,15 @@
  */
 recipients = [:]
 
-recipients.developers = "Kalnin Daniil <Daniil.Kalnin@opuscapita.com>, Roze Sergejs <Sergejs.Roze@opuscapita.com>"
-recipients.devops = "Amit Tiwari <Amit.Tiwari@opuscapita.com>"
-recipients.ops = "Barczykowski Bartosz <Bartosz.Barczykowski@opuscapita.com>"
-recipients.testers = "Bērziņš Mārtiņš <Martins.Berzins@opuscapita.com>"
+recipients.developers = "Ibrahim.Bilge@opuscapita.com"
+recipients.devops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
+recipients.ops = "Tiwari Amit <Amit.Tiwari@opuscapita.com>"
+recipients.testers = "Ibrahim.Bilge@opuscapita.com"
 
 
 import java.util.regex.*
 
-def code_version = params.CODE_BRANCH ?: 'master'
+def code_version = params.CODE_BRANCH ?: 'develop'
 def infra_version = params.INFRA_BRANCH ?: 'develop'
 def release_type = params.RELEASE_TYPE ?: 'development'
 def release_version, next_version, code_hash, infra_hash
