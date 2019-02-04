@@ -6,7 +6,7 @@
   shell: grep "{{ transmissionId }}" /peppol/logs/preprocessing/*.log
   register: log
   until: log.stdout | search("Input file.*"+transmissionId)
-  retries: 60
+  retries: 300
   delay: 1
 
 #rc is response code for shell commands 0=success and anything else=failed

@@ -4,7 +4,7 @@
   shell: docker logs internal-routing | grep "{{ transmissionId }}"
   register: log
   until: transmissionId in log.stdout
-  retries: 60
+  retries: 100
   delay: 1
   when: preprocessing_result not in ["Passed- No matching document templates found", "Passed- failed to parse file", "Passed- No SBDH present in file", "Passed- failed to recognize file" ]
 #- debug: var=log

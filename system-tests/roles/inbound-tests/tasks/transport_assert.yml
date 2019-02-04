@@ -6,7 +6,7 @@
   shell: docker logs transport-to-a2a | grep "{{ transmissionId }}"
   register: a2aLog
   until: transmissionId in a2aLog.stdout
-  retries: 120
+  retries: 150
   delay: 1
 
 - name: get transport-to-xib log & check if transmissionId "{{ transmissionId }}" "{{ file }}" is found in transport-to-xib
@@ -14,7 +14,7 @@
   shell: docker logs transport-to-xib | grep "{{ transmissionId }}"
   register: xibLog
   until: transmissionId in xibLog.stdout
-  retries: 3
+  retries: 50
   delay: 1
 
 #rc is response code for shell commands 0=success and anything else=failed
