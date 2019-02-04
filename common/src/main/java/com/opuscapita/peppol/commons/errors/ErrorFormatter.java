@@ -113,6 +113,23 @@ public class ErrorFormatter {
         return detailedDescription;
     }
 
+    @NotNull
+    public static String getShortDescription(@NotNull ContainerMessage cm, @Nullable Throwable e) {
+        String shortDescription = "Incident";
+        if (StringUtils.isNotBlank(cm.getFileName())) {
+            shortDescription += ", file: " + cm.getFileName();
+        }
+        if (StringUtils.isNotBlank(cm.getCustomerId())) {
+            shortDescription += ", customer: " + cm.getCustomerId();
+        }
+        if (e != null && StringUtils.isNotBlank(e.getMessage())) {
+            shortDescription += ", reason: " + e.getMessage();
+        } else {
+            shortDescription += ", reason: unknown";
+        }
+        return shortDescription;
+    }
+
     @Nullable
     static String exceptionMessageToString(@Nullable Throwable e) {
         if (e == null) {
