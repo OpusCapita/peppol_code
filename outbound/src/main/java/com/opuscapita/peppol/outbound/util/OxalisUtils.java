@@ -21,9 +21,9 @@ public class OxalisUtils {
         PeppolMessageMetadata metadata = cm.getProcessingInfo().getPeppolMessageMetadata();
         if (metadata != null) {
             if (StringUtils.isNotBlank(metadata.getDocumentTypeIdentifier())) {
-//                if (StringUtils.isNotBlank(metadata.getProtocol())) {
-//                    return DocumentTypeIdentifier.of(metadata.getDocumentTypeIdentifier(), Scheme.of(metadata.getProtocol()));
-//                }
+                if (StringUtils.isNotBlank(metadata.getProtocol())) {
+                    return DocumentTypeIdentifier.of(metadata.getDocumentTypeIdentifier(), Scheme.of(metadata.getProtocol()));
+                }
                 return DocumentTypeIdentifier.of(metadata.getDocumentTypeIdentifier());
             }
 

@@ -22,7 +22,7 @@ public class TransportIncomingFileMetadata implements TransmissionResult {
     public TransportIncomingFileMetadata(@NotNull Header header) {
         this.header = header;
         this.timestamp = new Date();
-        this.transportProfile = TransportProfile.AS2_1_0;
+        this.transportProfile = TransportProfile.of(DocumentTypeIdentifier.DEFAULT_SCHEME.getIdentifier());
         this.transmissionIdentifier = TransmissionIdentifier.generateUUID();
     }
 
