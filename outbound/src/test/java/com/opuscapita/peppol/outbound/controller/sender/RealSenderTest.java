@@ -69,7 +69,6 @@ public class RealSenderTest {
             }
         };
         RealSender realSender = new RealSender();
-        realSender.initialize();
 
         resourceFiles.forEach(file -> {
             try {
@@ -90,7 +89,6 @@ public class RealSenderTest {
     @Test
     public void testSendWithJsonFromRabbitMq() throws Exception {
         RealSender realSender = new RealSender();
-        realSender.initialize();
         ContainerMessage containerMessage = null;
         File jsonFileFromStage = getResourceFile(this.getClass().getResource("/msg-to-outbound.json.json"));
         String jsonContent = Files.readLines(jsonFileFromStage, Charsets.UTF_8).stream().collect(Collectors.joining());
