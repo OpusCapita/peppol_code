@@ -33,35 +33,20 @@ import java.io.InputStream;
 @Scope("prototype")
 public class RealSender implements PeppolSender {
 
-    final private static Logger logger = LoggerFactory.getLogger(RealSender.class);
-
-    final private OxalisWrapper oxalisWrapper;
+    private static Logger logger = LoggerFactory.getLogger(RealSender.class);
 
     private OxalisOutboundComponent oxalisOutboundModule;
 
-    @Autowired
-    public RealSender(OxalisWrapper oxalisWrapper) {
-        this.oxalisWrapper = oxalisWrapper;
+    public RealSender() {
+        this.oxalisOutboundModule = new OxalisOutboundComponent();
     }
 
-    @PostConstruct
-    public void initialize() {
-        oxalisOutboundModule = oxalisWrapper.getOxalisOutboundModule();
-    }
-
-    protected OxalisOutboundComponent getOxalisOutboundModule() {
+    OxalisOutboundComponent getOxalisOutboundModule() {
         return oxalisOutboundModule;
     }
 
-    protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
-        return oxalisWrapper.getTransmissionRequestBuilder(true);
-    }
-
-    private Scheme getProcessIdentifierScheme(@NotNull ContainerMessage cm) {
-        if (Archetype.SVEFAKTURA1.equals(cm.getDocumentInfo().getArchetype())) {
-            return Scheme.of("sfti-procid");
-        }
-        return ProcessIdentifier.DEFAULT_SCHEME;
+    TransmissionRequestBuilder getTransmissionRequestBuilder() {
+        return oxalisOutboundModule.getTransmissionRequestBuilder();
     }
 
     @SuppressWarnings("unused")
@@ -72,12 +57,10 @@ public class RealSender implements PeppolSender {
             throw new IllegalArgumentException("There is no document in message");
         }
 
-        TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
-
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
-            TransmissionRequest transmissionRequest = requestBuilder
-                    .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
-                    .processType(ProcessIdentifier.of(document.getProfileId(), getProcessIdentifierScheme(cm)))
+            TransmissionRequest transmissionRequest = getTransmissionRequestBuilder()
+//                    .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
+//                    .processType(ProcessIdentifier.of(document.getProfileId(), getProcessIdentifierScheme(cm)))
                     .sender(ParticipantIdentifier.of(document.getSenderId()))
                     .receiver(ParticipantIdentifier.of(document.getRecipientId()))
                     .payLoad(inputStream)
@@ -90,4 +73,10 @@ public class RealSender implements PeppolSender {
         }
     }
 
+    private Scheme getProcessIdentifierScheme(@NotNull ContainerMessage cm) {
+        if (Archetype.SVEFAKTURA1.equals(cm.getDocumentInfo().getArchetype())) {
+            return Scheme.of("sfti-procid");
+        }
+        return ProcessIdentifier.DEFAULT_SCHEME;
+    }
 }
