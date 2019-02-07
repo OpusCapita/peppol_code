@@ -59,7 +59,7 @@ public class RealSender implements PeppolSender {
 
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             TransmissionRequest transmissionRequest = getTransmissionRequestBuilder()
-//                    .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
+                    .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
 //                    .processType(ProcessIdentifier.of(document.getProfileId(), getProcessIdentifierScheme(cm)))
                     .sender(ParticipantIdentifier.of(document.getSenderId()))
                     .receiver(ParticipantIdentifier.of(document.getRecipientId()))
