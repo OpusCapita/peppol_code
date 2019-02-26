@@ -44,7 +44,9 @@ public class RealSender implements PeppolSender {
     }
 
     TransmissionRequestBuilder getTransmissionRequestBuilder() {
-        return oxalisOutboundModule.getTransmissionRequestBuilder();
+        TransmissionRequestBuilder transmissionRequestBuilder = oxalisOutboundModule.getTransmissionRequestBuilder();
+        transmissionRequestBuilder.setTransmissionBuilderOverride(true);
+        return transmissionRequestBuilder;
     }
 
     @NotNull
