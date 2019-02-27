@@ -3,7 +3,6 @@ package com.opuscapita.peppol.outbound.controller.sender;
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
 import com.opuscapita.peppol.commons.container.document.Archetype;
-import com.opuscapita.peppol.outbound.util.OxalisUtils;
 import no.difi.oxalis.api.lang.OxalisContentException;
 import no.difi.oxalis.api.lang.OxalisTransmissionException;
 import no.difi.oxalis.api.outbound.TransmissionRequest;
@@ -11,7 +10,6 @@ import no.difi.oxalis.api.outbound.TransmissionResponse;
 import no.difi.oxalis.api.outbound.Transmitter;
 import no.difi.oxalis.outbound.OxalisOutboundComponent;
 import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
-import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.vefa.peppol.common.model.Scheme;
 import org.jetbrains.annotations.NotNull;
@@ -76,10 +74,10 @@ public class RealSender implements PeppolSender {
 
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
             TransmissionRequest transmissionRequest = requestBuilder
-                    .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
-                    .processType(ProcessIdentifier.of(document.getProfileId(), getProcessIdentifierScheme(cm)))
-                    .sender(ParticipantIdentifier.of(document.getSenderId()))
-                    .receiver(ParticipantIdentifier.of(document.getRecipientId()))
+//                    .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
+//                    .processType(ProcessIdentifier.of(document.getProfileId(), getProcessIdentifierScheme(cm)))
+//                    .sender(ParticipantIdentifier.of(document.getSenderId()))
+//                    .receiver(ParticipantIdentifier.of(document.getRecipientId()))
                     .payLoad(inputStream)
                     .build();
 
