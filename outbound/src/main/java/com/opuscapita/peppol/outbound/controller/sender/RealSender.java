@@ -2,7 +2,6 @@ package com.opuscapita.peppol.outbound.controller.sender;
 
 import com.opuscapita.peppol.commons.container.ContainerMessage;
 import com.opuscapita.peppol.commons.container.DocumentInfo;
-import com.opuscapita.peppol.commons.container.document.Archetype;
 import com.opuscapita.peppol.outbound.util.OxalisUtils;
 import no.difi.oxalis.api.lang.OxalisContentException;
 import no.difi.oxalis.api.lang.OxalisTransmissionException;
@@ -14,14 +13,13 @@ import no.difi.oxalis.outbound.transmission.TransmissionRequestBuilder;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.vefa.peppol.common.model.Scheme;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,38 +31,24 @@ import java.io.InputStream;
 @Scope("prototype")
 public class RealSender implements PeppolSender {
 
-    final private static Logger logger = LoggerFactory.getLogger(RealSender.class);
-
-    final private OxalisWrapper oxalisWrapper;
+    private static Logger logger = LoggerFactory.getLogger(RealSender.class);
 
     private OxalisOutboundComponent oxalisOutboundModule;
 
-    @Autowired
-    public RealSender(OxalisWrapper oxalisWrapper) {
-        this.oxalisWrapper = oxalisWrapper;
+    public RealSender() {
+        this.oxalisOutboundModule = new OxalisOutboundComponent();
     }
 
-    @PostConstruct
-    public void initialize() {
-        oxalisOutboundModule = oxalisWrapper.getOxalisOutboundModule();
-    }
-
-    protected OxalisOutboundComponent getOxalisOutboundModule() {
+    OxalisOutboundComponent getOxalisOutboundModule() {
         return oxalisOutboundModule;
     }
 
-    protected TransmissionRequestBuilder getTransmissionRequestBuilder() {
-        return oxalisWrapper.getTransmissionRequestBuilder(true);
+    TransmissionRequestBuilder getTransmissionRequestBuilder() {
+        TransmissionRequestBuilder transmissionRequestBuilder = oxalisOutboundModule.getTransmissionRequestBuilder();
+        transmissionRequestBuilder.setTransmissionBuilderOverride(true);
+        return transmissionRequestBuilder;
     }
 
-    private Scheme getProcessIdentifierScheme(@NotNull ContainerMessage cm) {
-        if (Archetype.SVEFAKTURA1.equals(cm.getDocumentInfo().getArchetype())) {
-            return Scheme.of("sfti-procid");
-        }
-        return ProcessIdentifier.DEFAULT_SCHEME;
-    }
-
-    @SuppressWarnings("unused")
     @NotNull
     public TransmissionResponse send(@NotNull ContainerMessage cm) throws IOException, OxalisContentException, OxalisTransmissionException {
         DocumentInfo document = cm.getDocumentInfo();
@@ -72,22 +56,34 @@ public class RealSender implements PeppolSender {
             throw new IllegalArgumentException("There is no document in message");
         }
 
-        TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
-
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
-            TransmissionRequest transmissionRequest = requestBuilder
+            TransmissionRequestBuilder transmissionRequestBuilder = getTransmissionRequestBuilder()
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(cm))
-                    .processType(ProcessIdentifier.of(document.getProfileId(), getProcessIdentifierScheme(cm)))
+                    .processType(OxalisUtils.getPeppolProcessTypeId(cm, ProcessIdentifier.DEFAULT_SCHEME))
                     .sender(ParticipantIdentifier.of(document.getSenderId()))
                     .receiver(ParticipantIdentifier.of(document.getRecipientId()))
-                    .payLoad(inputStream)
-                    .build();
+                    .payLoad(inputStream);
 
+            TransmissionRequest transmissionRequest = transmissionRequestBuilder.build();
+            Transmitter transmitter = oxalisOutboundModule.getTransmitter();
             logger.info("Thread " + Thread.currentThread().getName() + " is about to send message: " + cm.toLog() + " to endpoint: " + transmissionRequest.getEndpoint());
 
-            Transmitter transmitter = oxalisOutboundModule.getTransmitter();
-            return transmitter.transmit(transmissionRequest);
+            try {
+                return transmitter.transmit(transmissionRequest);
+
+            } catch (Exception e) {
+                /**
+                 * Temp workaround for process id protocol issue, need to find an exact way to determine correct protocol.
+                 */
+                String message = e.getMessage();
+                if (StringUtils.isNotBlank(message) &&
+                        message.replaceAll("\n", " ").replaceAll("\r", " ").contains("transport profile(s) not found")) {
+                    transmissionRequest = transmissionRequestBuilder.processType(OxalisUtils.getPeppolProcessTypeId(cm, Scheme.of("sfti-procid"))).build();
+                    return transmitter.transmit(transmissionRequest);
+                } else {
+                    throw e;
+                }
+            }
         }
     }
-
 }

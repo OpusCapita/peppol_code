@@ -3,8 +3,6 @@ package com.opuscapita.peppol.outbound;
 import com.opuscapita.peppol.commons.template.CommonMessageReceiver;
 import com.opuscapita.peppol.outbound.controller.OutboundController;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -23,11 +21,8 @@ import org.springframework.context.annotation.Lazy;
 @EnableDiscoveryClient
 //@EnableScheduling
 public class OutboundApp {
-    @SuppressWarnings("unused")
-    private static final Logger logger = LoggerFactory.getLogger(OutboundApp.class);
 
     private final OutboundController controller;
-    // private final DocumentLoader documentLoader;
 
     @Value("${peppol.outbound.queue.in.name}")
     private String queueName;
@@ -41,8 +36,6 @@ public class OutboundApp {
     @Value("${peppol.outbound.consumers.timeout.ms:60000}")
     private int consumersTimeout;
 
-    private boolean was = false;
-
     @Autowired
     public OutboundApp(@NotNull @Lazy OutboundController controller) {
         this.controller = controller;
@@ -51,30 +44,6 @@ public class OutboundApp {
     public static void main(String[] args) {
         SpringApplication.run(OutboundApp.class, args);
     }
-
-//    @Scheduled(fixedDelay = 12_000)
-//    public void postConstruct() {
-//        if (was) {
-//            ContainerMessage cm = new ContainerMessage();
-//
-//            ProcessingInfo pi = new ProcessingInfo(Endpoint.TEST, "test_endpoint");
-//            cm.setProcessingInfo(pi);
-//
-//            cm.setFileName("/home/rozeser1/test/chernobyl.xml");
-//
-//            try {
-//                DocumentInfo documentInfo = documentLoader.load("/home/rozeser1/test/chernobyl.xml", Endpoint.TEST);
-//                cm.setDocumentInfo(documentInfo);
-//
-//                controller.send(cm);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            System.exit(0);
-//        }
-//        was = true;
-//    }
 
     @Bean
     MessageListenerAdapter listenerAdapter(@NotNull CommonMessageReceiver receiver) {
@@ -94,5 +63,37 @@ public class OutboundApp {
         return container;
     }
 
-
+//    ////////////////////local testing////////////////////////
+//
+//    private boolean was = false;
+//    private final DocumentLoader documentLoader;
+//
+//    @Autowired
+//    public OutboundApp(@NotNull @Lazy OutboundController controller, @NotNull DocumentLoader documentLoader) {
+//        this.controller = controller;
+//        this.documentLoader = documentLoader;
+//    }
+//
+//    public static void main(String[] args) {
+//        SpringApplication.run(OutboundApp.class, args);
+//    }
+//
+//    @Scheduled(fixedDelay = 12_000)
+//    public void postConstruct() {
+//        if (was) {
+//            String filename = "C:\\artifacts\\test\\peppol-bis.xml";
+//
+//            try {
+//                ContainerMessage cm = new ContainerMessage(filename, Endpoint.TEST);
+//                cm.getProcessingInfo().setPeppolMessageMetadata(PeppolMessageMetadata.createDummy());
+//                cm.setDocumentInfo(documentLoader.load(filename, Endpoint.TEST));
+//                controller.send(cm);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            System.exit(0);
+//        }
+//        was = true;
+//    }
 }

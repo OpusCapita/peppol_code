@@ -23,6 +23,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.net.URI;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 
@@ -45,8 +48,8 @@ public class TestSender extends RealSender {
     private String testRecipient;
 
     @Autowired
-    public TestSender(@Nullable OxalisWrapper oxalisWrapper, @NotNull FakeSender fakeSender) {
-        super(oxalisWrapper);
+    public TestSender(@NotNull FakeSender fakeSender) {
+        super();
         this.fakeSender = fakeSender;
     }
 
@@ -64,33 +67,18 @@ public class TestSender extends RealSender {
             throw new IllegalArgumentException("There is no document in message");
         }
 
-        TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder();
-
         try (InputStream inputStream = new FileInputStream(cm.getFileName())) {
 
-//            X509Certificate certificate = null;
-//            try {
-//                CertificateFactory fact = CertificateFactory.getInstance("X.509");
-//                FileInputStream is = new FileInputStream("C:\\Users\\ibilge\\.oxalis\\oxalis.cer");
-//                certificate = (X509Certificate) fact.generateCertificate(is);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-
-            TransmissionRequest transmissionRequest = requestBuilder
+            TransmissionRequestBuilder requestBuilder = getTransmissionRequestBuilder()
                     .documentType(OxalisUtils.getPeppolDocumentTypeId(document))
                     .processType(ProcessIdentifier.of(document.getProfileId()))
-
-//                    .overrideAs2Endpoint(Endpoint.of(
-//                            TransportProfile.AS2_1_0,
-//                            URI.create("http://localhost:8089/as2"),
-//                            certificate))
-
                     .sender(ParticipantIdentifier.of(document.getSenderId()))
                     .receiver(ParticipantIdentifier.of(testRecipient))
-                    .payLoad(getUpdatedFileContent(cm, testRecipient))
-                    .build();
+                    .payLoad(getUpdatedFileContent(cm, testRecipient));
 
+//            requestBuilder = sendRequestToGivenUrl(requestBuilder, "http://localhost:8089/as2");
+
+            TransmissionRequest transmissionRequest = requestBuilder.build();
             logger.info("About to send message: " + cm.toLog() + " to receiver: " + testRecipient + " using test sender to endpoint: " + transmissionRequest.getEndpoint());
 
             if (cm.getFileName().contains("-fail-me-io-")) {
@@ -172,5 +160,18 @@ public class TestSender extends RealSender {
         }
 
         return new ByteArrayInputStream(result.toByteArray());
+    }
+
+    @SuppressWarnings("unused")
+    private TransmissionRequestBuilder sendRequestToGivenUrl(TransmissionRequestBuilder requestBuilder, String url) {
+        X509Certificate certificate = null;
+        try {
+            CertificateFactory fact = CertificateFactory.getInstance("X.509");
+            FileInputStream is = new FileInputStream("C:\\Users\\ibilge\\.oxalis\\oxalis.cer");
+            certificate = (X509Certificate) fact.generateCertificate(is);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return requestBuilder.overrideAs2Endpoint(Endpoint.of(TransportProfile.AS2_1_0, URI.create(url), certificate));
     }
 }
