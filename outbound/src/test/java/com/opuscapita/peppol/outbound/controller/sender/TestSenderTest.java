@@ -43,7 +43,7 @@ public class TestSenderTest {
         di.setRecipientId("9908:929120825");
         cm.setDocumentInfo(di);
 
-        TestSender testSender = new TestSender(new FakeSender());
+        TestSender testSender = new TestSender(null, new FakeSender());
         InputStream result = testSender.getUpdatedFileContent(cm, "TEST_ID");
 
         expected.put("TEST_ID", 3);

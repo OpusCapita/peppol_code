@@ -68,7 +68,8 @@ public class RealSenderTest {
                 add("/inconsistent_sender.xml");
             }
         };
-        RealSender realSender = new RealSender();
+        RealSender realSender = new RealSender(new OxalisWrapper());
+        realSender.initialize();
 
         resourceFiles.forEach(file -> {
             try {
@@ -88,7 +89,8 @@ public class RealSenderTest {
     @Ignore
     @Test
     public void testSendWithJsonFromRabbitMq() throws Exception {
-        RealSender realSender = new RealSender();
+        RealSender realSender = new RealSender(new OxalisWrapper());
+        realSender.initialize();
         ContainerMessage containerMessage = null;
         File jsonFileFromStage = getResourceFile(this.getClass().getResource("/msg-to-outbound.json.json"));
         String jsonContent = Files.readLines(jsonFileFromStage, Charsets.UTF_8).stream().collect(Collectors.joining());

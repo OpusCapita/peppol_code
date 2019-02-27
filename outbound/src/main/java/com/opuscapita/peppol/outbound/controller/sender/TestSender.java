@@ -48,8 +48,8 @@ public class TestSender extends RealSender {
     private String testRecipient;
 
     @Autowired
-    public TestSender(@NotNull FakeSender fakeSender) {
-        super();
+    public TestSender(@Nullable OxalisWrapper oxalisWrapper, @NotNull FakeSender fakeSender) {
+        super(oxalisWrapper);
         this.fakeSender = fakeSender;
     }
 
