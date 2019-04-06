@@ -132,12 +132,54 @@ try {
         lock(inversePrecedence: true, resource: 'peppol-stage-servers') {
             milestone 3
             stage('Integration Tests') {
-             echo "skip"
-                 }
+                try {
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook('integration-tests.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                    }
+                } catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Integration tests have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/integration-tests-results.html'
+                    dir('infra/ap2/ansible') {
+                        // clean up the integration-tests environment (destroy everything)
+                        ansiblePlaybook('integration-tests-clean.yml', 'environments/integration/hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                    }
+                }
+            }
             milestone 4
             stage('Deployment to Stage') {
-                echo "skip"
-                 }
+                try {
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook('peppol-stage.yml', 'environments/stage/hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                    }
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.ops}, ${recipients.devops}, ${infra_author}, ${code_author}",
+                        'Deployment to Stage environment has failed. Check the log for details.'
+                    )
+                }
+            }
+            stage('Smoke Tests') {
+                try {
+                    dir('infra/ap2/ansible') {
+                        ansiblePlaybook('smoke-tests.yml', 'environments/stage/hosts', 'ansible-sudo', "peppol_version=${release_version}")
+                    }
+                }
+                catch(e) {
+                    failBuild(
+                        "${recipients.testers}, ${infra_author}, ${code_author}",
+                        'Smoke tests have failed. Check the log for details.'
+                    )
+                }
+                finally {
+                    archiveArtifacts artifacts: 'infra/ap2/ansible/test/smoke-tests-results.html'
+                }
+            }
             stage('Acceptance') {
                 if (release_type in ['patch_release', 'minor_release', 'major_release']) {
                     input message: 'Deploy PEPPOL Access Point to production?', ok: 'Sure'
