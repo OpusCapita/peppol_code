@@ -204,6 +204,7 @@ public class PersistenceController {
         fileInfo.setFileSize(peppolEvent.getFileSize());
         fileInfo.setDuplicate(message.getFiles() != null && message.getFiles().size() > 0);
         fileInfo.setMessage(message);
+        fileInfo.setArrivedTimeStamp(new Timestamp(System.currentTimeMillis()));
 
         fileInfo = fileInfoRepository.save(fileInfo);
         logger.info("New file info persisted with name: " + peppolEvent.getFileName());
