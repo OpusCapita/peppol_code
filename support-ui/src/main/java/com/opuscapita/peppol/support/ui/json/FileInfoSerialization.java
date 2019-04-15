@@ -24,7 +24,7 @@ public class FileInfoSerialization extends JsonSerializer<FileInfo> {
         jsonGenerator.writeNumberField("id", fileInfo.getId());
         jsonGenerator.writeStringField("filename", fileInfo.getFilename());
         jsonGenerator.writeNumberField("fileSize", fileInfo.getFileSize());
-        jsonGenerator.writeStringField("arrivedTimeStamp", String.valueOf(fileInfo.getArrivedTimeStamp().getTime()));
+        jsonGenerator.writeStringField("arrivedTimeStamp", String.valueOf((fileInfo.getArrivedTimeStamp() == null) ? "" : fileInfo.getArrivedTimeStamp().getTime()));
         jsonGenerator.writeBooleanField("duplicate", fileInfo.isDuplicate());
         // Lets check if failedInfo was initialized
         try {

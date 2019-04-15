@@ -64,6 +64,12 @@ public class FileInfo implements Comparable<FileInfo> {
         if (this == fileInfo) {
             return EQUAL;
         }
+        if (this.getArrivedTimeStamp() == null) {
+            if (fileInfo.getArrivedTimeStamp() == null) {
+                return EQUAL;
+            }
+            return AFTER;
+        }
         if (this.getArrivedTimeStamp().after(fileInfo.getArrivedTimeStamp())) {
             return BEFORE;
         }
